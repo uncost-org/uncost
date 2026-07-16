@@ -3,27 +3,41 @@ title: "POL-010 — In-Kind Gift Acceptance Policy (P1)"
 updated: 2026-07-16
 version: "1.3"
 status: draft
-review_status: independent-claude-review-pending
-privacy: public
+canonical_status: public-review-draft-not-in-force
+visibility: public
+adoption_status: not-adopted
+review_status: pending-required-review-and-adoption
+independent_claude_review: pending-post-publication
+source_cutoff: 2026-07-15
+source_sha256: 5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670
 ---
 
-> **DRAFT — NOT ADOPTED — NOT IN FORCE.** Independent Claude review, founder review, and required legal/fiscal-sponsor review are pending.
+> **Draft — not in force; pending required review/adoption.**
+> Published for review only. Publication is not adoption and does not activate this policy. Uncost is pre-launch; this draft does not represent an incorporated nonprofit, an accepted fiscal sponsor, an active donation flow, a live community or Assembly, or an adopted policy. Independent AI review is advisory and does not replace founder, human, qualified professional, or future fiscal-sponsor review.
 
 # POL-010 — In-Kind Gift Acceptance Policy (P1)
 
-**Owner:** Founder, with sponsor sign-off on receipting. **Applies to:** all non-cash support — compute, model access, software credits, equipment, materials, storage, logistics, data access, and future demonstration sites.
+**Owner:** Founder; any confirmed sponsor controls receipting. **Applies upon adoption to:** proposed non-cash support such as compute, model/software access, credits, equipment, materials, storage, logistics, data access, and sites.
 
 ## Purpose
-In-kind support is first-class in Uncost's funding model (Plan) — and the most common source of hidden strings, valuation trouble, and dead-weight cost. This policy makes acceptance deliberate.
+
+Accept useful mission-aligned support without hidden strings, valuation errors, privacy/licensing problems, or dead-weight costs.
 
 ## Rules
-1. **Acceptance criteria — accept only when all four hold:** mission fit (it advances a registered project or operation); usability (Uncost can actually deploy it within a reasonable window); net benefit (the full cost to accept — storage, transport, insurance, maintenance, disposal — is materially below the value received); and clean terms (no editorial, governance, data, or recognition strings; the POL-004 firewall applies identically to in-kind).
-2. **Cost-to-accept is assessed in writing** for physical goods before acceptance: where it will be stored, who transports it, who insures and maintains it, and what disposal costs if unused. Storage and logistics capacity are themselves valued in-kind contributions (Plan), and their absence is a legitimate reason to decline equipment.
-3. **Valuation and tax:** the donor is responsible for any valuation or appraisal; Uncost and its sponsor issue receipts per the sponsor's rules; no Uncost material ever states or implies that an in-kind gift, donated service, or volunteer time carries an automatic tax-deductible cash value (Plan language). Creator content donations follow the same rule — no deductibility representations.
-4. **Compute, API credits, and model access:** record expiry dates, acceptable-use terms, and any data-handling constraints in the register; credits with terms that conflict with POL-002 or POL-007 are declined; concentration risk is reviewed annually (no single provider dependency without a fallback note).
-5. **Restricted in-kind** (usable only for a named project) follows POL-004's restricted-gift rules.
-6. **Disclosure:** in-kind gifts appear in The Treasury by category and, for material gifts, by named source unless the donor requests anonymity and leadership plus sponsor agree it carries no influence risk; any in-kind relationship with a company featured in a case study is disclosed in that case study (Plan firewall).
-7. **Refusal and exit:** Uncost may decline or return any gift; unused physical gifts are returned, transferred to an aligned nonprofit, or disposed of with a register entry.
+
+1. **Four acceptance tests:** mission fit; practical usability; net benefit after storage/transport/insurance/maintenance/disposal; and clean terms with no editorial, governance, data, ranking, recognition, or influence strings.
+2. **Physical goods:** document total cost, storage, transport, insurance, maintenance, permissions, safety, and disposition before acceptance.
+3. **Valuation and tax:** the donor is responsible for valuation/appraisal; any receipt follows confirmed sponsor rules; Uncost never claims automatic tax deductibility for services, volunteer time, access, or other in-kind support.
+4. **Compute, credits, and model access:** record expiry, permitted use, data handling, concentration, and fallback; decline terms conflicting with POL-002/007/009.
+5. **Data or data access:** require documented provenance, permission or licence, permitted-use terms, retention/deletion rules, and compatibility with POL-002, POL-007, and POL-009.
+6. **Restricted in-kind:** follows POL-004's restricted-gift controls.
+7. **Disclosure and anonymity:** safe Treasury summaries disclose category and material source where required. Permitted anonymity applies only to general reporting and may not conceal a conflict or financial/in-kind relationship with a company Uncost studies or features.
+8. **Refusal and exit:** Uncost may decline or return support; disposition of unused goods follows written terms and a retained record.
 
 ## Adoption checklist
-Sponsor review of receipting; create the in-kind register (item, source, value basis, terms, expiry, location, disposition); confirm storage capacity honestly before the first equipment acceptance.
+
+Confirmed sponsor receipting; acceptance authority; materiality rule; private gift register; storage/logistics; concentration fallback; data/access review; disclosure process.
+
+This draft does not imply equipment, credits, data access, storage, or a sponsor receipting process is active.
+
+**Private records:** detailed gift register, contracts, location/security detail, value basis, and donor information lawfully withheld.

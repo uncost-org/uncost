@@ -3,27 +3,38 @@ title: "POL-009 — Open-Source Licensing Policy (P1)"
 updated: 2026-07-16
 version: "1.3"
 status: draft
-review_status: independent-claude-review-pending
-privacy: public
+canonical_status: public-review-draft-not-in-force
+visibility: public
+adoption_status: not-adopted
+review_status: pending-required-review-and-adoption
+independent_claude_review: pending-post-publication
+source_cutoff: 2026-07-15
+source_sha256: 5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670
 ---
 
-> **DRAFT — NOT ADOPTED — NOT IN FORCE.** Independent Claude review, founder review, and required legal/fiscal-sponsor review are pending.
+> **Draft — not in force; pending required review/adoption.**
+> Published for review only. Publication is not adoption and does not activate this policy. Uncost is pre-launch; this draft does not represent an incorporated nonprofit, an accepted fiscal sponsor, an active donation flow, a live community or Assembly, or an adopted policy. Independent AI review is advisory and does not replace founder, human, qualified professional, or future fiscal-sponsor review.
 
 # POL-009 — Open-Source Licensing Policy (P1)
 
-**Owner:** Founder. **Applies to:** all public repos, published content, datasets, brand assets, and inbound contributions.
+**Owner:** Founder. **Applies to:** repositories, published content, datasets, brand assets, and inbound contributions.
 
 ## Purpose
-Open by default, precise about what "open" means: code, content, data, brand, and personal stories carry different rights, and conflating them creates legal exposure and community disputes.
+
+Be precise about rights: code, educational content, data, brand, third-party material, and personal stories require different treatment.
 
 ## Rules
-1. **Code:** Apache-2.0 is the current repository default (permissive plus explicit patent grant). Any change requires founder and legal review plus a written repository rationale.
-2. **Documentation and educational content:** CC BY 4.0 is the current repository default, except where third-party material, personal stories, brand material, or partner restrictions apply.
-3. **Original datasets:** CC BY 4.0 or ODC-BY for datasets Uncost fully owns; third-party data always retains its source license, attribution, and usage limits — the SRC- register records the license of every source, and the dashboards must not republish data whose terms forbid it.
-4. **Brand:** the Uncost name, logo, wordmark, slogans, and campaign identity are **not** open-licensed; a brand-use page governs permitted use. Open tools, protected identity.
-5. **Personal stories and community contributions of a personal nature are never open by default**; they require specific, scoped, revocable consent (POL-002).
-6. **Inbound contributions:** DCO sign-off (or CLA if the sponsor requires) before substantial contributions; contributors confirm they hold the rights to what they submit; AI-assisted contributions disclosed where material and reviewed for license contamination.
-7. **Repo hygiene:** every public repo carries LICENSE, README, CONTRIBUTING.md, CODE_OF_CONDUCT.md (POL-003), and SECURITY.md with a private disclosure contact and a response-window commitment.
+
+1. **This repository:** the root `LICENSE` applies Apache-2.0 to source code and CC BY 4.0 to original documentation/educational content, with exclusions stated in `NOTICE.md`. These are applied repository-specific licences, not automatic defaults for every future asset.
+2. **Future code/content defaults:** Apache-2.0 for code and CC BY 4.0 for original educational content are proposed defaults pending IP/licensing and sponsor review before reuse elsewhere. Every repository/file states the licence actually applied; silence grants no licence.
+3. **Datasets:** CC BY 4.0 or ODC-BY are proposed for datasets Uncost fully owns, pending review. Third-party data retains its source licence, attribution, and restrictions; prohibited republication remains prohibited.
+4. **Brand:** the Uncost name, logo, wordmark, slogans, and campaign identity are not open-licensed by the repository licences. Separate brand-use terms are required.
+5. **Personal material:** stories and personal community contributions are never open by default and require specific, scoped, revocable consent.
+6. **Inbound contributions:** contributors confirm rights and disclose material AI assistance. DCO versus CLA remains an adoption/sponsor decision; neither is implied live by this draft.
+7. **Repository hygiene:** state actual licences; retain source/attribution/terms; provide README, contribution, conduct, and private security-reporting routes appropriate to the repository.
 
 ## Adoption checklist
-Confirm Apache-2.0 + CC BY 4.0 defaults at repo rebuild; create the four repo template files; publish the brand-use page; record every existing source's license in the SRC- register before dashboard launch.
+
+Qualified IP/licensing and sponsor review; decide future code/content/data defaults; DCO or CLA; brand-use terms; source-licence register; security response commitment.
+
+**Private records:** vulnerability reports, security details, personal consents, and restricted source terms.

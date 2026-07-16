@@ -1,2 +1,2 @@
 source_id,type,title,publisher,url,publication_date,last_checked,license,confidence,refresh_cadence,notes
-SRC-001,governance-control,Uncost final external Movement Plan and Roadmap,Uncost,,2026-07-15,2026-07-15,not-published-in-repo,confirmed,on-change,Controlling movement source; SHA-256 recorded in docs/CONTROL.md; not a cost-stat evidence source
+SRC-001,governance-control,Uncost final external Movement Plan and Roadmap,Uncost,,2026-07-15,2026-07-15,not-published-in-repo,confirmed,on-change,Controlling movement source; SHA-256 5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670; 24 pages; not a cost-stat evidence source

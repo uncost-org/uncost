@@ -3,28 +3,40 @@ title: "POL-005 — Conflict of Interest Policy (P0)"
 updated: 2026-07-16
 version: "1.3"
 status: draft
-review_status: independent-claude-review-pending
-privacy: public
+canonical_status: public-review-draft-not-in-force
+visibility: public
+adoption_status: not-adopted
+review_status: pending-required-review-and-adoption
+independent_claude_review: pending-post-publication
+source_cutoff: 2026-07-15
+source_sha256: 5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670
 ---
 
-> **DRAFT — NOT ADOPTED — NOT IN FORCE.** Independent Claude review, founder review, and required legal/fiscal-sponsor review are pending.
+> **Draft — not in force; pending required review/adoption.**
+> Published for review only. Publication is not adoption and does not activate this policy. Uncost is pre-launch; this draft does not represent an incorporated nonprofit, an accepted fiscal sponsor, an active donation flow, a live community or Assembly, or an adopted policy. Independent AI review is advisory and does not replace founder, human, qualified professional, or future fiscal-sponsor review.
 
 # POL-005 — Conflict of Interest Policy (P0)
 
-**Owner:** Founder; register maintained privately; sponsor sees it on request. **Applies to:** founder, advisers/stewards, moderators, sector and region leads, contractors, agents acting for Uncost, and anyone with spending, moderation, content, or governance authority.
+**Owner:** Founder; a private register and independent review path are required before adoption. **Applies to:** anyone with spending, content, moderation, governance, data, partnership, or hiring authority.
 
 ## Purpose
-Protect Uncost from hidden influence — and protect the founder from the appearance of it, which for a movement-first, founder-led organization is nearly as damaging as the real thing.
+
+Protect Uncost from hidden influence and from the appearance that private interests determine public-interest work.
 
 ## Policy statement
-Covered people disclose interests that could reasonably affect their Uncost judgment before participating in the affected decision. Disclosure is routine and safe; concealment is the violation.
+
+Covered people disclose interests that could reasonably affect their Uncost judgment before participating in an affected decision. Disclosure is routine; concealment is a breach.
 
 ## Rules
-1. **Disclose:** paid relationships with vendors, creators, sponsors, donors, or partners; equity, referral, affiliate, or compensation interests tied to decisions; close personal or family relationships with vendors or beneficiaries; donor attempts to influence research, governance, hiring, or content; creator deals that could bias recommendations.
-2. **Founder related-party rule (standing, explicit):** the founder operates separate commercial ventures. Any Uncost use of, payment to, or data exchange with a founder-connected entity requires a written basis (license or agreement), disclosure in the register, arm's-length terms with documented comparables, and — once a sponsor exists — sponsor sign-off. For any founder-connected data or services, any cost or source data used by Uncost requires a written license/permission basis, related-party disclosure, and strict separation of commercial and charitable datasets; the nonprofit must not subsidize or blur private commercial assets into charitable outputs.
-3. **Process:** disclose before the decision → record in the private register → a non-conflicted reviewer (sponsor, adviser, or designated steward) decides mitigation → the conflicted person recuses from the vote/approval where the interest is material → related-party transactions carry written rationale and comparable alternatives.
-4. **Gifts:** no covered person accepts personal gifts, travel, payments, or perks above a modest threshold (set at adoption; interim: US$50) from any vendor, donor, or partner without disclosure and approval.
-5. **Annual attestation:** every covered person confirms their disclosures annually and at role changes.
+
+1. **Disclose:** financial, equity, referral, affiliate, compensation, donor, vendor, partner, creator, close personal/family, or other interests tied to the decision.
+2. **Related parties:** any use of or payment to a founder- or leadership-connected entity, dataset, service, or asset requires a written permission, licence, or agreement; documented arm's-length comparables; charitable/commercial dataset and account separation; disclosure; independent review and recusal; and fiscal-sponsor approval where applicable.
+3. **Process:** disclose before the decision; record it privately; assign a non-conflicted reviewer; document mitigation/comparables; recuse the conflicted person where material; retain the decision trail.
+4. **Gifts:** the modest-gift threshold is set only at adoption with sponsor review. Until then, covered people accept no personal gift, travel, payment, or perk from a party seeking an Uncost decision without disclosure and independent written approval.
+5. **Attestation:** every covered person confirms disclosures at onboarding, role change, and the adopted recurring interval.
 
 ## Adoption checklist
-Create the disclosure form and register; set the gift threshold; run the founder's first full disclosure (including all commercial entities) before sponsor due diligence, so it is a strength in that conversation rather than a discovery.
+
+Independent reviewer; disclosure form/register; gift threshold; recusal and related-party procedure; first private attestation; sponsor/professional review.
+
+**Private records:** complete disclosures, related-party registers, diligence, investigations, personal background, and non-public transaction details.

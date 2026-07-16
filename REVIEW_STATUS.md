@@ -33,3 +33,7 @@ Claude should independently compare each policy and project document against:
 4. legal, privacy, safety, claims, licensing, governance, and feasibility risks.
 
 The reviewer should return file-specific findings without silently editing GitHub. Corrections remain founder-approved repository changes.
+
+## Pre-review policy conformance repair — 2026-07-16
+
+A late independent advisory source-conformance pass identified public-draft repairs before Claude review. The current v1.3 policy files remove private/internal placeholders, strengthen final-plan gates, and remain not adopted or in force. Independent Claude review must target the exact corrected public commit recorded in issue #1.

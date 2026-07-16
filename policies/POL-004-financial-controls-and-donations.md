@@ -3,33 +3,47 @@ title: "POL-004 — Financial Controls & Donation Policy (P0)"
 updated: 2026-07-16
 version: "1.3"
 status: draft
-review_status: independent-claude-review-pending
-privacy: public
+canonical_status: public-review-draft-not-in-force
+visibility: public
+adoption_status: not-adopted
+review_status: pending-required-review-and-adoption
+independent_claude_review: pending-post-publication
+source_cutoff: 2026-07-15
+source_sha256: 5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670
 ---
 
-> **DRAFT — NOT ADOPTED — NOT IN FORCE.** Independent Claude review, founder review, and required legal/fiscal-sponsor review are pending.
+> **Draft — not in force; pending required review/adoption.**
+> Published for review only. Publication is not adoption and does not activate this policy. Uncost is pre-launch; this draft does not represent an incorporated nonprofit, an accepted fiscal sponsor, an active donation flow, a live community or Assembly, or an adopted policy. Independent AI review is advisory and does not replace founder, human, qualified professional, or future fiscal-sponsor review.
 
 # POL-004 — Financial Controls & Donation Policy (P0)
 
-**Owner:** Founder as interim treasurer, superseded by sponsor finance controls at signing. **Applies to:** every dollar and every in-kind resource Uncost receives or spends.
+**Owner:** Founder before sponsorship; any confirmed fiscal sponsor's controls supersede conflicting draft detail. **Applies upon adoption to:** every financial or in-kind resource Uncost receives or spends.
 
 ## Purpose
-Protect donor trust and the movement's independence; make The Treasury's "every dollar has a receipt" promise operationally true; prevent misuse in a founder-led structure with no staff yet.
+
+Protect donor trust and movement independence, make every financial action traceable, and prevent misuse in a founder-led pre-launch structure.
 
 ## Policy statement
-Uncost funds are used only for mission-aligned, documented, approved purposes. Donations never purchase editorial control, favorable coverage, governance influence, data access, or preferential treatment — the same firewall that governs company partnerships (Plan, "Partnering with cost-reducing companies").
+
+No public donation flow opens before a fiscal sponsor or other lawful approved structure is confirmed. Funds and gifts may be used only for mission-aligned, documented, approved purposes. Support never buys editorial control, favorable coverage, ranking, inclusion, governance influence, data access, or preferential treatment.
 
 ## Rules
-1. **Acceptance:** accept donations that are legal, mission-aligned, and free of improper conditions. Escalate or refuse gifts that are illegal or sanctioned; anonymous above a steward-set threshold; conditioned on partisan activity, content outcomes, endorsement, vendor selection, data access, or governance influence; reputationally high-risk; or restricted in ways Uncost cannot honor.
-2. **Restricted gifts** require written terms, a named owner, a budget category, a reporting expectation, and an agreed exit/return rule if the restriction becomes impossible or mission-inconsistent.
-3. **Approval thresholds (interim placeholders; sponsor thresholds control at signing):** up to $250 — founder or operations lead; $251–$1,000 — two approvals, one being the founder; over $1,000 — founder approval plus written rationale retained; recurring commitments — reviewed before acceptance regardless of size; related-party spend — POL-005 review and recusal required at any amount.
-4. **The single-founder problem, named honestly:** with one person, "dual control" is aspirational. Until an adviser or steward exists, the compensating controls are: the fiscal sponsor as second approver for material spend, a complete receipt-and-rationale trail for everything, monthly Treasury publication, and no cash handling. The founder may not approve their own reimbursements; those route to the sponsor.
-5. **Reimbursements:** receipt, business purpose, date, amount, and approver required; submitted within 30 days; no self-approval.
-6. **Banking:** segregated accounts under the sponsor's structure only; no cryptocurrency, tokens, or on-chain treasury of any kind (Plan: The Assembly and The Treasury use no crypto mechanics).
-7. **The Treasury (public record):** publish funds received, spending categories, project reserves, sponsor and platform fees, and regular updates — with privacy, security, payroll, donor, and vendor redactions where appropriate. Every expense keeps an internal receipt and approval trail even where public reporting is aggregated (Plan language). Publication cadence: monthly once donations open; quarterly summaries at minimum.
+
+1. **Acceptance:** accept only legal, mission-aligned support with clean terms. Escalate or refuse sanctioned, improperly conditioned, influence-seeking, reputationally unsafe, or unadministrable gifts.
+2. **Restricted gifts:** require written terms, named ownership, an approved category, reporting expectations, and an exit/return rule.
+3. **No equity:** Uncost does not take equity or investment positions in companies it studies or features. Any financial or in-kind relationship with such a company is disclosed with the relevant public work.
+4. **Thresholds:** approval, anonymous-gift, materiality, and recurring-commitment thresholds are TBD at adoption and must be reconciled with the confirmed sponsor's controls. No v1.2 placeholder amount is carried forward as an adopted rule. Related-party spend always requires POL-005 disclosure, independent review or recusal, and sponsor approval where applicable.
+5. **No self-approval:** the founder may not approve their own reimbursement or related-party payment. Before a sponsor/independent approver exists, such spending remains held.
+6. **Records:** every transaction retains purpose, date, amount/value basis, receipt or agreement, restriction, and approver. Reimbursement timing follows adopted sponsor controls.
+7. **Banking:** only segregated accounts under the confirmed lawful structure; no cash handling and no cryptocurrency, token, on-chain, wallet, or multisig treasury.
+8. **Public Treasury summaries:** once lawful flows open, publish safe aggregate funds, spending categories, reserves, and fees. Exact cadence and redactions are set at adoption with sponsor/privacy review.
 
 ## Escalation
-Any suspected misuse: freeze the relevant spend, notify the sponsor, document, and adjudicate before resuming.
+
+Freeze suspected misuse, preserve records, notify the responsible independent/sponsor owner when available, and adjudicate before resuming.
 
 ## Adoption checklist
-Do not open a public donation flow until sponsorship is confirmed. Confirm sponsor thresholds and receipting; choose the donation platform through the sponsor; set the anonymous-gift threshold; stand up the Treasury publication template; legal/sponsor review of rules 3–4.
+
+Confirmed sponsor/channel; approvers; thresholds; anonymous-gift rule; receipting; restricted-gift process; reporting cadence; POL-005/010 alignment; qualified legal/accounting/sponsor review.
+
+**Private records:** banking, receipts, donor/vendor/payroll detail, investigations, and security-sensitive controls.
