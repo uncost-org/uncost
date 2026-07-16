@@ -3,31 +3,43 @@ title: "POL-007 — Responsible AI Policy (P1)"
 updated: 2026-07-16
 version: "1.3"
 status: draft
-review_status: independent-claude-review-pending
-privacy: public
+canonical_status: public-review-draft-not-in-force
+visibility: public
+adoption_status: not-adopted
+review_status: pending-required-review-and-adoption
+independent_claude_review: pending-post-publication
+source_cutoff: 2026-07-15
+source_sha256: 5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670
 ---
 
-> **DRAFT — NOT ADOPTED — NOT IN FORCE.** Independent Claude review, founder review, and required legal/fiscal-sponsor review are pending.
+> **Draft — not in force; pending required review/adoption.**
+> Published for review only. Publication is not adoption and does not activate this policy. Uncost is pre-launch; this draft does not represent an incorporated nonprofit, an accepted fiscal sponsor, an active donation flow, a live community or Assembly, or an adopted policy. Independent AI review is advisory and does not replace founder, human, qualified professional, or future fiscal-sponsor review.
 
 # POL-007 — Responsible AI Policy (P1)
 
-**Owner:** Founder. **Applies to:** all AI use in Uncost content, dashboards, models, voiceover, research, agents, and operations.
+**Owner:** Founder. **Applies to:** AI use in Uncost research, drafting, content, dashboards, models, design, voice, agents, and operations.
 
 ## Purpose
-Uncost is an AI-forward movement making public claims about AI; its own AI use must be exemplary, transparent, and human-accountable — its credibility depends on practicing what it publishes.
+
+Make Uncost's AI use transparent, source-led, privacy-respecting, and human-accountable.
 
 ## Policy statement
-AI may research, draft, summarize, design, model, and operate; humans remain accountable for every public claim, every dollar, every safety decision, every personal-data action, and every enforcement action.
+
+AI may assist with research, drafting, summarisation, design, and modelling, and may perform only approved, logged, low-risk internal automation. Humans remain accountable for every public claim, publication, financial action, personal-data action, safety decision, enforcement action, and external commitment.
 
 ## Rules
-1. **Human review is mandatory before:** publishing any public content, statistic, dashboard figure, or sector claim; sending official email or social posts; generating synthetic voice or likeness; any action affecting donors, volunteers, minors, or vulnerable people; spending funds, changing permissions, or making legal commitments.
-2. **Receipts-first applies to AI output:** every factual public claim carries a source (SRC- ID), date, and confidence label; estimates, scenarios, and derived figures are labeled as such; inventing sources, statistics, quotes, endorsements, or lived-experience stories is prohibited and treated as a serious violation.
-3. **Disclosure:** disclose AI use where material to trust — generated imagery/video/voice, substantially AI-written reports, AI-built dashboards or models, and any automated agent interacting with the public identifies itself as automated.
-4. **Content guardrails for agents** (final-plan content guardrails): no partisan language; no investment or financial advice; no medical, legal, or child-safety claims; no privacy-invasive collection; no overpromising AI/robotics capability — task-specific language and uncertainty ranges only.
-5. **Data limits:** no private community, donor, or pilot data into third-party AI tools without approval, minimization, and adequate vendor terms (POL-002); no training or fine-tuning on community data without explicit consent.
-6. **Synthetic media:** no deceptive synthetic media, period; voice/likeness only with consent; clearly labeled where used (including founder voiceover if synthetic tools assist it).
-7. **Agent autonomy line:** agents may draft, research, and prepare; agents may not independently publish, post, spend, approve, moderate high-stakes cases, contact vulnerable people, or mutate public systems. Publishing credentials stay under human control. Any future delegation requires a separate, narrow, revocable, logged founder approval and does not follow from this draft.
-8. **Incidents:** an AI-caused public error triggers correction-with-changelog on the affected surface, a register entry, and a review of the failing gate.
+
+1. **Human review:** mandatory before public content/statistics, official messages, synthetic media, actions affecting donors/volunteers/vulnerable people, spending, permission changes, enforcement, or legal/external commitments.
+2. **Receipts first:** factual public claims carry source ID, date, and confidence; estimates/scenarios/derived values are labeled; fabricated sources, statistics, quotes, endorsements, or lived-experience stories are prohibited.
+3. **Disclosure:** disclose material AI use, including generated media, substantially AI-produced reports, models, dashboards, and any approved public-facing automation.
+4. **Guardrails:** no partisan output; no financial, medical, legal, or child-safety advice; no invasive collection; no overclaiming AI/robotics capability.
+5. **Data:** no private community, donor, participant, or pilot data in third-party AI without approved need, minimization, consent/legal basis where required, security, and vendor terms; no training on community data without explicit consent.
+6. **Synthetic media:** no deception; voice or likeness requires consent and clear labeling.
+7. **Autonomy:** AI may draft, research, and prepare. It may not independently publish, post, spend, approve, moderate high-stakes cases, contact vulnerable people, or mutate public/external systems. Credentials remain human-controlled; any future delegation is narrow, logged, revocable, and separately approved.
+8. **Incidents:** correct public errors with a changelog, preserve an incident record, and repair the failed gate.
 
 ## Adoption checklist
-Approve the tool/vendor list; add the AI-disclosure note to the content workflow; build the pre-publication claim-check checklist; wire the SRC- register into the dashboard pipeline.
+
+Approved tool/vendor list; claim-check workflow; disclosure standard; security/privacy review; human approval roles; credential controls; incident process. This draft does not imply a public agent, production source pipeline, or approved vendor list exists.
+
+**Private records:** restricted-data prompts, vendor/security assessments, incidents, access controls, and credential detail.
