@@ -1,0 +1,47 @@
+{
+  "all86Approved": true,
+  "allDecodeRGBAFullAlphaRange": true,
+  "counts": {
+    "logos": 7,
+    "robots": 64,
+    "sectors": 15,
+    "total": 86
+  },
+  "deploymentWrites": 0,
+  "exactDuplicateGroups": [
+    [
+      "website/assets/brand/logos/logo-final-light.png",
+      "website/assets/brand/logos/logo-final-transparent.png"
+    ]
+  ],
+  "generatedAt": "2026-07-17T16:02:34.742754+00:00",
+  "githubWritesAtReceipt": 0,
+  "heldAssets": 0,
+  "mergeActions": 0,
+  "other85ByteIdentical": true,
+  "repairedSign": "8d3faad4da445684a2e459878b830579cce8ca5c565bcc0f32468f99bc3f2d76",
+  "signPanelRepairReceiptSha256": "7401df2e0a9d2445aac01d9fe61ab28c3e7588546b3eaa7b50201204d9e7f3c2",
+  "signPanelVisualReceiptSha256": "1a535ccef79d2711362ef824c52eb4c74ed62137e2ef990dbf0510e135f98c3b",
+  "sourceArchiveSha256": "db9ba296c41beae222c4c9dde102b69a4f43f097f7f0d774c989e7d38980a3cc",
+  "status": "PASS_ALL_86_FINAL_ASSETS_DETERMINISTIC_AND_VISUAL",
+  "visualBackgrounds": {
+    "coral": "#D64A1E",
+    "cream": "#FAF7F0",
+    "ink": "#0E0E0C"
+  },
+  "visualContactIndex": {
+    "path": "local QA evidence/FULL_SET_CONTACT_INDEX.json",
+    "sha256": "6479499423810a22878fb0a4a6fd4a2968419e6646db2d66c6de886ff6de6fcc",
+    "sheets": 7,
+    "uniqueAssetCoverage": 86
+  },
+  "visualQa": {
+    "actions01To40": "PASS",
+    "expressions01To18": "PASS",
+    "knownDefectRegression": "PASS",
+    "logos07": "PASS_VARIANT_SPECIFIC_CONTRAST",
+    "sectors15": "PASS_WITH_INTENDED_LIGHT_SURFACE_CAVEAT",
+    "signPanel": "PASS",
+    "turnarounds01To06": "PASS"
+  }
+}

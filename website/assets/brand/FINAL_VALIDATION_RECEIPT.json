@@ -1,0 +1,37 @@
+{
+  "assetCounts": {
+    "logos": 7,
+    "robots": 64,
+    "sectors": 15,
+    "total": 86
+  },
+  "csvSha256": "0f45059f2be2ce44fab65a05f4f380c1b1f30757a528b4472f95088158aa3a48",
+  "deploymentWrites": 0,
+  "duplicateGroups": [
+    [
+      "website/assets/brand/logos/logo-final-light.png",
+      "website/assets/brand/logos/logo-final-transparent.png"
+    ]
+  ],
+  "githubWrites": 0,
+  "heldAssets": 0,
+  "manifestSha256": "1a553c66418a84cab12cbe17975a56d4746a53b552d2979dde0038afff3414ed",
+  "mergeActions": 0,
+  "normalEqualsOptimized": true,
+  "normalExit": 0,
+  "optimizationSafe": true,
+  "optimizedExit": 0,
+  "other85ByteIdentical": true,
+  "publicationFilesBeforeValidationReceipt": 93,
+  "qaReceiptSha256": "d9b03ee613a62fd96827cf07fea19676bda3d9b87ac6142b4f48b6059d839803",
+  "reviewBranchWritesAtReceipt": 0,
+  "sha256SumsSha256": "ac673959e5e77994e464f41ffbdaf05f42f1f2b19925d3d1c2c6a33f930790d3",
+  "signRepair": {
+    "changedPixels": 553630,
+    "outsidePanelRgbaIdentical": true,
+    "sha256": "8d3faad4da445684a2e459878b830579cce8ca5c565bcc0f32468f99bc3f2d76"
+  },
+  "status": "PASS_FINAL_86_ASSET_CANDIDATE",
+  "validatorSha256": "49c6a19bbe4751601a8687f81d18131fc8cf2d083c446cabe550fb022a67da68",
+  "visualUniqueAssetCoverage": 86
+}
