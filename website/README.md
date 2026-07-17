@@ -15,6 +15,8 @@ Required top-level information architecture:
 
 Primary front-door language should use **“Living should not have a price tag.”** and **“Uncost the cost of living.”** The primary CTA is The Pledge. Donation UI remains absent until fiscal sponsorship is confirmed.
 
-## Design handoff pending
+## Design handoff status
 
-A completed Claude Design system was reported by the founder, but its export is not present in the repository build inputs. Before implementation, obtain a source bundle or shareable artifact containing the design canvas/source, design-system/tokens, component states, assets and fonts/licences, responsive layouts, and interaction notes. Preserve it as design input; reconcile all copy and data placeholders against current control before building.
+The founder-authorized final **image-asset set** now lives in [`website/assets/brand/`](assets/brand/): seven logo/mark variants, fifteen canonical sector illustrations, sixty-four robot illustrations, exact source/output hashes, alt text, rights boundaries, deterministic receipts and a closed hold ledger. All 86 images passed fresh alpha and visual QA on canonical cream, ink and coral backgrounds.
+
+This is repository intake only. It does not select runtime assets, rebuild or deploy the website, approve sponsor materials, or publish a production design. The remaining implementation handoff still requires design tokens/components, verified font binaries/licences, responsive layouts, interaction notes and copy/data-placeholder reconciliation against current control.
