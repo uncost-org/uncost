@@ -1,0 +1,99 @@
+/*
+ * Uncost civic-block tokens — UNP-46 review packet.
+ * Visual authority only. Public copy and claims remain controlled elsewhere.
+ */
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./fonts/Inter-latin-variable.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC,
+    U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
+    U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Roboto Condensed";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("./fonts/RobotoCondensed-latin-variable.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC,
+    U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
+    U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light;
+
+  /* Brand primitives. */
+  --cream: #faf7f0;
+  --cream-2: #f2ede1;
+  --white: #ffffff;
+  --ink: #0e0e0c;
+  --ink-2: #1a1a17;
+  --earth-ink: #3f2518;
+  --coral: #d64a1e;
+  --coral-deep: #b23a14;
+  --wheat: #e8b84a;
+  --clay: #c1472c;
+  --sage: #7fa86e;
+  --ink-blue: #2b5f7f;
+
+  /* Semantic color roles. Original coral is accent/display only. */
+  --surface: var(--cream);
+  --surface-alt: var(--cream-2);
+  --surface-inverse: var(--ink);
+  --text: var(--ink);
+  --text-soft: #2a2a26;
+  --text-muted: #5a574f;
+  --text-inverse: var(--cream);
+  --accent: var(--coral);
+  --action: var(--coral-deep);
+  --action-text: var(--cream);
+  --link: var(--coral-deep);
+  --link-hover: #8f2d0f;
+  --focus: var(--ink);
+  --rule: var(--ink);
+  --rule-soft: rgba(14, 14, 12, 0.24);
+
+  /* Type. */
+  --font-display: "Roboto Condensed", "Arial Narrow", sans-serif;
+  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --tracking-tight: -0.02em;
+  --tracking-eyebrow: 0.08em;
+  --leading-display: 0.94;
+  --leading-tight: 1.1;
+  --leading-body: 1.65;
+  --leading-meta: 1.4;
+  --size-hero: clamp(3rem, 8vw, 7.5rem);
+  --size-h1: clamp(2.5rem, 6vw, 4.5rem);
+  --size-h2: clamp(2rem, 4.5vw, 3.5rem);
+  --size-h3: clamp(1.5rem, 3vw, 2.25rem);
+  --size-body: 1.125rem;
+  --size-body-small: 1rem;
+  --size-meta: 0.875rem;
+  --measure: 62ch;
+
+  /* Spacing and layout. */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8rem;
+  --block-pad-y: clamp(2.5rem, 8vw, 7.5rem);
+  --block-pad-x: clamp(1.25rem, 5vw, 5rem);
+  --content-max: 90rem;
+  --rule-width: 0.125rem;
+  --rule-width-bold: 0.25rem;
+  --radius: 0;
+  --shadow: none;
+  --motion-fast: 80ms;
+}

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 from pathlib import Path
-import re, sys, json
+import re, sys, json, subprocess
 root=Path(__file__).resolve().parents[1]
 errors=[]; warnings=[]
 expected=['README.md','OPEN_LETTER.md','IMAGINE.md','PRINCIPLES.md','NEEDS.md','GOVERNANCE.md','ASSEMBLY.md','FUNDING.md','FAQ.md','CLAUDE.md','REVIEW_STATUS.md','CONTRIBUTING.md','CODE_OF_CONDUCT.md','SECURITY.md','docs/CONTROL.md','docs/MOVEMENT_PLAN.md','docs/ROADMAP.md','policies/README.md','projects/README.md','sectors/README.md','sources/register.csv','website/README.md']
@@ -81,6 +81,20 @@ for p in root.rglob('*.md'):
 road=(root/'docs/ROADMAP.md').read_text()
 for d in ['2026-07-15','2026-10-13','2027-01-15','2027-04-15','2027-07-15']:
     if d not in road: errors.append(f'ROADMAP_DATE_MISSING:{d}')
+
+design_script = root/'scripts/audit_design_handoff.py'
+if design_script.exists():
+    design_audit = subprocess.run(
+        [sys.executable, str(design_script)],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        check=False,
+    )
+    if design_audit.returncode != 0:
+        errors.append(f'DESIGN_HANDOFF_AUDIT_FAILED')
+        warnings.append(design_audit.stdout.strip())
+
 result={'ok':not errors,'errors':errors,'warnings':warnings,'counts':{'policies':len(policy),'projects':len(project),'sectors':len(sector)}}
 print(json.dumps(result,indent=2))
 sys.exit(0 if not errors else 1)

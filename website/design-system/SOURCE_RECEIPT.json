@@ -1,0 +1,214 @@
+{
+  "schema": "unp-46-design-handoff-receipt",
+  "version": "1.2.0",
+  "generated_at": "2026-07-17T18:26:55Z",
+  "issue": {
+    "id": "68cc2371-0764-4d85-b8b0-5eaf623346f8",
+    "identifier": "UNP-46",
+    "title": "Ingest final Claude Design handoff and publish safe review PR (no merge/deploy)",
+    "company_id": "17037973-1d3f-4514-bb16-6d51b30b443c"
+  },
+  "base": {
+    "repository": "uncost-org/uncost",
+    "branch": "main",
+    "base_commit": "4d22924095aad24707b6b08913ad63c78b58dcfc",
+    "base_tree": "b9645bc047c135ec497e7a268fd910b2b56f962f",
+    "asset_manifest_path": "website/assets/brand/ASSET_MANIFEST.json",
+    "asset_manifest_sha256": "1a553c66418a84cab12cbe17975a56d4746a53b552d2979dde0038afff3414ed"
+  },
+  "changed_file_coverage": {
+    "mode": "git-diff-output-inventory",
+    "base_commit": "4d22924095aad24707b6b08913ad63c78b58dcfc",
+    "review_branch": "paperclip/unp-46-design-handoff"
+  },
+  "archive": {
+    "filename": "Uncost Design System-handoff (1).zip",
+    "sha256": "fbcfe95732ba5df38b69d57977aa8f1f0b0097717c5b0e144cc1d9736fe5ff74",
+    "bytes": 377932786,
+    "member_count": 417,
+    "root_prefix": "uncost-design-system/"
+  },
+  "governance_inputs": {
+    "accepted_roadmap_issue": "UNP-39",
+    "accepted_content_map_issue": "UNP-41",
+    "design_audit": "Intake Audit 2026-07-17",
+    "source_status": "final handoff"
+  },
+  "source_transformations": [
+    {
+      "logical_source_path": "project/colors_and_type.css",
+      "source_sha256": "cffee798868671c67d7d86197e43444ea198e7850dc34ecf3246e82251d76b52",
+      "output_path": "website/design-system/tokens.css",
+      "output_sha256": "1d35d637fcffdb9c87bb13360ae2d58bfc857317e504973b419ffd28c61be560",
+      "mode": "transform"
+    },
+    {
+      "logical_source_path": "project/ui_kits/components.css",
+      "source_sha256": "6ae252e2f87b169d261af0dc1707fbe999faa81c4458be1f8c7c497a1d8bcf24",
+      "output_path": "website/design-system/components.css",
+      "output_sha256": "e6af8deed7a92aa7a46cc1a4cdbba42c9095baf19c18dc1ae8c831f5f0c42681",
+      "mode": "transform"
+    },
+    {
+      "logical_source_path": "project/assets/icons/icons.svg",
+      "source_sha256": "30b694a2d8fd28c22d8e391adfee14e4678199efba39bd5f9f0271b6703ed505",
+      "output_path": "website/design-system/icons/icons.svg",
+      "output_sha256": "41b80d70af163ea31045233ae312b0dd365f8915526db2e3e93b46754b9243bf",
+      "mode": "curate"
+    }
+  ],
+  "source_verification": {
+    "default_mode": "externally-verified-frozen-values",
+    "archive_env": "UNCOST_DESIGN_HANDOFF_ARCHIVE",
+    "extracted_env": "UNCOST_DESIGN_HANDOFF_EXTRACTED",
+    "extracted_root_policy": "exact-wrapper-or-frozen-prefix-stripped",
+    "external_review": "CARLBOT_UNP46_REVIEW_2"
+  },
+  "canonical_references": [
+    {
+      "kind": "logo",
+      "path": "website/assets/brand/logos/mark-only-final-light.png",
+      "sha256": "2f5ba137e19809ba07479dcb77f15f854f5d7740e2f4036d5e238b5fcc7d3a45",
+      "alt_text": "Uncost standalone barcode-to-wheat, homes and health-cross mark"
+    },
+    {
+      "kind": "robot",
+      "path": "website/assets/brand/robots/01_waving_transparent.png",
+      "sha256": "915e7023a243f36797fbefd08d78ad67739dea1cec95f91bc08b30260e4d31b1",
+      "alt_text": "Uncost robot waving"
+    },
+    {
+      "kind": "sector",
+      "path": "website/assets/brand/sectors/sector-energy.png",
+      "sha256": "c945e16e62d449398942a44a38444b42d7807edf430e53a5563fe33d4c9308da",
+      "alt_text": "Uncost sector illustration: Energy"
+    },
+    {
+      "kind": "sector",
+      "path": "website/assets/brand/sectors/sector-food.png",
+      "sha256": "aa77b2f44b65ee6ae130048617045154d0a659d4c3833694051c6ca8fb9e264d",
+      "alt_text": "Uncost sector illustration: Food"
+    },
+    {
+      "kind": "sector",
+      "path": "website/assets/brand/sectors/sector-shelter.png",
+      "sha256": "432da5fb1bb20ee730a6357084290c78c4c281e09111f47be81019293516dcae",
+      "alt_text": "Uncost sector illustration: Shelter"
+    }
+  ],
+  "fonts": {
+    "source_infra_commit": "389b770410cc0b7c21c85673bfa2077420fe7f65",
+    "source_family": {
+      "display": {
+        "family": "Roboto Condensed",
+        "source_url": "https://fonts.gstatic.com/s/robotocondensed/v31/ieVl2ZhZI2eCN5jzbjEETS9weq8-19K7DQk6YvM.woff2",
+        "sha256": "718ced55c5d8e207d6d14b1765fe6cf5886882834f45cc0ad23283cd210f9a96",
+        "license_file": "website/design-system/fonts/RobotoCondensed-OFL.txt",
+        "license_sha256": "0e4cc6ece88573545be2ed25835363662a6182ba4a4c1b5c8feda52add30e8a6"
+      },
+      "body": {
+        "family": "Inter",
+        "source_url": "https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw.woff2",
+        "sha256": "c940764593d0fe5d596be327ca7558855e018039fb78509aa21921fd3644c3e4",
+        "license_file": "website/design-system/fonts/Inter-OFL.txt",
+        "license_sha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57"
+      }
+    }
+  },
+  "outputs": [
+    {
+      "path": ".github/workflows/content-audit.yml",
+      "sha256": "615aee5ccda23f9bdabcd31111d2f97a74cb9b4dd457f4abd221f90a3ec3f40f",
+      "role": "full-history-ci-audit"
+    },
+    {
+      "path": "scripts/audit_design_handoff.py",
+      "sha256": "b5bfb82a452641030ec4fc07ccc4a7c5db2b1189f112c03ef8b098ccb6050635",
+      "role": "reproducible-checks"
+    },
+    {
+      "path": "scripts/audit_repository.py",
+      "sha256": "d12798d4d1433960230814287d86848495f1c4bc9b8854da3f24579b0051efa7",
+      "role": "repository-audit-entrypoint"
+    },
+    {
+      "path": "website/design-system/README.md",
+      "sha256": "331e14e479ece21252cfed7c522b973e40e797ec4cadf0f16e14ca1c0f8209b2",
+      "role": "packet-overview"
+    },
+    {
+      "path": "website/design-system/AUTHORITY.md",
+      "sha256": "852ee6661a0ba78585626e82972bcf375dddb2632f2c5fd2e7ec3a602651f590",
+      "role": "precedence-and-boundary"
+    },
+    {
+      "path": "website/design-system/EXCLUSIONS.md",
+      "sha256": "255be435c2341f10359a785ba1f940ee9d08fc9cd82fbd2d91c27aaee46dc4ca",
+      "role": "quarantine-ledger"
+    },
+    {
+      "path": "website/design-system/tokens.css",
+      "sha256": "1d35d637fcffdb9c87bb13360ae2d58bfc857317e504973b419ffd28c61be560",
+      "role": "semantic-tokens"
+    },
+    {
+      "path": "website/design-system/components.css",
+      "sha256": "e6af8deed7a92aa7a46cc1a4cdbba42c9095baf19c18dc1ae8c831f5f0c42681",
+      "role": "component-primitives"
+    },
+    {
+      "path": "website/design-system/icons/icons.svg",
+      "sha256": "41b80d70af163ea31045233ae312b0dd365f8915526db2e3e93b46754b9243bf",
+      "role": "iconography-subset"
+    },
+    {
+      "path": "website/design-system/reference/index.html",
+      "sha256": "2c554f7f50d03150ddde83ab058e43ef8f6a6d81fd54c7a88a9abe6cf3944e40",
+      "role": "safe-review-specimen"
+    },
+    {
+      "path": "website/design-system/fonts/README.md",
+      "sha256": "605b351077f2c7bd230e57cb615fc18f0b2aaf486e4aabd4fc16ec4c58b175bd",
+      "role": "font-source-and-license-notes"
+    },
+    {
+      "path": "website/design-system/fonts/Inter-OFL.txt",
+      "sha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57",
+      "role": "font-license"
+    },
+    {
+      "path": "website/design-system/fonts/RobotoCondensed-OFL.txt",
+      "sha256": "0e4cc6ece88573545be2ed25835363662a6182ba4a4c1b5c8feda52add30e8a6",
+      "role": "font-license"
+    },
+    {
+      "path": "website/design-system/fonts/Inter-latin-variable.woff2",
+      "sha256": "c940764593d0fe5d596be327ca7558855e018039fb78509aa21921fd3644c3e4",
+      "role": "design-font-body"
+    },
+    {
+      "path": "website/design-system/fonts/RobotoCondensed-latin-variable.woff2",
+      "sha256": "718ced55c5d8e207d6d14b1765fe6cf5886882834f45cc0ad23283cd210f9a96",
+      "role": "design-font-display"
+    },
+    {
+      "path": "website/design-system/SOURCE_RECEIPT.json",
+      "hash_mode": "external-post-commit-receipt",
+      "role": "receipt"
+    }
+  ],
+  "mandatory_exclusions": {
+    "total_members": 417,
+    "quarantined_classes": [
+      "_tmp",
+      "uploads",
+      "scrap",
+      "scraps",
+      "screenshots"
+    ]
+  },
+  "checks": {
+    "audit_script": "python3 scripts/audit_design_handoff.py",
+    "expected_exit": 0
+  }
+}
