@@ -1,0 +1,9 @@
+#!/bin/sh
+# Last local gate before commits become public history on the remote.
+# Enable with: sh scripts/setup-hooks.sh  (see CONTRIBUTING.md)
+set -e
+cd "$(git rev-parse --show-toplevel)"
+echo "pre-push: repository audit"
+python3 scripts/audit_repository.py
+echo "pre-push: website content audit"
+python3 scripts/audit_website.py

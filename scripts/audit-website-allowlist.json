@@ -1,0 +1,135 @@
+[
+  {
+    "rule": "crypto-generic",
+    "path": "policies/POL-004-financial-controls-and-donations.md",
+    "line_sha256": "26fc517bcc84622d231e76276023df101f1975863c4ec206194577ca2b1dfafe",
+    "justification": "Founder-reviewed prohibition sentence: bans the retired mechanism; removing the vocabulary would weaken the ban itself",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "policies/POL-004-financial-controls-and-donations.md",
+    "line_sha256": "26fc517bcc84622d231e76276023df101f1975863c4ec206194577ca2b1dfafe",
+    "justification": "Founder-reviewed prohibition sentence: bans the retired mechanism; removing the vocabulary would weaken the ban itself",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-token",
+    "path": "policies/POL-004-financial-controls-and-donations.md",
+    "line_sha256": "26fc517bcc84622d231e76276023df101f1975863c4ec206194577ca2b1dfafe",
+    "justification": "Founder-reviewed prohibition sentence: bans the retired mechanism; removing the vocabulary would weaken the ban itself",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-wallet",
+    "path": "policies/POL-004-financial-controls-and-donations.md",
+    "line_sha256": "26fc517bcc84622d231e76276023df101f1975863c4ec206194577ca2b1dfafe",
+    "justification": "Founder-reviewed prohibition sentence: bans the retired mechanism; removing the vocabulary would weaken the ban itself",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-dao",
+    "path": "policies/POL-006-assembly-governance-and-voting.md",
+    "line_sha256": "21584283469e838b240e91e6ac22bc4b175565a29b0998c6c30c724d5ccb7503",
+    "justification": "Founder-reviewed prohibition sentence: bans the retired mechanism; removing the vocabulary would weaken the ban itself",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "policies/POL-006-assembly-governance-and-voting.md",
+    "line_sha256": "21584283469e838b240e91e6ac22bc4b175565a29b0998c6c30c724d5ccb7503",
+    "justification": "Founder-reviewed prohibition sentence: bans the retired mechanism; removing the vocabulary would weaken the ban itself",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-token",
+    "path": "policies/POL-006-assembly-governance-and-voting.md",
+    "line_sha256": "21584283469e838b240e91e6ac22bc4b175565a29b0998c6c30c724d5ccb7503",
+    "justification": "Founder-reviewed prohibition sentence: bans the retired mechanism; removing the vocabulary would weaken the ban itself",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "tax-deductibility-claim",
+    "path": "policies/POL-010-in-kind-gift-acceptance.md",
+    "line_sha256": "c8ee659b28954fbc5dbdf75c023557c817e5bacc6c898d7a72768dce1ad4e31d",
+    "justification": "Founder-reviewed disclaimer: states Uncost never claims automatic tax deductibility; the vocabulary is the disclaimer",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-dao",
+    "path": "policies/POLICY-PACK-v1.3.md",
+    "line_sha256": "21584283469e838b240e91e6ac22bc4b175565a29b0998c6c30c724d5ccb7503",
+    "justification": "Founder-reviewed prohibition sentence: bans the retired mechanism; removing the vocabulary would weaken the ban itself (verbatim mirror of POL-006 rule 7)",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "policies/POLICY-PACK-v1.3.md",
+    "line_sha256": "26fc517bcc84622d231e76276023df101f1975863c4ec206194577ca2b1dfafe",
+    "justification": "Founder-reviewed prohibition sentence: bans the retired mechanism; removing the vocabulary would weaken the ban itself (verbatim mirror of POL-004 rule 7)",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "policies/POLICY-PACK-v1.3.md",
+    "line_sha256": "21584283469e838b240e91e6ac22bc4b175565a29b0998c6c30c724d5ccb7503",
+    "justification": "Founder-reviewed prohibition sentence: bans the retired mechanism; removing the vocabulary would weaken the ban itself (verbatim mirror of POL-006 rule 7)",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "policies/POLICY-PACK-v1.3.md",
+    "line_sha256": "26fc517bcc84622d231e76276023df101f1975863c4ec206194577ca2b1dfafe",
+    "justification": "Founder-reviewed prohibition sentence: bans the retired mechanism; removing the vocabulary would weaken the ban itself (verbatim mirror of POL-004 rule 7)",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-token",
+    "path": "policies/POLICY-PACK-v1.3.md",
+    "line_sha256": "21584283469e838b240e91e6ac22bc4b175565a29b0998c6c30c724d5ccb7503",
+    "justification": "Founder-reviewed prohibition sentence: bans the retired mechanism; removing the vocabulary would weaken the ban itself (verbatim mirror of POL-006 rule 7)",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-token",
+    "path": "policies/POLICY-PACK-v1.3.md",
+    "line_sha256": "26fc517bcc84622d231e76276023df101f1975863c4ec206194577ca2b1dfafe",
+    "justification": "Founder-reviewed prohibition sentence: bans the retired mechanism; removing the vocabulary would weaken the ban itself (verbatim mirror of POL-004 rule 7)",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-wallet",
+    "path": "policies/POLICY-PACK-v1.3.md",
+    "line_sha256": "26fc517bcc84622d231e76276023df101f1975863c4ec206194577ca2b1dfafe",
+    "justification": "Founder-reviewed prohibition sentence: bans the retired mechanism; removing the vocabulary would weaken the ban itself (verbatim mirror of POL-004 rule 7)",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "tax-deductibility-claim",
+    "path": "policies/POLICY-PACK-v1.3.md",
+    "line_sha256": "c8ee659b28954fbc5dbdf75c023557c817e5bacc6c898d7a72768dce1ad4e31d",
+    "justification": "Founder-reviewed disclaimer: states Uncost never claims automatic tax deductibility; the vocabulary is the disclaimer (verbatim mirror of POL-010 rule 3)",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "sector-transit",
+    "path": "sectors/SEC-008-transportation.md",
+    "line_sha256": "59a494e6b32263bbfb2edd0f460d2e01ec7ef75a8f60d650967c03610c84b764",
+    "justification": "Transit appears as a sub-item of the canonical Transportation sector Includes list, not as a sector name",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-token",
+    "path": "website/README.md",
+    "line_sha256": "e11cfcde97d12e858d13ee74443bc2b9d91fb370bf90bc9746999136f41cb140",
+    "justification": "Design-token vocabulary: the line describes the design tokens/components handoff, not a crypto asset",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "figure-count",
+    "path": "website/assets/brand/README.md",
+    "line_sha256": "a5bb721b4e5a9cde55c8cd0fdc92de974e3196cc2d9fbfd37b1549bca4d3b350",
+    "justification": "Pixel count in a founder-authorized repair provenance record; receipt-backed by the SHA-256 lineage on the same line",
+    "added": "2026-07-19"
+  }
+]

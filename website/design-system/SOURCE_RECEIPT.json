@@ -118,7 +118,7 @@
   "outputs": [
     {
       "path": ".github/workflows/content-audit.yml",
-      "sha256": "615aee5ccda23f9bdabcd31111d2f97a74cb9b4dd457f4abd221f90a3ec3f40f",
+      "sha256": "b007ea9a64fdb2bfb51f1386bc5600a8d8a27f46a84c1c1feb0def712b4db265",
       "role": "full-history-ci-audit"
     },
     {
@@ -128,7 +128,7 @@
     },
     {
       "path": "scripts/audit_repository.py",
-      "sha256": "992cecbe52bd9952bc5a3265c020186dbf95ab6c3085575c29c39324a8e16f22",
+      "sha256": "f4e220fc48ae2f1a44a254c1c1d725ea53f189e5b14da80ebe3b4d57604cb553",
       "role": "repository-audit-entrypoint"
     },
     {
