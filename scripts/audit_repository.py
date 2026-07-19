@@ -69,8 +69,8 @@ for p in root.rglob('*'):
     rel=p.relative_to(root)
     if re.search(r'/Users/[A-Za-z0-9._-]+/',s): errors.append(f'LOCAL_PATH:{rel}')
     if rel not in {Path('.gitignore'),Path('scripts/audit_repository.py')} and re.search(r'(?i)(github_pat_|ghp_[A-Za-z0-9]{20,}|CLOUDFLARE_API_TOKEN|postgres(?:ql)?://[^\s]+:[^\s]+@|\.wrangler/)',s): errors.append(f'SECRET_OR_PRIVATE_MARKER:{rel}')
-    if rel != Path('scripts/audit_repository.py'):
-        for phrase in ['14 sectors','fourteen sectors','post-monetary','beyond money','#UncostTheWorld','Start with $1','DAO donation','Money is broken. Here']:
+    if rel not in {Path('scripts/audit_repository.py'),Path('scripts/audit_website.py')}:
+        for phrase in ['14 sectors','fourteen sectors','post-monetary','beyond money','#UncostTheWorld','Start with $1','DAO donation','Money is broken. Here','unprice.org']:
             if phrase.lower() in s.lower(): errors.append(f'STALE_PHRASE:{rel}:{phrase}')
 # Relative markdown links must resolve; ignore anchors and web/mail.
 link_re=re.compile(r'\[[^\]]*\]\(([^)]+)\)')

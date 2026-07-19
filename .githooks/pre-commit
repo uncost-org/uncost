@@ -1,0 +1,10 @@
+#!/bin/sh
+# Fail-closed content guardrails before anything enters public history.
+# Public git history is permanent; CI is the backstop, not the gate.
+# Enable with: sh scripts/setup-hooks.sh  (see CONTRIBUTING.md)
+set -e
+cd "$(git rev-parse --show-toplevel)"
+echo "pre-commit: repository audit"
+python3 scripts/audit_repository.py
+echo "pre-commit: website content audit"
+python3 scripts/audit_website.py
