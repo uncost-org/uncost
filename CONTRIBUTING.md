@@ -33,7 +33,7 @@ Public git history is permanent: prohibited or stale content pushed "temporarily
 
 ### Building the site scaffold
 
-The static site lives under `website/` (Eleventy, Node 22): `cd website && npm ci && npm run build` writes `website/dist/`, and `npm run audit:built` runs the content audit against the built HTML — CI does both on every pull request, so built output is audited before any deployment exists. Built-output findings are always fixed at their source.
+The static site lives under `website/` (Eleventy, Node 22): `cd website && npm ci && npm run build` writes `website/dist/`, and `npm run audit:built` runs the content audit against the built HTML — CI does both on every pull request, so built output is audited before any deployment exists. Built-output findings are always fixed at their source. Note: built-output coverage of allowlisted lines depends on the build not transforming text — enabling any typographic transform (smart quotes, dash conversion, entities) requires re-verifying every built-mode suppression in the same change (see the note in `scripts/audit_website.py`).
 
 ### Known review queue
 
