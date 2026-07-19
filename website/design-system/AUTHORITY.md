@@ -11,6 +11,8 @@ Use these sources in order. A lower item cannot override a higher one.
 5. This packet for visual tokens, layout behavior, and component appearance only.
 6. The raw Claude Design prototypes as historical design evidence only.
 
+The controlling source in item 1 is the final July-2026 Movement Plan and Roadmap, SHA-256 `a2b640217626a76e9a26f73a5744f8c59051c83351a72bc041150824ac5a3dcd` (27 pages), as pinned in `docs/CONTROL.md`; it supersedes the 2026-07-15 edition.
+
 If visual reference copy conflicts with control, control wins. If an image path, hash, or alt string conflicts with the asset manifest, the manifest wins. Stop and preserve unresolved conflicts rather than inventing a result.
 
 ## Accepted structural constraints represented here

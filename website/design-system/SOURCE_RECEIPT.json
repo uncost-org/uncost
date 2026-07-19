@@ -128,7 +128,7 @@
     },
     {
       "path": "scripts/audit_repository.py",
-      "sha256": "d12798d4d1433960230814287d86848495f1c4bc9b8854da3f24579b0051efa7",
+      "sha256": "992cecbe52bd9952bc5a3265c020186dbf95ab6c3085575c29c39324a8e16f22",
       "role": "repository-audit-entrypoint"
     },
     {
@@ -138,7 +138,7 @@
     },
     {
       "path": "website/design-system/AUTHORITY.md",
-      "sha256": "852ee6661a0ba78585626e82972bcf375dddb2632f2c5fd2e7ec3a602651f590",
+      "sha256": "f51e66bbdda892819094514ad4613458effb4506daea63d32920e09f2d97052c",
       "role": "precedence-and-boundary"
     },
     {
