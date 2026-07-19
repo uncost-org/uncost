@@ -10,6 +10,7 @@ review_status: pending-required-review-and-adoption
 independent_claude_review: pending-post-publication
 source_cutoff: 2026-07-15
 source_sha256: 5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670
+source_superseded_by_sha256: a2b640217626a76e9a26f73a5744f8c59051c83351a72bc041150824ac5a3dcd
 ---
 
 > **Draft — not in force; pending required review/adoption.**

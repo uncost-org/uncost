@@ -20,10 +20,14 @@ for p in project:
     if '- **Roadmap:**' not in s: errors.append(f'ROADMAP_FIELD_MISSING:{p.relative_to(root)}')
     if re.search(r'Plan Section [A-Z]|the plan\'s Section [A-Z]|v3\.2|founder operates from Vietnam|already designed into|faceless',s,re.I): errors.append(f'PRIVATE_OR_STALE_REMNANT:{p.relative_to(root)}')
 policy_banner='> **Draft — not in force; pending required review/adoption.**'
-source_hash='5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670'
+# Two-pin source model (records/changes/CHG-001): CONTROL.md and the register pin
+# the July-2026 final plan; v1.3 policy drafts stay stamped with the 2026-07-15
+# edition they were derived from until re-reviewed against the new edition.
+current_source_hash='a2b640217626a76e9a26f73a5744f8c59051c83351a72bc041150824ac5a3dcd'
+policy_derived_source_hash='5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670'
 for p in policy:
     s=p.read_text(encoding='utf-8')
-    required=['status: draft','canonical_status: public-review-draft-not-in-force','visibility: public','adoption_status: not-adopted','review_status: pending-required-review-and-adoption','independent_claude_review: pending-post-publication',f'source_sha256: {source_hash}',policy_banner]
+    required=['status: draft','canonical_status: public-review-draft-not-in-force','visibility: public','adoption_status: not-adopted','review_status: pending-required-review-and-adoption','independent_claude_review: pending-post-publication',f'source_sha256: {policy_derived_source_hash}',f'source_superseded_by_sha256: {current_source_hash}',policy_banner]
     for marker in required:
         if marker not in s: errors.append(f'POLICY_METADATA_MISSING:{p.relative_to(root)}:{marker}')
     for pattern in [r'\$250',r'\$1,000',r'interim: US\$50',r'operates internationally from day one',r'Pledge page commitments are binding',r'founder operates separate commercial ventures']:
@@ -41,7 +45,7 @@ for filename,markers in checks.items():
     for marker in markers:
         if marker.lower() not in s.lower(): errors.append(f'POLICY_CONTROL_MARKER_MISSING:{filename}:{marker}')
 master=(root/'policies/POLICY-PACK-v1.3.md').read_text(encoding='utf-8')
-for marker in ['canonical_status: public-review-draft-not-in-force','adoption_status: not-adopted','independent_claude_review: pending-post-publication',f'source_sha256: {source_hash}',policy_banner]:
+for marker in ['canonical_status: public-review-draft-not-in-force','adoption_status: not-adopted','independent_claude_review: pending-post-publication',f'source_sha256: {policy_derived_source_hash}',f'source_superseded_by_sha256: {current_source_hash}',policy_banner]:
     if marker not in master: errors.append(f'MASTER_METADATA_MISSING:{marker}')
 for p in policy:
     text=p.read_text(encoding='utf-8')
@@ -50,10 +54,11 @@ for p in policy:
     body=text[text.index('# '+heading.group(1)):].strip()
     if master.count(body)!=1: errors.append(f'MASTER_POLICY_BODY_MISMATCH:{p.name}:{master.count(body)}')
 index=(root/'policies/README.md').read_text(encoding='utf-8')
-for marker in [source_hash,policy_banner,'Publication does not satisfy any gate or authorize implementation.']:
+for marker in [policy_derived_source_hash,current_source_hash,policy_banner,'Publication does not satisfy any gate or authorize implementation.']:
     if marker not in index: errors.append(f'POLICY_INDEX_CONTROL_MISSING:{marker}')
-for source_file in [root/'docs/CONTROL.md',root/'sources/register.csv',root/'policies/POLICY-PACK-v1.3.md']:
-    if source_hash not in source_file.read_text(encoding='utf-8'): errors.append(f'SOURCE_HASH_MISSING:{source_file.relative_to(root)}')
+for source_file in [root/'docs/CONTROL.md',root/'sources/register.csv']:
+    if current_source_hash not in source_file.read_text(encoding='utf-8'): errors.append(f'SOURCE_HASH_MISSING:{source_file.relative_to(root)}')
+if policy_derived_source_hash not in master: errors.append('SOURCE_HASH_MISSING:policies/POLICY-PACK-v1.3.md')
 for p in root.rglob('*'):
     if not p.is_file() or '.git' in p.parts or p.suffix.lower() not in {'.md','.py','.yml','.yaml','.csv',''}: continue
     try:s=p.read_text(encoding='utf-8')

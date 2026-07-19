@@ -5,6 +5,8 @@
 
 These ten permanent policy IDs are public review drafts derived from the final external Movement Plan and Roadmap dated 2026-07-15 (SHA-256 `5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670`). v1.3 supersedes v1.2 **for current review only**; v1.2 and older private drafts remain provenance and are not public authority.
 
+The 2026-07-15 edition has since been superseded as controlling source by the final July-2026 Movement Plan and Roadmap (27 pages, SHA-256 `a2b640217626a76e9a26f73a5744f8c59051c83351a72bc041150824ac5a3dcd`) pinned in `docs/CONTROL.md`. These drafts keep their derivation stamp, carry `source_superseded_by_sha256` markers, and await re-review against the July-2026 edition (`records/changes/CHG-001-controlling-source-repin.md`).
+
 | ID | Policy | Status | Required next review |
 |---|---|---|---|
 | `POL-001` | [Political Activity Policy (P0)](POL-001-political-activity.md) | Draft; not adopted or in force | Pending independent Claude, founder, professional/sponsor review and adoption |
