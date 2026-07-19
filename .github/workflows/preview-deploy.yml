@@ -1,0 +1,74 @@
+name: preview-deploy
+on:
+  pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: preview-deploy-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+jobs:
+  preview:
+    # Same-repo branches only: fork PRs must never reach a job that can
+    # read the deploy token.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version-file: website/.nvmrc
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - name: Check deploy configuration
+        id: config
+        env:
+          HAS_TOKEN: ${{ secrets.CF_PAGES_TOKEN != '' }}
+          HAS_ACCOUNT: ${{ secrets.CF_ACCOUNT_ID != '' }}
+        run: |
+          if [ "$HAS_TOKEN" = "true" ] && [ "$HAS_ACCOUNT" = "true" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice::Preview deployment not configured — CF_PAGES_TOKEN and CF_ACCOUNT_ID secrets are absent. Building and auditing only."
+          fi
+      - run: npm ci
+        working-directory: website
+      - run: npm run build
+        working-directory: website
+      - name: Enforce preview noindex posture
+        run: |
+          printf 'User-agent: *\nDisallow: /\n' > website/dist/robots.txt
+          printf '/*\n  X-Robots-Tag: noindex, nofollow\n' > website/dist/_headers
+      - name: Verify noindex posture before deploy
+        run: |
+          set -e
+          grep -q 'Disallow: /' website/dist/robots.txt
+          grep -q 'X-Robots-Tag: noindex, nofollow' website/dist/_headers
+          echo "noindex posture verified"
+      - run: python3 scripts/audit_website.py
+      - run: python3 scripts/audit_website.py --built website/dist
+      - name: Deploy preview
+        if: steps.config.outputs.enabled == 'true'
+        id: deploy
+        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
+        env:
+          # Branch name reaches the shell as data, never as templated code.
+          HEAD_REF: ${{ github.head_ref }}
+        with:
+          apiToken: ${{ secrets.CF_PAGES_TOKEN }}
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          workingDirectory: website
+          command: pages deploy dist --project-name=uncost-site-preview --branch="$HEAD_REF"
+      - name: Report preview URL
+        if: steps.config.outputs.enabled == 'true'
+        env:
+          DEPLOY_URL: ${{ steps.deploy.outputs.deployment-url }}
+        run: |
+          {
+            echo "### Preview deployment"
+            echo ""
+            echo "Preview (noindex, robots-disallowed; Cloudflare Access must be enabled on the project): $DEPLOY_URL"
+          } >> "$GITHUB_STEP_SUMMARY"
