@@ -1,0 +1,30 @@
+[
+  {
+    "rule": "figure-percent",
+    "path": "projects/PRJ-001-human-essentials-dashboard.md",
+    "line_sha256": "3961a5ba256648a421eb568f8a60b34ed364b8d9d990ed2d55e5cf6bb915fdf7",
+    "note": "Founder disposition 2026-07-19: standing review queue \u2014 forward-looking internal target in a draft project brief; resolved when the brief gets its website content pass (cite or reword), not by exception",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "figure-percent",
+    "path": "projects/PRJ-002-cost-of-living-tracker.md",
+    "line_sha256": "55c4b45e443b18bd6241ccd7dea45771fe4524530c124e40a3bab45aff17b06c",
+    "note": "Founder disposition 2026-07-19: standing review queue \u2014 forward-looking internal target in a draft project brief; resolved when the brief gets its website content pass (cite or reword), not by exception",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "figure-percent",
+    "path": "projects/PRJ-002-cost-of-living-tracker.md",
+    "line_sha256": "c3526a43c77e5dabbd31a3cdbc40092a695a01931d4be16229f80d6cd278c8ce",
+    "note": "Founder disposition 2026-07-19: standing review queue \u2014 forward-looking internal target in a draft project brief; resolved when the brief gets its website content pass (cite or reword), not by exception",
+    "added": "2026-07-19"
+  },
+  {
+    "rule": "figure-percent",
+    "path": "projects/PRJ-007-basic-needs-planner.md",
+    "line_sha256": "1b71a5f8f3f35e90cdbe4a89ee2a8f34fb8e016f83389327ec74578a54344daf",
+    "note": "Founder disposition 2026-07-19: standing review queue \u2014 forward-looking internal target in a draft project brief; resolved when the brief gets its website content pass (cite or reword), not by exception",
+    "added": "2026-07-19"
+  }
+]

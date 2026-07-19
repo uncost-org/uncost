@@ -1,0 +1,15 @@
+---
+layout: layouts/base.njk
+title: "Policies"
+---
+<div class="block">
+<h1>Policies</h1>
+<p class="meta">Public review drafts; not adopted or in force. Publication is not adoption.</p>
+<ul>
+{% for policy in catalog.policies %}
+  <li><a href="/policies/{{ policy.slug }}/">{{ policy.display }} ({{ policy.id }})</a></li>
+{% endfor %}
+</ul>
+<p class="meta">[PLACEHOLDER] — the consolidated stage table for gated and not-yet-live surfaces renders here per the frozen contract.</p>
+<p class="meta">The consolidated policy pack is maintained in the public repository: <a href="https://github.com/uncost-org/uncost/blob/main/policies/POLICY-PACK-v1.3.md">Policy Pack v1.3</a>.</p>
+</div>

@@ -31,6 +31,14 @@ Public git history is permanent: prohibited or stale content pushed "temporarily
 2. `scripts/audit_website.py` scans `website/`, `sectors/`, `policies/`, and `projects/` (and, with `--built DIR`, built HTML output before deployment). Failure rules exit non-zero. Figure rules — dollar amounts, percentages, and large counts without a `SRC-###` citation on the same line or a `data-source` ancestor element — only warn, for human review.
 3. Every finding prints its rule id, file, line, and excerpt; in CI the same findings appear as pull-request annotations and in the job summary.
 
+### Building the site scaffold
+
+The static site lives under `website/` (Eleventy, Node 22): `cd website && npm ci && npm run build` writes `website/dist/`, and `npm run audit:built` runs the content audit against the built HTML — CI does both on every pull request, so built output is audited before any deployment exists. Built-output findings are always fixed at their source.
+
+### Known review queue
+
+A standing warning that the founder has dispositioned (kept visible on purpose until the source copy is fixed) is labelled via `scripts/audit-website-review-queue.json` — same keying as the allowlist, but it never suppresses: the finding still prints on every run, marked `QUEUE`, in its own job-summary section so it is not re-litigated as new. Record one with `python3 scripts/audit_website.py --queue-add RULE PATH LINE "disposition note"`. Editing the source line withdraws the label and the finding reverts to a plain warning.
+
 ### Exceptions
 
 A legitimate use of restricted vocabulary (for example, a policy sentence that prohibits the mechanism it names) is recorded in `scripts/audit-website-allowlist.json`, keyed by rule id, file, and the SHA-256 of the exact line — any edit to the line invalidates the exception.

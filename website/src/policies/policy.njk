@@ -1,0 +1,13 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: catalog.policies
+  size: 1
+  alias: policy
+permalink: "/policies/{{ policy.slug }}/"
+eleventyComputed:
+  title: "{{ policy.display | safe }} ({{ policy.id }})"
+---
+<div class="block">
+{{ policy.body | md | safe }}
+</div>

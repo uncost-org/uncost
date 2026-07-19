@@ -1,6 +1,6 @@
 # Website implementation status
 
-The website is not rebuilt or deployed from this repository yet.
+A routing scaffold (Eleventy, `website/src/`, placeholder templates only) builds locally and in CI, and its built output is content-audited on every pull request. Nothing is deployed: page design and copy arrive via the governed design handoff, form markup arrives via the UNP-57 page contract, and deployment remains separately gated.
 
 ## Content control
 

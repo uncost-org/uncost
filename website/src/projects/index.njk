@@ -1,0 +1,16 @@
+---
+layout: layouts/base.njk
+title: "The Projects"
+---
+<div class="block">
+<h1>The Projects</h1>
+<p class="meta">Public review drafts; no budget, build, pilot, or launch is approved.</p>
+<ul>
+{% for project in catalog.projects %}
+  <li><a href="/projects/{{ project.slug }}/">{{ project.display }}</a></li>
+{% endfor %}
+</ul>
+</div>
+<div class="block block--cream-2">
+{{ catalog.longerHorizon | md | safe }}
+</div>

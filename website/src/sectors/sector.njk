@@ -1,0 +1,14 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: catalog.sectors
+  size: 1
+  alias: sector
+permalink: "/sectors/{{ sector.slug }}/"
+eleventyComputed:
+  title: "{{ sector.name | safe }} · The Sectors"
+---
+<div class="block">
+<p class="meta">[PLACEHOLDER] — sector page presentation arrives with the governed design handoff. The dossier below is the reviewed public source.</p>
+{{ sector.body | md | safe }}
+</div>

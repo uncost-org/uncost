@@ -60,7 +60,7 @@ for source_file in [root/'docs/CONTROL.md',root/'sources/register.csv']:
     if current_source_hash not in source_file.read_text(encoding='utf-8'): errors.append(f'SOURCE_HASH_MISSING:{source_file.relative_to(root)}')
 if policy_derived_source_hash not in master: errors.append('SOURCE_HASH_MISSING:policies/POLICY-PACK-v1.3.md')
 for p in root.rglob('*'):
-    if not p.is_file() or '.git' in p.parts or p.suffix.lower() not in {'.md','.py','.yml','.yaml','.csv',''}: continue
+    if not p.is_file() or '.git' in p.parts or 'node_modules' in p.parts or 'dist' in p.parts or p.suffix.lower() not in {'.md','.py','.yml','.yaml','.csv',''}: continue
     try:s=p.read_text(encoding='utf-8')
     except UnicodeDecodeError: errors.append(f'NON_UTF8:{p.relative_to(root)}'); continue
     if s and not s.endswith('\n'): errors.append(f'NO_FINAL_NEWLINE:{p.relative_to(root)}')
@@ -75,6 +75,7 @@ for p in root.rglob('*'):
 # Relative markdown links must resolve; ignore anchors and web/mail.
 link_re=re.compile(r'\[[^\]]*\]\(([^)]+)\)')
 for p in root.rglob('*.md'):
+    if 'node_modules' in p.parts or 'dist' in p.parts: continue
     s=p.read_text(encoding='utf-8')
     for target in link_re.findall(s):
         t=target.split('#',1)[0]

@@ -34,6 +34,7 @@ from typing import Callable, Dict, List, Optional, Tuple
 
 ROOT = Path(__file__).resolve().parents[1]
 ALLOWLIST_PATH = ROOT / "scripts" / "audit-website-allowlist.json"
+QUEUE_PATH = ROOT / "scripts" / "audit-website-review-queue.json"
 REGISTER_PATH = ROOT / "sources" / "register.csv"
 
 SOURCE_SCOPE = ("website", "sectors", "policies", "projects")
@@ -91,7 +92,7 @@ HARD_ALL_RULES: Tuple[Rule, ...] = (
 # visible text, so code spans and fences are NOT exempt), and HTML text
 # nodes plus visible attribute values.
 HARD_PROSE_RULES: Tuple[Rule, ...] = (
-    ("crypto-token", re.compile(r"(?i)\btokens?\b"), False),
+    ("crypto-token", re.compile(r"(?i)\btokens?\b(?!\.css)"), False),
     ("crypto-wallet", re.compile(r"(?i)\bwallets?\b"), False),
     ("crypto-dao", re.compile(r"(?i)\bdao\b"), True),
     ("crypto-on-chain", re.compile(r"(?i)\bon[-\s]?chain\b"), False),
@@ -143,6 +144,50 @@ def line_is_cited(line: str, register_ids: set) -> bool:
     return any(mark.group(0) in register_ids for mark in CITATION_MARK.finditer(line))
 
 
+def normalize(text: str) -> str:
+    return re.sub(r"\s+", " ", clean(text)).strip()
+
+
+def load_queue() -> List[Dict[str, str]]:
+    if not QUEUE_PATH.exists():
+        return []
+    entries = json.loads(QUEUE_PATH.read_text(encoding="utf-8"))
+    if not isinstance(entries, list):
+        raise SystemExit("review queue must be a JSON list")
+    for entry in entries:
+        for field in ("rule", "path", "line_sha256", "note", "added"):
+            if not entry.get(field):
+                raise SystemExit(f"review-queue entry missing {field}: {entry}")
+    return entries
+
+
+def entry_source_texts(entries: List[Dict[str, str]]) -> List[Tuple[str, str]]:
+    """Resolve entries to (rule, normalized current text) of their source lines.
+
+    Used by built-output mode: a rendered fragment is covered by an entry only
+    while its text is still a substring of the reviewed source line, so any
+    edit to the source line withdraws the coverage. Entries whose line no
+    longer exists resolve to nothing (fail closed).
+    """
+    texts: List[Tuple[str, str]] = []
+    for entry in entries:
+        source = ROOT / entry["path"]
+        if not source.exists():
+            continue
+        for line in source.read_text(encoding="utf-8").splitlines():
+            if line_hash(line) == entry["line_sha256"]:
+                texts.append((entry["rule"], normalize(line)))
+                break
+    return texts
+
+
+def covered_by_source(rule: str, chunk: str, texts: List[Tuple[str, str]]) -> bool:
+    fragment = normalize(chunk)
+    if len(fragment) < 25:
+        return False
+    return any(rule == entry_rule and fragment in text for entry_rule, text in texts)
+
+
 class Finding:
     def __init__(self, tier: str, rule: str, path: str, line: int, excerpt: str):
         self.tier = tier
@@ -150,6 +195,7 @@ class Finding:
         self.path = path
         self.line = line
         self.excerpt = excerpt
+        self.note = ""
 
     def key(self, line_text: str) -> Tuple[str, str, str]:
         return (self.rule, self.path, line_hash(line_text))
@@ -317,6 +363,8 @@ def iter_source_files() -> List[Path]:
         if not base.is_dir():
             continue
         for path in sorted(base.rglob("*")):
+            if {"node_modules", "dist"} & set(path.parts):
+                continue
             if path.is_file() and path.suffix.lower() in SCANNED_SUFFIXES:
                 files.append(path)
     return files
@@ -366,15 +414,33 @@ def run_scan(built_dir: Optional[Path]) -> int:
                 scan_built_html(path, rel, findings, line_texts, register_ids)
 
     allowlist = load_allowlist()
+    queue = load_queue()
     allowed = {(e["rule"], e["path"], e["line_sha256"]) for e in allowlist}
+    queued_keys = {(e["rule"], e["path"], e["line_sha256"]) for e in queue}
+    queue_notes = {(e["rule"], e["path"], e["line_sha256"]): e["note"] for e in queue}
+    if built_dir is not None:
+        allowed_texts = entry_source_texts(allowlist)
+        queued_texts = entry_source_texts(queue)
     kept: List[Finding] = []
     suppressed: List[Finding] = []
+    queued: List[Finding] = []
     for finding in findings:
         text = line_texts.get((finding.path, finding.line), finding.excerpt)
-        if built_dir is None and finding.key(text) in allowed:
-            suppressed.append(finding)
+        if built_dir is None:
+            if finding.key(text) in allowed:
+                suppressed.append(finding)
+            elif finding.tier == "WARN" and finding.key(text) in queued_keys:
+                finding.note = queue_notes[finding.key(text)]
+                queued.append(finding)
+            else:
+                kept.append(finding)
         else:
-            kept.append(finding)
+            if covered_by_source(finding.rule, finding.excerpt, allowed_texts):
+                suppressed.append(finding)
+            elif finding.tier == "WARN" and covered_by_source(finding.rule, finding.excerpt, queued_texts):
+                queued.append(finding)
+            else:
+                kept.append(finding)
 
     fails = [f for f in kept if f.tier == "FAIL"]
     warns = [f for f in kept if f.tier == "WARN"]
@@ -387,21 +453,41 @@ def run_scan(built_dir: Optional[Path]) -> int:
                 f"::{kind} file={finding.path},line={finding.line},"
                 f"title=content-audit:{finding.rule}::{finding.excerpt}"
             )
+    for finding in queued:
+        print(f"QUEUE {finding.rule} {finding.path}:{finding.line} — {finding.excerpt}")
+        if annotate:
+            print(
+                f"::notice file={finding.path},line={finding.line},"
+                f"title=content-audit-review-queue:{finding.rule}::known review queue — {finding.excerpt}"
+            )
     summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
-    if summary_path and (fails or warns):
+    if summary_path and (fails or warns or queued):
         with open(summary_path, "a", encoding="utf-8") as handle:
-            handle.write("\n### Website content audit\n\n| Tier | Rule | Location | Excerpt |\n|---|---|---|---|\n")
-            for finding in fails + warns:
-                excerpt = finding.excerpt.replace("|", "\\|")
+            if fails or warns:
+                handle.write("\n### Website content audit — findings\n\n| Tier | Rule | Location | Excerpt |\n|---|---|---|---|\n")
+                for finding in fails + warns:
+                    excerpt = finding.excerpt.replace("|", "\\|")
+                    handle.write(
+                        f"| {finding.tier} | {finding.rule} | {finding.path}:{finding.line} | {excerpt} |\n"
+                    )
+            if queued:
                 handle.write(
-                    f"| {finding.tier} | {finding.rule} | {finding.path}:{finding.line} | {excerpt} |\n"
+                    "\n### Known review queue (standing, founder-dispositioned)\n\n"
+                    "These are not new findings: they stay visible until the source copy "
+                    "is fixed (cited or reworded), per the recorded disposition.\n\n"
+                    "| Rule | Location | Excerpt | Disposition |\n|---|---|---|---|\n"
                 )
+                for finding in queued:
+                    excerpt = finding.excerpt.replace("|", "\\|")
+                    note = (finding.note or "").replace("|", "\\|")[:160]
+                    handle.write(f"| {finding.rule} | {finding.path}:{finding.line} | {excerpt} | {note} |\n")
     print(
         json.dumps(
             {
                 "ok": not fails,
                 "fail_count": len(fails),
                 "warn_count": len(warns),
+                "queue_count": len(queued),
                 "suppressed_count": len(suppressed),
                 "mode": "built" if built_dir else "source",
             }
@@ -410,7 +496,16 @@ def run_scan(built_dir: Optional[Path]) -> int:
     return 1 if fails else 0
 
 
-def allowlist_add(rule: str, rel: str, line_number: int, justification: str) -> int:
+def _registry_add(
+    registry_path: Path,
+    loader: Callable[[], List[Dict[str, str]]],
+    text_field: str,
+    label: str,
+    rule: str,
+    rel: str,
+    line_number: int,
+    text_value: str,
+) -> int:
     path = ROOT / rel
     lines = path.read_text(encoding="utf-8").splitlines()
     if not 0 < line_number <= len(lines):
@@ -420,22 +515,36 @@ def allowlist_add(rule: str, rel: str, line_number: int, justification: str) -> 
     if len(duplicates) > 1:
         raise SystemExit(
             f"line {line_number} of {rel} is byte-identical to lines {duplicates}; "
-            "an exception would cover them all — make the lines distinct or record "
-            "a deliberate decision in the justification and re-run with a unique line"
+            "an entry would cover them all — make the lines distinct or record "
+            "a deliberate decision and re-run with a unique line"
         )
-    entries = load_allowlist()
+    entries = loader()
     entry = {
         "rule": rule,
         "path": rel,
         "line_sha256": line_hash(target),
-        "justification": justification,
+        text_field: text_value,
         "added": date.today().isoformat(),
     }
     entries.append(entry)
     entries.sort(key=lambda e: (e["path"], e["rule"], e["line_sha256"]))
-    ALLOWLIST_PATH.write_text(json.dumps(entries, indent=2) + "\n", encoding="utf-8")
-    print(f"added allowlist entry for {rule} at {rel}:{line_number}")
+    registry_path.write_text(json.dumps(entries, indent=2) + "\n", encoding="utf-8")
+    print(f"added {label} entry for {rule} at {rel}:{line_number}")
     return 0
+
+
+def allowlist_add(rule: str, rel: str, line_number: int, justification: str) -> int:
+    return _registry_add(
+        ALLOWLIST_PATH, load_allowlist, "justification", "allowlist",
+        rule, rel, line_number, justification,
+    )
+
+
+def queue_add(rule: str, rel: str, line_number: int, note: str) -> int:
+    return _registry_add(
+        QUEUE_PATH, load_queue, "note", "review-queue",
+        rule, rel, line_number, note,
+    )
 
 
 def selftest() -> int:
@@ -463,6 +572,7 @@ def selftest() -> int:
     expect(not hits(HARD_ALL_RULES, "governance review of the finance controls"), "plain governance/finance safe")
 
     expect("crypto-token" in hits(HARD_PROSE_RULES, "buy our token today"), "token fires in prose")
+    expect(not hits(HARD_PROSE_RULES, 'href="/design-system/tokens.css"'), "tokens.css stylesheet path is safe")
     expect("crypto-token" in hits(HARD_PROSE_RULES, "a `token` in inline code"), "token in code span fires")
     expect("crypto-token" in hits(HARD_PROSE_RULES, "a to​ken with zero-width"), "zero-width split fires")
     expect("crypto-dao" in hits(HARD_PROSE_RULES, "run by a DAO"), "DAO fires")
@@ -517,6 +627,21 @@ def selftest() -> int:
     dollar_warns = [f for f in findings if f.rule == "figure-dollar"]
     expect(len(dollar_warns) == 2, "void/empty data-source do not suppress; registered ancestor does")
 
+    texts = [("crypto-token", normalize("7. **Banking:** no cash handling and no cryptocurrency, token, or treasury of any kind."))]
+    expect(
+        covered_by_source("crypto-token", "no cash handling and no cryptocurrency, token, or treasury of any kind.", texts),
+        "built fragment covered by allowlisted source line",
+    )
+    expect(
+        not covered_by_source("crypto-wallet", "no cash handling and no cryptocurrency, token, or treasury of any kind.", texts),
+        "coverage is rule-scoped",
+    )
+    expect(not covered_by_source("crypto-token", "a token", texts), "short fragments are never covered")
+    expect(
+        not covered_by_source("crypto-token", "an edited sentence mentioning a token somewhere else entirely", texts),
+        "non-matching fragment is not covered",
+    )
+
     if failures:
         for failure in failures:
             print(f"SELFTEST FAIL: {failure}")
@@ -535,6 +660,12 @@ def main() -> int:
         metavar=("RULE", "PATH", "LINE", "JUSTIFICATION"),
         help="record a reviewed exception for RULE at PATH:LINE",
     )
+    parser.add_argument(
+        "--queue-add",
+        nargs=4,
+        metavar=("RULE", "PATH", "LINE", "NOTE"),
+        help="label a standing warning as the known review queue (stays visible, never fails)",
+    )
     args = parser.parse_args()
 
     if args.selftest:
@@ -542,6 +673,9 @@ def main() -> int:
     if args.allowlist_add:
         rule, rel, line_number, justification = args.allowlist_add
         return allowlist_add(rule, rel, int(line_number), justification)
+    if args.queue_add:
+        rule, rel, line_number, note = args.queue_add
+        return queue_add(rule, rel, int(line_number), note)
     built_dir = Path(args.built).resolve() if args.built else None
     if built_dir is not None and not built_dir.is_dir():
         raise SystemExit(f"built directory not found: {built_dir}")

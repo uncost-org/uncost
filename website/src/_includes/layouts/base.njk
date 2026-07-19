@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% if home %}Uncost — Living should not have a price tag.{% else %}{{ title }} · Uncost{% endif %}</title>
+{% if noindex %}<meta name="robots" content="noindex">
+{% endif %}<link rel="stylesheet" href="/design-system/tokens.css">
+<link rel="stylesheet" href="/design-system/components.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header">
+  <a href="/"><img src="/assets/brand/logos/logo-tight-light.png" alt="Uncost.org" height="40"></a>
+  <nav class="site-nav" aria-label="Primary">
+    <a href="/movement">The Movement</a>
+    <a href="/case">The Case</a>
+    <a href="/projects">The Projects</a>
+    <a href="/assembly">The Assembly</a>
+  </nav>
+  <nav class="site-nav" aria-label="Secondary">
+    <a href="/sectors">Sectors</a>
+    <a href="/news">News</a>
+    <a href="/roadmap">Roadmap</a>
+    <a href="/faq">FAQ</a>
+    <a href="/about">About</a>
+  </nav>
+  <a class="button" href="/pledge">Sign the Pledge</a>
+</header>
+<main id="main">
+{{ content | safe }}
+</main>
+<footer class="site-footer">
+  <div class="block block--ink">
+    <p>Get updates — [PLACEHOLDER: the email-updates capture ships with the UNP-57 page contract.] Sign-ups open soon.</p>
+    <p class="meta">Nonprofit and nonpartisan.</p>
+    <nav aria-label="Footer">
+      <a href="/privacy">Privacy</a>
+      <a href="/contact">Contact</a>
+      <a href="/news/feed.xml">RSS</a>
+    </nav>
+  </div>
+</footer>
+</body>
+</html>
