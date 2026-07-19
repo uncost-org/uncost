@@ -18,3 +18,13 @@ jobs:
       - run: python3 scripts/audit_repository.py
       - run: python3 scripts/audit_website.py --selftest
       - run: python3 scripts/audit_website.py
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: website/.nvmrc
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - run: npm ci
+        working-directory: website
+      - run: npm run build
+        working-directory: website
+      - run: python3 scripts/audit_website.py --built website/dist

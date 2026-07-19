@@ -1,0 +1,13 @@
+---
+layout: layouts/base.njk
+title: "The Sectors"
+---
+<div class="block">
+<h1>The Sectors</h1>
+<p class="meta">[PLACEHOLDER] — sector hub presentation arrives with the governed design handoff. Order is canonical and fixed.</p>
+<ol>
+{% for sector in catalog.sectors %}
+  <li><a href="/sectors/{{ sector.slug }}/">{{ sector.name }}</a> <span class="meta">{{ sector.status }}</span></li>
+{% endfor %}
+</ol>
+</div>

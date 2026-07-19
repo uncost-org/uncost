@@ -1,0 +1,17 @@
+{
+  "name": "uncost-website",
+  "private": true,
+  "description": "Static site scaffold for uncost.org. Placeholder templates only; design and copy arrive via the governed design handoff.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "eleventy",
+    "serve": "eleventy --serve",
+    "audit:built": "python3 ../scripts/audit_website.py --built dist"
+  },
+  "dependencies": {
+    "@11ty/eleventy": "^3.0.0",
+    "markdown-it": "^14.0.0"
+  }
+}

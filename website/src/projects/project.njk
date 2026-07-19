@@ -1,0 +1,13 @@
+---
+layout: layouts/base.njk
+pagination:
+  data: catalog.projects
+  size: 1
+  alias: project
+permalink: "/projects/{{ project.slug }}/"
+eleventyComputed:
+  title: "{{ project.display | safe }} · The Projects"
+---
+<div class="block">
+{{ project.body | md | safe }}
+</div>
