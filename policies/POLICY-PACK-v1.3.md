@@ -10,6 +10,7 @@ review_status: pending-required-review-and-adoption
 independent_claude_review: pending-post-publication
 source_cutoff: 2026-07-15
 source_sha256: 5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670
+source_superseded_by_sha256: a2b640217626a76e9a26f73a5744f8c59051c83351a72bc041150824ac5a3dcd
 ---
 # Uncost Policy Pack v1.3 — Public Review Draft
 
@@ -18,7 +19,8 @@ source_sha256: 5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670
 
 ## Authority and supersession
 
-- Controlling source: final external Movement Plan and Roadmap, 24 pages, dated 2026-07-15, SHA-256 `5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670`.
+- Derivation source: final external Movement Plan and Roadmap, 24 pages, dated 2026-07-15, SHA-256 `5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670`.
+- That edition is superseded as controlling source by the final July-2026 Movement Plan and Roadmap, 27 pages, SHA-256 `a2b640217626a76e9a26f73a5744f8c59051c83351a72bc041150824ac5a3dcd`, pinned in `docs/CONTROL.md`. Re-review of these drafts against the July-2026 edition is pending; the re-pin changes no policy text (`records/changes/CHG-001-controlling-source-repin.md`).
 - v1.3 supersedes v1.2 **for current review only**. It is not adopted and activates nothing.
 - Historical v0.1/v1.2/private split pages remain private provenance.
 - A merged repository file may still be draft, proposed, held, or professionally gated.

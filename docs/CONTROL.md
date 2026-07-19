@@ -1,13 +1,16 @@
 # Public source control and authority
 
-Updated: 2026-07-16
+Updated: 2026-07-19
 
 ## Controlling movement source
 
-- Logical source: **Uncost final external Movement Plan and Roadmap**
-- Source date / Day 1 anchor: **2026-07-15**
-- SHA-256: `5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670`
+- Logical source: **Uncost final external Movement Plan and Roadmap (July 2026 edition)**
+- Edition finality: declared final by the founder on **2026-07-18**
+- SHA-256: `a2b640217626a76e9a26f73a5744f8c59051c83351a72bc041150824ac5a3dcd`
+- Size: 27 pages, 37,576,547 bytes
+- Day 1 anchor: **2026-07-15** (unchanged; see the date rule below)
 - Authority: final controlling source for Uncost mission, positioning, sequencing, safeguards, and roadmap.
+- Supersedes: the 2026-07-15 edition, SHA-256 `5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670` (24 pages). Documents stamped with the superseded hash as `source_sha256` were derived from that edition; they keep the derivation stamp plus a `source_superseded_by_sha256` marker until re-reviewed against this edition. See `records/changes/CHG-001-controlling-source-repin.md`.
 - Publication boundary: the source PDF is not embedded in this repository. These documents are public derivatives; a separately designed public edition can be added after its own review.
 
 ## Merged canon baseline

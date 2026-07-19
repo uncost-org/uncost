@@ -461,6 +461,15 @@ def validate_changed_file_coverage(
             add_error(errors, "CHANGED_FILE_GIT_UNTRACKED", untracked.stderr.strip())
         else:
             changed_paths.update(line for line in untracked.stdout.splitlines() if line)
+    else:
+        # Outside the frozen handoff review branch this receipt inventories only
+        # the design-system packet, so coverage can only be enforced for packet
+        # paths; repository-wide changes are governed by audit_repository.py.
+        changed_paths = {
+            path
+            for path in changed_paths
+            if path.startswith("website/design-system/")
+        }
 
     for path in sorted(changed_paths - output_paths):
         add_error(errors, "CHANGED_FILE_NOT_IN_RECEIPT", path)
