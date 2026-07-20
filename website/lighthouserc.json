@@ -1,0 +1,30 @@
+{
+  "ci": {
+    "collect": {
+      "staticDistDir": "dist",
+      "url": [
+        "http://localhost/index.html",
+        "http://localhost/movement/index.html",
+        "http://localhost/sectors/index.html",
+        "http://localhost/sectors/food/index.html",
+        "http://localhost/policies/privacy-data-protection/index.html",
+        "http://localhost/projects/human-essentials-dashboard/index.html",
+        "http://localhost/pledge/index.html"
+      ],
+      "numberOfRuns": 1,
+      "settings": { "chromeFlags": "--no-sandbox --disable-setuid-sandbox" }
+    },
+    "assert": {
+      "assertions": {
+        "resource-summary:image:size": ["warn", { "maxNumericValue": 400000 }],
+        "total-byte-weight": ["warn", { "maxNumericValue": 1600000 }],
+        "categories:performance": ["warn", { "minScore": 0.9 }],
+        "categories:accessibility": ["warn", { "minScore": 0.9 }],
+        "categories:best-practices": ["warn", { "minScore": 0.9 }],
+        "categories:seo": ["warn", { "minScore": 0.9 }],
+        "unused-javascript": "off",
+        "uses-http2": "off"
+      }
+    }
+  }
+}

@@ -28,3 +28,8 @@ jobs:
       - run: npm run build
         working-directory: website
       - run: python3 scripts/audit_website.py --built website/dist
+      - name: HTML validity and heading order
+        run: npx html-validate "dist/**/*.html"
+        working-directory: website
+      - name: Internal links, anchors, and zero third-party requests
+        run: python3 scripts/audit_site_quality.py website/dist

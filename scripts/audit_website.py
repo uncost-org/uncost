@@ -374,7 +374,7 @@ def iter_source_files() -> List[Path]:
         if not base.is_dir():
             continue
         for path in sorted(base.rglob("*")):
-            if {"node_modules", "dist"} & set(path.parts):
+            if {"node_modules", "dist", ".lighthouseci"} & set(path.parts):
                 continue
             if path.is_file() and path.suffix.lower() in SCANNED_SUFFIXES:
                 files.append(path)

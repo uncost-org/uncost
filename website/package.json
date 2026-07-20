@@ -8,10 +8,18 @@
   "scripts": {
     "build": "eleventy",
     "serve": "eleventy --serve",
-    "audit:built": "python3 ../scripts/audit_website.py --built dist"
+    "audit:built": "python3 ../scripts/audit_website.py --built dist",
+    "report:a11y": "node scripts/a11y-report.cjs",
+    "report:lighthouse": "lhci autorun"
   },
   "dependencies": {
     "@11ty/eleventy": "^3.0.0",
+    "@11ty/eleventy-img": "^6.0.4",
     "markdown-it": "^14.0.0"
+  },
+  "devDependencies": {
+    "@lhci/cli": "^0.14.0",
+    "html-validate": "^9.7.1",
+    "pa11y": "^8.0.0"
   }
 }
