@@ -168,6 +168,17 @@ def entry_source_texts(entries: List[Dict[str, str]]) -> List[Tuple[str, str]]:
     while its text is still a substring of the reviewed source line, so any
     edit to the source line withdraws the coverage. Entries whose line no
     longer exists resolve to nothing (fail closed).
+
+    MAINTENANCE DEPENDENCY: this verbatim-substring match assumes the build
+    pipeline does not transform text between source and output. The site
+    build currently renders markdown with typographic transforms disabled
+    (no smart quotes, no dash conversion, no entity rewriting). If any text
+    transform is ever enabled, these fragments can silently stop matching
+    and the built-output audit will fail on content that is actually
+    reviewed and allowlisted. Whoever adds such a transform must re-verify
+    every built-mode suppression (the suppressed_count in built mode,
+    currently the rendered prohibition-sentence fragments) in the same
+    change.
     """
     texts: List[Tuple[str, str]] = []
     for entry in entries:
