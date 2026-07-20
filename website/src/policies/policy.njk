@@ -4,6 +4,7 @@ pagination:
   data: catalog.policies
   size: 1
   alias: policy
+  addAllPagesToCollections: true
 permalink: "/policies/{{ policy.slug }}/"
 eleventyComputed:
   title: "{{ policy.display | safe }} ({{ policy.id }})"

@@ -4,6 +4,7 @@ pagination:
   data: catalog.projects
   size: 1
   alias: project
+  addAllPagesToCollections: true
 permalink: "/projects/{{ project.slug }}/"
 eleventyComputed:
   title: "{{ project.display | safe }} · The Projects"

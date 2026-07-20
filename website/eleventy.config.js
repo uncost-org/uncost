@@ -9,6 +9,13 @@ module.exports = function (eleventyConfig) {
   const md = markdownIt({ html: false });
   eleventyConfig.addFilter("md", (content) => md.render(content || ""));
 
+  // A URL is sitemap-eligible only if it renders an HTML page (ends in "/"
+  // or ".html"); .xml/.txt/.json outputs are excluded.
+  eleventyConfig.addFilter("isIndexable", (url) => {
+    if (typeof url !== "string") return false;
+    return url.endsWith("/") || url.endsWith(".html");
+  });
+
   // Render a markdown document to be embedded UNDER an existing page <h1>:
   // every heading is demoted one level so the page keeps a single h1 and a
   // valid, unbroken heading order (enforced by html-validate). Used where a
@@ -27,6 +34,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "design-system/components.css": "design-system/components.css" });
   eleventyConfig.addPassthroughCopy({ "design-system/fonts": "design-system/fonts" });
   eleventyConfig.addPassthroughCopy({ "design-system/icons": "design-system/icons" });
+  eleventyConfig.addPassthroughCopy({ "src/_headers": "_headers" });
 
   // Brand image pipeline. Source PNGs under assets/brand/ remain the sole
   // canonical, manifest-pinned authority (website/assets/brand/ASSET_MANIFEST.json);
@@ -59,6 +67,19 @@ module.exports = function (eleventyConfig) {
     });
   }
   eleventyConfig.addNunjucksAsyncShortcode("image", image);
+
+  // Open Graph card image: a build-time 1200-wide PNG derivative of the
+  // approved brand mark, written to dist/img/og/. Brand artwork only — never
+  // a fabricated statistic. Not committed; regenerated every build.
+  eleventyConfig.on("eleventy.before", async () => {
+    await Image(path.join(BRAND_ROOT, "logos", "mark-only-final-light.png"), {
+      widths: [1200],
+      formats: ["png"],
+      outputDir: path.join(__dirname, "dist", "img", "og"),
+      urlPath: "/img/og/",
+      filenameFormat: (id, s, width, format) => `${path.parse(s).name}-${width}.${format}`,
+    });
+  });
 
   return {
     dir: { input: "src", output: "dist", includes: "_includes" },
