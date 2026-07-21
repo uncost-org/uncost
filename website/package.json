@@ -18,7 +18,7 @@
     "markdown-it": "^14.0.0"
   },
   "devDependencies": {
-    "@lhci/cli": "^0.14.0",
+    "@lhci/cli": "^0.15.1",
     "html-validate": "^9.7.1",
     "pa11y": "^8.0.0"
   }
