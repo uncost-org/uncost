@@ -40,8 +40,11 @@ jobs:
         working-directory: website
       - name: Enforce preview noindex posture
         run: |
+          # Previews disallow all crawling and add a noindex header, on top of
+          # the production security headers (CSP/HSTS/etc.) built into _headers
+          # — append the rule, do not replace the file.
           printf 'User-agent: *\nDisallow: /\n' > website/dist/robots.txt
-          printf '/*\n  X-Robots-Tag: noindex, nofollow\n' > website/dist/_headers
+          printf '\n/*\n  X-Robots-Tag: noindex, nofollow\n' >> website/dist/_headers
       - name: Verify noindex posture before deploy
         run: |
           set -e
