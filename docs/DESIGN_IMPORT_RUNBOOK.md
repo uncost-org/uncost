@@ -44,6 +44,89 @@ Do not push the raw export, or any intermediate cleaning state, to
    `website/design-system/AUTHORITY.md` and its receipt; page content becomes
    template and copy under `website/src/`.
 
+## Step 1a — conversion mechanics (Claude Design HTML → Eleventy)
+
+Added 2026-07-21 after inspecting the finished export (SHA-256
+`8962b207d54d6536bef89ff8a96d5fc8ecb96007c01071dbdafbf03933730441`, 52 site
+pages under `project/site/`). The earlier runbook covered cleaning thoroughly
+but under-specified the conversion; this records how standalone design HTML
+becomes the scaffold's Nunjucks-templates-plus-content-collections.
+
+**What the export is.** Plain semantic HTML per page, no framework, no
+`<script>`, on the "civic block" design system; copy is inline in the markup;
+each page links its own `site/tokens.css` + `site/components.css` +
+`site/site.css`. It carries **no plan-hash stamp** — copy fidelity is
+established against the re-pinned July source (`docs/CONTROL.md`, SHA-256
+`a2b640…`), never taken from the artifact. Where design copy diverges from the
+controlling source, the source wins.
+
+**Design-system CSS reconciliation — [FOUNDER CONFIRM before execution].** The
+export ships an evolved design-system CSS trio that overlaps but extends the
+repo's hash-pinned design-system: brand tokens (`--cream/--ink/--coral`) match,
+but it adds semantic tokens (`--fg-2`, `--fg-3`) and a `[data-theme="dark"]`
+theme the pinned system does not have. Two paths:
+
+- **Recommended — adopt-and-re-audit, as a separate PR first.** Treat the
+  finished export's design-system CSS as the current authority: bring it into
+  `website/design-system/`, re-run `scripts/audit_design_handoff.py` (contrast
+  matrix, no external URLs, self-hosted fonts), regenerate `SOURCE_RECEIPT.json`,
+  and update `AUTHORITY.md`. Keeps the pages faithful to the finished design and
+  preserves the audit guarantees. Landed **before** the content port so the
+  design-system change is reviewable separately from copy.
+- **Alternative — port onto the existing pinned design-system.** Keep the
+  earlier freeze; rewrite each page's token/class usage onto it and fill gaps.
+  More faithful to the UNP-46 freeze, but produces visual drift from the
+  finished design and more per-page work.
+- **Dark theme:** the pinned design-system is light-only (`color-scheme: light`).
+  Default is to drop the export's dark theme for launch (it needs its own
+  contrast QA); keep it only on explicit founder request.
+
+**HTML → Nunjucks mapping.** The shared chrome (`<head>`, header, nav, footer)
+extends the base layout at `website/src/_includes/layouts/base.njk`; each page's
+`<main>` becomes its page template. Reconcile nav/footer labels against the
+frozen route contract. Structure, classes, and layout live in templates; prose
+does not.
+
+**Per-string content extraction (constraint: content separate from
+presentation).** Every human-readable string is lifted out of the markup into a
+content file — markdown for prose-heavy pages, a data file
+(`*.11tydata.json` / `src/_data`) for short/structured strings — and replaced
+with a template variable. For the sector/policy/project detail pages, wire the
+templates to the **existing** repo markdown the scaffold already renders
+(`sectors/SEC-*.md`, `policies/POL-*.md`, `projects/PRJ-*.md`) so copy stays in
+content files. Map by the repo's canonical IDs, not the design's labels (the
+export mislabels `privacy` as POL-001; it is **POL-002**). Where a design
+template expects a field the dossier lacks, that field is `[CONTENT NEEDED]`.
+
+**Images.** Replace every `<img>`/inline asset reference with the `{% image %}`
+shortcode against `website/assets/brand/` manifest paths, alt text from the
+manifest. No committed derivatives.
+
+**Disavowal vocabulary.** The finished pages use DAO/token/crypto/on-chain only
+in disavowal sentences (`about`, `faq`, `treasury`, `privacy` — e.g. "there are
+no tokens, no on-chain voting"). Record an allowlist entry per line
+(`python3 scripts/audit_website.py --allowlist-add`) with a written
+justification, exactly as the policy prohibition sentences are handled.
+
+**No invention.** Anything the export cannot fill stays a visible
+`[CONTENT NEEDED]` marker — no filler. Known gaps in this export: the 4 project
+detail pages PRJ-004/005/006/007 (template + 3 instances shipped), the 9 policy
+detail pages beyond the `privacy` template instance, and the `500` page (fill
+from the scaffold's existing one).
+
+**`docs/CONTENT_INVENTORY.md` deliverable.** Maps every route to the exact
+file(s) holding its copy, with a word count and a one-line purpose, chunked by
+group (the four parts, then the fifteen sectors, then the trust cluster) so
+review proceeds group by group.
+
+**Port sequencing.**
+1. If adopt-and-re-audit: the design-system CSS update PR — reviewed, audited,
+   receipt-regenerated — lands first.
+2. Content port in staging: extract, wire, `[CONTENT NEEDED]` the gaps, allowlist
+   the disavowals, audit green twice.
+3. One audited commit to a public feature branch; open PR against `main`; branch
+   name to the founder at push.
+
 ## Step 2 — clean in the staging repository, never in public
 
 1. In `uncost-org/uncost-design-staging`, create a working branch.
@@ -57,11 +140,16 @@ Do not push the raw export, or any intermediate cleaning state, to
 3. Run the audit against the export **before the first commit**, and keep
    running it as you clean:
    ```sh
-   python3 scripts/audit_website.py          # source scan
+   python3 scripts/audit_website.py              # source scan (fail-closed terms)
    npm --prefix website ci && npm --prefix website run build
    python3 scripts/audit_website.py --built website/dist   # built-output scan
-   python3 scripts/audit_repository.py       # structure + hygiene + design receipt
+   python3 scripts/audit_site_quality.py website/dist       # links, anchors, zero third-party
+   npx --prefix website html-validate "website/dist/**/*.html"  # validity + heading order
+   python3 scripts/audit_repository.py           # structure + hygiene + design receipt
    ```
+   (`audit_site_quality.py` and `html-validate` are the blocking gates added in
+   PR-5; the non-blocking `quality-report` a11y/Lighthouse workflow also runs in
+   CI. All of the above must be green — see Step 3.)
    Fix every FAIL at its source. Do not add allowlist entries to silence real
    stale content — the allowlist is only for legitimate uses (for example a
    prohibition sentence that names the mechanism it bans), each with a written
