@@ -21,3 +21,8 @@
 - Re-pinned `docs/CONTROL.md` and `sources/register.csv` to the final July-2026 Movement Plan and Roadmap (27 pages, SHA-256 `a2b640217626a76e9a26f73a5744f8c59051c83351a72bc041150824ac5a3dcd`), declared final by the founder on 2026-07-18. The Day 1 anchor remains 2026-07-15.
 - Policy drafts keep their 2026-07-15 derivation stamp and gain explicit `source_superseded_by_sha256` markers; re-review against the July-2026 edition remains pending.
 - Recorded as `records/changes/CHG-001-controlling-source-repin.md`. No policy text, adoption status, or roadmap date changed.
+
+## 2026-07-21 — DEF-05 closed: durable design authority recorded
+
+- Recorded in `docs/CONTROL.md` that the 4-part order, the 15-sector order, and the six-class status vocabulary are durably authoritative in the repository (build-enforced in `website/src/_data/catalog.js`; hash-pinned in the design-system CSS), superseding the lost ephemeral `/tmp` overlay cited by earlier planning.
+- DEF-05 is a provenance record, not a publication blocker. No content, order, or status vocabulary changed.

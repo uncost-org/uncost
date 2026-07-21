@@ -26,6 +26,10 @@ Updated: 2026-07-19
 - Private internal planning remains private and non-controlling. It must not be copied into public files merely because it is useful context.
 - Historical repository and website material is provenance only. It is not a content source for this fresh repository unless revalidated explicitly.
 
+## Durable design authority (order and status vocabulary)
+
+The four-part order (The Movement, The Case, The Projects, The Assembly), the fixed 15-sector order, and the six-class honest status vocabulary are durably authoritative in this repository and require no external overlay file: the sector order is enforced at build time in `website/src/_data/catalog.js` (the build fails on any reorder), and the status vocabulary is the six `status--{prelaunch,draft,scaffold,planned,blocked,receipt}` classes fixed in the hash-pinned design-system CSS (`website/design-system/components.css`, pinned by `SOURCE_RECEIPT.json`). This supersedes the ephemeral `/tmp` copy/status/order overlay cited by earlier planning (defect DEF-05); that artifact is not durable and is not required — its content is reproducible from the repository. DEF-05 is a provenance record, not a publication blocker.
+
 ## Conflict rule
 
 When a subordinate statement conflicts with the controlling external plan, change or quarantine the subordinate statement. Do not rewrite the final external plan to fit older material.
