@@ -12,13 +12,13 @@ jobs:
       - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - run: python3 scripts/audit_repository.py
       - run: python3 scripts/audit_website.py --selftest
       - run: python3 scripts/audit_website.py
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version-file: website/.nvmrc
           cache: npm
