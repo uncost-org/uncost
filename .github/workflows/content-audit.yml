@@ -18,7 +18,7 @@ jobs:
       - run: python3 scripts/audit_repository.py
       - run: python3 scripts/audit_website.py --selftest
       - run: python3 scripts/audit_website.py
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version-file: website/.nvmrc
           cache: npm
