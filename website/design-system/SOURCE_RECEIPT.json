@@ -118,7 +118,7 @@
   "outputs": [
     {
       "path": ".github/workflows/content-audit.yml",
-      "sha256": "377a580334b64248772683d6de1f7fce158c2b0cc82b090df80761b88c9dbc02",
+      "sha256": "954638097599aadebb8d08f89275563db2222d646c4530a53eff49c92e72534b",
       "role": "full-history-ci-audit"
     },
     {
