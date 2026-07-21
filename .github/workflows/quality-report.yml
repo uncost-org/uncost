@@ -1,0 +1,31 @@
+name: quality-report
+# Non-blocking accessibility and performance reporting (WCAG 2.2 AA via pa11y,
+# Lighthouse budgets via lhci). Reports to the job summary; never a merge gate.
+# The blocking correctness gates (links, anchors, HTML validity, heading order,
+# zero third-party requests) live in the required content-audit workflow.
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: website/.nvmrc
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - run: npm ci
+        working-directory: website
+      - run: npm run build
+        working-directory: website
+      - name: Accessibility report (WCAG 2.2 AA)
+        continue-on-error: true
+        run: npm run report:a11y
+        working-directory: website
+      - name: Lighthouse budgets
+        continue-on-error: true
+        run: npm run report:lighthouse
+        working-directory: website
