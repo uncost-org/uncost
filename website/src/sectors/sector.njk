@@ -4,6 +4,7 @@ pagination:
   data: catalog.sectors
   size: 1
   alias: sector
+  addAllPagesToCollections: true
 permalink: "/sectors/{{ sector.slug }}/"
 eleventyComputed:
   title: "{{ sector.name | safe }} · The Sectors"
