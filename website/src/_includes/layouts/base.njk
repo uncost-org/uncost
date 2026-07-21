@@ -4,8 +4,26 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% if home %}Uncost — Living should not have a price tag.{% else %}{{ title }} · Uncost{% endif %}</title>
+{% set pageTitle = "Uncost — " + site.tagline if home else title + " · Uncost" %}
+{% set pageDesc = description or site.description %}
+{% set canonical = site.origin + (page.url | default("/")) %}
+<meta name="description" content="{{ pageDesc }}">
 {% if noindex %}<meta name="robots" content="noindex">
-{% endif %}<link rel="stylesheet" href="/design-system/tokens.css">
+{% else %}<link rel="canonical" href="{{ canonical }}">
+{% endif %}<meta property="og:type" content="website">
+<meta property="og:site_name" content="{{ site.name }}">
+<meta property="og:title" content="{{ pageTitle }}">
+<meta property="og:description" content="{{ pageDesc }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:image" content="{{ site.origin + site.ogImage }}">
+<meta property="og:image:alt" content="Uncost logo">
+<meta property="og:locale" content="{{ site.locale }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ pageTitle }}">
+<meta name="twitter:description" content="{{ pageDesc }}">
+<meta name="twitter:image" content="{{ site.origin + site.ogImage }}">
+<link rel="alternate" type="application/rss+xml" title="Uncost — News" href="{{ site.origin }}/news/feed.xml">
+<link rel="stylesheet" href="/design-system/tokens.css">
 <link rel="stylesheet" href="/design-system/components.css">
 </head>
 <body>
