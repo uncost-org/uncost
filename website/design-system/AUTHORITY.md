@@ -19,7 +19,7 @@ This packet's visual authority (item 5) moved from the **2026-07-16 UNP-46 inter
 
 Three constraints the repo already enforced were **re-applied** on the adopted CSS, because the finished export's design-system layer had regressed each (the audit catches them; they are documented in `docs/DESIGN_CONSTRAINTS.md`):
 
-- **Coral contrast rule.** Bright coral (`#D64A1E`) is for decoration and large-display only; normal-size text, links, and small pills use **deep coral (`#B23A14`) with cream** to meet WCAG 2.2 AA. Links, the `needs-refresh` and `focus` pills, and the coral CTA block were moved to deep coral (bright coral failed at 4.04–4.47).
+- **Coral contrast rule (corrected 2026-07-22).** Brand coral (`#D64A1E`) is fine as a **block / button / pill background** provided the text on it is **near-black `#0A0A0A` or darker** — that pair is **4.58**, which clears WCAG 2.2 AA. Do **not** put plain `--ink` `#0E0E0C` on coral (that is 4.47, a 0.03 miss) and do **not** put cream/white on brand coral (4.04). **Deep coral (`#B23A14`) is required only where coral is used AS TEXT**: bright coral as text on cream is 4.04, a genuine miss no token nudge fixes, so links and the `.refno` chip use deep coral; nav/menu link hovers use deep coral; footer link hovers on ink use **wheat** (coral-as-text fails on ink too, at 4.47). Bright coral also stays fine for decoration (borders, dots, hatches) and large-display numbers (≥ WCAG large-text size, 3.0 threshold). Concretely: the CTA block, the primary and header CTA buttons, the pledge bar, and the `needs-refresh` + `focus` pills all use brand coral with `#0A0A0A` (routed through the `--fg-on-spark` token). *This corrects an earlier, broader rule that moved every coral surface to deep coral + cream. That was an overcorrection: on those backgrounds the failure was a 0.03 rounding miss against 4.5, fixable by darkening the text, not by abandoning the brand colour. The prior rule is preserved in git history.*
 - **No `vote` or `dollar` glyph** in the icon set (content-safety omission, per `EXCLUSIONS.md`). The export re-introduced both; they were stripped.
 - **Light theme only.** The export's attribute-only dark theme was stripped (recoverable from the export archive).
 
@@ -49,7 +49,7 @@ If visual reference copy conflicts with control, control wins. If an image path,
 
 ## Deliberate deviations from the prototype
 
-- Normal-size actions use deep coral with cream text to meet contrast; the original coral is limited to decoration and large display use.
+- Coral action surfaces (CTA block, buttons, pledge bar, focus/needs-refresh pills) keep brand coral `#D64A1E` as the background with near-black `#0A0A0A` text (4.58, AA). Deep coral `#B23A14` is used only where coral appears as text (links, `.refno`, nav hovers); bright coral otherwise stays for decoration and large-display numbers.
 - The continuously moving carousel, demo counters, illustrative dollar figures, and unsupported sector claims are absent.
 - `live`, `funded`, `approved`, and similar status variants are not implemented.
 - Prototype React/Babel CDN execution and external font runtime requests are absent.

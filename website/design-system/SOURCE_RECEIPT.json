@@ -1,7 +1,7 @@
 {
   "schema": "unp-46-design-handoff-receipt",
   "version": "1.2.0",
-  "generated_at": "2026-07-22T14:00:00+07:00",
+  "generated_at": "2026-07-22T23:12:56+07:00",
   "issue": {
     "id": "68cc2371-0764-4d85-b8b0-5eaf623346f8",
     "identifier": "UNP-46",
@@ -39,14 +39,14 @@
       "logical_source_path": "project/colors_and_type.css",
       "source_sha256": "bc335c5e3c5e5430a9bd869689247344339d6d07d94ec411f529606a3ca351a5",
       "output_path": "website/design-system/tokens.css",
-      "output_sha256": "ebf9eab17b9cdf2ddb01e9765f63f494241347e1c02a4ed5b8694798259596dc",
+      "output_sha256": "3a151bdfdd4886a6e6d662d2795d99665d4711eaaa3a50fd51d17df2dbf49bf9",
       "mode": "transform"
     },
     {
       "logical_source_path": "project/ui_kits/components.css",
       "source_sha256": "6ae252e2f87b169d261af0dc1707fbe999faa81c4458be1f8c7c497a1d8bcf24",
       "output_path": "website/design-system/components.css",
-      "output_sha256": "c8c4006ad81df2f963f9fa24f6b9a07b737e4b40365684cb7c2f6ff4bef6b4a4",
+      "output_sha256": "d2a296f1ef4933ce18e2ef84da5d4084b094ca71b5d9c9c26ac83c488389ba6d",
       "mode": "transform"
     },
     {
@@ -138,7 +138,7 @@
     },
     {
       "path": "website/design-system/AUTHORITY.md",
-      "sha256": "fbfddf01334b8ce83948ca4b3cf09bec544045cbcad87d6ee0c7b09bca3c4eae",
+      "sha256": "5391196377584cb536d510655a0f58873c231ebc3fa0cfcf66b6949b8ee2a519",
       "role": "precedence-and-boundary"
     },
     {
@@ -148,12 +148,12 @@
     },
     {
       "path": "website/design-system/tokens.css",
-      "sha256": "ebf9eab17b9cdf2ddb01e9765f63f494241347e1c02a4ed5b8694798259596dc",
+      "sha256": "3a151bdfdd4886a6e6d662d2795d99665d4711eaaa3a50fd51d17df2dbf49bf9",
       "role": "semantic-tokens"
     },
     {
       "path": "website/design-system/components.css",
-      "sha256": "c8c4006ad81df2f963f9fa24f6b9a07b737e4b40365684cb7c2f6ff4bef6b4a4",
+      "sha256": "d2a296f1ef4933ce18e2ef84da5d4084b094ca71b5d9c9c26ac83c488389ba6d",
       "role": "component-primitives"
     },
     {
@@ -163,7 +163,7 @@
     },
     {
       "path": "website/design-system/reference/index.html",
-      "sha256": "a11193cb1ff271526bee0506a561a6020a95b3c34c80db3c529f1b818dcc3527",
+      "sha256": "d5e80cb0fe1dfe4664bf7b5681954eca7ad696b355d7f09bceccc047c200d719",
       "role": "safe-review-specimen"
     },
     {

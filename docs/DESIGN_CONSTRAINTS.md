@@ -15,13 +15,24 @@ that is called out.
 
 ## Colour and contrast
 
-1. **Bright coral (`#D64A1E`) is for decoration and large display only.** Normal-size
-   text, links, and small pills must use **deep coral (`#B23A14`) with cream** to
-   meet contrast. Bright coral on cream is only 4.04, and ink-on-bright-coral is
-   4.47 — both below AA.
+1. **Brand coral (`#D64A1E`) is fine as a BACKGROUND if the text on it is `#0A0A0A`
+   or darker; deep coral (`#B23A14`) is required only where coral is used AS TEXT.**
+   - **As a background** (CTA blocks, buttons, pills, the pledge bar): use brand coral
+     with near-black **`#0A0A0A`** text = **4.58**, which clears AA. Do **not** use plain
+     ink `#0E0E0C` on coral — that is **4.47** and fails by 0.03. Do **not** use
+     cream/white text on brand coral (**4.04**, fails).
+   - **As text** on cream (links, the `.refno` reference chip): brand coral is **4.04**
+     and fails — use **deep coral `#B23A14`** (5.59). As text on ink, coral also fails
+     (**4.47**) — use **wheat** for link hovers there.
+   - Bright coral stays fine for **decoration** (borders, dots, hatches) and
+     **large-display numbers** (≥ WCAG large-text size, 3.0 threshold).
    *Enforced:* `website/design-system/AUTHORITY.md` (human-readable rule) and the
    auto-discovery contrast check in `scripts/audit_design_handoff.py`
-   (`validate_contrast_matrix`).
+   (`validate_contrast_matrix`), which checks the **actual computed ratio** of every
+   text/background pair — so near-black-on-coral passes and cream-on-coral fails
+   automatically, with no coral-specific special case. *(Corrected 2026-07-22: the
+   earlier version banned coral as a background outright; the real failure was a 0.03
+   rounding miss fixable by darkening the text.)*
 2. **Every full-bleed block surface and every pill must meet WCAG 2.2 AA** — 4.5:1
    for text, 3.0:1 for focus rings / non-text UI. The audit auto-discovers every
    surface and pill in the CSS and checks each; there is no exemption list.

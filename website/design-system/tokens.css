@@ -57,7 +57,7 @@
   --fg-2:         #2A2A26;          /* secondary text */
   --fg-3:         #5A574F;          /* tertiary / meta */
   --fg-on-ink:    var(--cream);
-  --fg-on-spark:  var(--ink);       /* ink-on-coral is the canonical CTA */
+  --fg-on-spark:  #0A0A0A;          /* near-black on brand coral = 4.58, clears AA; the canonical ink-on-coral CTA. Plain --ink #0E0E0C is 4.47 and fails by 0.03. See AUTHORITY.md coral rule. */
 
   --link:         var(--coral-deep);  /* AA: bright coral is 4.04 on cream; coral-deep = 5.59 */
   --link-hover:   var(--coral-deep);
@@ -195,7 +195,7 @@ hr {
 .u-block--cream  { background: var(--cream); color: var(--ink); }
 .u-block--cream2 { background: var(--cream-2); color: var(--ink); }
 .u-block--ink    { background: var(--ink);   color: var(--cream); border-top-color: #EDEAE3; }
-.u-block--coral  { background: var(--coral-deep); color: var(--cream); } /* AA fix: bright coral + ink body = 4.47; coral-deep + cream = 5.59 */
+.u-block--coral  { background: var(--coral); color: var(--fg-on-spark); } /* brand coral + near-black #0A0A0A = 4.58 AA. Coral is fine as a BG with dark text; deep coral is only for coral-as-text (AUTHORITY.md). */
 .u-block--wheat  { background: var(--wheat); color: var(--ink); }
 .u-block--sage   { background: var(--sage);  color: var(--ink); }
 .u-block--inkblue{ background: var(--ink-blue); color: var(--cream); border-top-color: #EDEAE3; }
@@ -215,9 +215,9 @@ hr {
   cursor: pointer;
   transition: background-color 80ms linear, color 80ms linear;
 }
-.u-btn--primary { background: var(--coral-deep); color: var(--cream); } /* AA: was ink-on-coral 4.47 */
-.u-btn--primary:hover { background: var(--coral-deep); color: var(--cream); }
-.u-btn--primary:active { background: var(--coral-deep); }
+.u-btn--primary { background: var(--coral); color: var(--fg-on-spark); } /* brand coral + near-black = 4.58 AA (the export's canonical ink-on-coral CTA, nudged to clear AA) */
+.u-btn--primary:hover { background: var(--coral-deep); color: var(--cream); } /* press/hover shade: deep coral + cream = 5.59 */
+.u-btn--primary:active { background: var(--coral-deep); color: var(--cream); }
 .u-btn--ink     { background: var(--ink); color: var(--cream); }
 .u-btn--ink:hover { background: var(--cream); color: var(--ink); }
 .u-btn--ghost   { background: transparent; color: var(--ink); border-color: var(--ink); }
