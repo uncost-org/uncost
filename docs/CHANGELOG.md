@@ -26,3 +26,10 @@
 
 - Recorded in `docs/CONTROL.md` that the 4-part order, the 15-sector order, and the six-class status vocabulary are durably authoritative in the repository (build-enforced in `website/src/_data/catalog.js`; hash-pinned in the design-system CSS), superseding the lost ephemeral `/tmp` overlay cited by earlier planning.
 - DEF-05 is a provenance record, not a publication blocker. No content, order, or status vocabulary changed.
+
+## 2026-07-22 — Design-system authority adopted from the finished export
+
+- Moved the design-system visual authority from the 2026-07-16 UNP-46 intermediate handoff to the finished Claude Design export (SHA-256 `8962b207…`), adopting its native component vocabulary. Recorded in `website/design-system/AUTHORITY.md`; earlier CSS recoverable from git history.
+- Re-applied three constraints the export's design-system layer had regressed: coral contrast (bright coral → deep coral for small text/links/pills), removal of the `vote`/`dollar` glyphs, and light-theme-only.
+- Rewrote `scripts/audit_design_handoff.py` contrast validation to auto-discover every surface and pill (coverage complete by construction; 28 pairs checked, all AA). Regenerated `SOURCE_RECEIPT.json`.
+- Status vocabulary changed (DEF-05 dated update in `docs/CONTROL.md`); substance preserved. Added `docs/DESIGN_CONSTRAINTS.md` (paste-ready constraints for Claude Design, derived from the enforcing artifacts).

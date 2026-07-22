@@ -13,6 +13,20 @@ Use these sources in order. A lower item cannot override a higher one.
 
 The controlling source in item 1 is the final July-2026 Movement Plan and Roadmap, SHA-256 `a2b640217626a76e9a26f73a5744f8c59051c83351a72bc041150824ac5a3dcd` (27 pages), as pinned in `docs/CONTROL.md`; it supersedes the 2026-07-15 edition.
 
+## Design-system authority moved to the finished export (2026-07-22)
+
+This packet's visual authority (item 5) moved from the **2026-07-16 UNP-46 intermediate handoff** to the **finished Claude Design export, SHA-256 `8962b207d54d6536bef89ff8a96d5fc8ecb96007c01071dbdafbf03933730441`**. Reason: the UNP-46 handoff predated the finished pages — it was an intermediate intake, and the repo transformed its component vocabulary (`.u-block--` renamed to `.block--`, an accessibility layer added). The finished export contains all pages built on the export's native vocabulary (`.u-block`, `.blk`, `.rcpt-*`, `.status--*`), so the design-system now adopts that vocabulary directly rather than a rename that no page uses. The change was made through a reviewed, audited pull request; the earlier CSS remains recoverable from git history. See the source receipt (`SOURCE_RECEIPT.json`) for exact source hashes.
+
+Three constraints the repo already enforced were **re-applied** on the adopted CSS, because the finished export's design-system layer had regressed each (the audit catches them; they are documented in `docs/DESIGN_CONSTRAINTS.md`):
+
+- **Coral contrast rule.** Bright coral (`#D64A1E`) is for decoration and large-display only; normal-size text, links, and small pills use **deep coral (`#B23A14`) with cream** to meet WCAG 2.2 AA. Links, the `needs-refresh` and `focus` pills, and the coral CTA block were moved to deep coral (bright coral failed at 4.04–4.47).
+- **No `vote` or `dollar` glyph** in the icon set (content-safety omission, per `EXCLUSIONS.md`). The export re-introduced both; they were stripped.
+- **Light theme only.** The export's attribute-only dark theme was stripped (recoverable from the export archive).
+
+## Status vocabulary (changed with this adoption)
+
+The honest-status class set is now `status--{live, dev, planned, focus, next, dossier, future}` (adopted from the finished export), replacing the earlier `status--{prelaunch, draft, scaffold, planned, blocked, receipt}`. The substance is unchanged and preserved: every status renders honest text and no bare `Live`/`Funded`/`Approved`/`Operating` badge appears — for example `.status--live` renders **"Designed — opens at launch"**, never the word "Live." The content audit's badge ban is on rendered text, not class names. This is recorded as a contract-relevant change (UNP-50 rev 4) and in `docs/CONTROL.md` (DEF-05).
+
 If visual reference copy conflicts with control, control wins. If an image path, hash, or alt string conflicts with the asset manifest, the manifest wins. Stop and preserve unresolved conflicts rather than inventing a result.
 
 ## Accepted structural constraints represented here

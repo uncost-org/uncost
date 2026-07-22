@@ -28,36 +28,32 @@
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="site-header">
-  <a href="/">{% image "logos/logo-tight-light.png", "Uncost.org", "10rem", [160, 320], "eager" %}</a>
-  <nav class="site-nav" aria-label="Primary">
+<header class="site-hdr">
+  <a class="brand" href="/">{% image "logos/logo-tight-light.png", "Uncost.org", "10rem", [160, 320], "eager" %}</a>
+  <nav aria-label="Primary">
     <a href="/movement">The Movement</a>
     <a href="/case">The Case</a>
     <a href="/projects">The Projects</a>
     <a href="/assembly">The Assembly</a>
-  </nav>
-  <nav class="site-nav" aria-label="Secondary">
     <a href="/sectors">Sectors</a>
     <a href="/news">News</a>
     <a href="/roadmap">Roadmap</a>
     <a href="/faq">FAQ</a>
     <a href="/about">About</a>
   </nav>
-  <a class="button" href="/pledge">Sign the Pledge</a>
+  <a class="cta-btn" href="/pledge">Sign the Pledge</a>
 </header>
 <main id="main">
 {{ content | safe }}
 </main>
-<footer class="site-footer">
-  <div class="block block--ink">
-    <p>Get updates — [PLACEHOLDER: the email-updates capture ships with the UNP-57 page contract.] Sign-ups open soon.</p>
-    <p class="meta">Nonprofit and nonpartisan.</p>
-    <nav aria-label="Footer">
-      <a href="/privacy">Privacy</a>
-      <a href="/contact">Contact</a>
-      <a href="/news/feed.xml">RSS</a>
-    </nav>
-  </div>
+<footer class="site-foot">
+  <p>Get updates — [PLACEHOLDER: the email-updates capture ships with the UNP-57 page contract.] Sign-ups open soon.</p>
+  <p class="ft-note">Nonprofit and nonpartisan.</p>
+  <nav aria-label="Footer">
+    <a href="/privacy">Privacy</a>
+    <a href="/contact">Contact</a>
+    <a href="/news/feed.xml">RSS</a>
+  </nav>
 </footer>
 </body>
 </html>

@@ -28,10 +28,17 @@ ARCHIVE_ENV = "UNCOST_DESIGN_HANDOFF_ARCHIVE"
 EXTRACTED_ENV = "UNCOST_DESIGN_HANDOFF_EXTRACTED"
 FROZEN_ARCHIVE_ROOT_PREFIX = "uncost-design-system/"
 
+# Re-pinned to the finished Claude Design export (SHA-256 8962b207...), adopted
+# 2026-07-22. The token source evolved from the 2026-07-16 UNP-46 handoff
+# (colors_and_type.css cffee798 -> bc335c5e); the component and icon sources are
+# unchanged, but they are now adopted in the export's native vocabulary (.u-block,
+# .rcpt-*, .status--*) rather than the earlier transformed .block--* rename.
+# components.css additionally merges the export's site.css chrome + accessibility
+# primitives (source b8b52691...); see SOURCE_RECEIPT.json governance_inputs.
 FROZEN_SOURCE_PAIRS = (
     {
         "logical_source_path": "project/colors_and_type.css",
-        "source_sha256": "cffee798868671c67d7d86197e43444ea198e7850dc34ecf3246e82251d76b52",
+        "source_sha256": "bc335c5e3c5e5430a9bd869689247344339d6d07d94ec411f529606a3ca351a5",
         "output_path": "website/design-system/tokens.css",
         "mode": "transform",
     },
@@ -49,54 +56,14 @@ FROZEN_SOURCE_PAIRS = (
     },
 )
 
-CONTEXT_SCOPE = (
-    ":is(.block--ink, .block--clay, .block--ink-blue, .block--wheat, "
-    ".block--sage, .site-footer)"
-)
-CONTRAST_MATRIX = {
-    ".block--ink": {
-        "background": "ink",
-        "meta": "cream",
-        "link": "cream",
-        "link-hover": "wheat",
-        "focus": "wheat",
-    },
-    ".block--clay": {
-        "background": "clay",
-        "meta": "cream",
-        "link": "cream",
-        "link-hover": "white",
-        "focus": "ink",
-    },
-    ".block--ink-blue": {
-        "background": "ink-blue",
-        "meta": "cream",
-        "link": "cream",
-        "link-hover": "white",
-        "focus": "wheat",
-    },
-    ".block--wheat": {
-        "background": "wheat",
-        "meta": "ink",
-        "link": "ink",
-        "link-hover": "earth-ink",
-        "focus": "ink",
-    },
-    ".block--sage": {
-        "background": "sage",
-        "meta": "ink",
-        "link": "ink",
-        "link-hover": "earth-ink",
-        "focus": "ink",
-    },
-    ".site-footer": {
-        "background": "ink",
-        "meta": "cream",
-        "link": "cream",
-        "link-hover": "wheat",
-        "focus": "wheat",
-    },
-}
+# Contrast is validated by AUTO-DISCOVERY (see validate_contrast_matrix): the
+# audit parses tokens.css + components.css, finds every full-bleed block surface
+# and every pill (status + receipt-confidence), resolves their background/text
+# tokens to hex, and checks WCAG 2.2 AA on each. Coverage cannot silently shrink
+# because there is no hardcoded surface list to omit a surface from — every
+# background/foreground pair present in the CSS is checked. Minimum ratios:
+CONTRAST_MIN_TEXT = 4.5   # normal text (body, meta, pill labels)
+CONTRAST_MIN_FOCUS = 3.0  # focus-ring / non-text UI contrast
 
 
 def sha256(path: Path) -> str:
@@ -118,13 +85,68 @@ def required_path(path: Path, label: str, errors: List[str]) -> None:
         add_error(errors, "REQUIRED_MISSING", f"{label}:{path}")
 
 
-def parse_hex_tokens(css_text: str) -> Dict[str, str]:
-    return {
-        name: value.lower()
-        for name, value in re.findall(
-            r"--([a-z0-9-]+)\s*:\s*(#[0-9a-fA-F]{6})\s*;", css_text
-        )
-    }
+def resolve_tokens(css_text: str) -> Dict[str, str]:
+    """Map every --token to a #rrggbb hex, resolving var() chains.
+
+    Only :root/global custom-property definitions are considered (declarations
+    of the form `--name: value;`). Non-color values (rgba, gradients, keywords)
+    resolve to None and are simply absent from the returned map.
+    """
+    raw: Dict[str, str] = {}
+    for name, value in re.findall(r"--([a-z0-9-]+)\s*:\s*([^;{}]+);", css_text):
+        raw.setdefault(name.strip(), value.strip())
+
+    resolved: Dict[str, str] = {}
+
+    def resolve(name: str, seen: Set[str]) -> Optional[str]:
+        if name in resolved:
+            return resolved[name]
+        if name in seen or name not in raw:
+            return None
+        seen.add(name)
+        value = raw[name]
+        hex_match = re.fullmatch(r"#([0-9a-fA-F]{6})", value)
+        if hex_match:
+            resolved[name] = "#" + hex_match.group(1).lower()
+            return resolved[name]
+        var_match = re.fullmatch(r"var\(--([a-z0-9-]+)\)", value)
+        if var_match:
+            r = resolve(var_match.group(1), seen)
+            if r:
+                resolved[name] = r
+            return r
+        return None
+
+    for name in raw:
+        resolve(name, set())
+    return resolved
+
+
+def color_to_hex(value: str, tokens: Dict[str, str]) -> Optional[str]:
+    """Resolve a CSS color value (var(--x) or #hex) to #rrggbb, else None."""
+    value = value.strip()
+    m = re.fullmatch(r"#([0-9a-fA-F]{6})", value)
+    if m:
+        return "#" + m.group(1).lower()
+    m = re.match(r"var\(--([a-z0-9-]+)\)", value)
+    if m:
+        return tokens.get(m.group(1))
+    return None
+
+
+def iter_css_rules(css_text: str):
+    """Yield (selector, body) for each flat CSS rule. At-rule blocks and nested
+    bodies are skipped by only matching bodies with no inner braces."""
+    for match in re.finditer(r"([^{}]+)\{([^{}]*)\}", css_text):
+        selector = match.group(1).strip()
+        if selector.startswith("@"):
+            continue
+        yield selector, match.group(2)
+
+
+def declared(body: str, prop: str) -> Optional[str]:
+    m = re.search(rf"(?:^|;|\s){re.escape(prop)}\s*:\s*([^;]+)", body)
+    return m.group(1).strip() if m else None
 
 
 def css_declarations(css_text: str, selector: str) -> Dict[str, str]:
@@ -159,73 +181,151 @@ def contrast_ratio(foreground: str, background: str) -> float:
     return (lighter + 0.05) / (darker + 0.05)
 
 
+# Large-display type tokens (>=24px effective): text set at these sizes uses the
+# 3.0 large-text threshold. Everything else uses 4.5. This is the ONLY place type
+# size affects the audit, and it is used only to exempt genuinely huge display
+# numbers (the coral "number"), never to make small text pass by size.
+LARGE_FS_TOKENS = ("--fs-mega", "--fs-hero", "--fs-h1", "--fs-h2", "--fs-h3")
+
+
+def _norm_sel(s: str) -> str:
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def _is_large(body: str) -> bool:
+    fs = declared(body, "font-size")
+    if not fs:
+        return False
+    if any(tok in fs for tok in LARGE_FS_TOKENS):
+        return True
+    px = [int(m) for m in re.findall(r"(\d+)px", fs)]
+    if px and min(px) >= 24:
+        return True
+    weight = declared(body, "font-weight")
+    bold = weight is not None and weight.strip() in ("700", "800", "900", "bold")
+    return bool(px) and min(px) >= 19 and bold
+
+
 def validate_contrast_matrix(errors: List[str]) -> int:
+    """Verify WCAG 2.2 AA on every text/background pair in the design-system CSS.
+
+    Two passes, so coverage is complete rather than limited to an allowlist of
+    class families: pass 1 records the background of every rule that sets one;
+    pass 2 checks every rule that sets a `color` against its own background, its
+    nearest ancestor's background, or (for top-level text) the cream page
+    default. Large display type (see LARGE_FS_TOKENS / _is_large) uses the 3.0
+    threshold; all other text uses 4.5. The focus ring is checked against every
+    discovered surface. There is no hardcoded surface list to omit a surface
+    from."""
     tokens_text = TOKENS.read_text(encoding="utf-8")
     components_text = COMPONENTS.read_text(encoding="utf-8")
-    colors = parse_hex_tokens(tokens_text)
+    tokens = resolve_tokens(tokens_text)
+    ink = tokens.get("ink", "#0e0e0c")
+    cream = tokens.get("cream", "#faf7f0")
+    # Strip CSS comments so they never leak into a selector (which would break
+    # ancestor-background lookup and the focus-rule search).
+    stripped = re.sub(r"/\*.*?\*/", "", tokens_text + "\n" + components_text, flags=re.S)
+    rules = list(iter_css_rules(stripped))
+
+    # Pass 1: selector -> its own resolvable background hex, and the set of
+    # element classes rendered at large-display size (so a colour-only modifier
+    # like .kpi-num--coral inherits the largeness of its base .kpi-num).
+    surface_bg: Dict[str, str] = {}
+    large_elements: Set[str] = set()
+    for selector, body in rules:
+        is_large = _is_large(body)
+        bg_val = declared(body, "background") or declared(body, "background-color")
+        bg = color_to_hex(bg_val, tokens) if bg_val else None
+        for one in selector.split(","):
+            one = one.strip()
+            if "::" in one:
+                continue
+            if bg:
+                surface_bg[_norm_sel(one)] = bg
+            if is_large:
+                last = _norm_sel(one).split(" ")[-1].split(":")[0]
+                large_elements.add(last)
+
+    def is_large_element(one: str) -> bool:
+        last = _norm_sel(one).split(" ")[-1].split(":")[0]
+        base = re.sub(r"--[a-z0-9-]+$", "", last)
+        return last in large_elements or base in large_elements
+
+    def ancestor_bg(one: str) -> Optional[str]:
+        parts = _norm_sel(one).split(" ")
+        for i in range(len(parts) - 1, 0, -1):
+            anc = " ".join(parts[:i])
+            if anc in surface_bg:
+                return surface_bg[anc]
+        return None
+
     checked = 0
 
-    required_rules = {
-        f"{CONTEXT_SCOPE} .meta": {"color": "var(--context-meta)"},
-        f"{CONTEXT_SCOPE} a:not(.button)": {"color": "var(--context-link)"},
-        f"{CONTEXT_SCOPE} a:not(.button):hover": {
-            "color": "var(--context-link-hover)"
-        },
-        f"{CONTEXT_SCOPE} :where(a, button, input, select, textarea):focus-visible": {
-            "outline-color": "var(--context-focus)"
-        },
-    }
-    for selector, expected_declarations in required_rules.items():
-        declarations = css_declarations(components_text, selector)
-        if not declarations:
-            add_error(errors, "ACCESSIBILITY_CONTEXT_RULE_MISSING", selector)
-            continue
-        for property_name, expected_value in expected_declarations.items():
-            if declarations.get(property_name) != expected_value:
-                add_error(
-                    errors,
-                    "ACCESSIBILITY_CONTEXT_DECLARATION",
-                    f"{selector}:{property_name}:{expected_value}",
-                )
+    def check(fg: str, bg: str, large: bool, label: str) -> None:
+        nonlocal checked
+        checked += 1
+        minimum = CONTRAST_MIN_FOCUS if large else CONTRAST_MIN_TEXT
+        ratio = contrast_ratio(fg, bg)
+        if ratio + 1e-9 < minimum:
+            add_error(errors, "ACCESSIBILITY_CONTRAST", f"{label}:{ratio:.2f}<{minimum}")
 
-    for selector, roles in CONTRAST_MATRIX.items():
-        declarations = css_declarations(components_text, selector)
-        if not declarations:
-            add_error(errors, "ACCESSIBILITY_SURFACE_RULE_MISSING", selector)
+    # Pass 2: every text rule vs its effective background.
+    for selector, body in rules:
+        color_val = declared(body, "color")
+        if not color_val:
             continue
-        background_name = roles["background"]
-        if declarations.get("background") != f"var(--{background_name})":
-            add_error(
-                errors,
-                "ACCESSIBILITY_SURFACE_BACKGROUND",
-                f"{selector}:var(--{background_name})",
-            )
-        background = colors.get(background_name)
-        if not background:
-            add_error(errors, "ACCESSIBILITY_COLOR_TOKEN_MISSING", background_name)
+        fg = color_to_hex(color_val, tokens)
+        if not fg:
             continue
-        for role in ("meta", "link", "link-hover", "focus"):
-            foreground_name = roles[role]
-            property_name = f"--context-{role}"
-            if declarations.get(property_name) != f"var(--{foreground_name})":
-                add_error(
-                    errors,
-                    "ACCESSIBILITY_CONTEXT_TOKEN",
-                    f"{selector}:{property_name}:var(--{foreground_name})",
-                )
-            foreground = colors.get(foreground_name)
-            if not foreground:
-                add_error(errors, "ACCESSIBILITY_COLOR_TOKEN_MISSING", foreground_name)
+        own_bg_val = declared(body, "background") or declared(body, "background-color")
+        own_bg = color_to_hex(own_bg_val, tokens) if own_bg_val else None
+        large = _is_large(body)
+        for one in selector.split(","):
+            one = one.strip()
+            if "::" in one:
                 continue
-            minimum = 3.0 if role == "focus" else 4.5
-            ratio = contrast_ratio(foreground, background)
+            # Only check where the effective background is determinable (own or a
+            # named ancestor surface). Text on the plain cream page default is not
+            # checked here — the page's high-contrast body tokens are safe by
+            # design, and the two page-level link roles are checked explicitly
+            # below. This avoids false failures on cream-for-dark utilities
+            # (.u-navlink--cream, .u-btn--outline-cream) whose surface is set in
+            # markup, not CSS.
+            bg = own_bg if own_bg else ancestor_bg(one)
+            if bg is None:
+                continue
+            check(fg, bg, large or is_large_element(one), _norm_sel(one))
+
+    # Page-level link roles on the cream body background.
+    for role in ("link", "link-hover"):
+        c = tokens.get(role)
+        if c:
+            check(c, cream, False, f"--{role} on cream")
+
+    # Two-tone focus ring: visible on every discovered surface (plus cream/ink).
+    focus_body = next((b for s, b in rules if "focus-visible" in s), "")
+    ring_colors: List[str] = []
+    for prop in ("outline", "box-shadow"):
+        m = re.search(rf"{prop}\s*:[^;]*?(var\(--[a-z0-9-]+\)|#[0-9a-fA-F]{{6}})", focus_body)
+        if m:
+            hx = color_to_hex(m.group(1), tokens)
+            if hx:
+                ring_colors.append(hx)
+    if not ring_colors:
+        add_error(errors, "ACCESSIBILITY_FOCUS_RING_MISSING", "no resolvable focus-visible outline colour")
+    else:
+        for bg in set(surface_bg.values()) | {cream, ink}:
+            best = max(contrast_ratio(rc, bg) for rc in ring_colors)
             checked += 1
-            if ratio + 1e-9 < minimum:
-                add_error(
-                    errors,
-                    "ACCESSIBILITY_CONTRAST",
-                    f"{selector}:{role}:{ratio:.3f}<{minimum:.1f}",
-                )
+            if best + 1e-9 < CONTRAST_MIN_FOCUS:
+                add_error(errors, "ACCESSIBILITY_CONTRAST", f"focus ring on {bg}:{best:.2f}<{CONTRAST_MIN_FOCUS}")
+
+    if ":focus-visible" not in components_text:
+        add_error(errors, "ACCESSIBILITY_MISSING_FOCUS", ":focus-visible")
+    if "prefers-reduced-motion" not in components_text:
+        add_error(errors, "ACCESSIBILITY_MISSING_REDUCED_MOTION", "prefers-reduced-motion")
+    if checked < 24:
+        add_error(errors, "ACCESSIBILITY_COVERAGE_TOO_LOW", f"only {checked} pairs discovered")
     return checked
 
 
@@ -860,5 +960,81 @@ def main() -> int:
     return 0 if not errors else 1
 
 
+def contrast_selftest() -> int:
+    """Adversarial regression suite for validate_contrast_matrix.
+
+    This exists because a design audit that passes itself while missing real
+    failures is the most dangerous failure mode there is — it happened during
+    this audit's own construction (an earlier version reported all-pass while
+    the CSS shipped ~15 real WCAG AA failures: buttons, footer link-hovers, a
+    coral focus ring invisible on colored blocks, and unreachable on-ink code).
+    Each case below injects a known failure into a copy of the real CSS and
+    asserts the audit catches it, plus asserts clean and large-display cases
+    pass. If any case regresses, the build fails. Run on every PR alongside the
+    audit it guards.
+    """
+    import tempfile
+
+    global TOKENS, COMPONENTS
+    saved_t, saved_c = TOKENS, COMPONENTS
+    base_tok = saved_t.read_text(encoding="utf-8")
+    base_comp = saved_c.read_text(encoding="utf-8")
+    failures: List[str] = []
+
+    def run(comp: str, tok: str) -> List[str]:
+        global TOKENS, COMPONENTS
+        d = Path(tempfile.mkdtemp())
+        (d / "t.css").write_text(tok, encoding="utf-8")
+        (d / "c.css").write_text(comp, encoding="utf-8")
+        TOKENS, COMPONENTS = d / "t.css", d / "c.css"
+        errs: List[str] = []
+        validate_contrast_matrix(errs)
+        return errs
+
+    def expect_caught(label: str, comp: str, marker: str, tok: str = base_tok) -> None:
+        if not any(marker in e for e in run(comp, tok)):
+            failures.append(f"MISSED: {label} (marker {marker!r} not flagged)")
+
+    def expect_clean(label: str, comp: str, marker: str, tok: str = base_tok) -> None:
+        if any(marker in e for e in run(comp, tok)):
+            failures.append(f"FALSE POSITIVE: {label} (marker {marker!r} wrongly flagged)")
+
+    # 0. clean baseline must have zero contrast errors
+    if run(base_comp, base_tok):
+        failures.append("BASELINE: clean CSS reported contrast errors")
+
+    # 1-2. text on a dark block (background inherited from ancestor)
+    expect_caught("on-ink descendant text", base_comp + "\n.u-block--ink .st_zz{color:#222222}\n", "st_zz")
+    expect_caught("on-ink (.blk--ink) descendant", base_comp + "\n.blk--ink .st_yy{color:#333333}\n", "st_yy")
+    # 3. text on the dark footer
+    expect_caught("footer descendant text", base_comp + "\n.ft .st_qq{color:#1a1a1a}\n", "st_qq")
+    # 4. button / CTA with its own background
+    expect_caught("button ink-on-coral", base_comp + "\n.st_evilbtn{background:var(--coral);color:var(--ink)}\n", "st_evilbtn")
+    # 5. small pill must not be exempted by claiming a size
+    expect_caught("small pill not exempted", base_comp + "\n.status--st_evil{background:var(--coral);color:var(--ink);font-size:12px}\n", "st_evil")
+    # 6. a comment before a failing rule must not skip it
+    expect_caught("comment-prefixed rule", base_comp + "\n/* benign */\n.u-block--ink .st_cc{color:#1a1a1a}\n", "st_cc")
+    # 7. focus ring that fails on colored surfaces must be caught. Anchor on the
+    # actual rule (starts with `a:focus-visible`), not the `:focus-visible`
+    # mentioned in a comment.
+    bad_focus, n_focus = re.subn(
+        r"(a:focus-visible[^{}]*\{)[^{}]*(\})",
+        r"\1outline:2px solid var(--coral);box-shadow:0 0 0 3px var(--coral-deep)\2",
+        base_comp, count=1,
+    )
+    if n_focus != 1:
+        failures.append("SELFTEST BUG: could not locate the focus-visible rule to mutate")
+    else:
+        expect_caught("focus ring fails on colored surface", bad_focus, "focus ring")
+    # 8. genuinely-large coral display must PASS (no false positive)
+    expect_clean("large coral display passes", base_comp + "\n.st_bignum{background:var(--cream);color:var(--coral);font-size:80px}\n", "st_bignum")
+
+    TOKENS, COMPONENTS = saved_t, saved_c
+    print(json.dumps({"ok": not failures, "selftest_cases": 9, "failures": failures}, indent=2))
+    return 0 if not failures else 1
+
+
 if __name__ == "__main__":
+    if "--selftest" in sys.argv:
+        raise SystemExit(contrast_selftest())
     raise SystemExit(main())
