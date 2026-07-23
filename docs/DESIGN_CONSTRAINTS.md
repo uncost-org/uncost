@@ -33,6 +33,23 @@ that is called out.
    automatically, with no coral-specific special case. *(Corrected 2026-07-22: the
    earlier version banned coral as a background outright; the real failure was a 0.03
    rounding miss fixable by darkening the text.)*
+
+   **CTA band pattern — layout, not just contrast (decided 2026-07-23).** A
+   full-bleed call-to-action band is **`.blk--ink`** (dark) carrying a **coral
+   primary button**: the coral pops on the dark band and its `#0A0A0A` label is
+   4.58. **Do not make a full-bleed CTA band brand coral.** A coral band is
+   AA-achievable, but it forces its buttons to near-black — a coral button is
+   invisible on coral, and cream-on-coral is 4.04 — which both loses the coral's
+   draw on the one element meant to be clicked and splits the site into two CTA
+   treatments. Coral is the *button*, not the band. This is the shipped pattern
+   across the sector, project, and narrative CTAs.
+   *Enforced:* only partially — the contrast check in
+   `scripts/audit_design_handoff.py` catches the specific 4.04 failure mode (a
+   coral band with cream / outline-cream buttons), but an AA-valid all-near-black
+   coral band would pass the audit. So the "ink band, coral button" layout is a
+   documented **convention** here, not an automated check — recorded so the next
+   export does not regenerate coral CTA bands with cream outline buttons and
+   rediscover the 4.04 failure a third time.
 2. **Every full-bleed block surface and every pill must meet WCAG 2.2 AA** — 4.5:1
    for text, 3.0:1 for focus rings / non-text UI. The audit auto-discovers every
    surface and pill in the CSS and checks each; there is no exemption list.
