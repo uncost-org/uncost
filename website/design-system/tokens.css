@@ -1,99 +1,240 @@
-/*
- * Uncost civic-block tokens — UNP-46 review packet.
- * Visual authority only. Public copy and claims remain controlled elsewhere.
- */
+/* ============================================================
+   Uncost — Colors & Type Foundations
+   ------------------------------------------------------------
+   The authoritative token file. Import from any page:
+     <link rel="stylesheet" href="/colors_and_type.css">
+   Philosophy: civic block. Full-bleed color rectangles, flat
+   surfaces, no border-radius, no shadows, no gradients.
+   ============================================================ */
 
+/* --- Fonts (self-hosted, variable woff2) --- */
 @font-face {
-  font-family: "Inter";
-  font-style: normal;
+  font-family: 'Roboto Condensed';
+  src: url('./fonts/RobotoCondensed-latin-variable.woff2') format('woff2');
   font-weight: 100 900;
+  font-style: normal;
   font-display: swap;
-  src: url("./fonts/Inter-latin-variable.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC,
-    U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
-    U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
 @font-face {
-  font-family: "Roboto Condensed";
-  font-style: normal;
+  font-family: 'Inter';
+  src: url('./fonts/Inter-latin-variable.woff2') format('woff2');
   font-weight: 100 900;
+  font-style: normal;
   font-display: swap;
-  src: url("./fonts/RobotoCondensed-latin-variable.woff2") format("woff2");
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC,
-    U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
-    U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 :root {
-  color-scheme: light;
+  /* ============ COLOR — PRIMITIVES ============ */
+  /* Base surfaces */
+  --cream:        #FAF7F0;
+  --cream-2:      #F2EDE1;   /* subtle band separation on cream */
+  --ink:          #0E0E0C;
+  --ink-2:        #1A1A17;   /* band separation on ink */
 
-  /* Brand primitives. */
-  --cream: #faf7f0;
-  --cream-2: #f2ede1;
-  --white: #ffffff;
-  --ink: #0e0e0c;
-  --ink-2: #1a1a17;
-  --earth-ink: #3f2518;
-  --coral: #d64a1e;
-  --coral-deep: #b23a14;
-  --wheat: #e8b84a;
-  --clay: #c1472c;
-  --sage: #7fa86e;
-  --ink-blue: #2b5f7f;
+  /* Primary spark */
+  --coral:        #D64A1E;
+  --coral-deep:   #B23A14;   /* press / hover shade */
 
-  /* Semantic color roles. Original coral is accent/display only. */
-  --surface: var(--cream);
-  --surface-alt: var(--cream-2);
-  --surface-inverse: var(--ink);
-  --text: var(--ink);
-  --text-soft: #2a2a26;
-  --text-muted: #5a574f;
-  --text-inverse: var(--cream);
-  --accent: var(--coral);
-  --action: var(--coral-deep);
-  --action-text: var(--cream);
-  --link: var(--coral-deep);
-  --link-hover: #8f2d0f;
-  --focus: var(--ink);
-  --rule: var(--ink);
-  --rule-soft: rgba(14, 14, 12, 0.24);
+  /* Secondary sparks — sector palette */
+  --wheat:        #E8B84A;   /* Food, Goods, Entertainment */
+  --clay:         #C1472C;   /* Shelter, Materials, Clothing */
+  --sage:         #7FA86E;   /* Healthcare, Care, Environment */
+  --ink-blue:     #2B5F7F;   /* Education, Communication, Transit */
+  /* Coral (primary) also owns: Safety-Justice, Energy */
 
-  /* Type. */
-  --font-display: "Roboto Condensed", "Arial Narrow", sans-serif;
-  --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --tracking-tight: -0.02em;
+  /* Rules + dividers — never gray, always ink at reduced weight */
+  --rule:         #0E0E0C;
+  --rule-soft:    rgba(14,14,12,0.18);
+  --rule-hair:    rgba(14,14,12,0.08);
+
+  /* ============ COLOR — SEMANTIC (LIGHT) ============ */
+  --bg:           var(--cream);
+  --bg-alt:       var(--cream-2);
+  --bg-ink:       var(--ink);       /* used as a full-bleed block bg */
+  --bg-spark:     var(--coral);     /* used as a full-bleed block bg */
+
+  --fg:           var(--ink);
+  --fg-2:         #2A2A26;          /* secondary text */
+  --fg-3:         #5A574F;          /* tertiary / meta */
+  --fg-on-ink:    var(--cream);
+  --fg-on-spark:  #0A0A0A;          /* near-black on brand coral = 4.58, clears AA; the canonical ink-on-coral CTA. Plain --ink #0E0E0C is 4.47 and fails by 0.03. See AUTHORITY.md coral rule. */
+
+  --link:         var(--coral-deep);  /* AA: bright coral is 4.04 on cream; coral-deep = 5.59 */
+  --link-hover:   var(--coral-deep);
+
+  --divider:      var(--rule);
+  --divider-soft: var(--rule-soft);
+
+  /* ============ TYPE — PRIMITIVES ============ */
+  --font-display: 'Roboto Condensed', 'Arial Narrow', Impact, sans-serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --tracking-tight:   -0.02em;   /* display headlines */
+  --tracking-body:    0;
   --tracking-eyebrow: 0.08em;
-  --leading-display: 0.94;
-  --leading-tight: 1.1;
-  --leading-body: 1.65;
-  --leading-meta: 1.4;
-  --size-hero: clamp(3rem, 8vw, 7.5rem);
-  --size-h1: clamp(2.5rem, 6vw, 4.5rem);
-  --size-h2: clamp(2rem, 4.5vw, 3.5rem);
-  --size-h3: clamp(1.5rem, 3vw, 2.25rem);
-  --size-body: 1.125rem;
-  --size-body-small: 1rem;
-  --size-meta: 0.875rem;
-  --measure: 62ch;
 
-  /* Spacing and layout. */
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
-  --space-4: 1rem;
-  --space-5: 1.5rem;
-  --space-6: 2rem;
-  --space-7: 3rem;
-  --space-8: 4rem;
-  --space-9: 6rem;
-  --space-10: 8rem;
-  --block-pad-y: clamp(2.5rem, 8vw, 7.5rem);
-  --block-pad-x: clamp(1.25rem, 5vw, 5rem);
-  --content-max: 90rem;
-  --rule-width: 0.125rem;
-  --rule-width-bold: 0.25rem;
+  --leading-display:  0.92;
+  --leading-tight:    1.1;
+  --leading-body:     1.65;
+  --leading-meta:     1.35;
+
+  /* ============ TYPE — SEMANTIC SCALE ============ */
+  /* Display headlines use Roboto Condensed Bold (700), mixed case, tight tracking. */
+  --fs-mega:   clamp(96px, 18vw, 200px);   /* @kind font */
+  --fs-hero:   clamp(56px, 9vw, 120px);    /* @kind font */
+  --fs-h1:     clamp(40px, 6vw, 72px);     /* @kind font */
+  --fs-h2:     clamp(32px, 4.5vw, 56px);   /* @kind font */
+  --fs-h3:     clamp(24px, 3vw, 36px);     /* @kind font */
+  --fs-h4:     22px;
+  --fs-body:   18px;   /* 17–18px body target */
+  --fs-body-s: 16px;
+  --fs-meta:   14px;
+  --fs-eyebrow:13px;
+
+  /* ============ LAYOUT TOKENS ============ */
+  /* No border-radius anywhere. These are for reference. */
   --radius: 0;
   --shadow: none;
-  --motion-fast: 80ms;
+
+  /* Spacing — used inside blocks. Blocks themselves are full-bleed. */
+  --s-1:  4px;
+  --s-2:  8px;
+  --s-3:  12px;
+  --s-4:  16px;
+  --s-5:  24px;
+  --s-6:  32px;
+  --s-7:  48px;
+  --s-8:  64px;
+  --s-9:  96px;
+  --s-10: 128px;
+
+  /* Block padding — mobile & desktop */
+  --block-pad-y: clamp(40px, 8vw, 120px);
+  --block-pad-x: clamp(20px, 5vw, 80px);
+
+  --rule-w:      2px;    /* standard horizontal rule weight */
+  --rule-w-bold: 4px;    /* block-boundary rule */
+  --stroke:      2.25px; /* illustration single stroke */
+
+  --measure:     62ch;   /* body column cap */
 }
+
+/* Dark mode intentionally not shipped for launch. The export ships an
+   attribute-only inversion theme; it is recoverable from the export
+   archive (SHA-256 8962b207...) if later adopted with its own contrast
+   audit. See AUTHORITY.md and docs/CONTROL.md. */
+
+/* ============ BASE ELEMENTS ============ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: var(--leading-body);
+  font-feature-settings: "cv11", "ss01", "tnum" 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--leading-tight);
+  margin: 0;
+  color: var(--fg);
+  text-wrap: balance;
+}
+h1 { font-size: var(--fs-hero); line-height: var(--leading-display); }
+h2 { font-size: var(--fs-h1); }
+h3 { font-size: var(--fs-h2); }
+h4 { font-size: var(--fs-h3); }
+h5 { font-size: var(--fs-h4); }
+
+p  {
+  margin: 0 0 1em 0;
+  max-width: var(--measure);
+  text-wrap: pretty;
+}
+
+a {
+  color: var(--link);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+a:hover { color: var(--link-hover); }
+
+hr {
+  border: 0;
+  border-top: var(--rule-w) solid var(--rule);
+  margin: 0;
+}
+
+/* ============ UTILITY CLASSES ============ */
+
+/* Type roles */
+.u-display     { font-family: var(--font-display); font-weight: 700; letter-spacing: var(--tracking-tight); line-height: var(--leading-tight); }
+.u-display-bk  { font-family: var(--font-display); font-weight: 900; letter-spacing: var(--tracking-tight); line-height: var(--leading-display); }
+.u-eyebrow     { font-family: var(--font-body); font-weight: 500; font-size: var(--fs-eyebrow); letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; }
+.u-meta        { font-size: var(--fs-meta); color: var(--fg-3); line-height: var(--leading-meta); }
+.u-body-lg     { font-size: 20px; line-height: 1.55; }
+
+/* The "number" — display art, bigger than headlines, tabular figures */
+.u-number      { font-family: var(--font-display); font-weight: 900; font-size: var(--fs-mega); line-height: 0.85; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; color: var(--coral); }
+.u-number--ink { color: var(--fg); }
+
+/* Block — full-bleed color rectangle, the primary organizing device */
+.u-block {
+  padding: var(--block-pad-y) var(--block-pad-x);
+  border-top: var(--rule-w-bold) solid var(--rule);
+}
+.u-block--cream  { background: var(--cream); color: var(--ink); }
+.u-block--cream2 { background: var(--cream-2); color: var(--ink); }
+.u-block--ink    { background: var(--ink);   color: var(--cream); border-top-color: #EDEAE3; }
+.u-block--coral  { background: var(--coral); color: var(--fg-on-spark); } /* brand coral + near-black #0A0A0A = 4.58 AA. Coral is fine as a BG with dark text; deep coral is only for coral-as-text (AUTHORITY.md). */
+.u-block--wheat  { background: var(--wheat); color: var(--ink); }
+.u-block--sage   { background: var(--sage);  color: var(--ink); }
+.u-block--inkblue{ background: var(--ink-blue); color: var(--cream); border-top-color: #EDEAE3; }
+.u-block--clay   { background: var(--clay);  color: var(--cream); border-top-color: #EDEAE3; }
+
+/* Button — flat rectangles, ink-on-coral or cream-on-ink.
+   RULE: every button gets a 2px ink border so it stays visible across all hover states. */
+.u-btn {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+  padding: 16px 28px;
+  border: var(--rule-w) solid var(--ink);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 80ms linear, color 80ms linear;
+}
+.u-btn--primary { background: var(--coral); color: var(--fg-on-spark); } /* brand coral + near-black = 4.58 AA (the export's canonical ink-on-coral CTA, nudged to clear AA) */
+.u-btn--primary:hover { background: var(--coral-deep); color: var(--cream); } /* press/hover shade: deep coral + cream = 5.59 */
+.u-btn--primary:active { background: var(--coral-deep); color: var(--cream); }
+.u-btn--ink     { background: var(--ink); color: var(--cream); }
+.u-btn--ink:hover { background: var(--cream); color: var(--ink); }
+.u-btn--ghost   { background: transparent; color: var(--ink); border-color: var(--ink); }
+.u-btn--ghost:hover { background: var(--ink); color: var(--cream); }
+/* Outlined on dark surfaces — cream outline → flips to cream fill on hover */
+.u-btn--outline-cream { background: transparent; color: var(--cream); border-color: var(--cream); }
+.u-btn--outline-cream:hover { background: var(--cream); color: var(--ink); }
+/* Plain text link in the nav — coral on hover */
+.u-navlink { color: var(--ink); text-decoration: none; transition: color 80ms linear; }
+.u-navlink:hover { color: var(--coral-deep); }
+.u-navlink--cream { color: var(--cream); text-decoration: none; transition: color 80ms linear; }
+.u-navlink--cream:hover { color: var(--wheat); } /* on dark: coral fails 4.47, wheat=10.48 */
+
+/* Rule variants */
+.u-rule        { border-top: var(--rule-w) solid var(--rule); }
+.u-rule--bold  { border-top: var(--rule-w-bold) solid var(--rule); }
+.u-rule--hair  { border-top: 1px solid var(--rule-soft); }
+
+/* Container: desktop max-width without losing block feel */
+.u-container { max-width: 1440px; margin: 0 auto; }

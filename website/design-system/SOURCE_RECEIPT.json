@@ -1,7 +1,7 @@
 {
   "schema": "unp-46-design-handoff-receipt",
   "version": "1.2.0",
-  "generated_at": "2026-07-17T18:26:55Z",
+  "generated_at": "2026-07-22T23:12:56+07:00",
   "issue": {
     "id": "68cc2371-0764-4d85-b8b0-5eaf623346f8",
     "identifier": "UNP-46",
@@ -22,10 +22,10 @@
     "review_branch": "paperclip/unp-46-design-handoff"
   },
   "archive": {
-    "filename": "Uncost Design System-handoff (1).zip",
-    "sha256": "fbcfe95732ba5df38b69d57977aa8f1f0b0097717c5b0e144cc1d9736fe5ff74",
-    "bytes": 377932786,
-    "member_count": 417,
+    "filename": "Uncost Design System-handoff.zip",
+    "sha256": "8962b207d54d6536bef89ff8a96d5fc8ecb96007c01071dbdafbf03933730441",
+    "bytes": 397289097,
+    "member_count": 514,
     "root_prefix": "uncost-design-system/"
   },
   "governance_inputs": {
@@ -37,23 +37,23 @@
   "source_transformations": [
     {
       "logical_source_path": "project/colors_and_type.css",
-      "source_sha256": "cffee798868671c67d7d86197e43444ea198e7850dc34ecf3246e82251d76b52",
+      "source_sha256": "bc335c5e3c5e5430a9bd869689247344339d6d07d94ec411f529606a3ca351a5",
       "output_path": "website/design-system/tokens.css",
-      "output_sha256": "1d35d637fcffdb9c87bb13360ae2d58bfc857317e504973b419ffd28c61be560",
+      "output_sha256": "3a151bdfdd4886a6e6d662d2795d99665d4711eaaa3a50fd51d17df2dbf49bf9",
       "mode": "transform"
     },
     {
       "logical_source_path": "project/ui_kits/components.css",
       "source_sha256": "6ae252e2f87b169d261af0dc1707fbe999faa81c4458be1f8c7c497a1d8bcf24",
       "output_path": "website/design-system/components.css",
-      "output_sha256": "e6af8deed7a92aa7a46cc1a4cdbba42c9095baf19c18dc1ae8c831f5f0c42681",
+      "output_sha256": "d2a296f1ef4933ce18e2ef84da5d4084b094ca71b5d9c9c26ac83c488389ba6d",
       "mode": "transform"
     },
     {
       "logical_source_path": "project/assets/icons/icons.svg",
       "source_sha256": "30b694a2d8fd28c22d8e391adfee14e4678199efba39bd5f9f0271b6703ed505",
       "output_path": "website/design-system/icons/icons.svg",
-      "output_sha256": "41b80d70af163ea31045233ae312b0dd365f8915526db2e3e93b46754b9243bf",
+      "output_sha256": "a4f9e8558761a98a3d66cb029e15254be4e4bce98b5e4860e14c143b1dc1070b",
       "mode": "curate"
     }
   ],
@@ -118,12 +118,12 @@
   "outputs": [
     {
       "path": ".github/workflows/content-audit.yml",
-      "sha256": "954638097599aadebb8d08f89275563db2222d646c4530a53eff49c92e72534b",
+      "sha256": "1229b0f9185e55507fc169dc173ab94b2fe69ec0546d6064cc28de003925df89",
       "role": "full-history-ci-audit"
     },
     {
       "path": "scripts/audit_design_handoff.py",
-      "sha256": "52ac70c262b7a51c0fe62d3d2e6e29858ab79eee55802adf574757fec28dcede",
+      "sha256": "b960304e44be56d170773765d611479a496643b43dc803e8ceb66f15cfad16e9",
       "role": "reproducible-checks"
     },
     {
@@ -138,7 +138,7 @@
     },
     {
       "path": "website/design-system/AUTHORITY.md",
-      "sha256": "f51e66bbdda892819094514ad4613458effb4506daea63d32920e09f2d97052c",
+      "sha256": "5391196377584cb536d510655a0f58873c231ebc3fa0cfcf66b6949b8ee2a519",
       "role": "precedence-and-boundary"
     },
     {
@@ -148,22 +148,22 @@
     },
     {
       "path": "website/design-system/tokens.css",
-      "sha256": "1d35d637fcffdb9c87bb13360ae2d58bfc857317e504973b419ffd28c61be560",
+      "sha256": "3a151bdfdd4886a6e6d662d2795d99665d4711eaaa3a50fd51d17df2dbf49bf9",
       "role": "semantic-tokens"
     },
     {
       "path": "website/design-system/components.css",
-      "sha256": "e6af8deed7a92aa7a46cc1a4cdbba42c9095baf19c18dc1ae8c831f5f0c42681",
+      "sha256": "d2a296f1ef4933ce18e2ef84da5d4084b094ca71b5d9c9c26ac83c488389ba6d",
       "role": "component-primitives"
     },
     {
       "path": "website/design-system/icons/icons.svg",
-      "sha256": "41b80d70af163ea31045233ae312b0dd365f8915526db2e3e93b46754b9243bf",
+      "sha256": "a4f9e8558761a98a3d66cb029e15254be4e4bce98b5e4860e14c143b1dc1070b",
       "role": "iconography-subset"
     },
     {
       "path": "website/design-system/reference/index.html",
-      "sha256": "2c554f7f50d03150ddde83ab058e43ef8f6a6d81fd54c7a88a9abe6cf3944e40",
+      "sha256": "d5e80cb0fe1dfe4664bf7b5681954eca7ad696b355d7f09bceccc047c200d719",
       "role": "safe-review-specimen"
     },
     {
