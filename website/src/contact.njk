@@ -1,9 +1,41 @@
 ---
 layout: layouts/base.njk
 title: "Contact"
+description: "Reach a human at Uncost. Channels and the contact form publish once each is ownership-verified."
 ---
-<div class="block">
-<h1>Contact</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">[PLACEHOLDER: contact channels render only from an ownership-verified list.]</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">Contact</p>
+  <h1>Contact</h1>
+  {{ gap("contact-intro", "the 'say hello — a human replies' intro is design-authored with no source; author the contact lead once the inbox and reply commitment are confirmed") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Email</p>
+  <h2 class="sec">Email us.</h2>
+  {{ gap("contact-email", "the contact email address (contact@uncost.org) is uncited — not in MOVEMENT_PLAN.md or CONTROL.md; render only from an ownership-verified address") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Follow along</p>
+  <h2 class="sec">Follow along.</h2>
+  {{ gap("contact-social", "the social channel identities (Instagram, Threads, X, YouTube, Reddit, TikTok, Bluesky handles) are uncited with no citable source; list only ownership-verified accounts") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Build with us</p>
+  <h2 class="sec">Build with us.</h2>
+  {{ gap("contact-build", "the public GitHub repository location is uncited with no citable source in dossier or July source; wire the repo link once the canonical URL is confirmed") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Message</p>
+  <h2 class="sec">Send us a message.</h2>
+  {{ gap("contact-form", "the name/email/phone/message contact form is design-authored and has no wired endpoint; author the form fields, validation copy, and submission handling before it ships") }}
+</section>
+
+<section class="blk blk--ink">
+  <p class="eyebrow">After you send</p>
+  <h2 class="sec">What happens next.</h2>
+  {{ gap("contact-thanks", "the post-submit thanks/confirmation state restates an uncited reply address (contact@uncost.org); author the confirmation copy once the inbox is verified") }}
+</section>

@@ -1,9 +1,47 @@
 ---
 layout: layouts/base.njk
 title: "Take the Pledge"
+description: "Read the five Uncost Pledge commitments and add your name. The signature form ships later — nothing you enter is stored yet."
 ---
-<div class="block">
-<h1>Take the Pledge</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">[PLACEHOLDER: verification-flow copy and form markup ship with the UNP-57 page contract.]</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+
+<section class="blk blk--first">
+  <p class="eyebrow">The Pledge</p>
+  <h1>Take the Pledge</h1>
+  {{ gap("pledge-hero-intro", "the hero intro ('Add your name to five commitments') is design-authored with no source; the five-line statement below is dossier-backed but this framing line is not — author it against the July movement plan before it ships") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">The statement</p>
+  <h2 class="sec">What you're adding your name to.</h2>
+  <p class="lead">I believe living should not have a price tag.</p>
+  <p>I believe technology should make life cheaper for everyone — not concentrate wealth for a few.</p>
+  <p>I support using AI, robotics, and open tools to lower the real cost of food, shelter, energy, and the other essentials of a decent life.</p>
+  <p>I stand for work that is a choice, not a sentence served just to survive.</p>
+  <p>I add my name to call for a world where the basics of life are within everyone's reach.</p>
+</section>
+
+<section class="blk">
+  <p class="eyebrow">What signing does</p>
+  <h2 class="sec">What happens when you sign.</h2>
+  {{ gap("pledge-what-happens", "the three 'what happens when you sign' explainers (you are counted / your voice if you want it / updates only if you opt in) are design-authored with no source — author against the UNP-57 signature contract before they ship") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Add your name</p>
+  <h2 class="sec">Add your name to the Pledge.</h2>
+  <div class="form-off">
+    <span class="form-off-msg">The signature form isn't live yet — nothing you enter is recorded.</span>
+    {{ gap("pledge-form", "the pledge form copy (name/email fields, the sign consent, the updates opt-in, the Assembly-interest opt-in, the age confirmation, the submit label, and the confirmation-email notice) is design-authored and the '24-hour' confirmation window is uncited — author against the UNP-57 email-capture contract before the form ships") }}
+  </div>
+</section>
+
+<section class="blk blk--ink">
+  <p class="eyebrow">The work behind it</p>
+  <h2 class="sec">Built in the open.</h2>
+  {{ gap("pledge-built-in-open", "the 'built in the open' block cites uncited counts (draft policies, project briefs, sector dossiers) that may not render as fact — author from the public register once records exist, with each count carrying its source") }}
+  <p>
+    <a href="/sectors/" class="u-btn u-btn--primary">See the sectors</a>
+    <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--outline-cream">The public records</a>
+  </p>
+</section>

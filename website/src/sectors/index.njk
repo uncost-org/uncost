@@ -1,13 +1,19 @@
 ---
 layout: layouts/base.njk
 title: "The Sectors"
+description: "The fifteen essential-cost sectors Uncost tracks, in fixed order — from Food to Leisure."
 ---
-<div class="block">
-<h1>The Sectors</h1>
-<p class="meta">[PLACEHOLDER] — sector hub presentation arrives with the governed design handoff. Order is canonical and fixed.</p>
-<ol>
-{% for sector in catalog.sectors %}
-  <li><a href="/sectors/{{ sector.slug }}/">{{ sector.name }}</a> <span class="meta">{{ sector.status }}</span></li>
-{% endfor %}
-</ol>
-</div>
+{% from "partials/content-needed.njk" import block as gap %}
+<section class="blk blk--first">
+  <p class="eyebrow">The Sectors</p>
+  <h1 class="sec">Fifteen sectors of essential cost.</h1>
+  <p class="lead">The essentials of a life, grouped into fifteen sectors in a fixed order. Each has a dossier: what it covers, where automation could reduce cost, the guardrail, and the honest evidence status.</p>
+  {{ gap("sectors-index-intro", "the export's framing paragraph for the hub is design-authored; author from the July source once approved") }}
+</section>
+<section class="blk blk--cream2">
+  <div class="card-grid">
+{%- for sector in catalog.sectors %}
+    <a class="sec-card" href="/sectors/{{ sector.slug }}/"><span class="sec-card-num">{{ sector.num }} / 15</span><span class="sec-card-name">{{ sector.name }}</span><span class="status status--{{ sector.statusClass }}">{{ sector.status }}</span></a>
+{%- endfor %}
+  </div>
+</section>

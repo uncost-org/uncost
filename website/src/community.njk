@@ -1,10 +1,13 @@
 ---
 layout: layouts/base.njk
 title: "Community"
+description: "A community hub for supporters, volunteers, and contributors is planned but not yet open."
 noindex: true
 ---
-<div class="block">
-<h1>Community</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">This route is roadmap-gated (LATER in the frozen route contract) and intentionally unlisted.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">Community</p>
+  <h1 class="sec">Community.</h1>
+  <p class="lead">This page is planned and not yet built for launch.</p>
+  {{ gap("community-later", "planned; not built for launch") }}
+</section>

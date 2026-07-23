@@ -1,11 +1,49 @@
 ---
 layout: layouts/base.njk
 title: "Pledge verification"
+description: "The page a reader reaches after clicking the confirmation link in their pledge email — it resolves to one of three states: confirmed, link expired, or link already used."
 noindex: true
 ---
-<div class="block">
-<h1>Pledge verification</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">[PLACEHOLDER: verification-flow copy and form markup ship with the UNP-57 page contract.]</p>
-<p class="meta">[PLACEHOLDER: this template renders the success, link-expired, and link-already-used states per the server response.]</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+
+<section class="blk blk--first">
+  <p class="eyebrow">Pledge</p>
+  <h1>Pledge verification</h1>
+  <div class="form-off">
+    <p class="form-off-msg">Verification is inert here — email confirmation, resend, and the counted-signature tally ship later under the UNP-57 page contract.</p>
+  </div>
+  <p class="lead">This is the page a reader reaches from the confirmation link in their pledge email. It resolves to one of three states — the signature is confirmed, the link has expired, or the link was already used — and points to the next step.</p>
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Verify — valid</p>
+  <h2 class="sec">Confirmed.</h2>
+  {{ gap("pledge-verify-valid", "the confirmed-state copy (email-confirmed eyebrow, 'You're confirmed.' heading, the verified/being-counted reassurance, and the 'Continue' CTA to what was joined) is design-authored with no source; author against the UNP-57 verification contract before it ships") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Verify — expired</p>
+  <h2 class="sec">Link expired.</h2>
+  {{ gap("pledge-verify-expired", "the expired-state copy is design-authored with no source, and it asserts an uncited '24 hours' link-validity window that must not render as fact; author the state copy and confirm the real link lifetime against the UNP-57 contract, plus the 'Send a new link' / 'Back to the Pledge' next steps, before it ships") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Verify — used</p>
+  <h2 class="sec">Already counted.</h2>
+  {{ gap("pledge-verify-used", "the already-used-state copy ('You're already counted.', the signature-already-on-record reassurance, and the 'See what you joined' / 'Back to home' next steps) is design-authored with no source; author against the UNP-57 verification contract before it ships") }}
+</section>
+
+<section class="blk blk--ink">
+  <p class="eyebrow">State switcher</p>
+  <h2 class="sec">Preview control.</h2>
+  {{ gap("pledge-verify-state-switcher", "a design-only preview toggle (Valid / Expired / Used) for reviewing the three states, not reader-facing production copy — build only if the review harness needs it; do not ship as reader UI") }}
+</section>
+
+<section class="blk blk--ink">
+  <p class="eyebrow">Next step</p>
+  <h2 class="sec">Keep going.</h2>
+  <div class="cta-actions">
+    <a href="/movement" class="u-btn u-btn--primary">What the movement is</a>
+    <a href="/pledge" class="u-btn u-btn--outline-cream">Sign the Pledge</a>
+  </div>
+</section>

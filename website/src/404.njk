@@ -1,19 +1,24 @@
 ---
 layout: layouts/base.njk
 title: "Page not found"
+description: "This URL does not exist, moved, or has not been built yet. Head back to the home page or browse The Sectors."
 permalink: "/404.html"
 noindex: true
 ---
-<div class="block">
-<h1>Page not found</h1>
-<p>The page you were looking for does not exist here. These do:</p>
-<ul>
-  <li><a href="/">Home</a></li>
-  <li><a href="/movement">The Movement</a></li>
-  <li><a href="/case">The Case</a></li>
-  <li><a href="/projects">The Projects</a></li>
-  <li><a href="/assembly">The Assembly</a></li>
-  <li><a href="/sectors">The Sectors</a></li>
-  <li><a href="/contact">Contact</a></li>
-</ul>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">404</p>
+  <h1 class="sec">Page not found.</h1>
+  <p class="lead">The page you were looking for does not exist here, moved, or has not been built yet.</p>
+  {{ gap("404-hero", "the export's reassurance line (\"This page took a wrong turn\" / \"No dead ends here\") is design-authored with no source; author a short 404 message or leave the functional line above") }}
+  <p>
+    <a href="/" class="u-btn u-btn--primary">Back to home</a>
+    <a href="/sectors/" class="u-btn u-btn--ghost">The Sectors</a>
+  </p>
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Quick links</p>
+  <h2 class="sec">Other ways in.</h2>
+  {{ gap("404-quick-links", "the export's quick-link list (The Case / The Projects / The Pledge / Contact with taglines) is design-authored; wire from the reviewed primary navigation and its real destinations before it ships") }}
+</section>

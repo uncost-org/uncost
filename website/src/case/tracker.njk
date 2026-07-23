@@ -1,10 +1,14 @@
 ---
 layout: layouts/base.njk
-title: "Tracker"
+title: "The Tracker"
+description: "The Tracker is a planned public cost-of-living price tracker for The Case. It is not yet built."
 noindex: true
 ---
-<div class="block">
-<h1>Tracker</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">This route is roadmap-gated (LATER in the frozen route contract) and intentionally unlisted.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">Planned tool · The Case</p>
+  <h1>The Tracker.</h1>
+  <p class="lead">This page is planned and not yet built. When it ships, The Tracker will be a public cost-of-living price tracker feeding the dashboard and the public content — receipts-first, like everything in <a href="/movement">The Case</a>.</p>
+  {{ gap("tracker-later", "planned; not built for launch") }}
+  <p><a href="/receipts" class="u-btn u-btn--ink">The Receipts</a></p>
+</section>

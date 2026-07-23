@@ -1,8 +1,57 @@
 ---
 layout: layouts/base.njk
 title: "The Receipts — sources & methodology"
+description: "The methodology and source layer under everything Uncost publishes: every number has a source, every source a date, and every model states its assumptions."
 ---
-<div class="block">
-<h1>The Receipts — sources and methodology</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">Sources and methodology</p>
+  <h1>The Receipts</h1>
+</section>
+
+<section class="blk">
+  <h2 class="sec">Every number, out in the open.</h2>
+  <p class="lead">The Receipts is the methodology and source layer under everything we publish. The rule is simple: every number has a source, every source has a date, and every model states its assumptions. If a claim can&rsquo;t be sourced, we label it — plainly — as an estimate, a scenario, or a hypothesis, not a fact.</p>
+</section>
+
+<section class="blk blk--cream2">
+  <h2 class="sec">The rule, three ways.</h2>
+  <h3>01 — Sourced</h3>
+  <p>Every figure carries a source and a license, so anyone can trace it back and reuse it lawfully.</p>
+  <h3>02 — Dated</h3>
+  <p>Every source shows when it was captured and when it was last reviewed. Stale data is flagged, not hidden.</p>
+  <h3>03 — Labelled</h3>
+  <p>Every figure carries a confidence tag, and anything hypothetical is marked illustrative — unmissably.</p>
+</section>
+
+<section class="blk">
+  <p class="eyebrow">What the confidence tags mean</p>
+  <h2 class="sec">Four honest labels.</h2>
+  {{ gap("receipts-confidence-labels", "the four-label confidence vocabulary (Confirmed / Estimate / Scenario / Needs refresh) and its definitions are design-authored — the July source references 'confidence' but does not enumerate these labels, and they differ from the fixed honest-status vocabulary in CONTROL.md; author against a controlling source before it ships") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">What the furniture looks like in place</p>
+  <h2 class="sec">A figure, fully dressed.</h2>
+  {{ gap("receipts-worked-example", "the worked-example figure card is an explicitly illustrative placeholder demo ($X / [date]); author a real dressed example once a sourced, dated figure exists — do not ship the placeholder as final layout copy") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Because data goes stale</p>
+  <h2 class="sec">Built to stay current.</h2>
+  <p>The dashboards pull from public sources where possible, show visible &ldquo;last updated&rdquo; dates, and follow a regular review cadence. Automating those data pipelines is a funding priority — precisely so the evidence stays fresh instead of decaying quietly.</p>
+</section>
+
+<section class="blk blk--ink">
+  <p class="eyebrow">Corrections and changelog</p>
+  <h2 class="sec">We log our mistakes.</h2>
+  <p>Every correction is recorded publicly with a date and a plain description of what changed and why. Nothing is quietly edited.</p>
+  {{ gap("receipts-corrections-records", "the 'version-controlled corrections history in the public records' claim points at github.com/uncost-org/uncost, which diverges from the canon repo named in CONTROL.md (dafuqindustries/portfolio-canon) and is itself uncited; wire the public-records pointer only from the controlling source") }}
+  <h3>Log begins at launch</h3>
+  {{ gap("receipts-corrections-launch-state", "the 'no public figures have been published yet' state assertion is uncited on this page; confirm against a controlling source before publishing rather than rendering it as fact") }}
+</section>
+
+<section class="blk blk--coral">
+  <h2 class="sec">Found a number we got wrong?</h2>
+  {{ gap("receipts-cta", "the corrections-CTA copy and its buttons (report a correction / back to The Case) are design-authored and point at routes not in the confirmed link set; author the pitch and wire buttons to confirmed root-absolute paths before it ships") }}
+</section>

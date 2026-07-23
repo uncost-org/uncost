@@ -1,16 +1,25 @@
 ---
 layout: layouts/base.njk
 title: "The Projects"
+description: "Uncost's project briefs — public review drafts. No budget, build, pilot, or launch is approved."
 ---
-<div class="block">
-<h1>The Projects</h1>
-<p class="meta">Public review drafts; no budget, build, pilot, or launch is approved.</p>
-<ul>
-{% for project in catalog.projects %}
-  <li><a href="/projects/{{ project.slug }}/">{{ project.display }}</a></li>
-{% endfor %}
-</ul>
-</div>
-<div class="block block--cream-2">
-{{ catalog.longerHorizon | mdSection | safe }}
-</div>
+{% from "partials/content-needed.njk" import block as gap %}
+<section class="blk blk--first">
+  <p class="eyebrow">The Projects</p>
+  <h1 class="sec">The projects.</h1>
+  <p class="lead">Public review drafts. No budget, build, pilot, or launch is approved; every brief is a reviewed dossier, not a shipped product.</p>
+  {{ gap("projects-index-intro", "the export's 'one system, three parts' hub framing and per-project blurbs are design-authored; author from dossiers once approved") }}
+</section>
+<section class="blk blk--cream2">
+  <div class="doc-list">
+{%- for project in catalog.projects %}
+    <a class="doc-row" href="/projects/{{ project.slug }}/"><span class="doc-id">{{ project.id }}</span><span class="doc-title">{{ project.display }}</span><span class="status status--planned">Draft</span></a>
+{%- endfor %}
+  </div>
+</section>
+<section class="blk">
+  <p class="eyebrow">Longer horizon</p>
+  <div class="prose prose--flush">
+  {{ catalog.longerHorizon | mdSection | safe }}
+  </div>
+</section>

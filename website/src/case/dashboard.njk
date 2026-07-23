@@ -2,9 +2,16 @@
 layout: layouts/base.njk
 title: "Dashboard"
 noindex: true
+eleventyComputed:
+  title: "The Dashboard · The Case"
+  description: "The public Human Essentials Dashboard is planned, not yet built. What one human needs, what it costs by region, and where automation could cut those costs."
 ---
-<div class="block">
-<h1>Dashboard</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">This route is roadmap-gated (LATER in the frozen route contract) and intentionally unlisted.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">Planned tool · The Case</p>
+  <h1 class="sec">The Dashboard.</h1>
+  <p class="lead">The public interface of the Human Essentials Dashboard: what one human needs, what it costs by region, and where automation could cut those costs. It is on the way — not yet built.</p>
+  <p>Every figure will carry a source, a date, and a confidence label — and anything hypothetical will be marked illustrative. We won't publish a number we can't stand behind.</p>
+  {{ gap("dashboard-later", "planned; not built for launch — timeline, region count, and prototype scope are movable planning targets and must be authored against the July source, not committed here") }}
+  <p><a href="/movement" class="u-btn u-btn--ink">How we source it</a></p>
+</section>

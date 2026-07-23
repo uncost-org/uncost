@@ -1,9 +1,65 @@
 ---
 layout: layouts/base.njk
 title: "Privacy"
+description: "The plain-language notice you read before giving Uncost your email — what we collect, why, and what we never do. Draft; not yet finalized."
 ---
-<div class="block">
-<h1>Privacy</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">[PLACEHOLDER: the privacy notice is finalized from POL-002 before any form goes live.]</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">Privacy notice</p>
+  <h1>Privacy</h1>
+  <p class="lead">This is the notice you read before you hand Uncost your email address. It explains, in plain language, what we collect, why, and what we will never do with it.</p>
+  <p>It is still a draft. The parts that name the responsible legal entity and set a minimum age cannot be finalized until those decisions are made with the founder and counsel — so those sections are marked below as still being written, rather than filled with guesses.</p>
+</section>
+
+<section class="blk">
+  <p class="eyebrow">01 · Who is responsible</p>
+  <h2 class="sec">Who holds your data.</h2>
+  {{ gap("privacy-notice-controller", "data controller identity — pending founder + counsel") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">02 · What we collect</p>
+  <h2 class="sec">What we ask you for.</h2>
+  {{ gap("privacy-notice-collect", "the plain-language list of what a person actually gives us (email, optional details) — author for the notice, do not lift the POL-002 governance wording") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">03 · Why we use it</p>
+  <h2 class="sec">Why we use it.</h2>
+  {{ gap("privacy-notice-use", "the plain-language purposes we use your details for — author for the notice from the finalized POL-002 once adopted") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">04 · What we never do</p>
+  <h2 class="sec">What we never do.</h2>
+  <ul>
+    <li>We never sell, rent, or trade your personal data.</li>
+    <li>We never use your pledge or contact details for partisan political targeting.</li>
+    <li>We never require payment to vote or to take part.</li>
+    <li>We don't use tokens, on-chain voting, or crypto mechanics that expose your identity or funds.</li>
+  </ul>
+</section>
+
+<section class="blk">
+  <p class="eyebrow">05 · Minimum age</p>
+  <h2 class="sec">Who can sign up.</h2>
+  {{ gap("privacy-notice-age-threshold", "minimum age / guardian handling — pending decision") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">06 · How long we keep it</p>
+  <h2 class="sec">How long we keep it.</h2>
+  {{ gap("privacy-notice-retention", "the plain-language retention and deletion promise — author for the notice from the adopted retention rules") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">07 · Your rights</p>
+  <h2 class="sec">Your rights over your data.</h2>
+  {{ gap("privacy-notice-rights", "the plain-language access / correction / export / deletion rights and how to exercise them — author once the controller and contact route are set") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">08 · Contact</p>
+  <h2 class="sec">How to reach us.</h2>
+  {{ gap("privacy-notice-contact", "the working privacy contact route — pending a confirmed privacy inbox; the export's contact@uncost.org address is unsourced") }}
+</section>

@@ -34,6 +34,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "design-system/components.css": "design-system/components.css" });
   eleventyConfig.addPassthroughCopy({ "design-system/fonts": "design-system/fonts" });
   eleventyConfig.addPassthroughCopy({ "design-system/icons": "design-system/icons" });
+  eleventyConfig.addPassthroughCopy({ "src/css/site.css": "css/site.css" });
   eleventyConfig.addPassthroughCopy({ "src/_headers": "_headers" });
 
   // Brand image pipeline. Source PNGs under assets/brand/ remain the sole

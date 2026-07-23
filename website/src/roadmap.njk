@@ -1,8 +1,59 @@
 ---
 layout: layouts/base.njk
 title: "Roadmap"
+description: "The Roadmap is the staged plan for the movement — year-one milestones and the longer horizon, with every date framed as a movable target while the stage order and the safety gates that protect each step stay fixed."
 ---
-<div class="block">
-<h1>Roadmap</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">The Roadmap</p>
+  <h1 class="sec">The Roadmap.</h1>
+  <p class="lead">The road ahead, one milestone at a time.</p>
+  {{ gap("roadmap-introband", "the introband narrative (dates are targets, evidence sets the pace; stage order and the gates that protect each step do not move, the calendar does) is design-authored with no source — author against docs/CONTROL.md's Date rule before it ships") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Year one</p>
+  <h2 class="sec">The first year.</h2>
+
+  <h3>First 90 days</h3>
+  <p>Tax-deductible donations open <strong>only</strong> after sponsorship is confirmed.</p>
+  {{ gap("roadmap-y1-q1", "the rest of the first-quarter milestones (public launch, fiscal-sponsor application, Pledge and email capture, first sourced cost visual, core policies as review drafts) and the quarterly subscriber target are design-authored / uncited — author from the reviewed Movement Plan; the subscriber target must not ship without a source") }}
+
+  <h3>Months 4–6</h3>
+  {{ gap("roadmap-y1-q2", "the second-quarter milestones (Human Essentials Dashboard prototype, regional methodology, first Shelter/Food/Energy dossiers) and the regions target are design-authored / uncited — author from the reviewed Movement Plan; the regions target must not ship without a source") }}
+
+  <h3>Months 7–9</h3>
+  {{ gap("roadmap-y1-q3", "the third-quarter milestones (project briefs and creator partnerships, first Assembly community survey, early Treasury updates) and the active-members target are design-authored / uncited — author from the reviewed Movement Plan; the members target must not ship without a source") }}
+
+  <h3>Months 10–12</h3>
+  {{ gap("roadmap-y1-q4", "the fourth-quarter milestones (public progress report, partner outreach, funding applications, Year 2 plan) and the creator-partners target are design-authored / uncited — author from the reviewed Movement Plan; the partners target must not ship without a source") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Longer horizon</p>
+  <h2 class="sec">The longer horizon.</h2>
+
+  <h3>Year 2</h3>
+  {{ gap("roadmap-horizon-year2", "the Year 2 outlook (more regions and sectors, a wider contributor network, grant applications, and the named deliverables) is design-authored / uncited — author from the reviewed Movement Plan; named deliverables must not ship without a source") }}
+
+  <h3>Year 3</h3>
+  {{ gap("roadmap-horizon-year3", "the Year 3 outlook (partner-led, low-risk physical prototypes only where funding, safety review, legal capacity, and local operators exist) is design-authored — author from the reviewed Movement Plan; physical pilots remain gated per CLAUDE.md") }}
+
+  <h3>Beyond</h3>
+  {{ gap("roadmap-horizon-beyond", "the beyond-Year-3 outlook (larger integrated demonstrations only once evidence, partners, governance, and safety capacity are mature) is design-authored — author from the reviewed Movement Plan") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">How to read these dates</p>
+  <h2 class="sec">How to read these dates.</h2>
+  {{ gap("roadmap-date-disclaimer", "the date-reading disclaimer (every date is a movable target anchored to Day 1, not a promise; targets shift as evidence and capacity change, but the order of the stages and the gates — funding, safety review, legal capacity, local operators — do not) is design-authored — author against docs/CONTROL.md's Date rule; the Day 1 anchor date must not ship without a source") }}
+</section>
+
+<section class="blk blk--ink">
+  <h2 class="sec">Help set the pace.</h2>
+  {{ gap("roadmap-cta", "the closing pitch (evidence moves faster with more hands; sign the Pledge or see where you fit) is design-authored with no source — author from the reviewed Movement Plan") }}
+  <div class="cta-actions">
+    <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
+    <a href="/join" class="u-btn u-btn--outline-cream">Take part</a>
+  </div>
+</section>

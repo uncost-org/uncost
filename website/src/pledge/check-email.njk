@@ -2,9 +2,30 @@
 layout: layouts/base.njk
 title: "Check your email"
 noindex: true
+description: "Confirmation step for the Uncost Pledge — check your inbox for a verification link. The flow copy and email verification ship with the UNP-57 page contract."
 ---
-<div class="block">
-<h1>Check your email</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">[PLACEHOLDER: verification-flow copy and form markup ship with the UNP-57 page contract.]</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">The Pledge</p>
+  <h1>Check your email.</h1>
+  {{ gap("pledge-check-email-hero", "the 'almost there / check your inbox' hero and the confirmation-sent instruction line are design-authored with no source; author the double opt-in confirmation copy from the UNP-57 flow contract before it ships") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Next step</p>
+  <h2 class="sec">What happens next.</h2>
+  <div class="form-off">
+    <p class="form-off-msg">Email verification isn't wired up yet — the pledge confirmation flow ships with the UNP-57 page contract.</p>
+  </div>
+  {{ gap("pledge-check-email-link-expiry", "the confirmation-link validity window and the 'pledge isn't counted until you confirm' explanation are design-authored, and the 24-hour figure is uncited; author from the UNP-57 flow contract and never ship the unsourced window as fact") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Need help?</p>
+  <h2 class="sec">Didn't get the email?</h2>
+  {{ gap("pledge-check-email-troubleshooting", "the resend prompt, spam/promotions-folder guidance and the support-email fallback (including the contact address) are design-authored with no source; author from the UNP-57 flow contract once the resend behaviour and contact address are confirmed") }}
+  <p>
+    <a href="/pledge" class="u-btn u-btn--ink">Back to the pledge</a>
+    <a href="/" class="u-btn u-btn--ghost">Back to home</a>
+  </p>
+</section>

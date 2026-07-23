@@ -1,8 +1,69 @@
 ---
 layout: layouts/base.njk
 title: "The Movement"
+description: "The Movement is how Uncost reaches people with sourced, shareable content, welcomes them through one trusted front door, and offers a clear path from agreement to action — support, contribute, partner."
 ---
-<div class="block">
-<h1>The Movement</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">The Movement</p>
+  <h1 class="sec">The Movement.</h1>
+  <p class="lead">From agreement to action — one front door.</p>
+  {{ gap("movement-introband", "the introband narrative (how Uncost turns a widely felt frustration into organized momentum; every piece of content points back here) is design-authored with no source — author against the July Movement Plan before it ships") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">How it reaches people</p>
+  <h2 class="sec">Short, visual, source-led — never outrage alone.</h2>
+  {{ gap("movement-how-it-reaches", "the distribution narrative (explainers, data pieces, illustrated style, values-aligned creators; public content must lead back to evidence and action) is design-authored with no source — author from the reviewed content/distribution model") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Engagement tools</p>
+  <h2 class="sec">Three ways in.</h2>
+  <div class="scope">
+    <div>
+      <h3>The Pledge</h3>
+      {{ gap("movement-tool-pledge", "the Pledge blurb and launch-readiness label are design-authored with no source — author from the reviewed Pledge plan; link the sign flow to /pledge when it opens") }}
+    </div>
+    <div>
+      <h3>The cost-of-living quiz</h3>
+      {{ gap("movement-tool-quiz", "the cost-of-living quiz description and its planned status are design-authored with no source — author from the reviewed roadmap") }}
+    </div>
+    <div>
+      <h3>Share-a-stat</h3>
+      {{ gap("movement-tool-share-a-stat", "the Share-a-stat description (only published, source-backed figures become share assets) and its planned status are design-authored with no source — author from the reviewed roadmap") }}
+    </div>
+  </div>
+</section>
+
+<section class="blk blk--ink">
+  <p class="eyebrow">The path</p>
+  <h2 class="sec">The path from agreement to action.</h2>
+  <div class="scope">
+    <div>
+      <h3>Support</h3>
+      {{ gap("movement-path-support", "the Support tier description (free actions: join, share sourced material, take the quiz, sign the Pledge) is design-authored with no source — author from the contribution model") }}
+    </div>
+    <div>
+      <h3>Contribute</h3>
+      {{ gap("movement-path-contribute", "the Contribute tier description (volunteer research/data/engineering/writing/design/translation/moderation; donate once the sponsor gate opens) is design-authored with no source, and donation launch waits for confirmed fiscal sponsorship — author from the contribution model") }}
+    </div>
+    <div>
+      <h3>Partner</h3>
+      {{ gap("movement-path-partner", "the Partner tier description (experts, builders, institutions, companies build tools, advise, coordinate a sector or region, or provide reviewed in-kind support) is design-authored with no source — author from the contribution model") }}
+    </div>
+  </div>
+  <div class="cta-actions">
+    <a href="/join" class="u-btn u-btn--primary">Take part</a>
+    <a href="/receipts" class="u-btn u-btn--outline-cream">Follow the news</a>
+  </div>
+</section>
+
+<section class="blk blk--ink">
+  <h2 class="sec">The simplest first step is to join.</h2>
+  {{ gap("movement-cta", "the closing CTA line (it's free, and it shows the world how many of us want this) is design-authored with no source — author from the reviewed Movement Plan") }}
+  <div class="cta-actions">
+    <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
+    <a href="/join" class="u-btn u-btn--outline-cream">Get updates</a>
+  </div>
+</section>

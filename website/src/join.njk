@@ -1,9 +1,63 @@
 ---
 layout: layouts/base.njk
 title: "Take Part"
+description: "Three ways into the Uncost movement — support for free, contribute time or money, or partner to build. The interest form ships later; nothing you enter is stored yet."
 ---
-<div class="block">
-<h1>Join</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">[PLACEHOLDER: verification-flow copy and form markup ship with the UNP-57 page contract.]</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+
+<section class="blk blk--first">
+  <p class="eyebrow">Take part</p>
+  <h1>Take Part</h1>
+  {{ gap("join-intro", "the intro band ('Pick a door. Walk through it.' plus the free-first framing) is design-authored and asserts an uncited 'thirty seconds' time claim — author against the July movement plan before it ships") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Three tiers</p>
+  <h2 class="sec">Three ways to take part.</h2>
+  <p class="lead">Take part at the level that fits you. The most powerful first step is free.</p>
+
+  <h3>Tier 01 — Support <span class="status status--live">Free</span></h3>
+  <p>For anyone who agrees that living costs too much.</p>
+  <ul>
+    <li><a href="/pledge">Sign the Pledge</a></li>
+    <li>Join the email list — sign-ups open soon.</li>
+    <li><a href="/receipts">Share sourced stats</a></li>
+    <li>Take the cost-of-living quiz <span class="status status--planned">Planned</span></li>
+  </ul>
+  <p><a href="/pledge" class="u-btn u-btn--ink">Sign the Pledge — free</a></p>
+
+  <h3>Tier 02 — Contribute</h3>
+  <p>Time or money. For people who want to back the work directly.</p>
+  <ul>
+    <li>Give — once donations lawfully open.</li>
+    <li>Volunteer: research, data, engineering, writing, design, translation, moderation.</li>
+  </ul>
+  <p><a href="/contribute" class="u-btn u-btn--ink">See ways to contribute</a></p>
+
+  <h3>Tier 03 — Partner</h3>
+  <p>Build with us. For experts, builders, institutions, and companies.</p>
+  <ul>
+    <li>Build on GitHub.</li>
+    <li>Contribute expertise.</li>
+    <li>Coordinate a sector or region.</li>
+    <li>Provide in-kind resources or institutional partnership.</li>
+  </ul>
+  <p>
+    <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--ink">Build on GitHub</a>
+    <a href="#interest" class="u-btn u-btn--ink">Explore partnership</a>
+  </p>
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Privacy</p>
+  {{ gap("join-privacy-line", "the 'we won't sell your data or use your pledge for partisan targeting' line is design-authored; it is consistent with the nonpartisan posture but the wording has no source — author against the confirmed privacy policy before it ships") }}
+</section>
+
+<section id="interest" class="blk blk--ink">
+  <p class="eyebrow">Get in touch</p>
+  <h2 class="sec">Tell us how you'd like to help.</h2>
+  <div class="form-off">
+    <p class="form-off-msg">The interest form isn't live yet — nothing you enter is recorded, and no address is monitored yet.</p>
+    {{ gap("join-interest-form", "the interest-form copy (intro, the name / email / how-to-help select and its options / message fields, the consent line, the submit label, and all validation and thanks microcopy — including the uncited contact@uncost.org inbox address) is design-authored and inert; author against the UNP-57 email-capture contract before the form ships") }}
+  </div>
+</section>

@@ -1,8 +1,70 @@
 ---
 layout: layouts/base.njk
-title: "The Case"
+eleventyComputed:
+  title: "The Case"
+  description: "Uncost's evidence layer: what humans need, what those needs cost by region, where automation could plausibly reduce cost, and the open methodology behind every claim."
 ---
-<div class="block">
-<h1>The Case</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">The evidence layer</p>
+  <h1 class="sec">The Case.</h1>
+  {{ gap("case-intro", "the introband tagline and the who-it-serves paragraph are design-authored with no source; author the evidence-layer introduction from the July plan before it ships") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">The dashboard</p>
+  <h2 class="sec">Explore the evidence.</h2>
+  {{ gap("case-dashboard-controls", "the sector/region filter controls and the in-development status line are design-authored; the export's specific '2-3 regions' launch target diverges from the July source (MOVEMENT_PLAN.md names only a multi-region dashboard, no count) — author against the plan") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">What needs cost</p>
+  <h2 class="sec">The numbers.</h2>
+  {{ gap("case-kpis", "the cost-burden, grocery-inflation and left-after-rent figures are ⚠ UNCITED — attributed on-page to Harvard JCHS / BLS but not present in the July controlling source; do not render any statistic until each citation resolves through the public register") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Planned flagship</p>
+  <p><span class="status status--planned">Planned</span></p>
+  <h2 class="sec">The Human Essentials Dashboard.</h2>
+  {{ gap("case-dashboard-preview", "the illustrative dashboard output (monthly basket $X, 'shared solar + weatherization' reduction path, '3 regions' coverage) is placeholder/illustrative and ⚠ UNCITED; author the real preview from published per-region baskets and keep the illustrative-only framing so nothing reads as data") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">The question</p>
+  <h2 class="sec">What does one human actually need?</h2>
+  <p class="lead">Instead of starting from ideology, Uncost starts from the physical and social basics of a dignified life — fifteen sectors, from Food and Shelter to Communication and Leisure. Every part of the essential basket maps to one of them.</p>
+  <p><a href="/sectors/" class="u-btn u-btn--ink">All fifteen sectors</a></p>
+  {{ gap("case-regionality", "the regionality explainer ('a single global cost number would damage credibility... data available for three regions') is design-authored; author the coverage-labelling posture from the July plan before it ships") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Illustrative example</p>
+  <h2 class="sec">An example regional basket.</h2>
+  {{ gap("case-basket-example", "the per-sector basket segments (Shelter/Food/Energy/Water at $X) are placeholders flagged Illustrative on-page, not data; real baskets publish per region with sources — author from published baskets, never render placeholder values as fact") }}
+</section>
+
+<section class="blk blk--ink">
+  <p class="eyebrow">Methodology</p>
+  <h2 class="sec">How the receipts work.</h2>
+  <p class="lead">Every number has a source. Every source has a date. Every model states its assumptions. Where a claim cannot be sourced, it is labeled an estimate, scenario, or hypothesis — never presented as fact.</p>
+  <h3>The rules</h3>
+  <ul>
+    <li>Sources carry license, reuse status, and region coverage.</li>
+    <li>Figures show visible &ldquo;last updated&rdquo; dates and a refresh cadence.</li>
+    <li>Every correction is logged publicly.</li>
+    <li>Negative results are published with the same prominence as wins.</li>
+  </ul>
+  <h3>Confidence labels</h3>
+  <p>Confirmed · Estimate · Scenario · Needs refresh. Derived figures — calculated from two or more sources — display every contributing source, never a single badge.</p>
+  <p><a href="/receipts" class="u-btn u-btn--outline-cream">The full methodology, source register, and corrections log</a></p>
+</section>
+
+<section class="blk blk--ink">
+  <h2 class="sec">Evidence first. Tools next.</h2>
+  {{ gap("case-cta", "the closing pitch names three projects (Cost-of-Living Tracker, Basic Needs Cost Model, Human Essentials Dashboard) as feeding The Projects; only the Human Essentials Dashboard is established in the July source — do not name the others as fact until approved, author the handoff from the plan") }}
+  <div class="cta-actions">
+    <a href="/receipts" class="u-btn u-btn--primary">See The Receipts</a>
+    <a href="/projects" class="u-btn u-btn--outline-cream">The Projects</a>
+  </div>
+</section>
