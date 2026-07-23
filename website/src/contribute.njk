@@ -1,9 +1,58 @@
 ---
 layout: layouts/base.njk
 title: "Contribute"
+description: "Ways to back Uncost directly right now — register an intention to give before donations open, volunteer skills, or offer in-kind resources. Money is not being accepted yet."
 noindex: true
 ---
-<div class="block">
-<h1>Contribute</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">Contribute</p>
+  <h1>Back the work directly.</h1>
+  <p class="lead">Money is not the only way in — and right now it isn&rsquo;t even open yet. The most useful things you can give today are time, skills, and in-kind resources. Here&rsquo;s exactly what that looks like.</p>
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Status</p>
+  <p><span class="status status--planned">Donations not open</span></p>
+  <h2 class="sec">Donations not open.</h2>
+  <p>Uncost is seeking fiscal sponsorship before accepting public donations. You can register an intention to give now, and we&rsquo;ll contact you when it opens — no money changes hands today.</p>
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Three ways</p>
+  <h2 class="sec">Three ways to back the work.</h2>
+
+  <h3>Give — when donations open</h3>
+  <ul>
+    <li>Register an intention to give — we&rsquo;ll email you the moment donations lawfully open.</li>
+    <li>One-time or recurring, once the sponsor structure is confirmed.</li>
+  </ul>
+  <p><a href="/pledge" class="u-btn u-btn--ink">Register intent — sign the Pledge</a></p>
+
+  <h3>Volunteer — time &amp; skills</h3>
+  <ul>
+    <li>The fastest way to move the evidence forward.</li>
+    <li>Remote, flexible, credited in the public record.</li>
+  </ul>
+  <p><a href="/join" class="u-btn u-btn--ink">Tell us how you can help</a></p>
+
+  <h3>In-kind — resources &amp; compute</h3>
+  {{ gap("contribute-in-kind", "the specific in-kind categories (compute, model access, software credits, equipment, data access, logistics, storage) are design-authored elaboration; July source references only reviewed in-kind support. Author from the confirmed contribution model") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Volunteer roles</p>
+  <h2 class="sec">Where volunteers help first.</h2>
+  <p class="lead">Useful roles, right now.</p>
+  {{ gap("contribute-volunteer-roles", "the six discrete role definitions and the paid-conversion disclaimer are design-authored, not in the July source; author the role list and the volunteering-does-not-guarantee-pay language from the confirmed contribution model") }}
+</section>
+
+<section class="blk blk--ink">
+  <p class="eyebrow">Start free</p>
+  <h2 class="sec">Not ready to commit? Start free.</h2>
+  {{ gap("contribute-cta", "the export's superlative that signing the Pledge is the single most useful free thing you can do is uncited; author a source-backed free-action pitch before it ships") }}
+  <p>
+    <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
+    <a href="/treasury" class="u-btn u-btn--outline-cream">See The Treasury</a>
+  </p>
+</section>

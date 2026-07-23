@@ -131,5 +131,131 @@
     "line_sha256": "a5bb721b4e5a9cde55c8cd0fdc92de974e3196cc2d9fbfd37b1549bca4d3b350",
     "justification": "Pixel count in a founder-authorized repair provenance record; receipt-backed by the SHA-256 lineage on the same line",
     "added": "2026-07-19"
+  },
+  {
+    "rule": "crypto-dao",
+    "path": "website/src/about.njk",
+    "line_sha256": "7364cdf03ac2f731434c1549c76cf8091d472eb41a1a766a1283266aa15348c0",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "website/src/about.njk",
+    "line_sha256": "7364cdf03ac2f731434c1549c76cf8091d472eb41a1a766a1283266aa15348c0",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-token",
+    "path": "website/src/about.njk",
+    "line_sha256": "7364cdf03ac2f731434c1549c76cf8091d472eb41a1a766a1283266aa15348c0",
+    "justification": "test justification here for disavowal",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "website/src/assembly.njk",
+    "line_sha256": "c9ba7b888f75f9293975e250e5d6c41740f3e909f9ee67492ebf7d9964408458",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "website/src/assembly.njk",
+    "line_sha256": "c9ba7b888f75f9293975e250e5d6c41740f3e909f9ee67492ebf7d9964408458",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-token",
+    "path": "website/src/assembly.njk",
+    "line_sha256": "c9ba7b888f75f9293975e250e5d6c41740f3e909f9ee67492ebf7d9964408458",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-dao",
+    "path": "website/src/faq.njk",
+    "line_sha256": "bce8aaf21ed2362ef0d73b811aa1f832f38a4c798febff865abbdf903fa54bc7",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "website/src/faq.njk",
+    "line_sha256": "bce8aaf21ed2362ef0d73b811aa1f832f38a4c798febff865abbdf903fa54bc7",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "website/src/faq.njk",
+    "line_sha256": "f78c5a51de1330876fbc285f11725da5968e660e1af0dd8999ac5831917f748d",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "website/src/faq.njk",
+    "line_sha256": "f78c5a51de1330876fbc285f11725da5968e660e1af0dd8999ac5831917f748d",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-token",
+    "path": "website/src/faq.njk",
+    "line_sha256": "bce8aaf21ed2362ef0d73b811aa1f832f38a4c798febff865abbdf903fa54bc7",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-token",
+    "path": "website/src/faq.njk",
+    "line_sha256": "f78c5a51de1330876fbc285f11725da5968e660e1af0dd8999ac5831917f748d",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "website/src/privacy.njk",
+    "line_sha256": "86c7402331f3cb9153373007033f860da02136480c37389498f228ccebc09aa3",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "website/src/privacy.njk",
+    "line_sha256": "86c7402331f3cb9153373007033f860da02136480c37389498f228ccebc09aa3",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-token",
+    "path": "website/src/privacy.njk",
+    "line_sha256": "86c7402331f3cb9153373007033f860da02136480c37389498f228ccebc09aa3",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "tax-deductibility-claim",
+    "path": "website/src/roadmap.njk",
+    "line_sha256": "51176bb2de0dba722096a505fcf6effce00bf88892bda7083b98a661eff302c6",
+    "justification": "Honest gate statement: donations are NOT tax-deductible until fiscal sponsorship is confirmed; the sentence denies current deductibility, it does not claim it.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "website/src/treasury.njk",
+    "line_sha256": "69d903262d49b8edc8be1747983d6875711ec2ee008aeeab5d32ba0a62d45fd4",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "website/src/treasury.njk",
+    "line_sha256": "69d903262d49b8edc8be1747983d6875711ec2ee008aeeab5d32ba0a62d45fd4",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
   }
 ]

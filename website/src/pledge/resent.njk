@@ -1,10 +1,19 @@
 ---
 layout: layouts/base.njk
 title: "Verification email resent"
+description: "The recovery step in the Uncost Pledge sign-up flow for re-requesting a confirmation link."
 noindex: true
 ---
-<div class="block">
-<h1>Verification email resent</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">[PLACEHOLDER: verification-flow copy and form markup ship with the UNP-57 page contract.]</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">The Pledge</p>
+  <h1>Resend your confirmation link.</h1>
+  {{ gap("pledge-resend-intro", "the resend-screen intro copy is design-authored and states an uncited 24-hour link validity; author the confirmation-window wording from the confirmed verification-flow spec (UNP-57) before it ships") }}
+
+  <div class="form-off">
+    <p class="form-off-msg">Email capture is not wired yet — the resend form and its confirmation flow ship with the UNP-57 page contract.</p>
+    {{ gap("pledge-resend-form", "the resend form's field label, placeholder, submit-button label, and client-side validation message are design-authored; author them with the governed verification-flow copy before the form is wired") }}
+  </div>
+
+  <p><a href="/pledge" class="u-btn u-btn--ghost">Back to the Pledge</a></p>
+</section>

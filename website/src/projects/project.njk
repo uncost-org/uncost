@@ -8,7 +8,53 @@ pagination:
 permalink: "/projects/{{ project.slug }}/"
 eleventyComputed:
   title: "{{ project.display | safe }} · The Projects"
+  description: "{{ project.id }} — {{ project.display }}. A reviewed project dossier; draft, not approved for build."
 ---
-<div class="block">
-{{ project.body | md | safe }}
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<header class="p-head">
+  <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/projects/">Projects</a> &nbsp;/&nbsp; <span>{{ project.display }}</span></div>
+  <div class="p-meta"><span class="pid">{{ project.id }}</span><span class="status status--planned">Draft — not approved for build</span></div>
+  <h1 class="p-h1">{{ project.display }}</h1>
+  {% if project.publicSummary %}<p class="p-tagline">{{ project.publicSummary }}</p>{% else %}<p class="p-tagline">{{ gapInline("project-public-summary") }}</p>{% endif %}
+</header>
+
+<section class="blk blk--first">
+  <p class="eyebrow">At a glance</p>
+  {{ gap("project-at-a-glance", "the export's three at-a-glance cards (what it targets / the mechanism / how it lowers costs) are design-authored condensations, not verbatim dossier fields; approve from the capture or author from the dossier") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Overview</p>
+  <h2 class="sec">What it is.</h2>
+  {{ gap("project-overview", "the export's multi-paragraph overview is a design-authored rewrite; the reviewed one-line public summary is in the hero above. Author the fuller overview from the dossier and July source before it ships") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Funding &amp; status</p>
+  <h2 class="sec">Honest about where this stands.</h2>
+  <div class="fund">
+    <div class="fh"><span>{{ project.id }} — {{ project.display }}</span><span class="status status--planned">Draft</span></div>
+    <div class="fb">
+      {% if project.resourcePosture %}<p>{{ project.resourcePosture }}</p>{% else %}{{ gap("project-resource-posture") }}{% endif %}
+      <p class="fund-meta">No cost or savings figures are published here yet. When they are, each will carry a source, a date, and a confidence label — see <a href="/receipts">The Receipts</a>. Once funds move, spending is reported in <a href="/treasury">The Treasury</a>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Related sectors</p>
+  <h2 class="sec">Where it applies.</h2>
+  {{ gap("project-related-sectors", "the dossier's Sectors section names the primary/secondary sectors; wire the links from it rather than carrying the export's curated picks unreviewed") }}
+  <div class="related">
+    <a href="/sectors/"><span class="sq"></span> All 15 sectors →</a>
+  </div>
+</section>
+
+<section class="blk blk--ink">
+  <h2 class="cta-h">Help build this project.</h2>
+  {{ gap("project-cta", "the project-specific volunteer pitch is design-authored; author from the contribution model once roles are defined") }}
+  <div class="cta-actions">
+    <a href="/join" class="u-btn u-btn--primary">Take part</a>
+    <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--outline-cream">The public records</a>
+  </div>
+</section>

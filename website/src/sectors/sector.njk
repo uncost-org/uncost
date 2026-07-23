@@ -8,8 +8,94 @@ pagination:
 permalink: "/sectors/{{ sector.slug }}/"
 eleventyComputed:
   title: "{{ sector.name | safe }} · The Sectors"
+  description: "{{ sector.id }} {{ sector.name }}: what the sector includes, where AI and robotics could reduce costs, the guardrails, and the honest evidence status."
 ---
-<div class="block">
-<p class="meta">[PLACEHOLDER] — sector page presentation arrives with the governed design handoff. The dossier below is the reviewed public source.</p>
-{{ sector.body | md | safe }}
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="sector-head">
+  <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/sectors/">Sectors</a> &nbsp;/&nbsp; <span>{{ sector.name }}</span></div>
+  <div class="sector-head-grid">
+    <div>
+      <h1 class="sector-title">{{ sector.name }}.</h1>
+      <p class="sector-sub">{% if sector.includes %}{{ sector.includes }}{% else %}{{ gapInline("sector-includes") }}{% endif %}</p>
+      <div class="sector-num">Sector <b>{{ sector.num }} / 15</b> · <span class="status status--{{ sector.statusClass }}">{{ sector.status }}</span> · Dossier <b>{{ sector.id }}</b></div>
+    </div>
+    <div>{% image sector.illustration.src, sector.illustration.alt, "(max-width: 920px) 280px, 620px", [280, 620, 1024] %}</div>
+  </div>
+</section>
+
+<nav class="anchor-bar" aria-label="Page sections">
+  <a href="#scope">Scope &amp; opportunity <span class="cnt">01</span></a>
+  <a href="#evidence">Evidence status <span class="cnt">02</span></a>
+  <a href="#worked">Worked example <span class="cnt">03</span></a>
+  <a href="#projects">Related projects <span class="cnt">04</span></a>
+  <a href="#sources">Sources <span class="cnt">05</span></a>
+</nav>
+
+<section id="scope" class="sblock sblock--ink sblock--flush">
+  <div class="eyebrow">01 · Scope, opportunity, guardrail</div>
+  <h2>Where automation could bite — and what stays visible.</h2>
+  <div class="scope">
+    <div><h3><i></i>What it includes</h3><p>{% if sector.includes %}{{ sector.includes }}{% else %}{{ gapInline("sector-includes") }}{% endif %}</p></div>
+    <div><h3><i></i>The opportunity</h3><p>{% if sector.opportunity %}{{ sector.opportunity }}{% else %}{{ gapInline("sector-opportunity") }}{% endif %}</p></div>
+    <div><h3><i></i>The guardrail</h3><p>{% if sector.guardrail %}{{ sector.guardrail }}{% else %}{{ gapInline("sector-guardrail") }}{% endif %}</p></div>
+  </div>
+  <p class="rmstatus">Roadmap status: <b>{{ sector.status }}</b>. Status is sequencing, not importance.</p>
+</section>
+
+<section id="evidence" class="sblock sblock--ink">
+  <div class="eyebrow">02 · Evidence status</div>
+  <h2>No number ships without a <span class="hl-coral">receipt</span>.</h2>
+  <div class="evd-empty">
+    {% if sector.evidence %}<h3>{{ sector.evidence }}</h3>{% else %}{{ gap("sector-evidence") }}{% endif %}
+    <p>When {{ sector.name }} figures publish, each line carries: value, unit, region, date observed, a source ID from the public register, a confidence label, and the collection method.</p>
+    <div class="chips">
+      <span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span>
+      <span class="rcpt-conf rcpt-conf--estimate">Estimate</span>
+      <span class="rcpt-conf rcpt-conf--scenario">Scenario</span>
+      <span class="rcpt-conf rcpt-conf--needs-refresh">Needs refresh</span>
+    </div>
+  </div>
+</section>
+
+<section id="worked" class="sblock">
+  <div class="eyebrow">03 · How {{ sector.name | lower }} gets uncosted</div>
+  <h2>The worked example.</h2>
+  {{ gap("sector-worked-example", "the per-sector worked example (measure → publish → break down → match → package → track) is design-authored in the export and not in the dossier; author against the July plan and the sector's own evidence before it ships") }}
+</section>
+
+{% if sector.guardrail %}
+<section class="callout">
+  <blockquote>&ldquo;{{ sector.guardrail }}&rdquo;</blockquote>
+  <div class="attr">— The {{ sector.name }} guardrail · dossier {{ sector.id }}</div>
+</section>
+{% endif %}
+
+<section id="projects" class="sblock sblock--cream2 sblock--flush">
+  <div class="eyebrow">04 · Related projects</div>
+  <h2>Where {{ sector.name }} shows up in The Projects.</h2>
+  {{ gap("sector-related-projects", "which projects touch this sector, and each project's role for it, is editorial curation not present in the dossier — wire from reviewed project dossiers or author, do not carry the export's roles unreviewed") }}
+</section>
+
+<section id="sources" class="sblock">
+  <div class="eyebrow">05 · Sources</div>
+  <h2>The register comes before the figures.</h2>
+  <p class="sec-lead">Every source Uncost uses gets a public ID, publisher, date, license, refresh cadence, and region coverage. The {{ sector.name }} dossier draws on the register as reviewed records are added.</p>
+  {{ gap("sector-sources", "the export's source list cited a superseded plan edition, not the re-pinned July source; no sector-specific SRC- records are registered yet (matches the dossier's evidence status). Populate from the public register once records exist") }}
+</section>
+
+<section class="sblock sblock--cream2">
+  <div class="eyebrow">Related sectors</div>
+  <h2>Keep reading.</h2>
+  <div class="related">
+    <a href="/sectors/"><span class="sq"></span> All 15 sectors →</a>
+  </div>
+</section>
+
+<section class="sblock sblock--ink">
+  <h2 class="cta-h">Help build the {{ sector.name | lower }} evidence.</h2>
+  {{ gap("sector-cta", "the sector-specific volunteer-roles pitch is design-authored; author from the contribution model once roles are defined") }}
+  <div class="cta-actions">
+    <a href="/join" class="u-btn u-btn--primary">Take part</a>
+    <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--outline-cream">The public records</a>
+  </div>
+</section>

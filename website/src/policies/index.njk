@@ -1,15 +1,19 @@
 ---
 layout: layouts/base.njk
 title: "Policies"
+description: "Uncost's governance policies — public review drafts. Not adopted or in force; publication is not adoption."
 ---
-<div class="block">
-<h1>Policies</h1>
-<p class="meta">Public review drafts; not adopted or in force. Publication is not adoption.</p>
-<ul>
-{% for policy in catalog.policies %}
-  <li><a href="/policies/{{ policy.slug }}/">{{ policy.display }} ({{ policy.id }})</a></li>
-{% endfor %}
-</ul>
-<p class="meta">[PLACEHOLDER] — the consolidated stage table for gated and not-yet-live surfaces renders here per the frozen contract.</p>
-<p class="meta">The consolidated policy pack is maintained in the public repository: <a href="https://github.com/uncost-org/uncost/blob/main/policies/POLICY-PACK-v1.3.md">Policy Pack v1.3</a>.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap %}
+<section class="blk blk--first">
+  <p class="eyebrow">Policies</p>
+  <h1 class="sec">Governance, in the open.</h1>
+  <p class="lead">Public review drafts. Not adopted or in force — publication is not adoption. Each is published so it can be reviewed before it is ever activated.</p>
+</section>
+<section class="blk blk--cream2">
+  <div class="doc-list">
+{%- for policy in catalog.policies %}
+    <a class="doc-row" href="/policies/{{ policy.slug }}/"><span class="doc-id">{{ policy.id }}</span><span class="doc-title">{{ policy.display }}</span><span class="status status--planned">Draft</span></a>
+{%- endfor %}
+  </div>
+  <p class="doc-note">The consolidated policy pack is maintained in the public repository: <a href="https://github.com/uncost-org/uncost/blob/main/policies/POLICY-PACK-v1.3.md" target="_blank" rel="noopener">Policy Pack v1.3</a>.</p>
+</section>

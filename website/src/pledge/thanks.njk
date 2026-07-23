@@ -1,10 +1,79 @@
 ---
 layout: layouts/base.njk
 title: "Thanks for signing"
+description: "Your Uncost Pledge signature is recorded. Share the pledge and take your next step in the movement."
 noindex: true
 ---
-<div class="block">
-<h1>Thanks for signing</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">[PLACEHOLDER: verification-flow copy and form markup ship with the UNP-57 page contract.]</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">The Pledge</p>
+  <h1 class="sec">{{ gapInline("thanks-hero-headline") }}</h1>
+  <div class="form-off">
+    <p class="form-off-msg">Signature confirmation and verification flow are inert here — they ship with the UNP-57 page contract.</p>
+    {{ gap("thanks-hero-subline", "the confirmation headline and subline (“Signature confirmed / Your name is counted”) are design-authored with no source; author the confirmed-state copy before it ships") }}
+  </div>
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Where this stands</p>
+  <h2 class="sec">{{ gapInline("thanks-founding-signer-heading") }}</h2>
+  <p class="lead">Uncost is at the very start, which means your signature carries real weight — you're helping build the public demand everything else runs on. The live signature count will appear here as the movement grows.</p>
+</section>
+
+<section class="blk blk--ink">
+  <p class="eyebrow">Share</p>
+  <h2 class="sec">Now make it count double.</h2>
+  <p class="lead">Share the pledge — the fastest free way to grow the movement.</p>
+  {{ gap("thanks-share-buttons", "the share network selection (X, Threads, Facebook, email) and each share-intent link need a confirmed canonical pledge URL and the UNP-57 wiring; the share-intent text is source-backed but the buttons are inert until the URL and targets are set") }}
+</section>
+
+{#
+  FOUNDING-SIGNER RECOGNITION — present in the markup but dark by default,
+  activated by config (features.foundingSigners; off unless
+  UNCOST_FOUNDING_SIGNERS=on), the same pattern as the signature counter and at
+  the same 100-signature milestone. Factual recognition of the first signers,
+  with no editorial ranking — deliberately NOT "notable signers", which would be
+  a hierarchy on a one-person-one-vote movement.
+
+  HARD BLOCK — CONSENT, NOT DESIGN: do NOT activate this until a public-display
+  consent purpose exists in the UNP-57 consent model AND has been collected from
+  each person shown. UNP-57 rev 5 has exactly three purposes — signing, email
+  updates, and Assembly interest — none of which authorizes displaying a signer's
+  name publicly. Activating without that reserved purpose retrofits a use onto
+  people who never agreed to it. See website/src/_data/features.js.
+#}
+{% if features.foundingSigners %}
+<section class="blk">
+  <p class="eyebrow">Founding signers</p>
+  <h2 class="sec">{{ gapInline("thanks-founding-signers-heading") }}</h2>
+  {{ gap("thanks-founding-signers", "factual recognition of the founding signers (the first to sign, no ranking), shown at the 100-signature milestone. Author the copy AND wire only names collected under a public-display consent purpose — which does not yet exist in UNP-57 rev 5, so this stays config-dark until that purpose is added and collected") }}
+</section>
+{% endif %}
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Next steps</p>
+  <h2 class="sec">What's next?</h2>
+  <div class="grid-cells">
+    <div class="cell">
+      <h3>Take Part</h3>
+      <p>Volunteer skills, or offer in-kind resources.</p>
+      <p><a href="/join">See the ways in →</a></p>
+    </div>
+    <div class="cell">
+      <h3>Read The Case</h3>
+      <p>The evidence — what living really costs, sourced.</p>
+      <p><a href="/receipts">Explore the evidence →</a></p>
+    </div>
+    <div class="cell">
+      <h3>The Assembly</h3>
+      <p>Your transparent, advisory voice in the movement.</p>
+      <p><a href="/movement">How it works →</a></p>
+    </div>
+  </div>
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Privacy</p>
+  <h2 class="sec">{{ gapInline("thanks-privacy-heading") }}</h2>
+  <p class="lead">We'll only email you if you opted in. We won't sell your data or use your pledge for partisan targeting — read the privacy policy.</p>
+</section>

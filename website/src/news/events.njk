@@ -1,10 +1,13 @@
 ---
 layout: layouts/base.njk
 title: "Events"
+description: "Community events for the Uncost movement are planned and not yet built."
 noindex: true
 ---
-<div class="block">
-<h1>Events</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">This route is roadmap-gated (LATER in the frozen route contract) and intentionally unlisted.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">Events</p>
+  <h1 class="sec">Events</h1>
+  <p class="lead">This page is planned and not yet built. Once the community takes shape, meetups, talks, working sessions, and online gatherings will be listed here.</p>
+  {{ gap("events-later", "planned; not built for launch") }}
+</section>

@@ -8,7 +8,12 @@ pagination:
 permalink: "/policies/{{ policy.slug }}/"
 eleventyComputed:
   title: "{{ policy.display | safe }} ({{ policy.id }})"
+  description: "{{ policy.id }} — {{ policy.display }}. Public review draft; not adopted, not in force."
 ---
-<div class="block">
+<header class="pol-head">
+  <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/policies/">Policies</a> &nbsp;/&nbsp; <span>{{ policy.display }}</span></div>
+  <div class="pol-meta"><span class="pid pid--ink">{{ policy.id }}</span><span class="status status--planned">Public review draft — not in force</span></div>
+</header>
+<article class="prose">
 {{ policy.body | md | safe }}
-</div>
+</article>

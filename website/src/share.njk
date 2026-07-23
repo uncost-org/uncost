@@ -1,10 +1,14 @@
 ---
 layout: layouts/base.njk
 title: "Share"
+description: "Share a Stat — a planned Movement tool for reposting sourced cost-of-living facts — is not yet built."
 noindex: true
 ---
-<div class="block">
-<h1>Share</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">This route is roadmap-gated (LATER in the frozen route contract) and intentionally unlisted.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">Planned tool · The Movement</p>
+  <h1 class="sec">Share.</h1>
+  <p class="lead">A planned Movement tool: ready-made, sourced cost-of-living facts as graphics and short videos you can repost to your own networks — spreading the message for free. Every stat will link back to its source; nothing goes out without receipts.</p>
+  <p>This route is planned and not yet built for launch.</p>
+  {{ gap("share-later", "planned; not built for launch") }}
+</section>

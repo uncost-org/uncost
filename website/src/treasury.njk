@@ -1,10 +1,54 @@
 ---
 layout: layouts/base.njk
 title: "The Treasury"
+description: "Uncost's public financial record. Not yet active — Uncost is seeking fiscal sponsorship before public donations open, so there are no funds to report yet."
 noindex: true
 ---
-<div class="block">
-<h1>Treasury</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">No figures are published here until they carry receipts.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">{{ site.tagline }}</p>
+  <h1>The Treasury</h1>
+  {{ gap("treasury-intro", "the hero tagline and intro describing the Treasury as Uncost's public financial record (funds received, spending categories, project reserves, sponsor & platform fees) is design-authored; author from the movement plan before it ships") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Status</p>
+  <h2 class="sec">Not yet active.</h2>
+  <p><span class="status status--planned">Not yet active</span></p>
+  <p class="lead">Uncost is seeking fiscal sponsorship before accepting public donations. No donations are open, and there are no funds to report yet.</p>
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Structure</p>
+  <h2 class="sec">What the record will show.</h2>
+  {{ gap("treasury-structure", "the four-row structure (funds received / spending categories / project reserves / sponsor & platform fees, each 'reported when donations open') is design-authored; author once the reporting structure is defined") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Spending categories</p>
+  <h2 class="sec">The categories that will be reported.</h2>
+  {{ gap("treasury-categories", "the five spending categories are attributed to the movement plan, but the July source enumerates no spending-category breakdown (diverges from source, uncited); do not publish until categories are sourced") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Principles</p>
+  <h2 class="sec">The standing rules.</h2>
+  <h3>Receipts behind summaries</h3>
+  {{ gap("treasury-principle-receipts", "the 'every expense retains an internal receipt and approval trail' principle is design-authored; author from adopted controls before it ships") }}
+  <h3>Money never buys influence</h3>
+  {{ gap("treasury-principle-influence", "the 'donations and in-kind support never buy conclusions, coverage, governance influence, votes, or preferential treatment' principle is design-authored; author from the contribution model before it ships") }}
+  <h3>No speculative treasury</h3>
+  <p>No cryptocurrency, no on-chain mechanics — segregated accounts under a confirmed lawful structure only.</p>
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Reporting &amp; redaction</p>
+  <h2 class="sec">How figures will be reported.</h2>
+  {{ gap("treasury-redaction", "the summarize-and-redact reporting note references draft controls POL-004, POL-005 and POL-010 (public review drafts, not adopted); design-authored, author once the reporting policy is adopted") }}
+</section>
+
+<section class="blk blk--ink">
+  <h2 class="sec">Want to help before donations open?</h2>
+  {{ gap("treasury-cta", "the 'register an intention to give, volunteer, or offer in-kind support' pitch is design-authored; author from the contribution model") }}
+  <p><a href="/pledge" class="u-btn u-btn--primary">Contribute</a> <a href="/join" class="u-btn u-btn--outline-cream">Take part</a></p>
+</section>

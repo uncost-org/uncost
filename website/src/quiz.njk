@@ -1,10 +1,13 @@
 ---
 layout: layouts/base.njk
-title: "Quiz"
+title: "The Quiz"
+description: "The guess-what-living-costs quiz is planned, not yet built. In the meantime, sign the Pledge and read The Case."
 noindex: true
 ---
-<div class="block">
-<h1>Quiz</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-<p class="meta">This route is roadmap-gated (LATER in the frozen route contract) and intentionally unlisted.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">Planned tool · The Movement</p>
+  <h1>The Quiz</h1>
+  <p class="lead">This is a planned tool. It is not built for launch yet.</p>
+  {{ gap("quiz-later", "planned; not built for launch") }}
+</section>

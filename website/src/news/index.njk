@@ -1,8 +1,33 @@
 ---
 layout: layouts/base.njk
 title: "News"
+description: "The Uncost movement news index: pre-launch movement updates and a curated Cost Watch of external reporting on the cost of living and automation."
 ---
-<div class="block">
-<h1>News</h1>
-<p class="meta">[PLACEHOLDER] — the day-one news seed (Perspectives #1 plus two movement updates) arrives with the content pass. The feed is live from day one: <a href="/news/feed.xml">RSS</a>.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">News</p>
+  <h1 class="sec">News.</h1>
+  {{ gap("news-intro", "the 'What's moving — ours and the world's' intro and the left/right (movement updates vs Cost Watch) framing are design-authored with no source; author against the July plan before it ships") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Updates</p>
+  <h2 class="sec">Movement updates.</h2>
+  {{ gap("news-updates", "the pre-launch update cards (plan/brand/site 'complete', why Shelter/Food/Energy first, receipts methodology) are design-authored; one asserts artifacts are 'complete' which diverges from the July source and the CLAUDE.md shipped/adopted boundary — do not render as fact. Author from the plan and add the RSS-at-launch note when real") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Cost Watch</p>
+  <h2 class="sec">External reporting, curated.</h2>
+  {{ gap("news-cost-watch", "the curated external reading list (Harvard JCHS, US BLS CPI, IMF Blog) and the 'inclusion isn't endorsement' framing are design-authored with no reviewed source register entry; wire each link, publisher, and date from the public source register once records exist") }}
+</section>
+
+<section class="blk blk--ink">
+  <p class="eyebrow">Get updates</p>
+  <h2 class="sec">Stay in the loop.</h2>
+  {{ gap("news-cta", "the email-updates pitch ('occasional email … never sold') is design-authored and there is no confirmed updates/subscribe route yet; author the CTA copy and wire the real endpoint before it ships") }}
+  <div class="cta-actions">
+    <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
+    <a href="/join" class="u-btn u-btn--outline-cream">Take part</a>
+  </div>
+</section>

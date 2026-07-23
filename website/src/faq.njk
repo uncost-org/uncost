@@ -1,8 +1,80 @@
 ---
 layout: layouts/base.njk
 title: "FAQ"
+description: "Straight, grouped answers about what Uncost is, how it is funded, how the Assembly works, how evidence is handled, and where AI and robotics fit."
 ---
-<div class="block">
-<h1>FAQ</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">FAQ</p>
+  <h1>Straight answers.</h1>
+  {{ gap("faq-intro", "the intro band (no spin, ask us and we will add it) is design-authored with no source; author the FAQ standfirst before it ships") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">The basics</p>
+  <h2 class="sec">The basics.</h2>
+
+  <h3>What is Uncost, in one sentence?</h3>
+  <p>A nonprofit, nonpartisan movement to reduce the cost of living by directing AI, robotics, open-source tools, and shared infrastructure toward the essentials — starting with evidence, not promises.</p>
+
+  <h3>Is this a political party or campaign?</h3>
+  <p>No. Uncost is strictly nonpartisan. We publish open data and public-interest analysis and welcome people across the political spectrum. We don&rsquo;t back candidates, run campaigns, or do partisan lobbying.</p>
+
+  <h3>Is this crypto, a token, or a DAO?</h3>
+  <p>No — deliberately. There are no tokens, no on-chain voting, and no crypto mechanics. The Assembly&rsquo;s value is trust and participation, not financial speculation.</p>
+
+  <h3>Are you against work?</h3>
+  {{ gap("faq-q-against-work", "the forced-work / basic-needs-behind-a-paycheck framing is design-authored and not in the July MOVEMENT_PLAN or CONTROL; author from the vision before it ships") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Money &amp; funding</p>
+  <h2 class="sec">Money &amp; funding.</h2>
+
+  <h3>Can I donate right now?</h3>
+  <p>Not yet. We&rsquo;re seeking fiscal sponsorship before accepting public donations that would qualify for a tax deduction. You can register an intention to give and we&rsquo;ll email you the moment it opens — no money changes hands today.</p>
+
+  <h3>How will you handle money transparently?</h3>
+  {{ gap("faq-q-money-transparency", "the Treasury public financial record with internal receipt/approval trail is design-authored detail; July states only transparent financial records when funding begins — author against the funding model. Once live, spending reports in The Treasury (/treasury)") }}
+
+  <h3>Do donations buy influence or votes?</h3>
+  <p>Never. There&rsquo;s no payment to vote and no extra influence for donors — that&rsquo;s a core principle, since the whole movement opposes wealth determining outcomes.</p>
+</section>
+
+<section class="blk">
+  <p class="eyebrow">The evidence</p>
+  <h2 class="sec">The evidence.</h2>
+
+  <h3>How do I know your numbers are real?</h3>
+  <p>Every figure carries a source, a date, and a confidence label. Anything hypothetical is marked &ldquo;illustrative only.&rdquo; Corrections are logged publicly — see <a href="/receipts">The Receipts</a>.</p>
+
+  <h3>Won&rsquo;t you just overpromise what AI can do?</h3>
+  <p>We use careful, task-specific language and publish uncertainty ranges. Where a model shows automation <em>doesn&rsquo;t</em> beat the status quo once energy, capital, and maintenance are counted, we publish that negative result too.</p>
+
+  <h3>Why fifteen sectors?</h3>
+  <p>Because living isn&rsquo;t one bill. We map all fifteen essentials and go deep on three first — Shelter, Food, and Energy — to prove the model before expanding. See <a href="/sectors/">the Sectors</a>.</p>
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Voice &amp; governance</p>
+  <h2 class="sec">Voice &amp; governance.</h2>
+
+  <h3>What is the Assembly, and is my vote binding?</h3>
+  <p>The Assembly is how supporters propose, prioritise, and review the work, with transparent records. It is <strong>currently advisory</strong>. As the legal structure matures, votes may carry more weight where the law allows — but decisions with legal, fiduciary, or safeguarding duty always rest with responsible leadership and the fiscal sponsor. The exact binding-versus-advisory wording is being finalised and will be published in the governance policy.</p>
+
+  <h3>Who runs Uncost?</h3>
+  {{ gap("faq-q-who-runs", "the founder-led / recruiting advisory group / confidential founder-identity-for-due-diligence framing is design-authored and not in July MOVEMENT_PLAN or CONTROL; author from a reviewed governance statement") }}
+
+  <h3>How is my data handled?</h3>
+  {{ gap("faq-q-data-handling", "the data-handling promises (never sell data, never use pledge for partisan targeting) and the Privacy Policy POL-001 reference are design-authored with no source; wire from an actual published privacy policy once one exists") }}
+</section>
+
+<section class="blk blk--ink">
+  <p class="eyebrow">Still have a question?</p>
+  <h2 class="sec">Ask directly.</h2>
+  {{ gap("faq-cta", "the contact channel and human-reply guarantee (contact@uncost.org) are unsourced operational assertions; confirm the real contact route before publishing") }}
+  <div class="cta-actions">
+    <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
+    <a href="/movement" class="u-btn u-btn--outline-cream">What the movement is</a>
+  </div>
+</section>

@@ -1,8 +1,93 @@
 ---
 layout: layouts/base.njk
 title: "About"
+description: "The honest current state of Uncost: its four parts, how a cost gets uncosted, the working principles, what the movement is and is not, and who is accountable."
 ---
-<div class="block">
-<h1>About</h1>
-<p class="meta">[PLACEHOLDER] — page content arrives with the governed design handoff.</p>
-</div>
+{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+<section class="blk blk--first">
+  <p class="eyebrow">About</p>
+  <h1>About Uncost.</h1>
+  {{ gap("about-hero-tagline", "the hero line 'We're early. Here's exactly how early.' is design-authored with no source; approve it or author a source-backed hero statement") }}
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">The movement</p>
+  <h2 class="sec">The honest state of a new movement.</h2>
+  <p class="lead">Uncost is a nonprofit, nonpartisan movement working to lower the real cost of living using evidence, AI, robotics and open tools. It is also, right now, very new — so here is the honest state of it.</p>
+</section>
+
+<section class="blk">
+  <p class="eyebrow">The four parts</p>
+  <h2 class="sec">Four parts, one movement.</h2>
+  <h3>01 — The Movement</h3>
+  <p>Join in — pledge, take part, spread it. Reach people with visual, sourced explanations, bring them to a trusted front door, and offer clear paths to support, contribute, or partner. See <a href="/movement">The Movement</a>.</p>
+  <h3>02 — The Case</h3>
+  <p>The evidence — what living really costs. Define what one human needs, measure what it costs by region, explain the drivers, and publish open methodology.</p>
+  <h3>03 — The Projects</h3>
+  <p>Open tools that cut real costs. Translate evidence into open software, data tools, planning models, kits, studies, and playbooks that communities and qualified partners can use.</p>
+  <h3>04 — The Assembly</h3>
+  <p>Your voice — transparent and advisory. A structured, recorded supporter voice through proposals, surveys, and prioritization — within legal, fiduciary, and safeguarding limits.</p>
+</section>
+
+<section class="blk blk--ink">
+  <p class="eyebrow">The mechanism</p>
+  <h2 class="sec">How a cost gets uncosted.</h2>
+  <h3>1 — Measure</h3>
+  <p>Measure the current cost and its context, starting from public data.</p>
+  <h3>2 — Publish</h3>
+  <p>Publish the sources, dates, methods, and confidence labels — openly, so anyone can check the work.</p>
+  <h3>3 — Break down</h3>
+  <p>Break down the cost stack into its real components. {{ gapInline("about-mechanism-cost-stack") }}</p>
+  <h3>4 — Match</h3>
+  <p>Match plausible AI, robotics, sharing, infrastructure, or public-interest mechanisms to specific components.</p>
+  <h3>5 — Package</h3>
+  <p>Package the result as open evidence, software, a brief, or a playbook local groups can use. Uncost publishes; local operators decide and act.</p>
+  <h3>6 — Track</h3>
+  <p>Track whether total cost actually falls — and publish negative results with the same prominence as wins.</p>
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Working principles</p>
+  <h2 class="sec">Three rules keep it honest.</h2>
+  <h3>Receipts first</h3>
+  <p>Every public number, claim, and cost estimate is sourced, dated, confidence-labeled, and open to correction.</p>
+  <h3>Open and reusable</h3>
+  <p>Models, methods, dashboards, and project designs are public and reusable wherever rights, safety, privacy, and partner terms allow.</p>
+  <h3>Nonpartisan practical optimism</h3>
+  <p>Bold but phased, lawful, measurable, and credible across political identities.</p>
+</section>
+
+<section class="blk blk--cream2">
+  <p class="eyebrow">Plainly</p>
+  <h2 class="sec">What Uncost is — and is not.</h2>
+  <h3>Uncost is</h3>
+  {{ gap("about-what-uncost-is", "the four 'Uncost is' positive framings are design-authored with no source; approve or author from the movement plan before they ship") }}
+  <h3>Uncost is not</h3>
+  <ul>
+    <li>A political party or candidate campaign.</li>
+    <li>A crypto, DAO, or token project.</li>
+    <li>A promise that every physical constraint disappears or that everything becomes free.</li>
+    <li>A replacement for local democratic control or qualified professional judgment.</li>
+  </ul>
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Who is accountable</p>
+  <h2 class="sec">What doesn't exist yet.</h2>
+  {{ gap("about-accountability", "the current-state disclosures (not incorporated, no fiscal sponsor, cannot accept donations, Assembly not operating, dashboard designed not built, no policy in force, advisory group forming, leads being recruited) are uncited status claims; verify each against merged canon current-state before publishing") }}
+</section>
+
+<section class="blk">
+  <p class="eyebrow">Commitment</p>
+  <h2 class="sec">Accessibility.</h2>
+  {{ gap("about-accessibility", "the accessibility copy including the 'Built to WCAG 2.2 AA' conformance claim is design-authored and uncited; confirm against an audit or VPAT and author before publishing") }}
+</section>
+
+<section class="blk blk--ink">
+  <h2 class="sec">Take part.</h2>
+  {{ gap("about-cta", "the closing call-to-action copy is design-authored; author from the contribution model once roles are defined") }}
+  <p>
+    <a href="/join" class="u-btn u-btn--primary">Take part</a>
+    <a href="/movement" class="u-btn u-btn--outline-cream">The movement</a>
+  </p>
+</section>
