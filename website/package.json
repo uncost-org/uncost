@@ -20,6 +20,6 @@
   "devDependencies": {
     "@lhci/cli": "^0.15.1",
     "html-validate": "^9.7.1",
-    "pa11y": "^8.0.0"
+    "pa11y": "^9.1.1"
   }
 }
