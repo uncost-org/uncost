@@ -59,8 +59,18 @@ eleventyComputed:
 </section>
 
 <section id="worked" class="sblock">
+  {%- if sc.workedExample.measurement %}
+  <div class="eyebrow">03 · Where the method stops</div>
+  <h2>How far the method goes in {{ sector.name }} — and where it stops.</h2>
+  <p class="wx-lede">Nothing below is a finding. It is what the work would look like — up to the point where it must stop.</p>
+  <div class="steps6">
+    {%- for step in sc.workedExample.steps %}
+    <div class="step6"><div class="n">{{ loop.index }}</div><p>{{ step }}</p></div>
+    {%- endfor %}
+  </div>
+  <p class="wx-stop"><strong>Then we stop.</strong> Steps 4 to 6 — matching a mechanism, packaging it for others to run, and tracking whether the cost falls — would put a tool between a person and their {{ sc.workedExample.stopBetween }}. That needs {{ sc.workedExample.stopReason }} — and none of that exists yet. Until it does, {{ sector.name }} is a measurement sector: we can show what it costs and where the cost sits. We will not package something for a community group to run.</p>
+  {%- else %}
   <div class="eyebrow">03 · How a {{ sector.name | lower }} cost gets uncosted</div>
-  {% if sc.workedExample %}
   <h2>{{ sc.workedExample.scenario }}</h2>
   <p class="wx-lede">Nothing below is a finding. It is what the work would look like, step by step.</p>
   <div class="steps6">
@@ -68,10 +78,7 @@ eleventyComputed:
     <div class="step6"><div class="n">{{ loop.index }}</div><p>{{ step }}</p></div>
     {%- endfor %}
   </div>
-  {% else %}
-  <h2>The worked example.</h2>
-  {{ gap("sector-worked-example", "research-gated sector — its dossier guardrail forbids patient-facing, child-facing, or enforcement work without qualified governance, so a 'a community group can run it' worked example would imply a service that does not exist. Only cost measurement is in scope today; author a measurement-only version with the founder, or keep gapped.") }}
-  {% endif %}
+  {%- endif %}
 </section>
 
 {% if sector.guardrail %}
