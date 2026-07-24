@@ -11,6 +11,7 @@ eleventyComputed:
   description: "{{ sector.id }} {{ sector.name }}: what the sector includes, where AI and robotics could reduce costs, the guardrails, and the honest evidence status."
 ---
 {% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+{% set sc = sectorContent[sector.slug] %}
 <section class="sector-head">
   <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/sectors/">Sectors</a> &nbsp;/&nbsp; <span>{{ sector.name }}</span></div>
   <div class="sector-head-grid">
@@ -58,9 +59,19 @@ eleventyComputed:
 </section>
 
 <section id="worked" class="sblock">
-  <div class="eyebrow">03 · How {{ sector.name | lower }} gets uncosted</div>
+  <div class="eyebrow">03 · How a {{ sector.name | lower }} cost gets uncosted</div>
+  {% if sc.workedExample %}
+  <h2>{{ sc.workedExample.scenario }}</h2>
+  <p class="wx-lede">Nothing below is a finding. It is what the work would look like, step by step.</p>
+  <div class="steps6">
+    {%- for step in sc.workedExample.steps %}
+    <div class="step6"><div class="n">{{ loop.index }}</div><p>{{ step }}</p></div>
+    {%- endfor %}
+  </div>
+  {% else %}
   <h2>The worked example.</h2>
-  {{ gap("sector-worked-example", "the per-sector worked example (measure → publish → break down → match → package → track) is design-authored in the export and not in the dossier; author against the July plan and the sector's own evidence before it ships") }}
+  {{ gap("sector-worked-example", "research-gated sector — its dossier guardrail forbids patient-facing, child-facing, or enforcement work without qualified governance, so a 'a community group can run it' worked example would imply a service that does not exist. Only cost measurement is in scope today; author a measurement-only version with the founder, or keep gapped.") }}
+  {% endif %}
 </section>
 
 {% if sector.guardrail %}
@@ -73,14 +84,31 @@ eleventyComputed:
 <section id="projects" class="sblock sblock--cream2 sblock--flush">
   <div class="eyebrow">04 · Related projects</div>
   <h2>Where {{ sector.name }} shows up in The Projects.</h2>
-  {{ gap("sector-related-projects", "which projects touch this sector, and each project's role for it, is editorial curation not present in the dossier — wire from reviewed project dossiers or author, do not carry the export's roles unreviewed") }}
+  {% if sector.relatedProjects.length %}
+  <table class="prj-table">
+    <thead><tr><th>ID</th><th>Project</th><th>Role</th><th>Status</th></tr></thead>
+    <tbody>
+    {%- for p in sector.relatedProjects %}
+      <tr>
+        <td class="id">{{ p.id }}</td>
+        <td class="title"><a href="/projects/{{ p.slug }}/">{{ p.display }}</a><span class="sum">{{ p.line }}</span></td>
+        <td class="role">{% if p.layer %}{{ p.layer }}{% else %}{{ p.tag | capitalize }}{% endif %}</td>
+        <td><span class="status status--planned">Draft</span></td>
+      </tr>
+    {%- endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="sec-lead">No project currently names {{ sector.name }} in its dossier. Projects appear here only when their own brief lists this sector.</p>
+  {% endif %}
 </section>
 
 <section id="sources" class="sblock">
   <div class="eyebrow">05 · Sources</div>
   <h2>The register comes before the figures.</h2>
-  <p class="sec-lead">Every source Uncost uses gets a public ID, publisher, date, license, refresh cadence, and region coverage. The {{ sector.name }} dossier draws on the register as reviewed records are added.</p>
-  {{ gap("sector-sources", "the export's source list cited a superseded plan edition, not the re-pinned July source; no sector-specific SRC- records are registered yet (matches the dossier's evidence status). Populate from the public register once records exist") }}
+  <p class="sec-lead">No sector-specific sources are registered for {{ sector.name }} yet. When they are, each record will carry a public ID, publisher, date, licence, refresh cadence and region coverage — and every figure on this page will cite one.</p>
+  <p class="src-note">Official statistics first. Licences recorded at intake.</p>
+  <p><a href="https://github.com/uncost-org/uncost/blob/main/sources/register.csv" target="_blank" rel="noopener">Browse the public register</a> · <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener">Propose a source</a></p>
 </section>
 
 <section class="sblock sblock--cream2">
@@ -92,8 +120,8 @@ eleventyComputed:
 </section>
 
 <section class="sblock sblock--ink">
-  <h2 class="cta-h">Help build the {{ sector.name | lower }} evidence.</h2>
-  {{ gap("sector-cta", "the sector-specific volunteer-roles pitch is design-authored; author from the contribution model once roles are defined") }}
+  <h2 class="cta-h">Help build the {{ sector.name | lower }} evidence. Sources before slogans.</h2>
+  <p class="lead">Useful now: {{ sc.ctaRoles | join(", ") }}. As the work grows, a volunteer {{ sector.name }} lead.</p>
   <div class="cta-actions">
     <a href="/join" class="u-btn u-btn--primary">Take part</a>
     <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--outline-cream">The public records</a>

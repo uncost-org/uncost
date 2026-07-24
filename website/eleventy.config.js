@@ -5,6 +5,11 @@ const Image = require("@11ty/eleventy-img");
 const BRAND_ROOT = path.resolve(__dirname, "assets", "brand");
 
 module.exports = function (eleventyConfig) {
+  // Strip whitespace around block tags so `{% if %}`/`{% for %}` on their own
+  // lines do not emit indented blank lines (html-validate no-trailing-whitespace).
+  // Affects only block-tag whitespace — never rendered content.
+  eleventyConfig.setNunjucksEnvironmentOptions({ trimBlocks: true, lstripBlocks: true });
+
   // html: false — content sources are plain markdown; raw HTML stays inert.
   const md = markdownIt({ html: false });
   eleventyConfig.addFilter("md", (content) => md.render(content || ""));
