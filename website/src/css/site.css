@@ -63,6 +63,8 @@
 .step6:first-of-type{border-top:0}
 .step6 .n{width:44px;height:44px;background:var(--coral);border:2px solid var(--ink);color:var(--fg-on-spark);font-family:var(--font-display);font-weight:900;font-size:20px;display:flex;align-items:center;justify-content:center}
 .step6 p{font-size:15px;line-height:1.55;color:var(--fg-2);margin:0;max-width:70ch}
+.wx-stop{border-left:4px solid var(--coral-deep);background:var(--cream-2);padding:20px 24px;margin:28px 0 0;max-width:820px;font-size:16px;line-height:1.6;color:var(--ink)}
+.wx-stop strong{font-family:var(--font-display);font-weight:700}
 /* related projects table (sector-related-projects) */
 .prj-table{width:100%;border-collapse:collapse;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}
 .prj-table th,.prj-table td{text-align:left;padding:18px 16px;border-bottom:1px solid var(--rule-soft);vertical-align:top}

@@ -85,9 +85,45 @@ module.exports = {
     ctaRoles: ["source and licence review", "data methodology", "energy-systems research"],
   },
 
-  healthcare: { workedExample: null, ctaRoles: ["source and licence review", "data methodology", "health-economics research (cost measurement only)"] },
-  care: { workedExample: null, ctaRoles: ["source and licence review", "data methodology", "care-economics research"] },
-  education: { workedExample: null, ctaRoles: ["source and licence review", "data methodology", "education-cost research"] },
+  healthcare: {
+    workedExample: {
+      measurement: true,
+      steps: [
+        "Measure — start with what a household actually spends on medicine, diagnostics and basic care in one region, from public data with the date and region attached.",
+        PUBLISH,
+        "Break down — separate that cost into its parts: prevention, diagnostics, medicine, and the visits that go with them. Establishing the real split is the work, not the assumption.",
+      ],
+      stopBetween: "health and their care",
+      stopReason: "qualified clinical, legal, privacy and safety governance",
+    },
+    ctaRoles: ["source and licence review", "data methodology", "health-economics research (cost measurement only)"],
+  },
+  care: {
+    workedExample: {
+      measurement: true,
+      steps: [
+        "Measure — start with what a household actually spends on childcare, eldercare and disability care in one region, from public data with the date and region attached.",
+        PUBLISH,
+        "Break down — separate that cost into its parts: the hours of care, the people who provide it, and the support families pay for around it. Establishing the real split is the work, not the assumption.",
+      ],
+      stopBetween: "care",
+      stopReason: "dignity, consent, privacy, safeguarding and human oversight",
+    },
+    ctaRoles: ["source and licence review", "data methodology", "care-economics research"],
+  },
+  education: {
+    workedExample: {
+      measurement: true,
+      steps: [
+        "Measure — start with what a household actually spends on education, tutoring and skills in one region, from public data with the date and region attached.",
+        PUBLISH,
+        "Break down — separate that cost into its parts: tuition and fees, materials, tutoring, and the time it takes. Establishing the real split is the work, not the assumption.",
+      ],
+      stopBetween: "child's education",
+      stopReason: "privacy, curriculum, bias, guardian-consent and human-oversight safeguards",
+    },
+    ctaRoles: ["source and licence review", "data methodology", "education-cost research"],
+  },
 
   transportation: {
     workedExample: {
@@ -164,7 +200,19 @@ module.exports = {
     ctaRoles: ["source and licence review", "data methodology", "connectivity and access research"],
   },
 
-  safety: { workedExample: null, ctaRoles: ["source and licence review", "data methodology", "community-resilience research"] },
+  safety: {
+    workedExample: {
+      measurement: true,
+      steps: [
+        "Measure — start with what a household and a community actually spend on emergency readiness and prevention in one region, from public data with the date and region attached.",
+        PUBLISH,
+        "Break down — separate that cost into its parts: prevention, emergency response, disaster readiness, and recovery. Establishing the real split is the work, not the assumption.",
+      ],
+      stopBetween: "safety",
+      stopReason: "qualified authorities, safeguards, and a firm line that it is never enforcement or surveillance",
+    },
+    ctaRoles: ["source and licence review", "data methodology", "community-resilience research"],
+  },
 
   environment: {
     workedExample: {
