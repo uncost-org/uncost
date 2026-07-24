@@ -4,7 +4,16 @@ updates:
     directory: /
     schedule:
       interval: monthly
+
   - package-ecosystem: npm
     directory: /website
     schedule:
-      interval: weekly
+      interval: monthly
+    # Dev-dependency bumps (html-validate, pa11y, lhci, and their trees) arrive
+    # as ONE grouped PR per month, not a drip of individual PRs — a stream of
+    # low-signal PRs trains merge-without-review, which is the habit these gates
+    # exist to prevent. Runtime deps (eleventy, eleventy-img, markdown-it) stay
+    # individual: they are few and high-impact, and warrant per-PR review.
+    groups:
+      dev-dependencies:
+        dependency-type: development
