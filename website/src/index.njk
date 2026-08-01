@@ -4,13 +4,13 @@ home: true
 title: "Home"
 description: "Uncost is a nonprofit, nonpartisan movement working to uncost the cost of living — in the open, with every number sourced."
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+{% import "partials/figure.njk" as fig %}
 
 <section class="blk blk--first">
   <p class="eyebrow">A nonprofit, nonpartisan movement</p>
   <h1>{{ site.tagline }}</h1>
   <p class="lead">Uncost the cost of living.</p>
-  {{ gap("home-hero-intro", "the hero's positioning paragraph (machines that could make life cheaper aren't pointed at what keeps you alive; we work to change where they point, in the open, every number sourced) is design-authored with no source — author against the July movement plan before it ships") }}
+  <p>The machines that could make life cheaper aren’t pointed at the things that keep you alive. We’re working to change where they point — in the open, with every number sourced.</p>
   <p>
     <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
     <a href="/case" class="u-btn u-btn--ghost">See the evidence</a>
@@ -18,57 +18,70 @@ description: "Uncost is a nonprofit, nonpartisan movement working to uncost the 
 </section>
 
 <section class="blk">
-  <p class="eyebrow">02 · The problem, with receipts · United States</p>
+  <p class="eyebrow">The problem, with receipts · United States</p>
   <h2 class="sec">Working harder, still falling behind.</h2>
-  {{ gap("home-problem-stats", "the three cost-of-living figures (renter cost-burden, grocery inflation, dollars left after rent) carry external citations outside the July controlling source and one asserts a 'record' superlative — none may render as fact; wire from the public source register once records exist") }}
-  <p>Every figure carries its source, its date and its region. If we can't show you where a number came from, we don't print it. Figures checked July 2026.</p>
+  {{ fig.stat(register.byId["SRC-020"]) }}
+  {{ fig.stat(register.byId["SRC-021"]) }}
+  {{ fig.stat(register.byId["SRC-004"]) }}
+  <p>Every figure carries its source, its date and its region. If we can’t show you where a number came from, we don’t print it.</p>
   <p><a href="/receipts">See the receipts →</a></p>
 </section>
 
 <section class="blk blk--cream2">
-  <p class="eyebrow">03 · The idea</p>
+  <p class="eyebrow">The idea</p>
   <h2 class="sec">The idea, in three beats.</h2>
-  {{ gap("home-idea-beats", "the three-beat framing (basics got more expensive / everything else got cheaper to make / nobody points the cheap machines at the expensive problems) is design-authored and two beats are uncited macro claims — author against the July movement plan with sourced framing before it ships") }}
+  <div class="beat">
+    <h3>Everything that keeps you alive got more expensive.</h3>
+    <p>Shelter, food, power, care. The basics, not the luxuries.</p>
+  </div>
+  <div class="beat">
+    <h3>Almost everything else got cheaper to make.</h3>
+    <p>Automation, robotics and software kept driving production costs down.</p>
+  </div>
+  <div class="beat">
+    <h3>Nobody is pointing the cheap machines at the expensive problems.</h3>
+    <p>That’s the gap Uncost works in.</p>
+  </div>
 </section>
 
 <section class="blk blk--ink">
-  <p class="eyebrow">04 · What Uncost is</p>
+  <p class="eyebrow">What Uncost is</p>
   <h2 class="sec">Four parts, one job.</h2>
   <div>
     <h3>The Movement</h3>
-    <p>Join in — pledge, take part, spread it. Enough people saying the same thing, out loud. <a href="/movement">Explore →</a></p>
+    <p>Enough people saying the same thing, out loud. <a href="/movement">Explore →</a></p>
   </div>
   <div>
     <h3>The Case</h3>
-    <p>The evidence — what living actually costs, with every number sourced. <a href="/case">Explore →</a></p>
+    <p>What living actually costs, with every number sourced. <a href="/case">Explore →</a></p>
   </div>
   <div>
     <h3>The Projects</h3>
-    <p>Open tools that cut real costs — anyone can copy, adapt and run them. <a href="/projects">Explore →</a></p>
+    <p>Open tools anyone can copy, adapt and run. <a href="/projects/">Explore →</a></p>
   </div>
   <div>
     <h3>The Assembly</h3>
-    <p>Your voice — transparent and advisory. Supporters get a say, transparently and on the record. <a href="/assembly">Explore →</a></p>
+    <p>Supporters get a say, transparently and on the record. <a href="/assembly">Explore →</a></p>
   </div>
 </section>
 
 <section class="blk">
-  <p class="eyebrow">05 · How it works</p>
+  <p class="eyebrow">How it works</p>
   <h2 class="sec">How a cost gets uncosted.</h2>
-  <p class="lead">Six steps, every time — negative results included.</p>
+  <p class="lead">Six steps. No magic. The whole method is public, and so is every step we get wrong.</p>
   <ol>
-    <li>Measure the current cost and context.</li>
-    <li>Publish sources, dates, methods, and confidence.</li>
-    <li>Break down the cost stack into its real components.</li>
-    <li>Match plausible AI, robotics, sharing, infrastructure, or public-interest mechanisms to specific components.</li>
-    <li>Package the result as open evidence, software, a brief, or a playbook local groups can use.</li>
-    <li>Track whether total cost actually falls — publishing negative results too.</li>
+    <li>Measure what it really costs, from public data.</li>
+    <li>Show every source before the conclusions.</li>
+    <li>Find what drives the cost.</li>
+    <li>Identify what could lower it — counting what it adds as well as what it saves.</li>
+    <li>Package it so others can build and run it.</li>
+    <li>Track whether it worked — and publish the answer either way.</li>
   </ol>
   <p><a href="/movement" class="u-btn u-btn--ghost">How it works, in full</a></p>
 </section>
 
 <section class="blk blk--cream2">
-  <p class="eyebrow">06 · Focus now</p>
+  <p class="eyebrow">Focus now</p>
   <h2 class="sec">We start where the money actually goes.</h2>
   <div>
     <h3>Shelter <span class="status status--focus">Focus</span></h3>
@@ -82,26 +95,28 @@ description: "Uncost is a nonprofit, nonpartisan movement working to uncost the 
     <h3>Energy <span class="status status--focus">Focus</span></h3>
     <p>Electricity, heat, storage, cooking energy, and microgrids.</p>
   </div>
-  {{ gap("home-focus-note", "the sequencing line ('Shelter, food and energy first. Water is next. The other eleven are mapped and waiting.') asserts Water as the fourth focus, which the July source does not fix — author the sequencing note against the plan or omit the ordering claim") }}
+  <p>Shelter, food and energy first — to prove the model before expanding. The other twelve sectors are mapped and waiting.</p>
   <p><a href="/sectors/">All fifteen sectors →</a></p>
 </section>
 
 <section class="blk">
-  <p class="eyebrow">07 · Built in the open</p>
-  <h2 class="sec">Built in the open.</h2>
-  {{ gap("home-open-metrics", "the momentum band is design-authored. CUT the 'all sources public — every source registered, licensed and citable' claim entirely: the register is nearly empty and the claim is technically parseable but practically misleading. The policy, project, and sector counts are repo-verifiable (the content audit enforces those exact numbers) and may be authored; do not print any unsourced statistic") }}
-  <p><a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--ghost">See the public records on GitHub</a></p>
+  <p class="eyebrow">Built in the open</p>
+  <h2 class="sec">No launch video. No funding round. Just the work.</h2>
+  <p>10 draft policies. 7 project briefs. 15 sector dossiers. Every one of them public, sourced, and open to being told it’s wrong.</p>
+  <p><a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--ghost">Read the repository →</a></p>
 </section>
 
 <section class="blk blk--cream2">
-  <p class="eyebrow">08 · Imagine</p>
+  <p class="eyebrow">Imagine</p>
   <h2 class="sec">Imagine.</h2>
   <p>A regional dashboard where every cost has a source, a date, a method, and a confidence label.</p>
-  {{ gap("home-imagine-vignettes", "the remaining imagine vignettes (breaking a housing cost into land/materials/labor/energy/finance/regulation/maintenance; shared tools with reusable governance templates; a negative result published as prominently as a win) are design-authored — author against the July movement plan before they ship") }}
+  <p>Knowing which part of a housing cost comes from land, materials, labor, energy, finance, regulation, or maintenance — and where automation can and cannot help.</p>
+  <p>Shared tools and equipment supported by reusable governance, safety, and maintenance templates — not every community starting from zero.</p>
+  <p>A negative result published with the same prominence as a win, because trust matters more than protecting a slogan.</p>
 </section>
 
 <section class="blk blk--ink">
-  <p class="eyebrow">09 · The Roadmap</p>
+  <p class="eyebrow">The Roadmap</p>
   <h2 class="sec">The road ahead, one milestone at a time.</h2>
   <p class="lead">Dates are targets. Evidence sets the pace.</p>
   <p><a href="/roadmap" class="u-btn u-btn--outline-cream">See the roadmap</a></p>
@@ -109,10 +124,9 @@ description: "Uncost is a nonprofit, nonpartisan movement working to uncost the 
 
 <section class="blk blk--ink">
   <h2 class="sec">Add your name.</h2>
-  {{ gap("home-cta-pitch", "the closing pitch line ('It's free, and it shows the world how many of us want this') is design-authored — author against the participation model before it ships") }}
+  <p>It’s free, and it shows the world how many of us want this.</p>
   <p>
     <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
     <a href="/join" class="u-btn u-btn--outline-cream">Get updates</a>
   </p>
-  {{ gap("home-social-links", "the social channel row (Instagram, Threads, X, YouTube, Reddit, TikTok, Bluesky) has no verified account URLs in the source — wire real profile links from a confirmed channel list before it ships") }}
 </section>

@@ -1,0 +1,15 @@
+{#-
+  Obfuscated mailto for contact@uncost.org. The address is emitted as HTML
+  numeric character references, so the literal string "contact@uncost.org"
+  never appears in the page source (basic scraper defence) while the link
+  works normally and needs no JavaScript. Verified ownership-controlled address
+  (Cloudflare Email Routing on uncost.org).
+
+  Usage:
+    {% import "partials/mailto.njk" as mail %}
+    {{ mail.email() }}                    (link text is the address itself)
+    {{ mail.email("Contact us") }}        (custom link text)
+-#}
+{%- macro email(label="") -%}
+<a class="u-mail" href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#117;&#110;&#99;&#111;&#115;&#116;&#46;&#111;&#114;&#103;">{% if label %}{{ label }}{% else %}&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#117;&#110;&#99;&#111;&#115;&#116;&#46;&#111;&#114;&#103;{% endif %}</a>
+{%- endmacro -%}

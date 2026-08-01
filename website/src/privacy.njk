@@ -1,32 +1,40 @@
 ---
 layout: layouts/base.njk
 title: "Privacy"
-description: "The plain-language notice you read before giving Uncost your email — what we collect, why, and what we never do. Draft; not yet finalized."
+description: "The plain-language privacy notice for uncost.org. Today it collects nothing — no form on this site is live yet."
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+{% import "partials/mailto.njk" as mail %}
+
 <section class="blk blk--first">
   <p class="eyebrow">Privacy notice</p>
   <h1>Privacy</h1>
-  <p class="lead">This is the notice you read before you hand Uncost your email address. It explains, in plain language, what we collect, why, and what we will never do with it.</p>
-  <p>It is still a draft. The parts that name the responsible legal entity and set a minimum age cannot be finalized until those decisions are made with the founder and counsel — so those sections are marked below as still being written, rather than filled with guesses.</p>
+  <p class="lead">The honest version is short: right now, this site collects nothing about you, because no form on it is live yet. This notice explains who is responsible, what will change when a sign-up does go live, and what we will never do.</p>
 </section>
 
 <section class="blk">
-  <p class="eyebrow">01 · Who is responsible</p>
-  <h2 class="sec">Who holds your data.</h2>
-  {{ gap("privacy-notice-controller", "data controller identity — pending founder + counsel") }}
+  <p class="eyebrow">01 · What we collect today</p>
+  <h2 class="sec">Today, nothing.</h2>
+  <p>There is no live sign-up, pledge, or contact form on this site yet, so there is nothing for us to collect and nothing stored about your visit. The site sets no cookies, runs no analytics, and makes no third-party requests — every asset is served from uncost.org, which you can confirm in your browser’s network tab. That is why there is no cookie banner: there is nothing to consent to.</p>
+  <p>When a sign-up form does go live, it will collect only what you type in (an email address, and anything else you choose to add), this notice will be updated to say so before that happens, and nothing here is retroactive.</p>
 </section>
 
 <section class="blk blk--cream2">
-  <p class="eyebrow">02 · What we collect</p>
-  <h2 class="sec">What we ask you for.</h2>
-  {{ gap("privacy-notice-collect", "the plain-language list of what a person actually gives us (email, optional details) — author for the notice, do not lift the POL-002 governance wording") }}
+  <p class="eyebrow">02 · Who is responsible</p>
+  <h2 class="sec">Who holds your data.</h2>
+  {#- SPONSOR-GATED · COUNSEL-GATED: the data controller below is PROVISIONAL. The
+     controller identity changes once Uncost is incorporated and/or a fiscal
+     sponsor is confirmed, and the wording must be confirmed with counsel before
+     any form goes live. Update this line at the sponsor/counsel gate. -#}
+  <p>Uncost is not yet incorporated. Until it is, the person responsible for any personal data this project handles is the founder operating the unincorporated project Uncost. This is provisional and will be confirmed with counsel, and updated here, once the legal home (incorporation or a fiscal sponsor) is settled.</p>
 </section>
 
 <section class="blk">
-  <p class="eyebrow">03 · Why we use it</p>
-  <h2 class="sec">Why we use it.</h2>
-  {{ gap("privacy-notice-use", "the plain-language purposes we use your details for — author for the notice from the finalized POL-002 once adopted") }}
+  <p class="eyebrow">03 · Minimum age</p>
+  <h2 class="sec">Who can sign up.</h2>
+  {#- COUNSEL-GATED: the minimum-age threshold below is the intended DESIGN, not a
+     finalised legal position. Confirm 18+ (and any guardian handling) with counsel
+     before a sign-up form goes live. -#}
+  <p>The design is that sign-ups are for adults: when a form goes live, signing up will ask you to confirm you are 18 or older. This is the intended rule and will be confirmed with counsel before any form opens.</p>
 </section>
 
 <section class="blk blk--cream2">
@@ -34,32 +42,14 @@ description: "The plain-language notice you read before giving Uncost your email
   <h2 class="sec">What we never do.</h2>
   <ul>
     <li>We never sell, rent, or trade your personal data.</li>
-    <li>We never use your pledge or contact details for partisan political targeting.</li>
-    <li>We never require payment to vote or to take part.</li>
-    <li>We don't use tokens, on-chain voting, or crypto mechanics that expose your identity or funds.</li>
+    <li>We never use your details for partisan political targeting.</li>
+    <li>We never require payment to take part.</li>
+    <li>We never track you across other sites.</li>
   </ul>
 </section>
 
 <section class="blk">
-  <p class="eyebrow">05 · Minimum age</p>
-  <h2 class="sec">Who can sign up.</h2>
-  {{ gap("privacy-notice-age-threshold", "minimum age / guardian handling — pending decision") }}
-</section>
-
-<section class="blk blk--cream2">
-  <p class="eyebrow">06 · How long we keep it</p>
-  <h2 class="sec">How long we keep it.</h2>
-  {{ gap("privacy-notice-retention", "the plain-language retention and deletion promise — author for the notice from the adopted retention rules") }}
-</section>
-
-<section class="blk">
-  <p class="eyebrow">07 · Your rights</p>
-  <h2 class="sec">Your rights over your data.</h2>
-  {{ gap("privacy-notice-rights", "the plain-language access / correction / export / deletion rights and how to exercise them — author once the controller and contact route are set") }}
-</section>
-
-<section class="blk">
-  <p class="eyebrow">08 · Contact</p>
-  <h2 class="sec">How to reach us.</h2>
-  {{ gap("privacy-notice-contact", "the working privacy contact route — pending a confirmed privacy inbox; the export's contact@uncost.org address is unsourced") }}
+  <p class="eyebrow">05 · Reach us</p>
+  <h2 class="sec">Questions about privacy.</h2>
+  <p>If you have a question about privacy — now, or once sign-ups open — write to us at {{ mail.email() }} and a human will reply.</p>
 </section>

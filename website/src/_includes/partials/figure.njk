@@ -1,0 +1,22 @@
+{#-
+  Renders a cost-of-living statistic FROM the register (sources/register.csv via
+  _data/register.js). The wrapping data-source="SRC-###" is what the content
+  audit reads as the citation — a figure is "cited" only inside a registered
+  data-source. Never hardcode a number on a page; pass a register row here.
+
+  Usage:
+    {% import "partials/figure.njk" as fig %}
+    {{ fig.stat(register.byId["SRC-004"]) }}
+    {{ fig.line(register.byId["SRC-021"]) }}   (compact, one-line variant)
+-#}
+
+{% macro stat(row) -%}
+<figure class="stat" data-source="{{ row.source_id }}">
+  <p class="stat-claim">{{ row.display_caption }}</p>
+  <figcaption class="stat-src">{{ row.source_line }} · <a href="/receipts#{{ row.source_id }}">Receipt&nbsp;&rarr;</a></figcaption>
+</figure>
+{%- endmacro %}
+
+{% macro line(row) -%}
+<span class="stat-inline" data-source="{{ row.source_id }}">{{ row.display_caption }} <span class="stat-src">({{ row.source_line }})</span></span>
+{%- endmacro %}

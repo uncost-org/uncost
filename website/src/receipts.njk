@@ -4,6 +4,7 @@ title: "The Receipts — sources & methodology"
 description: "The methodology and source layer under everything Uncost publishes: every number has a source, every source a date, and every model states its assumptions."
 ---
 {% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+{% import "partials/figure.njk" as fig %}
 <section class="blk blk--first">
   <p class="eyebrow">Sources and methodology</p>
   <h1>The Receipts</h1>
@@ -12,6 +13,21 @@ description: "The methodology and source layer under everything Uncost publishes
 <section class="blk">
   <h2 class="sec">Every number, out in the open.</h2>
   <p class="lead">The Receipts is the methodology and source layer under everything we publish. The rule is simple: every number has a source, every source has a date, and every model states its assumptions. If a claim can&rsquo;t be sourced, we label it — plainly — as an estimate, a scenario, or a hypothesis, not a fact.</p>
+</section>
+
+<section class="blk" id="register">
+  <p class="eyebrow">The source register</p>
+  <h2 class="sec">Every figure, with its receipt.</h2>
+  <p>These are the sources behind the numbers on this site — each with its publisher, its date, its licence, and the verbatim line it came from. The register is also in the <a href="https://github.com/uncost-org/uncost/blob/main/sources/register.csv">public repository</a>.</p>
+  {% for row in register.stats %}
+  {%- if row.placement == "durable-page" %}
+  <div class="receipt-row" id="{{ row.source_id }}" data-source="{{ row.source_id }}">
+    <h3>{{ row.display_caption }}</h3>
+    <p class="receipt-meta">{{ row.source_line }} — {{ row.publisher }}, {{ row.publication_date }} · {{ row.license }} · last checked {{ row.last_checked }}</p>
+    <p class="receipt-verbatim">{{ row.receipt }}</p>
+  </div>
+  {%- endif %}
+  {% endfor %}
 </section>
 
 <section class="blk blk--cream2">

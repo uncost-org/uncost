@@ -1,6 +1,6 @@
 # Public source control and authority
 
-Updated: 2026-07-19
+Updated: 2026-07-25
 
 ## Controlling movement source
 
@@ -12,6 +12,7 @@ Updated: 2026-07-19
 - Authority: final controlling source for Uncost mission, positioning, sequencing, safeguards, and roadmap.
 - Supersedes: the 2026-07-15 edition, SHA-256 `5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670` (24 pages). Documents stamped with the superseded hash as `source_sha256` were derived from that edition; they keep the derivation stamp plus a `source_superseded_by_sha256` marker until re-reviewed against this edition. See `records/changes/CHG-001-controlling-source-repin.md`.
 - Publication boundary: the source PDF is not embedded in this repository. These documents are public derivatives; a separately designed public edition can be added after its own review.
+- Derived distribution copy: an email/web distribution PDF was generated from this controlling source on 2026-07-25 (Ghostscript `/prepress`, images downsampled to ~200 ppi; page count, selectable text, and metadata preserved). SHA-256 `5d9abfc6dc4f783074797f1144b3e78eb505880ceef40337b754a53b92000598`, 13,714,907 bytes, 27 pages. Different bytes, identical content, for distribution only; the pinned original above remains the sole authority. Not committed to this repository.
 
 ## Merged canon baseline
 
