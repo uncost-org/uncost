@@ -26,6 +26,10 @@ const PUBLISH =
 
 module.exports = {
   food: {
+    // Food's headline figure is the ground-beef average price (SRC-023), which
+    // replaced grocery inflation (SRC-002) in the headline slot per UNP-72;
+    // SRC-002 is retained in the register as the Food sector-trend source.
+    headlineSrc: "SRC-023",
     workedExample: {
       scenario: "A worked example: fresh produce in a dense city.",
       steps: [

@@ -110,7 +110,7 @@ module.exports = {
         {
           // Founder-final rewrite (replaces the docx draft flagged with ***).
           q: "How can I help right now?",
-          a: "Start with the pledge — it is the single most useful small act, because scale is the argument that makes institutions engage. Beyond that, we are actively looking for people who want to help build our movement: experts to help lead sectors and regions, researchers to verify figures against primary documents, reviewers for source licences and methodology, translators, and organisations that could pilot the work — co-ops, community groups, research teams, public bodies. If that is you, write to us; [[EMAIL]]. And donations: we can’t accept them yet but we hope to be able to accept support soon. When we can, we’ll say so clearly.",
+          a: "Start with the pledge — when sign-ups open, it is the single most useful small act, because scale is the argument that makes institutions engage. Beyond that, we are actively looking for people who want to help build our movement: experts to help lead sectors and regions, researchers to verify figures against primary documents, reviewers for source licences and methodology, translators, and organisations that could pilot the work — co-ops, community groups, research teams, public bodies. If that is you, write to us; [[EMAIL]]. And donations: we can’t accept them yet but we hope to be able to accept support soon. When we can, we’ll say so clearly.",
         },
       ],
     },

@@ -11,7 +11,9 @@ eleventyComputed:
   description: "{{ sector.id }} {{ sector.name }}: what the sector includes, where AI and robotics could reduce costs, the guardrails, and the honest evidence status."
 ---
 {% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+{% import "partials/figure.njk" as fig %}
 {% set sc = sectorContent[sector.slug] %}
+{% set headlineRow = register.byId[sc.headlineSrc] if sc.headlineSrc else null %}
 <section class="sector-head">
   <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/sectors/">Sectors</a> &nbsp;/&nbsp; <span>{{ sector.name }}</span></div>
   <div class="sector-head-grid">
@@ -46,6 +48,18 @@ eleventyComputed:
 <section id="evidence" class="sblock sblock--ink">
   <div class="eyebrow">02 · Evidence status</div>
   <h2>No number ships without a <span class="hl-coral">receipt</span>.</h2>
+  {% if headlineRow %}
+  <div class="evd">
+    {{ fig.stat(headlineRow) }}
+    <p>Every figure on this page carries: value, unit, region, date observed, a source ID from the public register, a confidence label, and the collection method.</p>
+    <div class="chips">
+      <span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span>
+      <span class="rcpt-conf rcpt-conf--estimate">Estimate</span>
+      <span class="rcpt-conf rcpt-conf--scenario">Scenario</span>
+      <span class="rcpt-conf rcpt-conf--needs-refresh">Needs refresh</span>
+    </div>
+  </div>
+  {% else %}
   <div class="evd-empty">
     {% if sector.evidence %}<h3>{{ sector.evidence }}</h3>{% else %}{{ gap("sector-evidence") }}{% endif %}
     <p>When {{ sector.name }} figures publish, each line carries: value, unit, region, date observed, a source ID from the public register, a confidence label, and the collection method.</p>
@@ -56,6 +70,7 @@ eleventyComputed:
       <span class="rcpt-conf rcpt-conf--needs-refresh">Needs refresh</span>
     </div>
   </div>
+  {% endif %}
 </section>
 
 <section id="worked" class="sblock">
@@ -113,7 +128,15 @@ eleventyComputed:
 <section id="sources" class="sblock">
   <div class="eyebrow">05 · Sources</div>
   <h2>The register comes before the figures.</h2>
+  {% if headlineRow %}
+  <div class="src-row" data-source="{{ headlineRow.source_id }}">
+    <p class="src-cite"><b>{{ headlineRow.source_id }}</b> · {{ headlineRow.title }} · {{ headlineRow.publication_date }} · {{ headlineRow.license }} · last checked {{ headlineRow.last_checked }}</p>
+    <p class="src-verbatim">{{ headlineRow.receipt }}</p>
+    <p><a href="/receipts#{{ headlineRow.source_id }}">Full receipt →</a></p>
+  </div>
+  {% else %}
   <p class="sec-lead">No sector-specific sources are registered for {{ sector.name }} yet. When they are, each record will carry a public ID, publisher, date, licence, refresh cadence and region coverage — and every figure on this page will cite one.</p>
+  {% endif %}
   <p class="src-note">Official statistics first. Licences recorded at intake.</p>
   <p><a href="https://github.com/uncost-org/uncost/blob/main/sources/register.csv" target="_blank" rel="noopener">Browse the public register</a> · <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener">Propose a source</a></p>
 </section>
