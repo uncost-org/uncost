@@ -56,7 +56,7 @@ jobs:
       - name: Deploy preview
         if: steps.config.outputs.enabled == 'true'
         id: deploy
-        uses: cloudflare/wrangler-action@9acf94ace14e7dc412b076f2c5c20b8ce93c79cd # v3
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         env:
           # Branch name reaches the shell as data, never as templated code.
           HEAD_REF: ${{ github.head_ref }}
