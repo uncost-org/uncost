@@ -10,5 +10,17 @@ eleventyExcludeFromCollections: true
     <atom:link href="{{ site.origin }}/news/feed.xml" rel="self" type="application/rss+xml" />
     <description>News from the Uncost movement.</description>
     <language>en</language>
+    {%- if news and news.length %}
+    <lastBuildDate>{{ news[0].pubDate }}</lastBuildDate>
+    {%- for item in news %}
+    <item>
+      <title>{{ item.title }}</title>
+      <link>{{ site.origin }}/news/#{{ item.slug }}</link>
+      <guid isPermaLink="false">uncost-news-{{ item.slug }}</guid>
+      <pubDate>{{ item.pubDate }}</pubDate>
+      <description><![CDATA[{{ item.body }}]]></description>
+    </item>
+    {%- endfor %}
+    {%- endif %}
   </channel>
 </rss>
