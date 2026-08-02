@@ -126,6 +126,13 @@ BUILT_URL_SUFFIXES = {".html", ".htm", ".css", ".js", ".mjs", ".cjs"}
 # anywhere in the build (case-insensitive, all file types).
 FORBIDDEN_NAMES = ("Okonkwo",)
 
+# Sponsor / incorporation transition markers (records/SPONSOR_TRANSITION.md).
+# They flag statements that change at the sponsor, counsel, or incorporation
+# gate, and must live ONLY in Nunjucks comments ({#- ... -#}) so the build
+# strips them. The built audit fails if any reaches rendered HTML (a sign the
+# note was written as an HTML comment or visible text instead).
+GATED_MARKERS = ("SPONSOR-GATED", "COUNSEL-GATED", "INCORPORATION-GATED")
+
 
 def host_allowed(host: str) -> bool:
     host = host.split("@")[-1].split(":")[0].rstrip(".").lower()
@@ -427,6 +434,28 @@ def scan_built_assertions(
                     line_texts[(rel, number)] = line
 
 
+def scan_gated_marker_leak(
+    built_dir: Path,
+    findings: List[Finding],
+    line_texts: Dict[Tuple[str, int], str],
+) -> None:
+    """FAIL if a *-GATED transition marker leaks into rendered HTML.
+
+    Markers (records/SPONSOR_TRANSITION.md) belong in Nunjucks comments only;
+    reaching the built HTML means the note was written as an HTML comment or as
+    visible text. Never allowlisted — fix it at the source.
+    """
+    for path in sorted(built_dir.rglob("*")):
+        if not path.is_file() or path.suffix.lower() not in {".html", ".htm"}:
+            continue
+        rel = str(path.relative_to(built_dir))
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            for marker in GATED_MARKERS:
+                if marker in line:
+                    findings.append(Finding("FAIL", "gated-marker-leak", rel, number, line.strip()[:90]))
+                    line_texts[(rel, number)] = line
+
+
 def iter_source_files() -> List[Path]:
     files: List[Path] = []
     for scope in SOURCE_SCOPE:
@@ -484,6 +513,7 @@ def run_scan(built_dir: Optional[Path]) -> int:
                 rel = str(path.relative_to(built_dir))
                 scan_built_html(path, rel, findings, line_texts, register_ids)
         scan_built_assertions(built_dir, findings, line_texts)
+        scan_gated_marker_leak(built_dir, findings, line_texts)
 
     allowlist = load_allowlist()
     queue = load_queue()
@@ -736,6 +766,15 @@ def selftest() -> int:
     asset_rules = [f.rule for f in asset_findings]
     expect(asset_rules.count("external-url") == 1, "only the third-party CDN url fails; uncost/github/relative/mailto pass")
     expect(asset_rules.count("forbidden-name") == 2, "Okonkwo fires case-insensitively across HTML and XML")
+
+    # Gated transition markers must never reach rendered HTML.
+    gated_findings: List[Finding] = []
+    gated_texts: Dict[Tuple[str, int], str] = {}
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / "leak.html").write_text("<!-- SPONSOR-GATED: leaked as an HTML comment -->", encoding="utf-8")
+        (Path(tmp) / "clean.html").write_text("<p>Donations open when a fiscal sponsor is confirmed.</p>", encoding="utf-8")
+        scan_gated_marker_leak(Path(tmp), gated_findings, gated_texts)
+    expect([f.rule for f in gated_findings] == ["gated-marker-leak"], "leaked gated marker fails; clean sponsor prose passes")
 
     if failures:
         for failure in failures:
