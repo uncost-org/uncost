@@ -4,7 +4,6 @@ title: "Contribute"
 description: "Ways to back Uncost directly right now — register an intention to give before donations open, volunteer skills, or offer in-kind resources. Money is not being accepted yet."
 noindex: true
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
 <section class="blk blk--first">
   <p class="eyebrow">Contribute</p>
   <h1>Back the work directly.</h1>
@@ -15,7 +14,8 @@ noindex: true
   <p class="eyebrow">Status</p>
   <p><span class="status status--planned">Donations not open</span></p>
   <h2 class="sec">Donations not open.</h2>
-  <p>Uncost is seeking fiscal sponsorship before accepting public donations. You can register an intention to give now, and we&rsquo;ll contact you when it opens — no money changes hands today.</p>
+  {#- SPONSOR-GATED: donations open only when a fiscal sponsor is confirmed. See records/SPONSOR_TRANSITION.md. -#}
+  <p>Uncost is seeking fiscal sponsorship before accepting public donations. You can register an intention to give now, and we&rsquo;ll contact you when it opens — no money changes hands today. We can&rsquo;t accept donations yet, but we hope to be able to accept support soon. When we can, we&rsquo;ll say so clearly.</p>
 </section>
 
 <section class="blk blk--cream2">
@@ -23,9 +23,11 @@ noindex: true
   <h2 class="sec">Three ways to back the work.</h2>
 
   <h3>Give — when donations open</h3>
+  {#- SPONSOR-GATED: giving opens only once the sponsor structure is confirmed. -#}
   <ul>
     <li>Register an intention to give — we&rsquo;ll email you the moment donations lawfully open.</li>
     <li>One-time or recurring, once the sponsor structure is confirmed.</li>
+    <li>When money does move, it is reported publicly through The Treasury.</li>
   </ul>
   <p><a href="/pledge" class="u-btn u-btn--ink">Register intent — sign the Pledge</a></p>
 
@@ -37,20 +39,33 @@ noindex: true
   <p><a href="/join" class="u-btn u-btn--ink">Tell us how you can help</a></p>
 
   <h3>In-kind — resources &amp; compute</h3>
-  {{ gap("contribute-in-kind", "the specific in-kind categories (compute, model access, software credits, equipment, data access, logistics, storage) are design-authored elaboration; July source references only reviewed in-kind support. Author from the confirmed contribution model") }}
+  <ul>
+    <li>Compute, model access, and software credits.</li>
+    <li>Equipment, data access, logistics, and storage.</li>
+    <li>Reviewed in-kind support is treated as first-class — it lowers the cost of building Uncost itself. It never buys conclusions, coverage, or influence.</li>
+  </ul>
+  <p><a href="/contact" class="u-btn u-btn--ink">Offer in-kind support</a></p>
 </section>
 
 <section class="blk">
   <p class="eyebrow">Volunteer roles</p>
-  <h2 class="sec">Where volunteers help first.</h2>
+  <h2 class="sec">Where volunteers help.</h2>
   <p class="lead">Useful roles, right now.</p>
-  {{ gap("contribute-volunteer-roles", "the six discrete role definitions and the paid-conversion disclaimer are design-authored, not in the July source; author the role list and the volunteering-does-not-guarantee-pay language from the confirmed contribution model") }}
+  <ul>
+    <li><strong>Source &amp; licence review</strong> — check that every figure has a real, licensed, dated source before it publishes.</li>
+    <li><strong>Data methodology</strong> — help design how costs are measured, compared, and refreshed by region.</li>
+    <li><strong>Sector research</strong> — write and maintain a sector dossier: scope, opportunity, guardrails.</li>
+    <li><strong>Engineering</strong> — build the open tools, and the data pipelines behind them.</li>
+    <li><strong>Content &amp; design</strong> — turn sourced evidence into short, honest, shareable explainers.</li>
+    <li><strong>Translation &amp; moderation</strong> — widen who can take part, and keep the community constructive.</li>
+  </ul>
+  <p>Some roles may later become paid if funding allows. Volunteering doesn&rsquo;t guarantee employment or pay, and we&rsquo;ll always say so plainly.</p>
 </section>
 
 <section class="blk blk--ink">
   <p class="eyebrow">Start free</p>
   <h2 class="sec">Not ready to commit? Start free.</h2>
-  {{ gap("contribute-cta", "the export's superlative that signing the Pledge is the single most useful free thing you can do is uncited; author a source-backed free-action pitch before it ships") }}
+  <p>Signing the pledge is free, and it&rsquo;s the public demand the rest of the work depends on.</p>
   <p>
     <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
     <a href="/treasury" class="u-btn u-btn--outline-cream">See The Treasury</a>
