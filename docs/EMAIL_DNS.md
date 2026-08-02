@@ -1,5 +1,14 @@
 # Email sending DNS records — documentation only
 
+> ⚠️ **Superseded in part (2026-08-02).** The domain policy and the current
+> transactional identity now live in [`docs/INFRA-DOMAINS.md`](INFRA-DOMAINS.md).
+> Amazon SES is the ESP; the transactional MAIL FROM is **`mail.uncost.org`**
+> (not the `t.uncost.org` planned below), and there is **one DMARC at the apex**
+> (not the per-subdomain `_dmarc.t` / `_dmarc.news` targeted below). The apex
+> inbound routing, SPF/DKIM via Cloudflare Email Routing, the
+> transactional/marketing separation, and the warm-up sequencing below still
+> govern. Where they differ, INFRA-DOMAINS.md controls.
+
 **Apply nothing from this file.** These are the exact DNS records to publish
 later, gated on vendor selection and an explicit founder DNS action. Publishing
 any DNS record is out of scope for this repository. This document is the
