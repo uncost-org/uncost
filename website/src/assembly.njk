@@ -3,34 +3,47 @@ layout: layouts/base.njk
 title: "The Assembly"
 description: "The Assembly is Uncost's intended supporter-voice mechanism — propose, deliberate, advise, on the record — advisory at launch and candid about its limits."
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
 <section class="blk blk--first">
   <p class="eyebrow">The Assembly</p>
   <h1>The Assembly</h1>
   <p class="lead">A real say — advisory first, honest about the limits.</p>
-  <p>The Assembly is how Uncost stays accountable to the people who support it: propose ideas, prioritize work, raise objections, and vote on priorities — with every proposal, method, and aggregate outcome recorded publicly.</p>
+  <p>The Assembly is how Uncost stays accountable to the people who support it: propose ideas, prioritise the work, raise objections, and advise on what comes next — with every proposal, method, and aggregate outcome recorded publicly.</p>
 </section>
 
 <section class="blk blk--cream2">
   <p class="eyebrow">Status</p>
   <h2 class="sec">Not yet operational.</h2>
   <p><span class="status status--planned">Advisory at launch</span></p>
-  <p>At launch, every Assembly outcome is advisory. No formal vote runs until the governance policy completes independent review, founder review, and legal and fiscal-sponsor review where applicable, and is formally adopted.</p>
-  {{ gap("assembly-status-governance", "the specific governance-policy identifier and its review-and-adoption chain are design-authored and the policy id (POL-006) is uncited; author from the adopted governance policy before it ships") }}
+  <p>At launch, every Assembly outcome is advisory. No formal vote runs until the governance policy — a public review draft, not adopted — completes independent review, founder review, and legal and fiscal-sponsor review where applicable, and is formally adopted.</p>
+  <p><a href="/policies/assembly-governance-participation/">Read the draft governance policy →</a></p>
 </section>
 
 <section class="blk">
   <p class="eyebrow">What supporters can do</p>
   <h2 class="sec">The participation loop.</h2>
-  <p class="lead">Uncost gives supporters a structured, recorded voice — through proposals, surveys, prioritization, and eventually formal votes where law and governance permit.</p>
-  {{ gap("assembly-participation-loop", "the four-step propose / deliberate / advise / see-the-record breakdown is a design-authored elaboration, and the proposal mechanics (public ASM reference, classification, conflict screen) are uncited; author from the governance policy before it ships") }}
+  <p class="lead">Uncost gives supporters a structured, recorded voice — through proposals, surveys, prioritisation, and eventually formal votes where law and governance permit.</p>
+  <h3>Propose</h3>
+  <p>Any eligible supporter can raise a proposal, each with a public reference and a conflict-of-interest screen.</p>
+  <h3>Deliberate</h3>
+  <p>Discussion happens in the open, with a balanced record of the arguments for and against. Rigorous disagreement is the point.</p>
+  <h3>Advise</h3>
+  <p>Surveys and recorded advisory votes on priorities — which regions or sectors come next, which projects, what the public work emphasises.</p>
+  <h3>See the record</h3>
+  <p>The method, eligibility, aggregate result, turnout, and the action taken — or the documented reason it wasn’t — are all public.</p>
 </section>
 
 <section class="blk blk--cream2">
   <p class="eyebrow">Standing rules</p>
   <h2 class="sec">Rules that don't bend.</h2>
-  {{ gap("assembly-standing-rules", "the standing rules (one person one vote, no paid influence, private ballots / public records, Pledge-based eligibility) are design-authored and the eligibility mechanic is uncited; author from the governance policy before it ships") }}
+  <h3>One person, one vote</h3>
+  <p>Participation is free and never weighted by donations, purchases, assets, or status.</p>
+  <h3>No payment to vote</h3>
+  <p>Donations never buy influence. A movement that opposes wealth deciding outcomes can’t let wealth decide its own.</p>
   <p>No tokens, no on-chain voting, no crypto mechanics. The Assembly's value is trust and participation, not speculation.</p>
+  <h3>Ballots private, records public</h3>
+  <p>Individual ballots stay private; proposals, methods, and aggregate outcomes are published.</p>
+  <h3>Eligibility comes with the pledge</h3>
+  <p>Signing the pledge, plus a privacy-preserving duplicate check — no biometrics, no government ID.</p>
 </section>
 
 <section class="blk">
@@ -40,8 +53,8 @@ description: "The Assembly is Uncost's intended supporter-voice mechanism — pr
   <h3>Advisory at launch</h3>
   <p>Every Assembly outcome starts advisory. Where law and governance allow, outcomes may come to determine bounded community priorities — which regions or sectors to focus on next, which community projects to pursue, the direction of public communications — and any such vote is marked subject to legal and fiduciary approval.</p>
   <h3>Reserved matters</h3>
+  {#- SPONSOR-GATED · INCORPORATION-GATED: the "fiscal sponsor" and "legal structure that does not yet exist" clauses change when a sponsor is confirmed / Uncost incorporates. See records/SPONSOR_TRANSITION.md. -#}
   <p>Finances above set thresholds and legal, fiduciary, safeguarding, privacy, employment, and regulatory duties remain with responsible leadership and the fiscal sponsor. Any binding authority would require legal structure that does not yet exist. Eligibility mechanics, quorum, appeals, and pauses are defined in the governance policy before the first vote.</p>
-  {{ gap("assembly-governance-policy-link", "the export links a draft governance policy by an uncited identifier (POL-006) with no registered public route; wire the link only once the reviewed policy has a published location") }}
 </section>
 
 <section class="blk blk--ink">
