@@ -109,6 +109,30 @@ WARN_FIGURE_RULES: Tuple[Tuple[str, "re.Pattern[str]"], ...] = (
 
 CITATION_MARK = re.compile(r"\bSRC-\d{3}\b")
 
+# --- Built-output-only FAIL assertions (scanned on raw built text) ---------
+# Absolute http(s) URLs in built HTML/CSS/JS are allowed only for uncost.org
+# (and its subdomains) and the project's own public repository. Everything
+# else — CDNs, fonts, trackers, third-party images/scripts — fails the built
+# audit, backing the "every asset served from uncost.org; no third-party
+# requests" guarantee. Relative paths and mailto: are unaffected (only http(s)
+# URLs are matched). github.com is a navigation target (repo links), not a
+# loaded asset; drop it from the set to forbid even those.
+ALLOWED_URL_HOSTS = {"uncost.org", "github.com"}
+URL_RE = re.compile(r"https?://([^/\s\"'<>)]+)", re.IGNORECASE)
+BUILT_URL_SUFFIXES = {".html", ".htm", ".css", ".js", ".mjs", ".cjs"}
+
+# Fabricated attributions that must never reach the built site. The Okonkwo
+# pull-quote was an invented attribution in the design export; it is banned
+# anywhere in the build (case-insensitive, all file types).
+FORBIDDEN_NAMES = ("Okonkwo",)
+
+
+def host_allowed(host: str) -> bool:
+    host = host.split("@")[-1].split(":")[0].rstrip(".").lower()
+    if not host:
+        return True
+    return any(host == allowed or host.endswith("." + allowed) for allowed in ALLOWED_URL_HOSTS)
+
 
 def clean(text: str) -> str:
     """Remove zero-width characters that could split or hide a banned term."""
@@ -367,6 +391,42 @@ def scan_built_html(
             line_texts[(rel, number)] = source_line(number)
 
 
+def scan_built_assertions(
+    built_dir: Path,
+    findings: List[Finding],
+    line_texts: Dict[Tuple[str, int], str],
+) -> None:
+    """Built-output-only FAIL assertions, independent of the vocab/figure rules:
+
+    - external-url: any http(s) URL in built HTML/CSS/JS whose host is not
+      uncost.org (or a subdomain) or an allowed repo host.
+    - forbidden-name: any banned fabricated attribution (e.g. Okonkwo),
+      case-insensitive, anywhere in the built output (all text file types).
+
+    These are never allowlisted: a built-output leak is fixed at its source.
+    """
+    for path in sorted(built_dir.rglob("*")):
+        if not path.is_file():
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue  # binary asset (image, font): nothing to scan
+        rel = str(path.relative_to(built_dir))
+        scan_urls = path.suffix.lower() in BUILT_URL_SUFFIXES
+        for number, line in enumerate(text.splitlines(), 1):
+            if scan_urls:
+                for match in URL_RE.finditer(line):
+                    if not host_allowed(match.group(1)):
+                        findings.append(Finding("FAIL", "external-url", rel, number, match.group(0)[:90]))
+                        line_texts[(rel, number)] = line
+            lowered = line.lower()
+            for name in FORBIDDEN_NAMES:
+                if name.lower() in lowered:
+                    findings.append(Finding("FAIL", "forbidden-name", rel, number, line.strip()[:90]))
+                    line_texts[(rel, number)] = line
+
+
 def iter_source_files() -> List[Path]:
     files: List[Path] = []
     for scope in SOURCE_SCOPE:
@@ -423,6 +483,7 @@ def run_scan(built_dir: Optional[Path]) -> int:
             if path.is_file() and path.suffix.lower() in {".html", ".htm"}:
                 rel = str(path.relative_to(built_dir))
                 scan_built_html(path, rel, findings, line_texts, register_ids)
+        scan_built_assertions(built_dir, findings, line_texts)
 
     allowlist = load_allowlist()
     queue = load_queue()
@@ -652,6 +713,29 @@ def selftest() -> int:
         not covered_by_source("crypto-token", "an edited sentence mentioning a token somewhere else entirely", texts),
         "non-matching fragment is not covered",
     )
+
+    # Built-output-only assertions: external URLs and forbidden fabricated names.
+    expect(host_allowed("uncost.org"), "uncost.org host allowed")
+    expect(host_allowed("www.uncost.org"), "uncost.org subdomain allowed")
+    expect(host_allowed("github.com"), "repo host allowed")
+    expect(not host_allowed("fonts.googleapis.com"), "third-party CDN host rejected")
+    expect(not host_allowed("uncost.org.evil.example"), "look-alike host rejected")
+    asset_findings: List[Finding] = []
+    asset_texts: Dict[Tuple[str, int], str] = {}
+    asset_html = (
+        '<link rel="stylesheet" href="https://fonts.googleapis.com/x.css">'
+        '<a href="https://github.com/uncost-org/uncost">repo</a>'
+        '<a href="/case">relative</a><a href="mailto:x@uncost.org">mail</a>'
+        '<img src="https://uncost.org/img/a.png" alt="a">'
+        "<blockquote>As Okonkwo wrote</blockquote>"
+    )
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / "p.html").write_text(asset_html, encoding="utf-8")
+        (Path(tmp) / "feed.xml").write_text("<x>okonkwo, lowercase in xml</x>", encoding="utf-8")
+        scan_built_assertions(Path(tmp), asset_findings, asset_texts)
+    asset_rules = [f.rule for f in asset_findings]
+    expect(asset_rules.count("external-url") == 1, "only the third-party CDN url fails; uncost/github/relative/mailto pass")
+    expect(asset_rules.count("forbidden-name") == 2, "Okonkwo fires case-insensitively across HTML and XML")
 
     if failures:
         for failure in failures:
