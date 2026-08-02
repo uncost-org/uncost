@@ -3,22 +3,33 @@ layout: layouts/base.njk
 title: "The Projects"
 description: "Uncost's project briefs — public review drafts. No budget, build, pilot, or launch is approved."
 ---
-{% from "partials/content-needed.njk" import block as gap %}
 <section class="blk blk--first">
   <p class="eyebrow">The Projects</p>
-  <h1 class="sec">The projects.</h1>
+  <h1 class="sec">From evidence to real cost reduction.</h1>
   <p class="lead">Public review drafts. No budget, build, pilot, or launch is approved; every brief is a reviewed dossier, not a shipped product.</p>
-  {{ gap("projects-index-intro", "the export's 'one system, three parts' hub framing and per-project blurbs are design-authored; author from dossiers once approved") }}
+  <p>The Projects are how Uncost moves from evidence to action: open-source tools, data models, and playbooks that communities and qualified partners can run themselves. We don’t own the farm — we publish the model, the sources, and the playbook, and local operators decide and act.</p>
 </section>
+
 <section class="blk blk--cream2">
+  <p class="eyebrow">The briefs</p>
+  <h2 class="sec">{{ catalog.projects.length }} briefs, all in review.</h2>
   <div class="doc-list">
 {%- for project in catalog.projects %}
     <a class="doc-row" href="/projects/{{ project.slug }}/"><span class="doc-id">{{ project.id }}</span><span class="doc-title">{{ project.display }}</span><span class="status status--planned">Draft</span></a>
 {%- endfor %}
   </div>
 </section>
+
 <section class="blk">
+  <p class="eyebrow">How they help</p>
+  <h2 class="sec">Every project has to earn its cost claim.</h2>
+  <p>A project only counts as a cost-reduction path where energy, capital, maintenance, and local conditions make a net reduction plausible. Where the model shows it doesn’t beat the status quo, we publish that negative result too. Where a cost driver is policy rather than technology, our role is open data and nonpartisan analysis — never partisan lobbying.</p>
+</section>
+
+<section class="blk blk--cream2">
   <p class="eyebrow">Longer horizon</p>
+  <h2 class="sec">Later — gated on funding and safety.</h2>
+  <p>Longer-term studies and partner-led physical demonstrations stay research-and-design tracks until there is funding, a local operator, safety review, legal capacity, insurance, and site permissions. None of it involves Uncost directly providing healthcare, care, child-facing education, or safety services.</p>
   <div class="prose prose--flush">
   {{ catalog.longerHorizon | mdSection | safe }}
   </div>

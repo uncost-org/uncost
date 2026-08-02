@@ -1,32 +1,48 @@
 ---
 layout: layouts/base.njk
 title: "Roadmap"
-description: "The Roadmap is the staged plan for the movement — year-one milestones and the longer horizon, with every date framed as a movable target while the stage order and the safety gates that protect each step stay fixed."
+description: "The Roadmap is the staged plan for the movement — year-one directions and the longer horizon, with every date framed as a movable target while the stage order and the safety gates that protect each step stay fixed."
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
 <section class="blk blk--first">
   <p class="eyebrow">The Roadmap</p>
   <h1 class="sec">The Roadmap.</h1>
   <p class="lead">The road ahead, one milestone at a time.</p>
-  {{ gap("roadmap-introband", "the introband narrative (dates are targets, evidence sets the pace; stage order and the gates that protect each step do not move, the calendar does) is design-authored with no source — author against docs/CONTROL.md's Date rule before it ships") }}
+  <p>Dates are targets. Evidence sets the pace. The order of the stages, and the gates that protect each one — funding, safety review, legal capacity, and local operators — do not move. The calendar does, as capacity and evidence change. Day 1 is 15 July 2026.</p>
 </section>
 
 <section class="blk blk--cream2">
   <p class="eyebrow">Year one</p>
-  <h2 class="sec">The first year.</h2>
+  <h2 class="sec">The first year, as directions — not promises.</h2>
 
   <h3>First 90 days</h3>
+  <ul>
+    <li>Public launch of the movement, the site, and the source library.</li>
+    <li>The fiscal-sponsor application and due diligence begin.</li>
+    <li>The pledge and email capture open; the first receipts-complete cost visual is published.</li>
+    <li>Core policies released as public review drafts.</li>
+  </ul>
+  {#- SPONSOR-GATED: donations open only when a fiscal sponsor is confirmed; the deductibility line below changes at that gate. See records/SPONSOR_TRANSITION.md. -#}
   <p>Tax-deductible donations open <strong>only</strong> after sponsorship is confirmed.</p>
-  {{ gap("roadmap-y1-q1", "the rest of the first-quarter milestones (public launch, fiscal-sponsor application, Pledge and email capture, first sourced cost visual, core policies as review drafts) and the quarterly subscriber target are design-authored / uncited — author from the reviewed Movement Plan; the subscriber target must not ship without a source") }}
 
   <h3>Months 4–6</h3>
-  {{ gap("roadmap-y1-q2", "the second-quarter milestones (Human Essentials Dashboard prototype, regional methodology, first Shelter/Food/Energy dossiers) and the regions target are design-authored / uncited — author from the reviewed Movement Plan; the regions target must not ship without a source") }}
+  <ul>
+    <li>First Human Essentials Dashboard prototype.</li>
+    <li>Regional methodology published.</li>
+    <li>The first Shelter, Food, and Energy dossiers go deep.</li>
+  </ul>
 
   <h3>Months 7–9</h3>
-  {{ gap("roadmap-y1-q3", "the third-quarter milestones (project briefs and creator partnerships, first Assembly community survey, early Treasury updates) and the active-members target are design-authored / uncited — author from the reviewed Movement Plan; the members target must not ship without a source") }}
+  <ul>
+    <li>Project briefs and first creator partnerships.</li>
+    <li>The first community survey through the advisory Assembly.</li>
+    <li>Early Treasury updates, once funds move.</li>
+  </ul>
 
   <h3>Months 10–12</h3>
-  {{ gap("roadmap-y1-q4", "the fourth-quarter milestones (public progress report, partner outreach, funding applications, Year 2 plan) and the creator-partners target are design-authored / uncited — author from the reviewed Movement Plan; the partners target must not ship without a source") }}
+  <ul>
+    <li>A public progress report and partner outreach.</li>
+    <li>Funding applications and a Year 2 plan.</li>
+  </ul>
 </section>
 
 <section class="blk">
@@ -34,24 +50,24 @@ description: "The Roadmap is the staged plan for the movement — year-one miles
   <h2 class="sec">The longer horizon.</h2>
 
   <h3>Year 2</h3>
-  {{ gap("roadmap-horizon-year2", "the Year 2 outlook (more regions and sectors, a wider contributor network, grant applications, and the named deliverables) is design-authored / uncited — author from the reviewed Movement Plan; named deliverables must not ship without a source") }}
+  <p>More regions and sectors, a wider contributor network, and grant applications — plus the Community Resource Simulator and the Library of Things Kit moving from brief toward build.</p>
 
   <h3>Year 3</h3>
-  {{ gap("roadmap-horizon-year3", "the Year 3 outlook (partner-led, low-risk physical prototypes only where funding, safety review, legal capacity, and local operators exist) is design-authored — author from the reviewed Movement Plan; physical pilots remain gated per CLAUDE.md") }}
+  <p>Partner-led, low-risk physical prototypes — but only where funding, safety review, legal capacity, and local operators already exist. Uncost publishes and supports; local operators decide and act.</p>
 
   <h3>Beyond</h3>
-  {{ gap("roadmap-horizon-beyond", "the beyond-Year-3 outlook (larger integrated demonstrations only once evidence, partners, governance, and safety capacity are mature) is design-authored — author from the reviewed Movement Plan") }}
+  <p>Larger integrated demonstrations, only once evidence, partners, governance, and safety capacity are mature.</p>
 </section>
 
 <section class="blk blk--cream2">
   <p class="eyebrow">How to read these dates</p>
   <h2 class="sec">How to read these dates.</h2>
-  {{ gap("roadmap-date-disclaimer", "the date-reading disclaimer (every date is a movable target anchored to Day 1, not a promise; targets shift as evidence and capacity change, but the order of the stages and the gates — funding, safety review, legal capacity, local operators — do not) is design-authored — author against docs/CONTROL.md's Date rule; the Day 1 anchor date must not ship without a source") }}
+  <p>Every date on this page is a movable target anchored to Day 1 (15 July 2026), not a promise. Targets shift as evidence and capacity change; the order of the stages and the gates that protect each one do not. Evidence, legal review, safety, sponsor requirements, and founder approval outrank the calendar.</p>
 </section>
 
 <section class="blk blk--ink">
   <h2 class="sec">Help set the pace.</h2>
-  {{ gap("roadmap-cta", "the closing pitch (evidence moves faster with more hands; sign the Pledge or see where you fit) is design-authored with no source — author from the reviewed Movement Plan") }}
+  <p>Evidence moves faster with more hands. Sign the pledge, or find where you fit.</p>
   <div class="cta-actions">
     <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
     <a href="/join" class="u-btn u-btn--outline-cream">Take part</a>

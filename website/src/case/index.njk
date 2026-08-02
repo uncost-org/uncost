@@ -4,44 +4,38 @@ eleventyComputed:
   title: "The Case"
   description: "Uncost's evidence layer: what humans need, what those needs cost by region, where automation could plausibly reduce cost, and the open methodology behind every claim."
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+{% import "partials/figure.njk" as fig %}
 <section class="blk blk--first">
   <p class="eyebrow">The evidence layer</p>
   <h1 class="sec">The Case.</h1>
-  {{ gap("case-intro", "the introband tagline and the who-it-serves paragraph are design-authored with no source; author the evidence-layer introduction from the July plan before it ships") }}
+  <p class="lead">The receipts behind every claim we make.</p>
+  <p>The Case is where Uncost shows its work: what a person actually needs, what those needs cost, where automation and shared infrastructure could plausibly bring the cost down — and the method behind every number. It is built to be checked by supporters, journalists, researchers, and sceptics alike.</p>
 </section>
 
 <section class="blk">
-  <p class="eyebrow">The dashboard</p>
-  <h2 class="sec">Explore the evidence.</h2>
-  {{ gap("case-dashboard-controls", "the sector/region filter controls and the in-development status line are design-authored; the export's specific '2-3 regions' launch target diverges from the July source (MOVEMENT_PLAN.md names only a multi-region dashboard, no count) — author against the plan") }}
-</section>
-
-<section class="blk blk--cream2">
-  <p class="eyebrow">What needs cost</p>
-  <h2 class="sec">The numbers.</h2>
-  {{ gap("case-kpis", "the cost-burden, grocery-inflation and left-after-rent figures are ⚠ UNCITED — attributed on-page to Harvard JCHS / BLS but not present in the July controlling source; do not render any statistic until each citation resolves through the public register") }}
-</section>
-
-<section class="blk">
-  <p class="eyebrow">Planned flagship</p>
-  <p><span class="status status--planned">Planned</span></p>
-  <h2 class="sec">The Human Essentials Dashboard.</h2>
-  {{ gap("case-dashboard-preview", "the illustrative dashboard output (monthly basket $X, 'shared solar + weatherization' reduction path, '3 regions' coverage) is placeholder/illustrative and ⚠ UNCITED; author the real preview from published per-region baskets and keep the illustrative-only framing so nothing reads as data") }}
+  <p class="eyebrow">What living costs</p>
+  <h2 class="sec">The numbers, with their receipts.</h2>
+  <p>We go deep on Shelter, Food, and Energy first — the three that hit hardest — and keep all fifteen sectors visible. Every figure here traces to a public source.</p>
+  {{ fig.stat(register.byId["SRC-004"]) }}
+  {{ fig.stat(register.byId["SRC-023"]) }}
+  {{ fig.stat(register.byId["SRC-005"]) }}
+  <p><a href="/sectors/">Every sector, with its evidence →</a></p>
 </section>
 
 <section class="blk blk--cream2">
   <p class="eyebrow">The question</p>
   <h2 class="sec">What does one human actually need?</h2>
   <p class="lead">Instead of starting from ideology, Uncost starts from the physical and social basics of a dignified life — fifteen sectors, from Food and Shelter to Communication and Leisure. Every part of the essential basket maps to one of them.</p>
+  <p>Costs are local, so we measure and label them by region rather than pretending a single national number tells the whole story — and we say plainly how much of the country a figure covers.</p>
   <p><a href="/sectors/" class="u-btn u-btn--ink">All fifteen sectors</a></p>
-  {{ gap("case-regionality", "the regionality explainer ('a single global cost number would damage credibility... data available for three regions') is design-authored; author the coverage-labelling posture from the July plan before it ships") }}
 </section>
 
 <section class="blk">
-  <p class="eyebrow">Illustrative example</p>
-  <h2 class="sec">An example regional basket.</h2>
-  {{ gap("case-basket-example", "the per-sector basket segments (Shelter/Food/Energy/Water at $X) are placeholders flagged Illustrative on-page, not data; real baskets publish per region with sources — author from published baskets, never render placeholder values as fact") }}
+  <p class="eyebrow">Planned flagship</p>
+  <p><span class="status status--planned">Planned</span></p>
+  <h2 class="sec">The Human Essentials Dashboard.</h2>
+  <p>The flagship is a regional, source-led picture of what one human needs and what those needs cost — carrying its history from day one, so anyone can see whether costs actually fall over time. It is designed, not built: when it ships, every figure in it will carry a source, a date, a region, and a confidence label, exactly like the numbers above.</p>
+  <p><a href="/projects/human-essentials-dashboard/">See the project brief →</a></p>
 </section>
 
 <section class="blk blk--ink">
@@ -62,9 +56,9 @@ eleventyComputed:
 
 <section class="blk blk--ink">
   <h2 class="sec">Evidence first. Tools next.</h2>
-  {{ gap("case-cta", "the closing pitch names three projects (Cost-of-Living Tracker, Basic Needs Cost Model, Human Essentials Dashboard) as feeding The Projects; only the Human Essentials Dashboard is established in the July source — do not name the others as fact until approved, author the handoff from the plan") }}
+  <p>The Case feeds The Projects — open tools that turn the evidence into something a community can actually run. The Human Essentials Dashboard presents the picture; the Cost-of-Living Tracker and Basic Needs Cost Model feed it. Every one is a public draft, not a shipped product.</p>
   <div class="cta-actions">
     <a href="/receipts" class="u-btn u-btn--primary">See The Receipts</a>
-    <a href="/projects" class="u-btn u-btn--outline-cream">The Projects</a>
+    <a href="/projects/" class="u-btn u-btn--outline-cream">The Projects</a>
   </div>
 </section>
