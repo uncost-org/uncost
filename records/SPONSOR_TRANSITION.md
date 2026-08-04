@@ -5,15 +5,12 @@ sign-off, a set of public statements and repository documents go out of date in
 the same moment. This is the checklist of every such statement, so none is
 missed. Update the statement, then tick it here.
 
-Line numbers are **verified against `main` at commit `eab9565` (2026-08-02)**;
+Line numbers are **verified against `main` at commit `f749576` (2026-08-03)**;
 the exact wording is quoted so each entry stays findable if lines drift.
 
-> ⚠️ **This map reflects current `main`, which does NOT yet include PR #45**
-> (narrative copy pass 2). PR #45 rewrites The Movement, The Case, The Projects,
-> The Assembly, Roadmap, and Contribute — which moves several of the entries
-> below and adds its own `SPONSOR-GATED` / `INCORPORATION-GATED` markers to those
-> pages. See "Pending: PR #45" at the foot of this file. When #45 merges, refresh
-> the affected rows.
+The narrative pages (Movement, Contribute, Roadmap, Assembly) carry their
+`SPONSOR-GATED` / `INCORPORATION-GATED` markers as Nunjucks comments in-template,
+enforced by the `gated-marker-leak` build assertion.
 
 ## Triggers
 
@@ -64,13 +61,14 @@ this file is their checklist.
 | `website/src/about.njk` | 31 | "We cannot accept donations." | SPONSOR |
 | `website/src/privacy.njk` | 28 | controller = "the founder operating the unincorporated project Uncost … provisional … once the legal home (incorporation or a fiscal sponsor) is settled" | INCORPORATION · SPONSOR · COUNSEL |
 | `website/src/privacy.njk` | 37 | "signing up will ask you to confirm you are 18 or older … confirmed with counsel before any form opens" | COUNSEL |
-| `website/src/contribute.njk` | 18 | "Uncost is seeking fiscal sponsorship before accepting public donations … no money changes hands today" | SPONSOR |
+| `website/src/contribute.njk` | 18 | "Uncost is seeking fiscal sponsorship before accepting public donations … no money changes hands today. We can't accept donations yet, but we hope to be able to accept support soon." | SPONSOR |
 | `website/src/contribute.njk` | 25 | "Give — when donations open" | SPONSOR |
-| `website/src/roadmap.njk` | 19 | "Tax-deductible donations open **only** after sponsorship is confirmed." | SPONSOR · COUNSEL |
+| `website/src/movement.njk` | 49 | Contribute tier: "Donations open once a fiscal sponsor is confirmed; until then there is nothing to give …" | SPONSOR |
+| `website/src/roadmap.njk` | 25 | "Tax-deductible donations open **only** after sponsorship is confirmed." | SPONSOR · COUNSEL |
 | `website/src/treasury.njk` | 4 | description: "Not yet active — Uncost is seeking fiscal sponsorship before public donations open" | SPONSOR |
 | `website/src/treasury.njk` | 16–18 | "Not yet active." / "seeking fiscal sponsorship before accepting public donations. No donations are open, and there are no funds to report yet." | SPONSOR |
-| `website/src/assembly.njk` | 16 | "Not yet operational." | SPONSOR · INCORPORATION |
-| `website/src/assembly.njk` | 43 | "… remain with responsible leadership and the fiscal sponsor. Any binding authority would require legal structure that does not yet exist." | SPONSOR · INCORPORATION |
+| `website/src/assembly.njk` | 15 | "Not yet operational." | SPONSOR · INCORPORATION |
+| `website/src/assembly.njk` | 57 | "… remain with responsible leadership and the fiscal sponsor. Any binding authority would require legal structure that does not yet exist." | SPONSOR · INCORPORATION |
 | `website/src/_data/faq.js` | 11 | standfirst: "donations closed, sign-ups not yet open" | SPONSOR |
 | `website/src/_data/faq.js` | 51 | "Uncost is not incorporated so cannot accept donations (coming soon!) …" | INCORPORATION · SPONSOR |
 | `website/src/_data/faq.js` | 64 | "seeking fiscal sponsorship … there is no donate button anywhere on this site, and nothing here should be read as a solicitation" | SPONSOR |
@@ -116,23 +114,3 @@ transition:
 - "planned … not yet built" placeholder pages: `press.njk`, `community.njk`,
   `quiz.njk`, `share.njk`, `news/events.njk`, `case/dashboard.njk`,
   `case/tracker.njk`.
-
-## Pending: PR #45 (narrative copy pass 2) — not yet on `main`
-
-PR #45 rewrites six narrative pages. When it merges, refresh these rows against
-the rewritten files (the rewrites move the statements and add their own gated
-markers, so the leak assertion will then cover them):
-
-- **`contribute.njk`** — Status and "Give" blocks are rewritten and gain
-  `SPONSOR-GATED` markers; the status paragraph adds the "hope to accept support
-  soon" line. Line numbers shift.
-- **`roadmap.njk`** — the tax-deductible gate line stays but moves; a
-  `SPONSOR-GATED` marker is added above it. Line numbers shift.
-- **`assembly.njk`** — the "Not yet operational" status and the "reserved
-  matters" paragraph are rewritten; a `SPONSOR-GATED · INCORPORATION-GATED`
-  marker is added to reserved matters. Line numbers shift.
-- **`movement.njk`** — the Contribute tier becomes a live statement ("Donations
-  open once a fiscal sponsor is confirmed") with a `SPONSOR-GATED` marker, where
-  today it is only a `gap()` placeholder note.
-- **`case/index.njk`**, **`projects/index.njk`** — no sponsor/incorporation
-  statements added; no rows here change.
