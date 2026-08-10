@@ -2,6 +2,7 @@
 layout: layouts/base.njk
 title: "News"
 description: "Pre-launch updates from the Uncost movement — what we have published and why, dated and honest about what is and isn't done."
+pageId: "news"
 ---
 <section class="blk blk--first">
   <p class="eyebrow">News</p>
@@ -13,19 +14,19 @@ description: "Pre-launch updates from the Uncost movement — what we have publi
   <p class="eyebrow">Updates</p>
   <h2 class="sec">Movement updates.</h2>
   {% for item in news %}
-  <article class="news-item">
+  <article class="up-item">
     <h3>{{ item.title }}</h3>
-    <p class="news-date"><time datetime="{{ item.dateISO }}">{{ item.date }}</time></p>
+    <p class="date"><time datetime="{{ item.dateISO }}">{{ item.date }}</time></p>
     <p>{{ item.body }}</p>
   </article>
   {% endfor %}
 </section>
 
-<section class="blk blk--ink">
+<section class="blk blk--ink" id="rss">
   <p class="eyebrow">Get updates</p>
   <h2 class="sec">Stay in the loop.</h2>
   <p>Email updates open when there’s a real route for them. For now, signing the pledge is how to be counted — and this page and its <a href="/news/feed.xml">RSS feed</a> are where new updates land.</p>
-  <div class="cta-actions">
+  <div class="row-16">
     <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
     <a href="/join" class="u-btn u-btn--outline-cream">Take part</a>
   </div>

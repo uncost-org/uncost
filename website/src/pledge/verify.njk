@@ -3,6 +3,7 @@ layout: layouts/base.njk
 title: "Pledge verification"
 description: "The page a reader reaches after clicking the confirmation link in their pledge email — it resolves to one of three states: confirmed, link expired, or link already used."
 noindex: true
+pageId: "pledge-verify"
 ---
 {% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
 
@@ -42,7 +43,7 @@ noindex: true
 <section class="blk blk--ink">
   <p class="eyebrow">Next step</p>
   <h2 class="sec">Keep going.</h2>
-  <div class="cta-actions">
+  <div class="row-16">
     <a href="/movement" class="u-btn u-btn--primary">What the movement is</a>
     <a href="/pledge" class="u-btn u-btn--outline-cream">Sign the Pledge</a>
   </div>

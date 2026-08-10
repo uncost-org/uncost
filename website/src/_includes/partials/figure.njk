@@ -11,14 +11,14 @@
 -#}
 
 {% macro stat(row) -%}
-<figure class="stat" data-source="{{ row.source_id }}">
-  <p class="stat-claim">{{ row.display_caption }}</p>
-  <figcaption class="stat-src">{{ row.source_line }} · <a href="/receipts#{{ row.source_id }}">Receipt&nbsp;&rarr;</a></figcaption>
+<figure class="rcpt" data-source="{{ row.source_id }}">
+  <p class="cap">{{ row.display_caption }}</p>
+  <figcaption class="rcpt-src">{{ row.source_line }} · <a href="/receipts#{{ row.source_id }}">Receipt&nbsp;&rarr;</a></figcaption>
 </figure>
 {%- endmacro %}
 
 {% macro line(row) -%}
-<span class="stat-inline" data-source="{{ row.source_id }}">{{ row.display_caption }} <span class="stat-src">({{ row.source_line }})</span></span>
+<span class="rcpt-src" data-source="{{ row.source_id }}">{{ row.display_caption }} <span class="rcpt-src">({{ row.source_line }})</span></span>
 {%- endmacro %}
 
 {#-

@@ -7,7 +7,7 @@ pagination:
   addAllPagesToCollections: true
 permalink: "/sectors/{{ sector.slug }}/"
 eleventyComputed:
-  pageId: "sectors-{{ sector.slug }}"
+  pageId: "sectors/{{ sector.slug }}"
   title: "{{ sector.name | safe }} — Sector dossier"
   description: "{{ sector.id }} {{ sector.name }}: what the sector includes, where AI and robotics could reduce costs, the guardrails, and the honest evidence status."
 ---

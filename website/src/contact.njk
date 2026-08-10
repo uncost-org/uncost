@@ -2,6 +2,7 @@
 layout: layouts/base.njk
 title: "Contact"
 description: "Reach a human at Uncost. Channels and the contact form publish once each is ownership-verified."
+pageId: "contact"
 ---
 {% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
 <section class="blk blk--first">
@@ -31,6 +32,7 @@ description: "Reach a human at Uncost. Channels and the contact form publish onc
 <section class="blk">
   <p class="eyebrow">Message</p>
   <h2 class="sec">Send us a message.</h2>
+  {% include "partials/forms/contact.njk" %}
   {{ gap("contact-form", "the name/email/phone/message contact form is design-authored and has no wired endpoint; author the form fields, validation copy, and submission handling before it ships") }}
 </section>
 

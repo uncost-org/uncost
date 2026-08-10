@@ -2,6 +2,7 @@
 layout: layouts/base.njk
 title: "The Receipts — sources & methodology"
 description: "The methodology and source layer under everything Uncost publishes: every number has a source, every source a date, and every model states its assumptions."
+pageId: "receipts"
 ---
 {% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
 {% import "partials/figure.njk" as fig %}
@@ -21,10 +22,10 @@ description: "The methodology and source layer under everything Uncost publishes
   <p>These are the sources behind the numbers on this site — each with its publisher, its date, its licence, and the verbatim line it came from. The register is also in the <a href="https://github.com/uncost-org/uncost/blob/main/sources/register.csv">public repository</a>.</p>
   {% for row in register.stats %}
   {%- if row.placement == "durable-page" %}
-  <div class="receipt-row" id="{{ row.source_id }}" data-source="{{ row.source_id }}">
+  <div class="rcpt-row" id="{{ row.source_id }}" data-source="{{ row.source_id }}">
     <h3>{{ row.display_caption }}</h3>
-    <p class="receipt-meta">{{ row.source_line }} — {{ row.publisher }}, {{ row.publication_date }} · {{ row.license }} · last checked {{ row.last_checked }}</p>
-    <p class="receipt-verbatim">{{ row.receipt }}</p>
+    <p class="rcpt-src">{{ row.source_line }} — {{ row.publisher }}, {{ row.publication_date }} · {{ row.license }} · last checked {{ row.last_checked }}</p>
+    <p class="cap">{{ row.receipt }}</p>
   </div>
   {%- endif %}
   {% endfor %}
@@ -58,7 +59,7 @@ description: "The methodology and source layer under everything Uncost publishes
   <p>The dashboards pull from public sources where possible, show visible &ldquo;last updated&rdquo; dates, and follow a regular review cadence. Automating those data pipelines is a funding priority — precisely so the evidence stays fresh instead of decaying quietly.</p>
 </section>
 
-<section class="blk blk--ink">
+<section class="blk blk--ink" id="corrections">
   <p class="eyebrow">Corrections and changelog</p>
   <h2 class="sec">We log our mistakes.</h2>
   <p>Every correction is recorded publicly with a date and a plain description of what changed and why. Nothing is quietly edited.</p>

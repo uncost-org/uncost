@@ -118,8 +118,86 @@ CITATION_MARK = re.compile(r"\bSRC-\d{3}\b")
 # URLs are matched). github.com is a navigation target (repo links), not a
 # loaded asset; drop it from the set to forbid even those.
 ALLOWED_URL_HOSTS = {"uncost.org", "github.com"}
+
+# Outbound NAVIGATION hosts. Deliberately a closed, reviewed list rather than
+# "any host in an <a href>": a link the movement publishes is an endorsement of
+# where it sends people, so adding one is a content decision that shows up in
+# review. These are the movement's own verified profiles, exactly as listed in
+# website/src/_data/chrome.json (social[]). They load nothing — see the
+# asset/navigation split below.
+ALLOWED_NAV_HOSTS = {
+    "instagram.com",
+    "threads.net",
+    "x.com",
+    "bsky.app",
+    "youtube.com",
+    "reddit.com",
+    "tiktok.com",
+}
 URL_RE = re.compile(r"https?://([^/\s\"'<>)]+)", re.IGNORECASE)
+
+# The guarantee is "no third-party REQUESTS", so the rule distinguishes where a
+# URL sits, not only which host it names:
+#
+#   ASSET position  — src, srcset, url(), <link href>, poster, action, import.
+#     The browser fetches these on load, so any host but uncost.org fails. This
+#     is absolute and is never allowlisted, including github.com.
+#   NAVIGATION position — an <a href>. Nothing is fetched until a person clicks,
+#     and the click leaves the site. Outbound links are the point of the footer's
+#     social row and the repository links, so these are permitted and counted.
+#
+# Without the split, adding the design's social profile links to the footer
+# fails the build 449 times while changing the number of third-party requests
+# the site makes by exactly zero.
+ASSET_URL_RE = re.compile(
+    r"""(?:\bsrc\s*=|\bsrcset\s*=|\bposter\s*=|\baction\s*=|url\(\s*)"""
+    r"""["'(]?\s*(https?://[^/\s"'<>)]+)""",
+    re.IGNORECASE,
+)
+LINK_HREF_URL_RE = re.compile(
+    r"""<link\b[^>]*?\bhref\s*=\s*["']?(https?://[^/\s"'<>)]+)""",
+    re.IGNORECASE,
+)
+ANCHOR_HREF_URL_RE = re.compile(
+    r"""<a\b[^>]*?\bhref\s*=\s*["']?(https?://[^/\s"'<>)]+)""",
+    re.IGNORECASE,
+)
 BUILT_URL_SUFFIXES = {".html", ".htm", ".css", ".js", ".mjs", ".cjs"}
+
+# A data: URI is inlined bytes, not a fetch. Its payload routinely contains
+# absolute URLs that are IDENTIFIERS rather than requests — every inline SVG
+# carries xmlns="http://www.w3.org/2000/svg", which no browser ever resolves.
+# Blank the payload before scanning so an inline icon cannot be reported as a
+# third-party request, while any real URL elsewhere on the line still is.
+def strip_data_uris(line: str) -> str:
+    """Blank every data: URI payload on a line.
+
+    A regex cannot do this safely: an inline SVG data URI legitimately contains
+    the quote character that would otherwise terminate the match
+    (url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\'...")),
+    which would leave the namespace URL exposed and reported as a third-party
+    request. So the payload is consumed with a scanner that closes on the
+    delimiter its own construct opened with.
+    """
+    out = []
+    i = 0
+    while True:
+        j = line.find("data:", i)
+        if j < 0:
+            out.append(line[i:])
+            return "".join(out)
+        out.append(line[i:j])
+        out.append("data:")
+        # Which delimiter opened this value? Look back past the payload start.
+        prefix = line[:j]
+        closer = ")"
+        for opener, close in (('url("', '"'), ("url('", "'"), ('="', '"'), ("='", "'"), ("url(", ")")):
+            if prefix.endswith(opener):
+                closer = close
+                break
+        k = line.find(closer, j + 5)
+        i = k if k >= 0 else len(line)
+
 
 # Fabricated attributions that must never reach the built site. The Okonkwo
 # pull-quote was an invented attribution in the design export; it is banned
@@ -423,10 +501,27 @@ def scan_built_assertions(
         scan_urls = path.suffix.lower() in BUILT_URL_SUFFIXES
         for number, line in enumerate(text.splitlines(), 1):
             if scan_urls:
+                line = strip_data_uris(line)
+                # Asset positions: first-party only, no exceptions.
+                for regex in (ASSET_URL_RE, LINK_HREF_URL_RE):
+                    for match in regex.finditer(line):
+                        host = match.group(1).split("//", 1)[-1]
+                        if host != "uncost.org" and not host.endswith(".uncost.org"):
+                            findings.append(
+                                Finding("FAIL", "third-party-asset", rel, number, match.group(0)[:90])
+                            )
+                            line_texts[(rel, number)] = line
+                # Everything else on the line: only navigation hosts are allowed,
+                # so a bare URL in text or an unrecognised construct still fails.
+                nav_hosts = {m.group(1).split('//', 1)[-1] for m in ANCHOR_HREF_URL_RE.finditer(line)}
                 for match in URL_RE.finditer(line):
-                    if not host_allowed(match.group(1)):
-                        findings.append(Finding("FAIL", "external-url", rel, number, match.group(0)[:90]))
-                        line_texts[(rel, number)] = line
+                    host = match.group(1)
+                    if host_allowed(host):
+                        continue
+                    if host in nav_hosts and host in ALLOWED_NAV_HOSTS:
+                        continue
+                    findings.append(Finding("FAIL", "external-url", rel, number, match.group(0)[:90]))
+                    line_texts[(rel, number)] = line
             lowered = line.lower()
             for name in FORBIDDEN_NAMES:
                 if name.lower() in lowered:

@@ -2,7 +2,9 @@
 layout: layouts/base.njk
 title: "About"
 description: "The honest current state of Uncost: what exists today, what doesn't yet, what the movement is and is not, and who is accountable."
+pageId: "about"
 ---
+{% import "partials/mailto.njk" as mail %}
 
 <section class="blk blk--first">
   <p class="eyebrow">About</p>
@@ -78,6 +80,14 @@ description: "The honest current state of Uncost: what exists today, what doesn'
   <p class="eyebrow">Who runs it</p>
   <h2 class="sec">Who runs Uncost.</h2>
   <p>Founder-led, with an advisory group forming. Sector and region leads are being recruited. We’ll name people when there are people to name — not before.</p>
+</section>
+
+<section class="blk" id="accessibility">
+  <p class="eyebrow">Accessibility</p>
+  <h2 class="sec">Built to WCAG 2.2 AA.</h2>
+  <p>This site targets WCAG 2.2 level AA, and the target is enforced by a build gate rather than a promise: every text and background pair in the design system is contrast-checked on each build, and the build fails if any pair drops below the standard.</p>
+  <p>What that means in practice: a skip link first in the tab order on every page, real landmarks, a visible focus outline on everything you can reach with a keyboard, labelled form controls, and a <code>prefers-reduced-motion</code> setting that turns animation off rather than merely slowing it. The site is fully static and needs no JavaScript to read: scripts add the menu, drawer and search overlay only.</p>
+  <p>If something here is hard or impossible to use, that is a defect and we want the report. Write to {{ mail.email() }} and tell us the page and what happened; it will be logged with the corrections.</p>
 </section>
 
 <section class="blk blk--ink">

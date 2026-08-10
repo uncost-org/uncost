@@ -2,6 +2,7 @@
 layout: layouts/base.njk
 title: "Policies"
 description: "Uncost's governance policies — public review drafts. Not adopted or in force; publication is not adoption."
+pageId: "policies"
 ---
 {% from "partials/content-needed.njk" import block as gap %}
 <section class="blk blk--first">
@@ -10,10 +11,10 @@ description: "Uncost's governance policies — public review drafts. Not adopted
   <p class="lead">Public review drafts. Not adopted or in force — publication is not adoption. Each is published so it can be reviewed before it is ever activated.</p>
 </section>
 <section class="blk blk--cream2">
-  <div class="doc-list">
+  <div class="pollist">
 {%- for policy in catalog.policies %}
-    <a class="doc-row" href="/policies/{{ policy.slug }}/"><span class="doc-id">{{ policy.id }}</span><span class="doc-title">{{ policy.display }}</span><span class="status status--planned">Draft</span></a>
+    <a class="polrow" href="/policies/{{ policy.slug }}/"><span class="pid">{{ policy.id }}</span><span >{{ policy.display }}</span><span class="status status--planned">Draft</span></a>
 {%- endfor %}
   </div>
-  <p class="doc-note">The consolidated policy pack is maintained in the public repository: <a href="https://github.com/uncost-org/uncost/blob/main/policies/POLICY-PACK-v1.3.md" target="_blank" rel="noopener">Policy Pack v1.3</a>.</p>
+  <p class="prose-60">The consolidated policy pack is maintained in the public repository: <a href="https://github.com/uncost-org/uncost/blob/main/policies/POLICY-PACK-v1.3.md" target="_blank" rel="noopener">Policy Pack v1.3</a>.</p>
 </section>

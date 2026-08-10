@@ -98,7 +98,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(-
 .ft a{color:var(--cream);text-decoration:none}
 .ft a:hover{color:var(--coral)}
 .ft-updates{display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.4fr);gap:28px 48px;padding:44px 28px;border-bottom:4px solid var(--coral);align-items:start;background:var(--wheat);color:var(--ink)}
-.ft-updates h3{font-family:var(--font-display);font-weight:700;font-size:24px;margin:0 0 6px;color:var(--ink)}
+.ft-updates h2,.ft-updates h3{font-family:var(--font-display);font-weight:700;font-size:24px;margin:0 0 6px;color:var(--ink)}
 .ft-updates .up-sub{font-size:14px;color:var(--fg-2);line-height:1.5;max-width:44ch}
 .ft-updates a{color:var(--ink)}
 .ft-updates a:hover{color:var(--coral-deep)}
@@ -124,7 +124,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(-
 .ft-grid img{height:110px;width:auto;display:block}
 .ft-tag{font-size:14px;color:var(--fg-2-on-ink);margin-top:18px;max-width:260px;line-height:1.55}
 .ft-mail{display:inline-block;font-size:14px;color:var(--fg-2-on-ink);margin-top:10px}
-.ft-col h4{font-family:var(--font-body);font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3-on-ink);margin:0 0 14px}
+.ft-col h3,.ft-col h4{font-family:var(--font-body);font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3-on-ink);margin:0 0 14px}
 .ft-col a{display:block;padding:6px 0;font-size:15px}
 .soc{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
 .soc a{width:34px;height:34px;border:2px solid rgba(237,234,227,.4);display:inline-flex;align-items:center;justify-content:center}

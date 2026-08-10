@@ -8,14 +8,14 @@
 {% import "partials/mailto.njk" as mail %}
 <footer class="ft">
   <div class="ft-updates" id="updates">
-    <div><h3>Get updates</h3><div class="up-sub">Occasional email updates on the evidence, the tools, and the movement. Nothing else.</div></div>
+    <div><h2>Get updates</h2><div class="up-sub">Occasional email updates on the evidence, the tools, and the movement. Nothing else.</div></div>
     {% include "partials/forms/updates.njk" %}
   </div>
   <div class="ft-grid">
     <div>
       {% image "logos/logo-tight-dark.png", "uncost.org", "10rem", [160, 320] %}
       <div class="ft-tag">{{ site.tagline }}</div>
-      {{ mail.email() | replace('class="u-mail"', 'class="ft-mail"') | safe }}
+      {{ mail.email("", "ft-mail") }}
       <div class="soc">
         {% for s in chrome.social %}
         {% if s.label == "Email" %}
@@ -27,7 +27,7 @@
       </div>
     </div>
     {% for col in chrome.footer %}
-    <div class="ft-col"><h4>{{ col.heading }}</h4>{% for link in col.links %}<a href="{{ link.url }}"{% if link.external %} target="_blank" rel="noopener"{% endif %}>{{ link.label }}</a>{% endfor %}</div>
+    <div class="ft-col"><h3>{{ col.heading }}</h3>{% for link in col.links %}<a href="{{ link.url }}"{% if link.external %} target="_blank" rel="noopener"{% endif %}>{{ link.label }}</a>{% endfor %}</div>
     {% endfor %}
   </div>
   <div class="ft-bar">

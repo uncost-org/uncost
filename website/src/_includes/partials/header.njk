@@ -22,6 +22,14 @@
           <div class="mg">
             <div class="mg-say">
               <div class="mg-num">{% if loop.index < 10 %}0{% endif %}{{ loop.index }}</div>
+              {#- A mega-panel title labels a navigation block; it is not part of the
+                 document outline, and the header renders before <main>, so this h3 is
+                 read as the page's first heading on all 63 pages. It is an <h3> because
+                 the design styles it that way (css/site.css: .hd-mega .mg-say h3).
+                 Only the FIRST panel needs the directive: it is the one the rule reports
+                 as the page's initial heading. Marking the others would itself fail
+                 html-validate's no-unused-disable rule. -#}
+              {% if loop.first %}<!-- [html-validate-disable-next heading-level -- navigation label, not document outline; see template comment] -->{% endif %}
               <h3><a href="{{ item.url }}">{{ item.label }}</a></h3>
               <p class="mg-desc">{{ item.desc }}</p>
             </div>

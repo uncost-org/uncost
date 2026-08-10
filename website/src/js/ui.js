@@ -31,7 +31,8 @@
     });
 
     function toggleDrawer(on){ if(!drawerEl) return; drawerEl.classList.toggle('open', on); document.body.style.overflow = on ? 'hidden' : ''; }
-    function toggleSearch(on){ if(!searchEl) return; searchEl.classList.toggle('open', on); document.body.style.overflow = on ? 'hidden' : ''; if(on) searchEl.querySelector('input').focus(); }
+    function toggleSearch(on){ if(!searchEl) return; searchEl.classList.toggle('open', on); document.body.style.overflow = on ? 'hidden' : ''; if(on){ var f = searchEl.querySelector('input, a, button'); if(f) f.focus(); } }  /* null-guarded on integration: with searchEnabled false the overlay renders
+     no input at all, and the export's unguarded .focus() would throw. */
     var bOpen = document.querySelector('[data-drawer-open]'), bClose = document.querySelector('[data-drawer-close]');
     var sOpen = document.querySelector('[data-search]'),      sClose = document.querySelector('[data-search-close]');
     if (bOpen)  bOpen.addEventListener('click', function(){ toggleDrawer(true); });

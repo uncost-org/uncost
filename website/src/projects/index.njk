@@ -2,6 +2,7 @@
 layout: layouts/base.njk
 title: "The Projects"
 description: "Uncost's project briefs — public review drafts. No budget, build, pilot, or launch is approved."
+pageId: "projects"
 ---
 <section class="blk blk--first">
   <p class="eyebrow">The Projects</p>
@@ -13,9 +14,9 @@ description: "Uncost's project briefs — public review drafts. No budget, build
 <section class="blk blk--cream2">
   <p class="eyebrow">The briefs</p>
   <h2 class="sec">{{ catalog.projects.length }} briefs, all in review.</h2>
-  <div class="doc-list">
+  <div class="plist">
 {%- for project in catalog.projects %}
-    <a class="doc-row" href="/projects/{{ project.slug }}/"><span class="doc-id">{{ project.id }}</span><span class="doc-title">{{ project.display }}</span><span class="status status--planned">Draft</span></a>
+    <a class="prow" href="/projects/{{ project.slug }}/"><span class="pid">{{ project.id }}</span><span >{{ project.display }}</span><span class="status status--planned">Draft</span></a>
 {%- endfor %}
   </div>
 </section>
@@ -30,7 +31,7 @@ description: "Uncost's project briefs — public review drafts. No budget, build
   <p class="eyebrow">Longer horizon</p>
   <h2 class="sec">Later — gated on funding and safety.</h2>
   <p>Longer-term studies and partner-led physical demonstrations stay research-and-design tracks until there is funding, a local operator, safety review, legal capacity, insurance, and site permissions. None of it involves Uncost directly providing healthcare, care, child-facing education, or safety services.</p>
-  <div class="prose prose--flush">
+  <div class="prose-60">
   {{ catalog.longerHorizon | mdSection | safe }}
   </div>
 </section>

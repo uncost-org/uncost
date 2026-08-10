@@ -7,6 +7,7 @@ pagination:
   addAllPagesToCollections: true
 permalink: "/projects/{{ project.slug }}/"
 eleventyComputed:
+  pageId: "projects/{{ project.slug }}"
   title: "{{ project.display | safe }} · The Projects"
   description: "{{ project.id }} — {{ project.display }}. A reviewed project dossier; draft, not approved for build."
 ---
@@ -14,8 +15,8 @@ eleventyComputed:
 <header class="p-head">
   <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/projects/">Projects</a> &nbsp;/&nbsp; <span>{{ project.display }}</span></div>
   <div class="p-meta"><span class="pid">{{ project.id }}</span><span class="status status--planned">Draft — not approved for build</span></div>
-  <h1 class="p-h1">{{ project.display }}</h1>
-  {% if project.publicSummary %}<p class="p-tagline">{{ project.publicSummary }}</p>{% else %}<p class="p-tagline">{{ gapInline("project-public-summary") }}</p>{% endif %}
+  <h1 >{{ project.display }}</h1>
+  {% if project.publicSummary %}<p class="tagline">{{ project.publicSummary }}</p>{% else %}<p class="tagline">{{ gapInline("project-public-summary") }}</p>{% endif %}
 </header>
 
 <section class="blk blk--first">
@@ -36,7 +37,7 @@ eleventyComputed:
     <div class="fh"><span>{{ project.id }} — {{ project.display }}</span><span class="status status--planned">Draft</span></div>
     <div class="fb">
       {% if project.resourcePosture %}<p>{{ project.resourcePosture }}</p>{% else %}{{ gap("project-resource-posture") }}{% endif %}
-      <p class="fund-meta">No cost or savings figures are published here yet. When they are, each will carry a source, a date, and a confidence label — see <a href="/receipts">The Receipts</a>. Once funds move, spending is reported in <a href="/treasury">The Treasury</a>.</p>
+      <p class="meta">No cost or savings figures are published here yet. When they are, each will carry a source, a date, and a confidence label — see <a href="/receipts">The Receipts</a>. Once funds move, spending is reported in <a href="/treasury">The Treasury</a>.</p>
     </div>
   </div>
 </section>
@@ -51,9 +52,9 @@ eleventyComputed:
 </section>
 
 <section class="blk blk--ink">
-  <h2 class="cta-h">Help build this project.</h2>
+  <h2 class="sec-cta">Help build this project.</h2>
   {{ gap("project-cta", "the project-specific volunteer pitch is design-authored; author from the contribution model once roles are defined") }}
-  <div class="cta-actions">
+  <div class="row-16">
     <a href="/join" class="u-btn u-btn--primary">Take part</a>
     <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--outline-cream">The public records</a>
   </div>

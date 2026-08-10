@@ -2,6 +2,7 @@
 layout: layouts/base.njk
 title: "Take the Pledge"
 description: "Read the five Uncost Pledge commitments and add your name. The signature form ships later — nothing you enter is stored yet."
+pageId: "pledge"
 ---
 {% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
 
@@ -30,8 +31,8 @@ description: "Read the five Uncost Pledge commitments and add your name. The sig
 <section class="blk">
   <p class="eyebrow">Add your name</p>
   <h2 class="sec">Add your name to the Pledge.</h2>
+  {% include "partials/forms/pledge.njk" %}
   <div class="form-off">
-    <span class="form-off-msg">The signature form isn't live yet — nothing you enter is recorded.</span>
     {{ gap("pledge-form", "the pledge form copy (name/email fields, the sign consent, the updates opt-in, the Assembly-interest opt-in, the age confirmation, the submit label, and the confirmation-email notice) is design-authored and the '24-hour' confirmation window is uncited — author against the UNP-57 email-capture contract before the form ships") }}
   </div>
 </section>

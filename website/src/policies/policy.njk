@@ -7,13 +7,14 @@ pagination:
   addAllPagesToCollections: true
 permalink: "/policies/{{ policy.slug }}/"
 eleventyComputed:
+  pageId: "policies/{{ policy.slug }}"
   title: "{{ policy.display | safe }} ({{ policy.id }})"
   description: "{{ policy.id }} — {{ policy.display }}. Public review draft; not adopted, not in force."
 ---
-<header class="pol-head">
+<header class="titleband">
   <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/policies/">Policies</a> &nbsp;/&nbsp; <span>{{ policy.display }}</span></div>
-  <div class="pol-meta"><span class="pid pid--ink">{{ policy.id }}</span><span class="status status--planned">Public review draft — not in force</span></div>
+  <div class="meta"><span class="pid ref">{{ policy.id }}</span><span class="status status--planned">Public review draft — not in force</span></div>
 </header>
-<article class="prose">
+<article class="prose-60">
 {{ policy.body | md | safe }}
 </article>

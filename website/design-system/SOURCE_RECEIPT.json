@@ -53,7 +53,7 @@
       "logical_source_path": "design-source/css/site.css",
       "source_sha256": "c323eeb146e6aa110040c40735503e4ed0e63005807fa0d42fc01c87de7b8693",
       "output_path": "website/design-system/site.css",
-      "output_sha256": "1f6d37233d19f9c041ee260bb8cf98d642e4e5f93c9be41d228009da7057a886",
+      "output_sha256": "593f22cb52e9fd6f4707c16d54d130c2e910a56889c57533da91eccf6abd717a",
       "mode": "transform"
     },
     {
@@ -176,7 +176,7 @@
     },
     {
       "path": "website/design-system/site.css",
-      "sha256": "1f6d37233d19f9c041ee260bb8cf98d642e4e5f93c9be41d228009da7057a886"
+      "sha256": "593f22cb52e9fd6f4707c16d54d130c2e910a56889c57533da91eccf6abd717a"
     },
     {
       "path": "website/design-system/icons/icons.svg",

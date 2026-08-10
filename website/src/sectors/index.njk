@@ -2,6 +2,7 @@
 layout: layouts/base.njk
 title: "The Sectors"
 description: "The fifteen essential-cost sectors Uncost tracks, in fixed order â€” from Food to Leisure."
+pageId: "sectors"
 ---
 {% from "partials/content-needed.njk" import block as gap %}
 <section class="blk blk--first">
@@ -11,9 +12,9 @@ description: "The fifteen essential-cost sectors Uncost tracks, in fixed order â
   {{ gap("sectors-index-intro", "the export's framing paragraph for the hub is design-authored; author from the July source once approved") }}
 </section>
 <section class="blk blk--cream2">
-  <div class="card-grid">
+  <div class="sgrid">
 {%- for sector in catalog.sectors %}
-    <a class="sec-card" href="/sectors/{{ sector.slug }}/"><span class="sec-card-num">{{ sector.num }} / 15</span><span class="sec-card-name">{{ sector.name }}</span><span class="status status--{{ sector.statusClass }}">{{ sector.status }}</span></a>
+    <a class="scard" href="/sectors/{{ sector.slug }}/"><span class="idx">{{ sector.num }} / 15</span><span >{{ sector.name }}</span><span class="status status--{{ sector.statusClass }}">{{ sector.status }}</span></a>
 {%- endfor %}
   </div>
 </section>
