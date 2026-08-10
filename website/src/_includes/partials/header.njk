@@ -1,0 +1,50 @@
+{#-
+  Global site header. DESIGN: structure and classes come from the export
+  (design-source/partials/header.html). CONTENT: nav labels, descriptions and
+  links come from _data/chrome.json.
+
+  The mega panels (.hd-mega) are built here from chrome.json rather than copied
+  from the export: the export's page HTML omits them, but css/site.css fully
+  specifies them (.mg / .mg-say / .mg-num / .mg-desc / .mg-go / .mg-pic) and
+  js/ui.js drives them by that exact contract, and site.json carries precisely
+  the three columns they need (heading + desc, links, robot). Without them the
+  primary nav has no dropdown at all. Flagged in the integration PR.
+-#}
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="hd">
+  <div class="hd-main">
+    <a class="brand" href="/" aria-label="Uncost — home">{% image "logos/logo-tight-light.png", "uncost.org", "10rem", [160, 320], "eager" %}</a>
+    <nav class="hd-nav" aria-label="Primary">
+      {% for item in chrome.nav %}
+      <div class="hd-item" data-i="{{ loop.index0 }}">
+        <a href="{{ item.url }}" aria-haspopup="true" aria-expanded="false"{% if page.url == item.url %} class="here"{% endif %}>{{ item.label }}<span class="car" aria-hidden="true"></span></a>
+        <div class="hd-mega">
+          <div class="mg">
+            <div class="mg-say">
+              <div class="mg-num">{% if loop.index < 10 %}0{% endif %}{{ loop.index }}</div>
+              <h3><a href="{{ item.url }}">{{ item.label }}</a></h3>
+              <p class="mg-desc">{{ item.desc }}</p>
+            </div>
+            <div class="mg-go">
+              {% for link in item.links %}
+              <a href="{{ link.url }}"{% if link.external %} target="_blank" rel="noopener"{% endif %}><span>{{ link.label }}{% if link.badge %}<span class="plan">{{ link.badge }}</span>{% endif %}</span><span class="ar" aria-hidden="true">&rarr;</span></a>
+              {% endfor %}
+            </div>
+            <div class="mg-pic">{% image item.robot, "" %}</div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </nav>
+    <div class="hd-actions">
+      <nav class="hd-quick" aria-label="Secondary">
+        {% for link in chrome.navSecondary %}
+        <a href="{{ link.url }}"{% if page.url == link.url %} class="here"{% endif %}>{{ link.label }}</a>
+        {% endfor %}
+      </nav>
+      <button class="hd-search" type="button" aria-label="Search" data-search><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5L21 21"></path></svg></button>
+      <a class="cta-btn" href="/pledge/">Sign the Pledge</a>
+      <button class="hd-burger" type="button" aria-label="Open menu" data-drawer-open><i></i><i></i><i></i></button>
+    </div>
+  </div>
+</header>

@@ -5,6 +5,10 @@ const Image = require("@11ty/eleventy-img");
 const BRAND_ROOT = path.resolve(__dirname, "assets", "brand");
 
 module.exports = function (eleventyConfig) {
+  // Belt-and-braces with website/.eleventyignore: the design export is
+  // reference-only. It is never site input and never reaches dist/.
+  eleventyConfig.ignores.add("design-source/**");
+  eleventyConfig.watchIgnores.add("design-source/**");
   // Strip whitespace around block tags so `{% if %}`/`{% for %}` on their own
   // lines do not emit indented blank lines (html-validate no-trailing-whitespace).
   // Affects only block-tag whitespace — never rendered content.
@@ -35,11 +39,28 @@ module.exports = function (eleventyConfig) {
 
   // Design-system primitives only. The reference specimen, receipts, and
   // authority documents are repository governance, not site output.
-  eleventyConfig.addPassthroughCopy({ "design-system/tokens.css": "design-system/tokens.css" });
-  eleventyConfig.addPassthroughCopy({ "design-system/components.css": "design-system/components.css" });
-  eleventyConfig.addPassthroughCopy({ "design-system/fonts": "design-system/fonts" });
-  eleventyConfig.addPassthroughCopy({ "design-system/icons": "design-system/icons" });
-  eleventyConfig.addPassthroughCopy({ "src/css/site.css": "css/site.css" });
+  //
+  // The four stylesheets are the design export's own, adopted byte-identically
+  // into the governed packet (website/design-system/) and served at the paths
+  // the export's markup already uses: /css/{tokens,components,site,sections}.css,
+  // loaded in that order. Authoring happens in the design canvas and arrives by
+  // re-export — never by patching these files here.
+  eleventyConfig.addPassthroughCopy({ "design-system/tokens.css": "css/tokens.css" });
+  eleventyConfig.addPassthroughCopy({ "design-system/components.css": "css/components.css" });
+  eleventyConfig.addPassthroughCopy({ "design-system/site.css": "css/site.css" });
+  eleventyConfig.addPassthroughCopy({ "design-system/sections.css": "css/sections.css" });
+  // Repo-owned build shim, loaded last. Carries no design values.
+  eleventyConfig.addPassthroughCopy({ "src/css/integration.css": "css/integration.css" });
+  // Curated icon sprite, served where the export's markup references it. The
+  // `vote` and `dollar` symbols the export ships are withheld per EXCLUSIONS.md.
+  eleventyConfig.addPassthroughCopy({ "design-system/icons/icons.svg": "assets/icons.svg" });
+  // Self-hosted variable fonts (OFL, already in the repo under the packet's
+  // names; these are byte-identical copies carrying the export's filenames so
+  // the adopted @font-face rules resolve without editing the export's CSS).
+  eleventyConfig.addPassthroughCopy({ "assets/fonts": "assets/fonts" });
+  // Behaviour only — menu, drawer, search overlay, accordion. No markup, no
+  // dependencies, no third-party requests.
+  eleventyConfig.addPassthroughCopy({ "src/js": "js" });
   eleventyConfig.addPassthroughCopy({ "src/_headers": "_headers" });
 
   // Brand image pipeline. Source PNGs under assets/brand/ remain the sole

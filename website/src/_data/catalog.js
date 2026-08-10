@@ -255,10 +255,25 @@ module.exports = function () {
   const sectors = loadSectors();
   const related = relatedProjectsBySector(projects, sectors);
   for (const s of sectors) s.relatedProjects = related[s.name] || [];
+  const policies = loadPolicies();
   return {
     sectors,
-    policies: loadPolicies(),
+    // Slug lookups so a template can name a sector or project by its permanent
+    // slug (the homepage focus trio, the nav) without re-deriving anything.
+    sectorsBySlug: Object.fromEntries(sectors.map((s) => [s.slug, s])),
+    policies,
     projects,
+    projectsBySlug: Object.fromEntries(projects.map((p) => [p.slug, p])),
     longerHorizon,
+    // Counts rendered on the homepage trust band. Derived from the repository's
+    // own registers, never a literal, so adding a policy or project updates the
+    // page and the reference range stays true.
+    counts: {
+      policies: policies.length,
+      projects: projects.length,
+      sectors: sectors.length,
+      policyRange: `${policies[0].id} to ${policies[policies.length - 1].id}`,
+      projectRange: `${projects[0].id} to ${projects[projects.length - 1].id}`,
+    },
   };
 };

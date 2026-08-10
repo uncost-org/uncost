@@ -1,0 +1,36 @@
+/* Build-integration shim — NOT part of the design system.
+ *
+ * The four design stylesheets (tokens, components, site, sections) are adopted
+ * byte-identically from the design export and are the visual authority. This
+ * file exists only to reconcile the export's markup assumptions with this
+ * repository's build pipeline. It carries NO design values: no colour, no type,
+ * no spacing, no geometry. Anything visual belongs in the design canvas and
+ * arrives by re-export.
+ *
+ * Rule 1 — responsive images.
+ * The export writes plain <img>. This repository renders every brand image
+ * through the manifest-pinned {% image %} pipeline (AUTHORITY.md: the asset
+ * manifest is the sole path/alt authority), which emits <picture><source…><img>
+ * so the browser can pick avif/webp. `display: contents` makes that <picture>
+ * wrapper transparent to layout, so the design's own `img` rules — .hd .brand
+ * img, .hd-mega .mg-pic img, .robot, .focus3 .img img — apply exactly as
+ * authored against a bare <img>. Without it the wrapper would become the flex
+ * or grid item and the design's sizing would not reach the image.
+ */
+picture {
+  display: contents;
+}
+
+/* Rule 2 — the export's one inline style, moved into a stylesheet.
+ *
+ * design-source/partials/search.html sizes the overlay logo with
+ * style="height:44px;width:auto". This site's Content-Security-Policy is
+ * style-src 'self', which blocks inline style attributes outright, so that
+ * declaration would silently not apply and the logo would render at its natural
+ * width. The values below are the export's own, carried across verbatim — this
+ * is the same declaration, relocated, not a new design decision.
+ */
+.search-ov .so-top img {
+  height: 44px;
+  width: auto;
+}

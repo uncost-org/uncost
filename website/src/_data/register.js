@@ -56,11 +56,52 @@ module.exports = function () {
     return obj;
   });
 
+  // Publication year, split out once here so templates never do string surgery
+  // on a date (Nunjucks has no substring filter and `slice` chunks arrays).
+  for (const row of all) row.publication_year = (row.publication_date || "").slice(0, 4);
+
   const byId = {};
   for (const row of all) byId[row.source_id] = row;
 
   // Cost statistics only (excludes the governance-control pin SRC-001).
   const stats = all.filter((r) => r.type === "cost-statistic");
 
-  return { all, byId, stats };
+  // display_value is the headline numeral a page renders large (the design's
+  // 104px figure). It is a PRESENTATION EXTRACT of the row, never an
+  // independent number: it must appear verbatim inside the row's own
+  // display_caption, so the big figure and the sourced claim cannot drift
+  // apart. Fail the build rather than publish a numeral the register does not
+  // support. ("30% versus 9%" is a comparison — each side is checked.)
+  for (const row of stats) {
+    if (!row.display_value) continue;
+    for (const part of row.display_value.split(" versus ")) {
+      if (!row.display_caption.includes(part)) {
+        throw new Error(
+          `register: ${row.source_id} display_value "${part}" is not in its display_caption`
+        );
+      }
+    }
+    // Region and period are shown on the face of every published figure (the
+    // receipts rule); a displayed figure missing either is a build error.
+    if (!row.region || !row.data_period) {
+      throw new Error(
+        `register: ${row.source_id} is displayed as a figure but lacks region/data_period`
+      );
+    }
+  }
+
+  // "Figures checked <month year>" — the most recent last_checked date in the
+  // register, so the freshness line on a page is a fact about the register
+  // rather than a date someone typed.
+  const checked = stats
+    .map((r) => r.last_checked)
+    .filter(Boolean)
+    .sort()
+    .pop();
+  const MONTHS = ["January", "February", "March", "April", "May", "June", "July",
+    "August", "September", "October", "November", "December"];
+  const [y, m] = (checked || "").split("-");
+  const lastChecked = y && m ? `${MONTHS[Number(m) - 1]} ${y}` : "";
+
+  return { all, byId, stats, lastChecked };
 };

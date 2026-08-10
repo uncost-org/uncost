@@ -20,3 +20,28 @@
 {% macro line(row) -%}
 <span class="stat-inline" data-source="{{ row.source_id }}">{{ row.display_caption }} <span class="stat-src">({{ row.source_line }})</span></span>
 {%- endmacro %}
+
+{#-
+  fact(row) — the design's full-dress statistic: a display numeral over its
+  plain-language claim, with source, publication year, data period and region
+  on the face of it. Every part comes from the register row; nothing here is
+  authored in the template. `.n` shows row.display_value, which _data/register.js
+  refuses to load unless it appears verbatim inside row.display_caption, so the
+  big number can never drift from the sourced claim.
+
+  A display_value of the form "A versus B" renders the design's comparison
+  variant (.n.cmp).
+-#}
+{% macro fact(row) -%}
+{% set parts = row.display_value.split(" versus ") %}
+<div class="fact" data-source="{{ row.source_id }}">
+  {% if parts.length == 2 %}
+  <div class="n cmp"><span>{{ parts[0] }}</span><span class="vs">versus</span><span class="b">{{ parts[1] }}</span></div>
+  {% else %}
+  <div class="n">{{ row.display_value }}</div>
+  {% endif %}
+  <div class="l">{{ row.display_caption }}</div>
+  <div class="src"><b>Source</b>{{ row.source_line }}.
+    <span class="dt"><span>Published {{ row.publication_year }}</span><span>{{ row.data_period }}{% if row.data_period | length == 4 %} data{% endif %}</span><span>{{ row.region }}</span></span></div>
+</div>
+{%- endmacro %}

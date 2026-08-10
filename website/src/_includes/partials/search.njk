@@ -1,0 +1,20 @@
+{#-
+  Full-screen search overlay, from design-source/partials/search.html.
+
+  Site search is not built (features.searchEnabled is false). The export ships
+  the overlay with the input present plus honest copy and shortcut links, and
+  js/ui.js focuses that input when the overlay opens — removing it would throw
+  and break the overlay — so the export's markup is reproduced as shipped.
+  Whether a non-functional input should render at all while search is off is
+  raised as an open question in the integration PR; it is the same reasoning
+  that omits every disabled form input, and it is a design decision.
+
+  DESIGN: structure fixed. CONTENT: shortcuts from _data/chrome.json.
+-#}
+<div class="search-ov" role="dialog" aria-modal="true" aria-label="Search">
+  <div class="so-top">{% image "logos/logo-tight-light.png", "", "8rem", [160, 320] %}<button class="drawer-x" type="button" aria-label="Close search" data-search-close>&#10005;</button></div>
+  <label for="site-search">Search uncost.org</label>
+  <input id="site-search" type="search" placeholder="Try &ldquo;shelter&rdquo; or &ldquo;pledge&rdquo;&hellip;" autocomplete="off">
+  <div class="so-note">Site search is planned &mdash; it arrives with the dashboard build. Until then, these get you everywhere:</div>
+  <div class="so-links">{% for link in chrome.searchShortcuts %}<a href="{{ link.url }}">{{ link.label }}</a>{% endfor %}</div>
+</div>

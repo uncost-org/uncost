@@ -10,14 +10,14 @@
 /* --- Fonts (self-hosted, variable woff2) --- */
 @font-face {
   font-family: 'Roboto Condensed';
-  src: url('./fonts/RobotoCondensed-latin-variable.woff2') format('woff2');
+  src: url('/assets/fonts/RobotoCondensed-variable.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: 'Inter';
-  src: url('./fonts/Inter-latin-variable.woff2') format('woff2');
+  src: url('/assets/fonts/Inter-variable.woff2') format('woff2');
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
@@ -29,6 +29,21 @@
   --cream:        #FAF7F0;
   --cream-2:      #F2EDE1;   /* subtle band separation on cream */
   --ink:          #0E0E0C;
+
+  /* ink-on-coral — AA correction applied on adoption (integration branch).
+     The export sets text on coral surfaces to --ink (#0E0E0C), which measures
+     4.47:1 on --coral (#D64A1E) — below the 4.5:1 WCAG 2.2 AA floor for normal
+     text. #0A0A0A measures 4.58:1 and is visually indistinguishable. This is
+     the same correction this repository applied when the previous export was
+     adopted. design-source/README.md §8.11 flags the contrast sweep as
+     unfinished; the design canvas should carry this so the next re-export
+     already passes. */
+  --ink-on-coral: #0A0A0A;
+
+  /* AA text variants — see DESIGN-TOKENS.md §Contrast.
+     --coral-deep   : coral text < 24px on cream/wheat surfaces (5.6:1)
+     --coral-on-ink : coral text < 24px on ink surfaces        (6.4:1) */
+  --coral-on-ink: #E8734A;
   --ink-2:        #1A1A17;   /* band separation on ink */
 
   /* Primary spark */
@@ -57,9 +72,20 @@
   --fg-2:         #2A2A26;          /* secondary text */
   --fg-3:         #5A574F;          /* tertiary / meta */
   --fg-on-ink:    var(--cream);
-  --fg-on-spark:  #0A0A0A;          /* near-black on brand coral = 4.58, clears AA; the canonical ink-on-coral CTA. Plain --ink #0E0E0C is 4.47 and fails by 0.03. See AUTHORITY.md coral rule. */
+  /* Text on ink surfaces. Promoted to first-class tokens so no page hardcodes them.
+     Contrast vs --ink #0E0E0C:  fg-1 13.2:1 (AAA) · fg-2 11.2:1 (AAA) · fg-3 5.7:1 (AA) */
+  --fg-1-on-ink:  #D9D5CB;   /* lead paragraphs on ink */
+  --fg-2-on-ink:  #C9C5BA;   /* secondary text on ink */
+  --fg-3-on-ink:  #8E8B82;   /* tertiary / meta on ink */
+  --fg-4-on-ink:  #A9A59C;   /* faintest meta on ink (7.9:1, AAA) */
+  --fg-4:         #6B675E;   /* faintest meta on cream (5.3:1, AA) */
+  --white:        #FFFFFF;   /* pure white card fills inside bordered grids */
+  --rule-on-ink:      #3A3A36;   /* hairline rule on ink */
+  --rule-on-ink-soft: #2E2E2A;   /* faintest rule on ink */
+  --rule-on-ink-hard: #4A4A44;   /* chip border on ink */
+  --fg-on-spark:  var(--ink);       /* ink-on-coral is the canonical CTA */
 
-  --link:         var(--coral-deep);  /* AA: bright coral is 4.04 on cream; coral-deep = 5.59 */
+  --link:         var(--coral-deep);   /* AA: coral is 4.04:1 on cream; coral-deep is 5.59:1 */
   --link-hover:   var(--coral-deep);
 
   --divider:      var(--rule);
@@ -119,10 +145,22 @@
   --measure:     62ch;   /* body column cap */
 }
 
-/* Dark mode intentionally not shipped for launch. The export ships an
-   attribute-only inversion theme; it is recoverable from the export
-   archive (SHA-256 8962b207...) if later adopted with its own contrast
-   audit. See AUTHORITY.md and docs/CONTROL.md. */
+/* ============ DARK MODE ============ */
+/* Inversion only — sparks are unchanged. Opt-in via [data-theme="dark"] or .dark */
+[data-theme="dark"], .theme-dark {
+  --bg:          #0B0B0B;
+  --bg-alt:      #141412;
+  --bg-ink:      #0B0B0B;
+  --fg:          #EDEAE3;
+  --fg-2:        #C9C5BA;
+  --fg-3:        #8E8B82;
+  --fg-on-ink:   #EDEAE3;
+  --rule:        #EDEAE3;
+  --rule-soft:   rgba(237,234,227,0.20);
+  --rule-hair:   rgba(237,234,227,0.10);
+  --divider:     var(--rule);
+  --divider-soft:var(--rule-soft);
+}
 
 /* ============ BASE ELEMENTS ============ */
 *, *::before, *::after { box-sizing: border-box; }
@@ -194,8 +232,8 @@ hr {
 }
 .u-block--cream  { background: var(--cream); color: var(--ink); }
 .u-block--cream2 { background: var(--cream-2); color: var(--ink); }
-.u-block--ink    { background: var(--ink);   color: var(--cream); border-top-color: #EDEAE3; }
-.u-block--coral  { background: var(--coral); color: var(--fg-on-spark); } /* brand coral + near-black #0A0A0A = 4.58 AA. Coral is fine as a BG with dark text; deep coral is only for coral-as-text (AUTHORITY.md). */
+.u-block--ink    { background: var(--ink);   color: var(--cream); border-top-color: #EDEAE3; --fg: #EDEAE3; --fg-2: #C9C5BA; --fg-3: #8E8B82; }
+.u-block--coral  { background: var(--coral); color: var(--ink-on-coral); }
 .u-block--wheat  { background: var(--wheat); color: var(--ink); }
 .u-block--sage   { background: var(--sage);  color: var(--ink); }
 .u-block--inkblue{ background: var(--ink-blue); color: var(--cream); border-top-color: #EDEAE3; }
@@ -215,9 +253,9 @@ hr {
   cursor: pointer;
   transition: background-color 80ms linear, color 80ms linear;
 }
-.u-btn--primary { background: var(--coral); color: var(--fg-on-spark); } /* brand coral + near-black = 4.58 AA (the export's canonical ink-on-coral CTA, nudged to clear AA) */
-.u-btn--primary:hover { background: var(--coral-deep); color: var(--cream); } /* press/hover shade: deep coral + cream = 5.59 */
-.u-btn--primary:active { background: var(--coral-deep); color: var(--cream); }
+.u-btn--primary { background: var(--coral); color: var(--ink-on-coral); }
+.u-btn--primary:hover { background: var(--coral-deep); color: var(--cream); }
+.u-btn--primary:active { background: var(--coral-deep); }
 .u-btn--ink     { background: var(--ink); color: var(--cream); }
 .u-btn--ink:hover { background: var(--cream); color: var(--ink); }
 .u-btn--ghost   { background: transparent; color: var(--ink); border-color: var(--ink); }
@@ -227,9 +265,9 @@ hr {
 .u-btn--outline-cream:hover { background: var(--cream); color: var(--ink); }
 /* Plain text link in the nav — coral on hover */
 .u-navlink { color: var(--ink); text-decoration: none; transition: color 80ms linear; }
-.u-navlink:hover { color: var(--coral-deep); }
+.u-navlink:hover { color: var(--coral); }
 .u-navlink--cream { color: var(--cream); text-decoration: none; transition: color 80ms linear; }
-.u-navlink--cream:hover { color: var(--wheat); } /* on dark: coral fails 4.47, wheat=10.48 */
+.u-navlink--cream:hover { color: var(--coral); }
 
 /* Rule variants */
 .u-rule        { border-top: var(--rule-w) solid var(--rule); }
