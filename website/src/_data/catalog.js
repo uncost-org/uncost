@@ -25,6 +25,11 @@ const POLICY_SLUGS = {
   "POL-008": "safeguarding-pilot-safety",
   "POL-009": "open-source-licensing",
   "POL-010": "in-kind-gift-acceptance",
+  // POL-011 is a RESERVED reference, not one of the contractual UNP-39 §5.19
+  // slugs. Its slug follows this repository's own naming ("...-and-...", as in
+  // POL-002 and POL-004) rather than the design export's shorter form, because
+  // the repository is the authority for reference numbers and their URLs.
+  "POL-011": "corrections-and-source-integrity",
 };
 
 // Parse "## Heading\n\nbody" sections of a dossier into { heading: body }.
@@ -142,7 +147,12 @@ function loadPolicies() {
     const display = (frontmatter.title || id)
       .replace(/^POL-\d{3} — /, "")
       .replace(/ \(P\d\)$/, "");
-    return { id, slug, display, frontmatter, body };
+    // A reserved reference holds a citable number for a policy nobody has
+    // written yet. It renders the stub state rather than a body, and it is
+    // never counted as a review draft.
+    const reserved =
+      frontmatter.canonical_status === "reference-reserved-not-drafted";
+    return { id, slug, display, frontmatter, body, reserved, drafted: !reserved };
   });
 }
 
@@ -273,6 +283,10 @@ module.exports = function () {
       projects: projects.length,
       sectors: sectors.length,
       policyRange: `${policies[0].id} to ${policies[policies.length - 1].id}`,
+      // Split out so page copy can stay true: a reserved reference is not a
+      // review draft, and saying "11 public review drafts" would not be.
+      policiesDrafted: policies.filter((p) => p.drafted).length,
+      policiesReserved: policies.filter((p) => p.reserved).length,
       projectRange: `${projects[0].id} to ${projects[projects.length - 1].id}`,
     },
   };

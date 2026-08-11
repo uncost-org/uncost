@@ -19,6 +19,21 @@ The 2026-07-15 edition has since been superseded as controlling source by the fi
 | `POL-008` | [Safeguarding & Pilot Safety Policy (P1)](POL-008-safeguarding-and-pilot-safety.md) | Draft; not adopted or in force | Pending independent Claude, founder, professional/sponsor review and adoption |
 | `POL-009` | [Open-Source Licensing Policy (P1)](POL-009-open-source-licensing.md) | Draft; not adopted or in force | Pending independent Claude, founder, professional/sponsor review and adoption |
 | `POL-010` | [In-Kind Gift Acceptance Policy (P1)](POL-010-in-kind-gift-acceptance.md) | Draft; not adopted or in force | Pending independent Claude, founder, professional/sponsor review and adoption |
+| `POL-011` | [Corrections & Source Integrity Policy](POL-011-corrections-and-source-integrity.md) | **Reserved; not yet drafted** | Drafting not started |
+
+## Reserved reference numbers
+
+`POL-011` is a **reserved reference number**, not a draft. It holds a permanent,
+citable identifier for a policy nobody has written yet, so a commitment the site
+already makes in public can be pointed at a reference instead of at nothing.
+
+A reserved number differs from the ten drafts above in every way that matters:
+it is not derived from the 2026-07-15 edition and carries no derivation stamp,
+it is not part of Policy Pack v1.3, and it contains no policy text. The
+repository audit enforces all three — a reserved file that claims the derivation
+hash, appears in the pack, or grows a rules section fails the build. Drafting it
+means writing it against the controlling source in `docs/CONTROL.md`, stamping
+its derivation, adding it to the pack, and moving its status to `draft`.
 
 ## Action-specific gates
 

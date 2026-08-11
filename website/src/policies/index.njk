@@ -8,12 +8,12 @@ pageId: "policies"
 <section class="blk blk--first">
   <p class="eyebrow">Policies</p>
   <h1 class="sec">Governance, in the open.</h1>
-  <p class="lead">Public review drafts. Not adopted or in force — publication is not adoption. Each is published so it can be reviewed before it is ever activated.</p>
+  <p class="lead">{{ catalog.counts.policiesDrafted }} public review drafts, plus {{ catalog.counts.policiesReserved }} reserved reference number{% if catalog.counts.policiesReserved != 1 %}s{% endif %} held for policies not yet written. Nothing here is adopted or in force — publication is not adoption. Each draft is published so it can be reviewed before it is ever activated.</p>
 </section>
 <section class="blk blk--cream2">
   <div class="pollist">
 {%- for policy in catalog.policies %}
-    <a class="polrow" href="/policies/{{ policy.slug }}/"><span class="pid">{{ policy.id }}</span><span >{{ policy.display }}</span><span class="status status--planned">Draft</span></a>
+    <a class="polrow" href="/policies/{{ policy.slug }}/"><span class="pid">{{ policy.id }}</span><span>{{ policy.display }}</span><span class="status status--planned">{% if policy.reserved %}Not yet drafted{% else %}Draft{% endif %}</span></a>
 {%- endfor %}
   </div>
   <p class="prose-60">The consolidated policy pack is maintained in the public repository: <a href="https://github.com/uncost-org/uncost/blob/main/policies/POLICY-PACK-v1.3.md" target="_blank" rel="noopener">Policy Pack v1.3</a>.</p>

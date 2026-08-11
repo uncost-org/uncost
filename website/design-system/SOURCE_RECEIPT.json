@@ -142,7 +142,7 @@
     },
     {
       "path": "scripts/audit_repository.py",
-      "sha256": "5ed927a9fefa337ecdf1dc5b4b68b6672fc966eafb803b4fd2a535f7fa6991b0",
+      "sha256": "ecf9fcf48b9175439f5c5a399abf7edb5b9fbe116afd01fde43f30b9d8124561",
       "role": "repository-audit-entrypoint"
     },
     {

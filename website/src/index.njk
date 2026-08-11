@@ -105,7 +105,7 @@ eleventyNavigation:
   <h2 class="sec u-59">{{ home.s6.headline | safe }}</h2>
   <p class="lead u-60">{{ home.s6.body | safe }}</p>
   <div class="counts">
-    <div class="c"><div class="cn">{{ catalog.counts.policies }}</div><div class="cl">Policies</div><div class="cs">{{ catalog.counts.policyRange }} &mdash; public review drafts, not adopted or in force.</div></div>
+    <div class="c"><div class="cn">{{ catalog.counts.policies }}</div><div class="cl">Policies</div><div class="cs">{{ catalog.counts.policyRange }} &mdash; {{ catalog.counts.policiesDrafted }} public review drafts and {{ catalog.counts.policiesReserved }} reserved reference, none adopted or in force.</div></div>
     <div class="c"><div class="cn">{{ catalog.counts.projects }}</div><div class="cl">Project briefs</div><div class="cs">{{ catalog.counts.projectRange }} &mdash; drafts pending independent review.</div></div>
     <div class="c"><div class="cn">{{ catalog.counts.sectors }}</div><div class="cl">Sector dossiers</div><div class="cs">One per sector, each with its scope, opportunity and guardrail stated.</div></div>
   </div>
