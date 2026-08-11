@@ -1,23 +1,27 @@
 {#-
-  Mobile menu (accordion) + sticky pledge bar. Shown under 940px.
+  Mobile menu (M1 accordion) + sticky pledge bar — structure from
+  design-source/partials/nav-drawer.html (v3). Shown under 940px.
 
-  The export's nav-drawer.html ships only the header row and the secondary
-  links — under 940px the primary nav (.hd-nav) is display:none, so on the
-  export's own pages a phone user cannot reach The Movement / The Case / The
-  Projects / The Assembly at all. css/site.css fully specifies the missing
-  accordion (.drawer-acc > button > .pm, .in, .in .dd-desc, .in a .ar/.plan) and
-  js/ui.js drives it by that exact contract, so it is reconstructed here from
-  the same _data/chrome.json the header uses. Flagged in the integration PR.
+  DESIGN: do not edit structure. This partial is included AFTER </main>, not
+  inside <header>: .drawer and .pledgebar are position:fixed overlays and moving
+  them into the header breaks the stacking context (v3 README, "Where the nav
+  markup lives"). Each section opens to an "Overview" link for the section
+  itself, then its dropdown links — ui.js keeps one section open at a time via
+  [data-acc] / .pm / .in.
+
+  CONTENT: labels, descriptions and links come from _data/chrome.json, the same
+  source the header's mega panels read, so the two never drift apart.
 -#}
 <div class="drawer" role="dialog" aria-modal="true" aria-label="Menu">
   <div class="drawer-hd">{% image "logos/logo-tight-light.png", "uncost.org", "8rem", [160, 320] %}<button class="drawer-x" type="button" aria-label="Close menu" data-drawer-close>&#10005;</button></div>
   {% for item in chrome.nav %}
   <div class="drawer-acc">
-    <button type="button" data-acc aria-expanded="false">{{ item.label }}<span class="pm" aria-hidden="true">+</span></button>
+    <button type="button" data-acc aria-expanded="false"><span>{{ item.label }}</span><span class="pm" aria-hidden="true">+</span></button>
     <div class="in">
-      <p class="dd-desc">{{ item.desc }}</p>
+      <div class="dd-desc">{{ item.desc }}</div>
+      <a href="{{ item.url }}">Overview<span class="ar" aria-hidden="true">&rarr;</span></a>
       {% for link in item.links %}
-      <a href="{{ link.url }}"{% if link.external %} target="_blank" rel="noopener"{% endif %}><span>{{ link.label }}{% if link.badge %}<span class="plan">{{ link.badge }}</span>{% endif %}</span><span class="ar" aria-hidden="true">&rarr;</span></a>
+      <a href="{{ link.url }}"{% if link.external %} target="_blank" rel="noopener"{% endif %}>{{ link.label }}{% if link.badge %}<span class="plan">{{ link.badge }}</span>{% endif %}<span class="ar" aria-hidden="true">&rarr;</span></a>
       {% endfor %}
     </div>
   </div>

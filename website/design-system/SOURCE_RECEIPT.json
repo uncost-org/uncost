@@ -22,9 +22,9 @@
     "review_branch": "feat/design-v2-integration"
   },
   "archive": {
-    "filename": "Uncost Design System 10 Aug 2026 v2.zip",
-    "sha256": "2da87396f787beb71d855126716ca31e6af1aa29e449f841075f303cf2f214d7",
-    "bytes": 30837335,
+    "filename": "uncost design system v3.zip",
+    "sha256": "e68ca4c7f0c491392fdb9f5dac63dcdb45e800a75abdda78e783c8f3b62de44e",
+    "bytes": 30880727,
     "member_count": 124,
     "root_prefix": "design-source/"
   },
@@ -137,7 +137,7 @@
     },
     {
       "path": "scripts/audit_design_handoff.py",
-      "sha256": "376ff1274a63f180f98bd041944d9912b5b5e7ec27930a1d9bea41ee001f3d04",
+      "sha256": "477e901ffaad7efa0479aad40434e94038bbb4241e634de15b0e0c203248c56f",
       "role": "reproducible-checks"
     },
     {
@@ -152,7 +152,7 @@
     },
     {
       "path": "website/design-system/AUTHORITY.md",
-      "sha256": "e7a9a231b357436fd49632d059ef144d7d446dba63a2db44e28d9a13ab66ad43",
+      "sha256": "658bdd38b2588f625e762f7404f4a88ca24a1b9cc33132c00d7b4b70b060cd85",
       "role": "precedence-and-boundary"
     },
     {

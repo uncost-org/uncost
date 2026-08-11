@@ -47,9 +47,12 @@ ARCHIVE_ENV = "UNCOST_DESIGN_HANDOFF_ARCHIVE"
 EXTRACTED_ENV = "UNCOST_DESIGN_HANDOFF_EXTRACTED"
 FROZEN_ARCHIVE_ROOT_PREFIX = "design-source/"
 
-# Re-pinned to the finished design export "Uncost Design System 10 Aug 2026 v2"
-# (archive SHA-256 2da87396..., 124 members under design-source/), adopted on the
-# design-v2 integration branch. This export ships FOUR stylesheets rather than a
+# Pinned to the finished design export, re-synced to v3 (archive SHA-256
+# e68ca4c7..., 124 members under design-source/) on the design-v2 integration
+# branch. The v3 regeneration changed only the chrome MARKUP (header +
+# nav-drawer partials and their inlined copies in the 61 pages); all four
+# stylesheets and the icon sprite are byte-identical to v2, so every
+# source_sha256 below is unchanged and carries over as-is. This export ships FOUR stylesheets rather than a
 # tokens/components pair, and they are adopted byte-identically except for the
 # documented WCAG 2.2 AA corrections recorded in AUTHORITY.md — hence mode
 # "transform" on tokens.css, components.css and site.css, and "adopt" on

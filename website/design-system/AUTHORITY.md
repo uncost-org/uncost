@@ -41,6 +41,35 @@ Fonts are unchanged: the export's `Inter-variable.woff2` and `RobotoCondensed-va
 
 The icon sprite stays curated: it gains `box`, `monitor` and `gear` from the export, and the export's `vote` and `dollar` symbols remain withheld under `EXCLUSIONS.md`.
 
+### Re-synced to the v3 export
+
+The export was regenerated as **"uncost design system v3"**, archive SHA-256
+`e68ca4c7f0c491392fdb9f5dac63dcdb45e800a75abdda78e783c8f3b62de44e` (30,880,727 bytes,
+124 members under `design-source/`), and the design layer on this branch was re-derived from it.
+
+**All four stylesheets are byte-identical between v2 and v3**, as are `data/`,
+`templates/`, `js/` and `assets/`. The source hashes pinned in
+`FROZEN_SOURCE_PAIRS` and `SOURCE_RECEIPT.json → source_transformations` are
+therefore unchanged, and so are the AA corrections below — nothing in the packet
+needed re-deriving.
+
+What v3 actually changes is the **chrome markup**, in `partials/header.html`,
+`partials/nav-drawer.html` and the inlined copies in all 61 pages. Verified
+mechanically: `<main>`, `<head>`, `<body>` attributes and the footer are
+identical in all 61 pages between v2 and v3. v2 shipped the CSS and `ui.js` for
+the nav but not its markup; v3 ships the real thing — four `.hd-mega` panels and
+four `.drawer-acc` sections — and the reconstruction this branch had been
+carrying is replaced by it.
+
+One structural correction came out of that. The reconstruction nested each
+`.hd-mega` inside its `.hd-item`; v3 places all four as siblings of `.hd-main`
+inside `<header class="hd">`. That placement is load-bearing — `.hd-mega` is
+`position:absolute` with `left:0;right:0`, so it only spans the header's full
+width when the header is its containing block. v3's CHECKLIST adds a §B2
+regression check for exactly this, and the built output passes it: every page
+carries four of each, with `.drawer`, `.pledgebar` and `.search-ov` after
+`</main>` and only `.hd-mega` inside `<header>`.
+
 ### WCAG 2.2 AA corrections applied on adoption
 
 The export's own `README.md` §8.11 records that a final contrast sweep was still outstanding. It was run here, and the corrections below were applied to the adopted CSS. **They are corrections to the design and should be carried back into the design canvas, so the next re-export already passes** rather than being re-patched.
