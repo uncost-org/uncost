@@ -1,65 +1,120 @@
 ---
 layout: layouts/base.njk
-eleventyComputed:
-  title: "The Case"
-  description: "Uncost's evidence layer: what humans need, what those needs cost by region, where automation could plausibly reduce cost, and the open methodology behind every claim."
+permalink: "/case/"
 pageId: "case"
+title: "The Case"
+description: "The Case is Uncost's evidence layer: what humans need, what those needs cost by region, and where automation can plausibly reduce costs — every figure sourced, dated, and confidence-labeled."
 ---
-{% import "partials/figure.njk" as fig %}
-<section class="blk blk--first">
-  <p class="eyebrow">The evidence layer</p>
-  <h1 class="sec">The Case.</h1>
-  <p class="lead">The receipts behind every claim we make.</p>
-  <p>The Case is where Uncost shows its work: what a person actually needs, what those needs cost, where automation and shared infrastructure could plausibly bring the cost down — and the method behind every number. It is built to be checked by supporters, journalists, researchers, and sceptics alike.</p>
+{#- Markup taken verbatim from design-source/pages/case.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: case.The Case — title -->
+<div class="titleband" data-screen-label="The Case — title"><h1>The <span class="t-coral">Case</span></h1></div>
+<div class="introband">
+  <h2>The receipts behind <span class="t-coral">every claim</span> we make.</h2>
+  <p>The Case is Uncost&rsquo;s evidence layer — built to be useful to supporters, journalists, researchers, urban planners, funders, and skeptics alike. It covers what humans need, what those needs cost by region, where automation and shared infrastructure can plausibly help, and the open methodology behind every claim.</p>
+</div>
+
+<!-- SECTION: case.Controls -->
+<div class="ctrlbar" data-screen-label="Controls">
+  <span class="ctrl ctrl--on">Sector ▾</span>
+  <span class="ctrl ctrl--sel">Shelter</span>
+  <span class="ctrl">Food</span>
+  <span class="ctrl">Energy</span>
+  <span class="ctrl">Region ▾</span>
+  <span class="regions-ind">Dashboard in development — launch targets <b>2–3 regions</b></span>
+</div>
+
+<!-- SECTION: case.KPIs -->
+<section class="bb-ink" data-screen-label="KPIs">
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-label">US renters cost-burdened</div><div class="kpi-num kpi-num--coral">1 in 2</div>
+      <div class="rcpt-row"><span class="rcpt-src"><b>Src</b>Harvard JCHS 2025 · US</span><span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span></div></div>
+    <div class="kpi"><div class="kpi-label">US grocery prices since Mar 2020</div><div class="kpi-num">+29%</div>
+      <div class="rcpt-row"><span class="rcpt-src"><b>Src</b>BLS CPI, food at home · US</span><span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span></div></div>
+    <div class="kpi"><div class="kpi-label">Left monthly after rent, &lt;$30K renters</div><div class="kpi-num">$250</div>
+      <div class="rcpt-row"><span class="rcpt-src"><b>Src</b>Harvard JCHS 2025 · US</span><span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span></div></div>
+    <div class="kpi"><div class="kpi-label">Monthly essential basket · one adult</div><div class="kpi-num">$X</div>
+      <div class="rcpt-row"><span class="rcpt-conf rcpt-conf--scenario">Scenario</span><span class="rcpt-illus">Illustrative</span></div></div>
+  </div>
 </section>
 
-<section class="blk">
-  <p class="eyebrow">What living costs</p>
-  <h2 class="sec">The numbers, with their receipts.</h2>
-  <p>We go deep on Shelter, Food, and Energy first — the three that hit hardest — and keep all fifteen sectors visible. Every figure here traces to a public source.</p>
-  {{ fig.stat(register.byId["SRC-004"]) }}
-  {{ fig.stat(register.byId["SRC-023"]) }}
-  {{ fig.stat(register.byId["SRC-005"]) }}
-  <p><a href="/sectors/">Every sector, with its evidence →</a></p>
-</section>
+<!-- SECTION: case.Dashboard preview -->
+<div class="panels" data-screen-label="Dashboard preview">
+  <div class="panel">
+    <div class="metalabel u-26">Planned flagship · The Human Essentials Dashboard <span class="status status--planned">Planned</span></div>
+    <h3 class="mt-8">What the dashboard will show.</h3>
+    <p class="u-27">A regional, source-led picture of what one human actually needs and what those needs cost — with history from day one, so the movement can see whether costs actually fall. An illustrative example of a dashboard output, using placeholder figures only:</p>
+    <div class="dstrip">
+      <div class="dh">In Region A<span class="rcpt-illus">Illustrative only</span></div>
+      <div class="cells">
+        <div class="c"><div class="cl">Monthly essential basket · one adult</div><div class="cv">$X</div></div>
+        <div class="c"><div class="cl">Largest pressure</div><div class="cv">Shelter</div></div>
+        <div class="c"><div class="cl">Highest-confidence reduction path</div><div class="cv">Shared solar + weatherization</div></div>
+        <div class="c"><div class="cl">Data coverage</div><div class="cv">3 regions</div></div>
+        <div class="c"><div class="cl">Last updated</div><div class="cv">[date]</div></div>
+        <div class="c"><div class="cl">Confidence</div><div class="cv">Medium</div></div>
+      </div>
+    </div>
+    <div class="rcpt-row mt-14"><span class="rcpt-src"><b>Source</b>Uncost Movement Plan — illustrative example</span><span class="rcpt-conf rcpt-conf--scenario">Scenario</span></div>
+  </div>
+  <div class="panel">
+    <div class="metalabel">The signature question</div>
+    <h3>What does one human actually need?</h3>
+    <p class="u-28">Instead of starting from ideology, Uncost starts from the physical and social basics of a dignified life — fifteen sectors, from Food and Shelter to Communication and Leisure. Every part of the essential basket maps to one of them.</p>
+    <a href="/sectors/" class="u-btn u-btn--ink u-29">All fifteen sectors</a>
+    <p class="u-30">Regionality is built in: a single global cost number would damage credibility. Early versions cover only a few regions and label coverage plainly — for example, &ldquo;data available for three regions.&rdquo;</p>
+  </div>
+</div>
 
-<section class="blk blk--cream2">
-  <p class="eyebrow">The question</p>
-  <h2 class="sec">What does one human actually need?</h2>
-  <p class="lead">Instead of starting from ideology, Uncost starts from the physical and social basics of a dignified life — fifteen sectors, from Food and Shelter to Communication and Leisure. Every part of the essential basket maps to one of them.</p>
-  <p>Costs are local, so we measure and label them by region rather than pretending a single national number tells the whole story — and we say plainly how much of the country a figure covers.</p>
-  <p><a href="/sectors/" class="u-btn u-btn--ink">All fifteen sectors</a></p>
-</section>
+<!-- SECTION: case.Basket example -->
+<div class="u-31" data-screen-label="Basket example">
+  <div class="metalabel">Example · regional cost basket · Region A</div>
+  <h3 class="u-32">Monthly essentials, by sector.</h3>
+</div>
+<div class="u-33">
+  <div class="basket">
+    <div class="bk-row"><span class="bk-name">Shelter</span><span class="bk-seg u-34"></span><span class="bk-val">$X</span></div>
+    <div class="bk-row"><span class="bk-name">Food</span><span class="bk-seg u-35"></span><span class="bk-val">$X</span></div>
+    <div class="bk-row"><span class="bk-name">Energy</span><span class="bk-seg u-36"></span><span class="bk-val">$X</span></div>
+    <div class="bk-row"><span class="bk-name">Water</span><span class="bk-seg u-37"></span><span class="bk-val">$X</span></div>
+  </div>
+  <div class="rcpt-row mt-14"><span class="rcpt-src"><b>Note</b>Segment sizes are placeholders, not data — real baskets are published per region with sources</span><span class="rcpt-illus">Illustrative only</span></div>
+</div>
 
-<section class="blk">
-  <p class="eyebrow">Planned flagship</p>
-  <p><span class="status status--planned">Planned</span></p>
-  <h2 class="sec">The Human Essentials Dashboard.</h2>
-  <p>The flagship is a regional, source-led picture of what one human needs and what those needs cost — carrying its history from day one, so anyone can see whether costs actually fall over time. It is designed, not built: when it ships, every figure in it will carry a source, a date, a region, and a confidence label, exactly like the numbers above.</p>
-  <p><a href="/projects/human-essentials-dashboard/">See the project brief →</a></p>
-</section>
+<details class="mdrawer" data-screen-label="Methodology drawer">
+  <summary>Methodology — how The Receipts work <span class="plus">+</span></summary>
+  <div class="mdrawer-body">
+    <div>
+      <h4>The rules</h4>
+      <p>Every number has a source. Every source has a date. Every model states its assumptions. Where a claim cannot be sourced, it is labeled an estimate, scenario, or hypothesis — never presented as fact.</p>
+      <ul>
+        <li>Sources carry license, reuse status, and region coverage.</li>
+        <li>Figures show visible &ldquo;last updated&rdquo; dates and a refresh cadence.</li>
+        <li>Every correction is logged publicly.</li>
+        <li>Negative results are published with the same prominence as wins.</li>
+      </ul>
+    </div>
+    <div>
+      <h4>Confidence labels</h4>
+      <div class="u-38">
+        <span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span>
+        <span class="rcpt-conf rcpt-conf--estimate">Estimate</span>
+        <span class="rcpt-conf rcpt-conf--scenario">Scenario</span>
+        <span class="rcpt-conf rcpt-conf--needs-refresh">Needs refresh</span>
+      </div>
+      <p>Derived figures — calculated from two or more sources — display every contributing source, never a single badge.</p>
+      <p>Full methodology, the source register, and the corrections log: <a class="t-coral" href="/receipts/">The Receipts</a></p>
+    </div>
+  </div>
+</details>
 
-<section class="blk blk--ink">
-  <p class="eyebrow">Methodology</p>
-  <h2 class="sec">How the receipts work.</h2>
-  <p class="lead">Every number has a source. Every source has a date. Every model states its assumptions. Where a claim cannot be sourced, it is labeled an estimate, scenario, or hypothesis — never presented as fact.</p>
-  <h3>The rules</h3>
-  <ul>
-    <li>Sources carry license, reuse status, and region coverage.</li>
-    <li>Figures show visible &ldquo;last updated&rdquo; dates and a refresh cadence.</li>
-    <li>Every correction is logged publicly.</li>
-    <li>Negative results are published with the same prominence as wins.</li>
-  </ul>
-  <h3>Confidence labels</h3>
-  <p>Confirmed · Estimate · Scenario · Needs refresh. Derived figures — calculated from two or more sources — display every contributing source, never a single badge.</p>
-  <p><a href="/receipts" class="u-btn u-btn--outline-cream">The full methodology, source register, and corrections log</a></p>
-</section>
-
-<section class="blk blk--ink">
-  <h2 class="sec">Evidence first. Tools next.</h2>
-  <p>The Case feeds The Projects — open tools that turn the evidence into something a community can actually run. The Human Essentials Dashboard presents the picture; the Cost-of-Living Tracker and Basic Needs Cost Model feed it. Every one is a public draft, not a shipped product.</p>
-  <div class="row-16">
-    <a href="/receipts" class="u-btn u-btn--primary">See The Receipts</a>
+<!-- SECTION: case.Case CTA -->
+<section class="blk blk--ink u-block--ink" data-screen-label="Case CTA">
+  <h2 class="sec mw-20ch">Evidence first. <span class="t-coral">Tools next.</span></h2>
+  <p class="lead u-39">The Case feeds The Projects: the Cost-of-Living Tracker supplies the data, the Basic Needs Cost Model tests scenarios, and the Human Essentials Dashboard presents both — openly, with receipts.</p>
+  <div class="btn-row">
+    <a href="/receipts/" class="u-btn u-btn--primary">See The Receipts</a>
     <a href="/projects/" class="u-btn u-btn--outline-cream">The Projects</a>
   </div>
 </section>

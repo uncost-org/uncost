@@ -1,14 +1,26 @@
 ---
 layout: layouts/base.njk
+permalink: "/community/"
+pageId: "later-community"
 title: "Community"
-description: "A community hub for supporters, volunteers, and contributors is planned but not yet open."
-noindex: true
-pageId: "later/community"
+description: "Planned — the community hub"
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
-<section class="blk blk--first">
-  <p class="eyebrow">Community</p>
-  <h1 class="sec">Community.</h1>
-  <p class="lead">This page is planned and not yet built for launch.</p>
-  {{ gap("community-later", "planned; not built for launch") }}
-</section>
+{#- Markup taken verbatim from design-source/pages/later/community.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: later/community.Community — title -->
+<div class="titleband" data-screen-label="Community — title"><h1>Community</h1></div>
+<div class="sys">
+  <!-- SECTION: later/community.Community -->
+  <div class="card" data-screen-label="Community">
+    <div class="cap"><span class="status status--planned">Planned</span></div>
+    <div class="bd">
+      <div class="eq">Planned page</div>
+      <h2>A community hub is on the way.</h2>
+      <p>A place for supporters, volunteers, and contributors to talk, organise, and coordinate work — with a clear code of conduct.</p>
+      <p>Until it opens, the work happens in the open on GitHub and across our social channels.</p>
+      <div class="whenrow"><b>When</b><span>Months 7–9 — moderation is an early volunteer role</span></div>
+      <div class="actions"><a href="https://github.com/uncost-org/uncost" class="u-btn u-btn--ink">Build on GitHub</a><a href="/join/" class="u-btn u-btn--ghost">Take Part</a></div>
+    </div>
+  </div>
+</div>

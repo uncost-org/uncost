@@ -1,20 +1,46 @@
 ---
 layout: layouts/base.njk
-title: "The Sectors"
-description: "The fifteen essential-cost sectors Uncost tracks, in fixed order — from Food to Leisure."
+permalink: "/sectors/"
 pageId: "sectors"
+title: "The Sectors"
+description: "Fifteen sectors, one plan each. Every essential of a decent life — what it covers, where the cost pressure is, and where we are on it."
 ---
-{% from "partials/content-needed.njk" import block as gap %}
-<section class="blk blk--first">
-  <p class="eyebrow">The Sectors</p>
-  <h1 class="sec">Fifteen sectors of essential cost.</h1>
-  <p class="lead">The essentials of a life, grouped into fifteen sectors in a fixed order. Each has a dossier: what it covers, where automation could reduce cost, the guardrail, and the honest evidence status.</p>
-  {{ gap("sectors-index-intro", "the export's framing paragraph for the hub is design-authored; author from the July source once approved") }}
-</section>
-<section class="blk blk--cream2">
-  <div class="sgrid">
-{%- for sector in catalog.sectors %}
-    <a class="scard" href="/sectors/{{ sector.slug }}/"><span class="idx">{{ sector.num }} / 15</span><span >{{ sector.name }}</span><span class="status status--{{ sector.statusClass }}">{{ sector.status }}</span></a>
-{%- endfor %}
+{#-
+  Markup is the design export's own (design-source/pages/sectors.html), taken
+  verbatim; only the 15 cards are dynamic. Each card's number, name, status
+  chip, illustration and "what it includes" line come from the repository's
+  sector dossiers via _data/catalog.js — the export's literal cards are
+  replaced by the loop, nothing else is re-authored.
+-#}
+{% from "partials/content-needed.njk" import inline as gapInline %}
+<!-- SECTION: sectors.Sectors — title -->
+<div class="titleband" data-screen-label="Sectors — title"><h1>The <span class="t-coral">Sectors</span></h1></div>
+<div class="introband">
+  <h2>Fifteen costs. One plan each.</h2>
+  <p>Living isn&rsquo;t one bill — it&rsquo;s fifteen. We map every essential of a decent life, go deep on three first, and keep all fifteen visible so nothing quietly falls off the list. Status is sequencing, not importance.</p>
+</div>
+<!-- SECTION: sectors.Legend -->
+<div class="legend" data-screen-label="Legend">
+  <span>Status:</span>
+  <span class="status status--focus">Focus</span> <span class="t-fg2-500">building now</span>
+  <span class="status s-next">Next</span> <span class="t-fg2-500">next wave</span>
+  <span class="status s-future">Future study</span> <span class="t-fg2-500">high-safety, studied cautiously</span>
+  <span class="status s-dossier">Dossier</span> <span class="t-fg2-500">research scaffold</span>
+</div>
+
+<!-- SECTION: sectors.15 sectors -->
+<div class="sgrid" data-screen-label="15 sectors">
+{% for sector in catalog.sectors %}
+  <a class="scard{% if sector.statusClass == 'focus' %} focus{% endif %}" href="/sectors/{{ sector.slug }}/"><div class="top"><span class="idx">{{ sector.num }}</span><span class="status {{ sector.chipClass }}">{{ sector.status }}</span></div>{% image sector.illustration.src, sector.illustration.alt %}<h3>{{ sector.name }}</h3><p>{% if sector.includes %}{{ sector.includes }}{% else %}{{ gapInline("sector-includes") }}{% endif %}</p><span class="go">Read the dossier &rarr;</span></a>
+{% endfor %}
+</div>
+
+<!-- SECTION: sectors.Sectors CTA -->
+<section class="blk blk--coral" data-screen-label="Sectors CTA">
+  <h2 class="sec mw-18ch">Want a sector moved up the list?</h2>
+  <p class="lead lead-52">Supporters help set what comes next through the advisory Assembly. The first step is free.</p>
+  <div class="btn-row">
+    <a href="/pledge/" class="u-btn u-btn--ink">Sign the Pledge</a>
+    <a href="/assembly/" class="u-btn u-btn--ghost">How the Assembly works</a>
   </div>
 </section>

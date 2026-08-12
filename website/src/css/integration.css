@@ -21,16 +21,16 @@ picture {
   display: contents;
 }
 
-/* Rule 2 — the export's one inline style, moved into a stylesheet.
+/* Rule 2 — .logo-44, which the export names but never defines.
  *
- * design-source/partials/search.html sizes the overlay logo with
- * style="height:44px;width:auto". This site's Content-Security-Policy is
- * style-src 'self', which blocks inline style attributes outright, so that
- * declaration would silently not apply and the logo would render at its natural
- * width. The values below are the export's own, carried across verbatim — this
- * is the same declaration, relocated, not a new design decision.
+ * v2 sized the search-overlay logo with an inline style="height:44px;width:auto".
+ * v3 replaced that with class="logo-44" but did not add a rule for it to any of
+ * the four stylesheets, so the class currently styles nothing and the logo would
+ * render at its natural width. These are v2's own values under v3's class name —
+ * a relocated declaration, not a new design decision. Carry it back to the canvas
+ * so a future export defines .logo-44 itself.
  */
-.search-ov .so-top img {
+.logo-44 {
   height: 44px;
   width: auto;
 }

@@ -1,14 +1,26 @@
 ---
 layout: layouts/base.njk
+permalink: "/quiz/"
+pageId: "later-quiz"
 title: "The Quiz"
-description: "The guess-what-living-costs quiz is planned, not yet built. In the meantime, sign the Pledge and read The Case."
-noindex: true
-pageId: "later/quiz"
+description: "Planned — the guess-the-cost quiz"
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
-<section class="blk blk--first">
-  <p class="eyebrow">Planned tool · The Movement</p>
-  <h1>The Quiz</h1>
-  <p class="lead">This is a planned tool. It is not built for launch yet.</p>
-  {{ gap("quiz-later", "planned; not built for launch") }}
-</section>
+{#- Markup taken verbatim from design-source/pages/later/quiz.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: later/quiz.Quiz — title -->
+<div class="titleband" data-screen-label="Quiz — title"><h1>The <span class="t-coral">Quiz</span></h1></div>
+<div class="sys">
+  <!-- SECTION: later/quiz.Quiz -->
+  <div class="card" data-screen-label="Quiz">
+    <div class="cap"><span class="status status--planned">Planned</span></div>
+    <div class="bd">
+      <div class="eq">Planned tool · The Movement</div>
+      <h2>The Quiz is on the way.</h2>
+      <p>A short, surprising &ldquo;guess what living actually costs&rdquo; quiz — compare your guesses to sourced figures, and see the full breakdown when you join.</p>
+      <p>It&rsquo;s one of the first things we&rsquo;ll build to turn curiosity into participation.</p>
+      <div class="whenrow"><b>When</b><span>Near launch — an early engagement tool</span></div>
+      <div class="actions"><a href="/pledge/" class="u-btn u-btn--primary">Sign the Pledge</a><a href="/case/" class="u-btn u-btn--ghost">Read The Case</a></div>
+    </div>
+  </div>
+</div>

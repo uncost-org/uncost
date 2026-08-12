@@ -41,7 +41,7 @@
   <div class="n">{{ row.display_value }}</div>
   {% endif %}
   <div class="l">{{ row.display_caption }}</div>
-  <div class="src"><b>Source</b>{{ row.source_line }}.
+  <div class="src"><b>Source</b>{{ row.publisher }}, <em>{{ row.publication_work }}</em>.
     <span class="dt"><span>Published {{ row.publication_year }}</span><span>{{ row.data_period }}{% if row.data_period | length == 4 %} data{% endif %}</span><span>{{ row.region }}</span></span></div>
 </div>
 {%- endmacro %}

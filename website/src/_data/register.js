@@ -58,7 +58,15 @@ module.exports = function () {
 
   // Publication year, split out once here so templates never do string surgery
   // on a date (Nunjucks has no substring filter and `slice` chunks arrays).
-  for (const row of all) row.publication_year = (row.publication_date || "").slice(0, 4);
+  for (const row of all) {
+    row.publication_year = (row.publication_date || "").slice(0, 4);
+    // The register's title is "Publisher — Work". The design italicises the work
+    // on the face of a statistic (<b>Source</b>Publisher, <em>Work</em>.), so the
+    // two parts are split here rather than reassembled in a template.
+    const dash = row.title.indexOf(" — ");
+    row.publication_work =
+      dash > -1 ? row.title.slice(dash + 3).trim() : row.title.trim();
+  }
 
   const byId = {};
   for (const row of all) byId[row.source_id] = row;

@@ -104,6 +104,11 @@ function loadSectors() {
       { Focus: "focus", Next: "next", "Future study": "future", Dossier: "dossier" }[
         status.trim()
       ] || "planned";
+    // The sectors index uses a second chip vocabulary: the export writes
+    // `status status--focus` for Focus but `status s-next` / `s-future` /
+    // `s-dossier` for the rest, and adds a `focus` modifier to the card itself.
+    // Both come from the dossier's own Roadmap status, never from a literal.
+    const chipClass = statusClass === "focus" ? "status--focus" : `s-${statusClass}`;
     return {
       id: h1[1],
       name: h1[2].trim(),
@@ -112,6 +117,7 @@ function loadSectors() {
       num: String(i + 1).padStart(2, "0"),
       status: status.trim(),
       statusClass,
+      chipClass,
       // Dossier-backed fields the detail template wires by name. Absent
       // sections resolve to undefined so the template can show [CONTENT NEEDED].
       includes: sec["includes"],
@@ -152,7 +158,27 @@ function loadPolicies() {
     // never counted as a review draft.
     const reserved =
       frontmatter.canonical_status === "reference-reserved-not-drafted";
-    return { id, slug, display, frontmatter, body, reserved, drafted: !reserved };
+    // The design renders a policy as a numbered section list with a matching
+    // contents rail: <nav class="pol-toc"> links to <section id="sN">, each
+    // headed <h3 class="s"><span class="num">N</span>Title</h3>. Split the
+    // reviewed markdown on its own "## " headings so the repo's text fills that
+    // shape — the prose is untouched, only its container is the design's.
+    const sections = [];
+    const parts = body.split(/^## +/m);
+    // The design's .pol-hd already renders the policy title as the page <h1>,
+    // so the markdown's own "# POL-0NN — Title" line is dropped here rather
+    // than emitting a second <h1> into .pol-body.
+    const preamble = parts[0].replace(/^#\s+POL-\d{3}[^\n]*\n/m, "").trim();
+    parts.slice(1).forEach((part, i) => {
+      const nl = part.indexOf("\n");
+      sections.push({
+        anchor: `s${i + 1}`,
+        num: i + 1,
+        title: (nl < 0 ? part : part.slice(0, nl)).trim(),
+        body: (nl < 0 ? "" : part.slice(nl + 1)).trim(),
+      });
+    });
+    return { id, slug, display, frontmatter, body, preamble, sections, reserved, drafted: !reserved };
   });
 }
 
@@ -169,11 +195,25 @@ function loadProjects() {
     const { frontmatter, body } = splitFrontmatter(raw);
     const display = (frontmatter.title || id).replace(/^PRJ-\d{3} — /, "");
     const sec = sectionMap(raw);
+    // Primary sectors this brief names, for the design's "Where it applies
+    // first" row. Derived from the dossier's own "## Sectors" section — the
+    // same rule the sector pages use in reverse — with the design's swatch
+    // colours cycled so the row matches the export's node shape.
+    const SQ = ["bg-sage", "bg-clay", "bg-coral", "bg-ink-blue"];
+    const sectorText = (sec["sectors"] || "").split(/secondary/i)[0];
+    const named = SECTOR_ORDER.filter((n) => new RegExp(`\\b${n}\\b`, "i").test(sectorText));
+    const projectSectors = named.slice(0, 3).map((n, i) => ({
+      name: n,
+      slug: n.toLowerCase(),
+      sq: SQ[i % SQ.length],
+    }));
     return {
       id,
       slug,
       display,
       frontmatter,
+      sections: sectionMap(raw),
+      sectors: projectSectors,
       // Reviewed public-facing copy the detail template can wire directly;
       // undefined → [CONTENT NEEDED] in the template.
       publicSummary: sec["public summary"],

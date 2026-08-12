@@ -1,32 +1,27 @@
 ---
 layout: layouts/base.njk
-title: "Check your email"
-noindex: true
-description: "Confirmation step for the Uncost Pledge — check your inbox for a verification link. The flow copy and email verification ship with the UNP-57 page contract."
+permalink: "/pledge/check-email/"
 pageId: "pledge-check-email"
+title: "Check your inbox"
+description: "One more step: confirm your email to count your Uncost Pledge signature."
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
-<section class="blk blk--first">
-  <p class="eyebrow">The Pledge</p>
-  <h1>Check your email.</h1>
-  {{ gap("pledge-check-email-hero", "the 'almost there / check your inbox' hero and the confirmation-sent instruction line are design-authored with no source; author the double opt-in confirmation copy from the UNP-57 flow contract before it ships") }}
-</section>
-
-<section class="blk">
-  <p class="eyebrow">Next step</p>
-  <h2 class="sec">What happens next.</h2>
-  <div class="form-off">
-    <p class="form-off-msg">Email verification isn't wired up yet — the pledge confirmation flow ships with the UNP-57 page contract.</p>
+{#- Markup taken verbatim from design-source/pages/pledge-check-email.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<div class="sys">
+  <!-- SECTION: pledge-check-email.Check email -->
+  <div class="card" data-screen-label="Check email">
+    <div class="cap"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14"></rect><path d="M3 7l9 6 9-6"></path></svg></div>
+    <div class="bd">
+      <div class="eq">Almost there</div>
+      <h1>Check your inbox.</h1>
+      <p>We&rsquo;ve sent a confirmation link to <span class="em">your email address</span>. Click it to count your signature.</p>
+      <p>The link is valid for <b>24 hours</b>. Your pledge isn&rsquo;t counted until you confirm — that&rsquo;s how we keep the tally honest.</p>
+      <div class="actions">
+        <a href="/pledge/resent/" class="u-btn u-btn--ink">Didn&rsquo;t get it? Resend</a>
+        <a href="/" class="u-btn u-btn--ghost">Back to home</a>
+      </div>
+      <p class="mini">Check your spam or promotions folder first. Still nothing after a few minutes? Resend, or email <a class="t-coral" href="mailto:contact@uncost.org">contact@uncost.org</a>.</p>
+    </div>
   </div>
-  {{ gap("pledge-check-email-link-expiry", "the confirmation-link validity window and the 'pledge isn't counted until you confirm' explanation are design-authored, and the 24-hour figure is uncited; author from the UNP-57 flow contract and never ship the unsourced window as fact") }}
-</section>
-
-<section class="blk blk--cream2">
-  <p class="eyebrow">Need help?</p>
-  <h2 class="sec">Didn't get the email?</h2>
-  {{ gap("pledge-check-email-troubleshooting", "the resend prompt, spam/promotions-folder guidance and the support-email fallback (including the contact address) are design-authored with no source; author from the UNP-57 flow contract once the resend behaviour and contact address are confirmed") }}
-  <p>
-    <a href="/pledge" class="u-btn u-btn--ink">Back to the pledge</a>
-    <a href="/" class="u-btn u-btn--ghost">Back to home</a>
-  </p>
-</section>
+</div>

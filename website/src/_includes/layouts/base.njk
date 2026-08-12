@@ -36,7 +36,7 @@
 </head>
 <body data-page="{{ pageId }}"{% if updatesOff %} data-updates-off{% endif %}>
 {% include "partials/header.njk" %}
-<main id="main">
+<main{% if mainClass %} class="{{ mainClass }}"{% endif %} id="main">
 {{ content | safe }}
 </main>
 {% include "partials/footer.njk" %}

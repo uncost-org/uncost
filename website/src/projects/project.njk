@@ -8,54 +8,71 @@ pagination:
 permalink: "/projects/{{ project.slug }}/"
 eleventyComputed:
   pageId: "projects/{{ project.slug }}"
-  title: "{{ project.display | safe }} · The Projects"
-  description: "{{ project.id }} — {{ project.display }}. A reviewed project dossier; draft, not approved for build."
+  title: "{{ project.display | safe }} ({{ project.id }})"
+  description: "{{ project.id }} — {{ project.display }}. Project brief; a draft pending independent review, not approved for build."
 ---
+{#-
+  One design for all 7 project briefs, taken from the export's own project page
+  (design-source/pages/projects/*.html): .p-head, the wheat "At a glance" band
+  with its .grid3, the Overview band, the .fund funding/status block, related
+  sectors, and the closing CTA.
+
+  Every field comes from the repository's own dossier (projects/PRJ-00N-*.md via
+  _data/catalog.js). Where the dossier does not carry a field the design asks
+  for, the page shows a visible [CONTENT NEEDED] marker rather than the export's
+  draft prose — the export's PRJ-004…007 copy is explicitly unreviewed
+  (export README §8.3).
+-#}
 {% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
-<header class="p-head">
+<header class="p-head" data-screen-label="Project head">
   <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/projects/">Projects</a> &nbsp;/&nbsp; <span>{{ project.display }}</span></div>
-  <div class="p-meta"><span class="pid">{{ project.id }}</span><span class="status status--planned">Draft — not approved for build</span></div>
-  <h1 >{{ project.display }}</h1>
-  {% if project.publicSummary %}<p class="tagline">{{ project.publicSummary }}</p>{% else %}<p class="tagline">{{ gapInline("project-public-summary") }}</p>{% endif %}
+  <div class="p-meta"><span class="pid">{{ project.id }}</span><span class="status status--dev">Draft brief</span><span class="status status--planned">Not approved for build</span></div>
+  <h1>{{ project.display }}</h1>
+  <p class="tagline">{% if project.publicSummary %}{{ project.publicSummary.split(". ")[0] }}.{% else %}{{ gapInline("project-tagline") }}{% endif %}</p>
 </header>
-
-<section class="blk blk--first">
-  <p class="eyebrow">At a glance</p>
-  {{ gap("project-at-a-glance", "the export's three at-a-glance cards (what it targets / the mechanism / how it lowers costs) are design-authored condensations, not verbatim dossier fields; approve from the capture or author from the dossier") }}
+<section class="blk bg-wheat bt-coral-4" data-screen-label="At a glance">
+  <div class="eyebrow">At a glance</div>
+  <div class="grid3">
+    <div><h2><i></i>What it targets</h2><p>{% if project.sections["the problem and the cost being reduced"] %}{{ project.sections["the problem and the cost being reduced"] }}{% else %}{{ gapInline("project-targets") }}{% endif %}</p></div>
+    <div><h2><i></i>The mechanism</h2><p>{% if project.sections["how it works"] %}{{ project.sections["how it works"] }}{% else %}{{ gapInline("project-mechanism") }}{% endif %}</p></div>
+    <div><h2><i></i>How it lowers costs</h2><p>{% if project.sections["what it is / what it is not"] %}{{ project.sections["what it is / what it is not"] }}{% else %}{{ gapInline("project-cost-path") }}{% endif %}</p></div>
+  </div>
 </section>
-
-<section class="blk blk--cream2">
-  <p class="eyebrow">Overview</p>
-  <h2 class="sec">What it is.</h2>
-  {{ gap("project-overview", "the export's multi-paragraph overview is a design-authored rewrite; the reviewed one-line public summary is in the hero above. Author the fuller overview from the dossier and July source before it ships") }}
+<section class="blk blk--cream2" data-screen-label="Overview">
+  <div class="eyebrow">Overview</div>
+  <h2>What this brief covers.</h2>
+  {% if project.publicSummary %}
+  <p class="lead">{{ project.publicSummary }}</p>
+  {% else %}
+  {{ gap("project-public-summary") }}
+  {% endif %}
 </section>
-
-<section class="blk">
-  <p class="eyebrow">Funding &amp; status</p>
-  <h2 class="sec">Honest about where this stands.</h2>
+<section class="blk" data-screen-label="Funding &amp; status">
+  <div class="eyebrow">Funding &amp; status</div>
+  <h2>Honest about where this stands.</h2>
   <div class="fund">
-    <div class="fh"><span>{{ project.id }} — {{ project.display }}</span><span class="status status--planned">Draft</span></div>
+    <div class="fh"><span>{{ project.id }} &mdash; {{ project.display }}</span><span class="status status--dev bg-wheat">Draft brief</span></div>
     <div class="fb">
-      {% if project.resourcePosture %}<p>{{ project.resourcePosture }}</p>{% else %}{{ gap("project-resource-posture") }}{% endif %}
-      <p class="meta">No cost or savings figures are published here yet. When they are, each will carry a source, a date, and a confidence label — see <a href="/receipts">The Receipts</a>. Once funds move, spending is reported in <a href="/treasury">The Treasury</a>.</p>
+      {% if project.resourcePosture %}
+      <p><b>Resourcing:</b> {{ project.resourcePosture }}</p>
+      {% else %}
+      {{ gap("project-resource-posture") }}
+      {% endif %}
+      {{ gap("project-useful-support") }}
+      <p><b>Reporting:</b> once funds move, spending on this project will be reported in <a class="t-coral" href="/treasury/">The Treasury</a>, with an internal receipt and approval trail.</p>
+      <p class="meta-13">No cost or savings figures are published here yet. When they are, each will carry a source, a date, and a confidence label &mdash; see <a class="t-coral" href="/receipts/">The Receipts</a>.</p>
     </div>
   </div>
 </section>
-
-<section class="blk blk--cream2">
-  <p class="eyebrow">Related sectors</p>
-  <h2 class="sec">Where it applies.</h2>
-  {{ gap("project-related-sectors", "the dossier's Sectors section names the primary/secondary sectors; wire the links from it rather than carrying the export's curated picks unreviewed") }}
-  <div class="related">
-    <a href="/sectors/"><span class="sq"></span> All 15 sectors →</a>
-  </div>
+<section class="blk blk--cream2" data-screen-label="Related sectors">
+  <div class="eyebrow">Related sectors</div>
+  <h2>Where it applies first.</h2>
+  <div class="rel">{% for s in project.sectors %}<a href="/sectors/{{ s.slug }}/"><span class="sq {{ s.sq }}"></span> {{ s.name }}</a>{% endfor %}<a class="bd-dashed" href="/sectors/"><span class="sq sq-outline"></span> All 15 sectors &rarr;</a></div>
 </section>
-
-<section class="blk blk--ink">
-  <h2 class="sec-cta">Help build this project.</h2>
-  {{ gap("project-cta", "the project-specific volunteer pitch is design-authored; author from the contribution model once roles are defined") }}
-  <div class="row-16">
-    <a href="/join" class="u-btn u-btn--primary">Take part</a>
-    <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--outline-cream">The public records</a>
+<section class="blk blk--coral bt-ink" data-screen-label="Project CTA">
+  <h2 class="mw-20ch">Help build {{ project.display | lower }}.</h2>
+  <div class="btn-row-26">
+    <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--ink">Build on GitHub</a>
+    <a href="/join/" class="u-btn u-btn--ghost">Take Part</a>
   </div>
 </section>

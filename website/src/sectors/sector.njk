@@ -29,9 +29,9 @@ eleventyComputed:
 {% import "partials/figure.njk" as fig %}
 {% set sc = sectorContent[sector.slug] %}
 {% set headlineRow = register.byId[sc.headlineSrc] if sc.headlineSrc else null %}
-{#- Related sectors: the next three in canonical order, wrapping. Mechanical,
-    so no editorial judgement is invented per sector. -#}
-{% set sqColours = ["bg-ink-blue", "bg-clay", "bg-coral"] %}
+{#- Related sectors come from _data/relatedSectors.json, extracted verbatim from
+    the export's own sector pages: which neighbours to show and each swatch colour
+    are the design's editorial choices, not a rule to re-derive. -#}
 
 <!-- SECTION: sectors/{{ sector.slug }}.Sector head -->
 <section class="sector-head" data-screen-label="Sector head">
@@ -42,7 +42,7 @@ eleventyComputed:
       <p class="sector-sub">{% if sector.includes %}{{ sector.includes }}{% else %}{{ gapInline("sector-includes") }}{% endif %}</p>
       <div class="sector-num"><span class="nb">Sector <b>{{ sector.num }} / 15</b></span> &middot; <span class="nb"><span class="status status--{{ sector.statusClass }}">{{ sector.status }}</span></span> &middot; <span class="nb">Dossier <b>{{ sector.id }}</b></span></div>
     </div>
-    <div class="sector-illus-slot">{% image sector.illustration.src, sector.illustration.alt, "(max-width: 920px) 90vw, 460px", [280, 620, 1024] %}</div>
+    <div class="sector-illus-slot">{% image sector.illustration.src, sector.illustration.alt, "(max-width: 920px) 90vw, 460px", [280, 620, 1024], "lazy", "sector-illus" %}</div>
   </div>
 </section>
 
@@ -101,20 +101,20 @@ eleventyComputed:
   {% if sc.workedExample.measurement %}
   <div class="eyebrow">03 &middot; Where the method stops</div>
   <h2>How far the method goes in {{ sector.name }} &mdash; and where it stops.</h2>
-  <p class="prose-60">Nothing below is a finding. It is what the work would look like &mdash; up to the point where it must stop.</p>
   <div class="steps6">
     {% for step in sc.workedExample.steps %}
-    <div class="step6"><div class="n">{{ loop.index }}</div><div><p>{{ step }}</p></div></div>
+    {% set bits = step.split(" — ") %}
+    <div class="step6"><div class="n">{{ loop.index }}</div><div><h3><b>{{ bits[0] }}</b></h3><p>{{ bits | slice(1) | first | join(" — ") if bits.length > 1 else step }}</p></div></div>
     {% endfor %}
   </div>
   <p class="prose-60"><b>Then we stop.</b> Steps 4 to 6 &mdash; matching a mechanism, packaging it for others to run, and tracking whether the cost falls &mdash; would put a tool between a person and their {{ sc.workedExample.stopBetween }}. That needs {{ sc.workedExample.stopReason }} &mdash; and none of that exists yet. Until it does, {{ sector.name }} is a measurement sector: we can show what it costs and where the cost sits. We will not package something for a community group to run.</p>
   {% else %}
   <div class="eyebrow">03 &middot; How a {{ sector.name | lower }} cost gets uncosted</div>
   <h2>{{ sc.workedExample.scenario }}</h2>
-  <p class="prose-60">Nothing below is a finding. It is what the work would look like, step by step.</p>
   <div class="steps6">
     {% for step in sc.workedExample.steps %}
-    <div class="step6"><div class="n">{{ loop.index }}</div><div><p>{{ step }}</p></div></div>
+    {% set bits = step.split(" — ") %}
+    <div class="step6"><div class="n">{{ loop.index }}</div><div><h3><b>{{ bits[0] }}</b></h3><p>{{ bits | slice(1) | first | join(" — ") if bits.length > 1 else step }}</p></div></div>
     {% endfor %}
   </div>
   {% endif %}
@@ -166,9 +166,8 @@ eleventyComputed:
   <div class="eyebrow">Related sectors</div>
   <h2>Keep reading.</h2>
   <div class="related">
-    {% for offset in [1, 2, 3] %}
-    {% set neighbour = catalog.sectors[(loop.index0 + sector.num | int) % 15] %}
-    <a href="/sectors/{{ neighbour.slug }}/"><span class="sq {{ sqColours[loop.index0] }}"></span> {{ neighbour.name }}</a>
+    {% for rel in relatedSectors[sector.slug] %}
+    <a href="/sectors/{{ rel.slug }}/"><span class="sq {{ rel.sq }}"></span> {{ rel.name }}</a>
     {% endfor %}
     <a class="bd-dashed" href="/sectors/"><span class="sq sq-outline"></span> All 15 sectors &rarr;</a>
   </div>

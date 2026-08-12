@@ -71,8 +71,8 @@ module.exports = function (eleventyConfig) {
   // alt argument; empty alt only for decorative marks).
   //
   // Usage in a template:
-  //   {% image "logos/logo-tight-light.png", "Uncost.org", "(max-width: 40rem) 8rem, 10rem", [160, 320], "eager" %}
-  async function image(src, alt, sizes = "100vw", widths = [320, 640, 960], loading = "lazy") {
+  //   {% image "logos/logo-tight-light.png", "Uncost.org", "(max-width: 40rem) 8rem, 10rem", [160, 320], "eager", "robot" %}
+  async function image(src, alt, sizes = "100vw", widths = [320, 640, 960], loading = "lazy", className = "") {
     if (alt === undefined) {
       throw new Error(`image shortcode: missing alt text for ${src}`);
     }
@@ -86,11 +86,17 @@ module.exports = function (eleventyConfig) {
       // built-output audit and any golden checks stay stable.
       filenameFormat: (id, s, width, format) => `${path.parse(s).name}-${width}.${format}`,
     });
+    // className lands on the <img>, not the <picture>: the design's rules are
+    // written against a bare <img> (.robot caps the hero at 440px,
+    // .sector-illus fixes the dossier illustration's height), and the wrapper
+    // is display:contents so it is invisible to layout. Dropping the class here
+    // is what made the hero robot render at full size.
     return Image.generateHTML(metadata, {
       alt,
       sizes,
       loading,
       decoding: "async",
+      ...(className ? { class: className } : {}),
     });
   }
   eleventyConfig.addNunjucksAsyncShortcode("image", image);

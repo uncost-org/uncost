@@ -12,70 +12,78 @@ eleventyComputed:
   description: "{{ policy.id }} — {{ policy.display }}.{% if policy.reserved %} Reference number reserved; the policy is not yet drafted.{% else %} Public review draft; not adopted, not in force.{% endif %}"
 ---
 {#-
-  One template, two states.
+  One template, two states, both on the export's policy shell
+  (design-source/pages/policies/*.html and pages/privacy.html): .pol-hd header,
+  .pol-wrap > .pol-toc + .pol-body, then the closing CTA band.
 
-  DRAFTED  — POL-001…010. The reviewed body renders from the repository's own
-             markdown, which supplies the page <h1>; nothing is authored here.
-  RESERVED — a permanent reference number held for a policy nobody has written
-             yet (catalog.js sets `reserved` from the file's canonical_status).
-             It renders the export's stub state: the reserved number, an honest
-             "not yet drafted" status, a version-history table recording only
-             the reservation, and a contact route. No policy content is invented
-             to fill it — there is none, and saying so plainly is the point.
-             This state supplies its own <h1>, since no markdown body renders.
+  DRAFTED  — POL-001…010. The reviewed markdown from policies/POL-0NN-*.md fills
+             the design's numbered sections; the prose is the repository's, only
+             the container is the design's. Nothing is re-authored here.
+  RESERVED — POL-011. The export's not-yet-drafted stub: reserved number, honest
+             status, a version-history table recording only the reservation, and
+             a contact route. No policy content is invented.
 -#}
 {% import "partials/mailto.njk" as mail %}
-<header class="titleband">
-  <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/policies/">Policies</a> &nbsp;/&nbsp; <span>{{ policy.display }}</span></div>
+<header class="pol-hd" data-screen-label="Policy header">
   <div class="meta">
-    <span class="pid ref">{{ policy.id }}</span>
+    <span class="ref">{{ policy.id }}</span>
     {% if policy.reserved %}
-    <span class="status status--planned">Not yet drafted</span>
-    <span class="m">Reference reserved</span>
+    <span class="m">Not yet drafted</span>
     <span class="m">Last updated: pre-launch</span>
+    <span class="m">Public review</span>
     {% else %}
-    <span class="status status--planned">Public review draft &mdash; not in force</span>
+    <span class="m">Draft &mdash; not in force</span>
+    <span class="m">Version {{ policy.frontmatter.version }}</span>
+    <span class="m">Public review</span>
     {% endif %}
   </div>
-  {% if policy.reserved %}
   <h1>{{ policy.display }}</h1>
-  {% endif %}
 </header>
-{% if policy.reserved %}
 <div class="pol-wrap">
-  <nav class="pol-toc" aria-label="Contents">
+  <nav class="pol-toc" aria-label="Contents" data-screen-label="TOC">
     <h2>Contents</h2>
+    {% if policy.reserved %}
     <a href="#s1">1 &middot; Status</a>
     <a href="#s2">2 &middot; Version history</a>
     <a href="#s3">3 &middot; Contact</a>
+    {% else %}
+    {% for s in policy.sections %}
+    <a href="#{{ s.anchor }}">{{ s.num }} &middot; {{ s.title }}</a>
+    {% endfor %}
+    {% endif %}
   </nav>
-  <div class="pol-body">
+  <div class="pol-body" data-screen-label="Policy body">
+    {% if policy.reserved %}
     <div class="callout">
-      <h2 class="s">The plain-language version</h2>
+      <h3>The plain-language version</h3>
       <p>This policy has not been written. Its reference number is reserved and permanent, so it can be cited now and will still point here once there is something to point at.</p>
     </div>
-    <section id="s1">
-      <h2 class="s"><span class="num">1</span>Status</h2>
-      <p>Not yet drafted. {{ policy.id }} is held in the public record as a reserved reference. There is no policy text, no scope and no rules &mdash; nothing here is in force, and a reserved reference is not an adopted policy.</p>
-      <p>Drafting it means writing it against the controlling source recorded in <a href="https://github.com/uncost-org/uncost/blob/main/docs/CONTROL.md" target="_blank" rel="noopener">docs/CONTROL.md</a>, stamping its derivation, adding it to the policy pack, and moving its status to draft &mdash; the same route every other policy took. Until then, do not cite this page as authority for anything.</p>
+    <section id="s1"><h3 class="s"><span class="num">1</span>Status</h3><p>Not yet drafted. {{ policy.id }} is held in the public record as a reserved reference: there is no policy text, no scope and no rules, nothing here is in force, and a reserved reference is not an adopted policy. Drafting it means writing it against the controlling source, stamping its derivation, adding it to the policy pack and moving its status to draft &mdash; the same route every other policy took. Until then, do not cite this page as authority for anything.</p></section>
+    <section id="s2"><h3 class="s"><span class="num">2</span>Version history</h3>
+      <table class="vhist"><thead><tr><th class="w-90">Version</th><th class="w-150">Date</th><th>Change</th></tr></thead><tbody>
+        <tr><td>&mdash;</td><td>Pre-launch</td><td>Reference number reserved. Drafting not started.</td></tr>
+      </tbody></table>
     </section>
-    <section id="s2">
-      <h2 class="s"><span class="num">2</span>Version history</h2>
-      <table class="vhist">
-        <thead><tr><th class="w-90">Version</th><th class="w-150">Date</th><th>Change</th></tr></thead>
-        <tbody>
-          <tr><td>&mdash;</td><td>Pre-launch</td><td>Reference number reserved. Drafting not started.</td></tr>
-        </tbody>
-      </table>
+    <section id="s3"><h3 class="s"><span class="num">3</span>Contact</h3><p>Questions about this reservation? Email {{ mail.email() }}. The full policy set is on the <a href="/policies/">Policies</a> page.</p></section>
+    {% else %}
+    <div class="callout">
+      <h3>The plain-language version</h3>
+      {{ policy.preamble | md | safe }}
+    </div>
+    {% for s in policy.sections %}
+    <section id="{{ s.anchor }}"><h3 class="s"><span class="num">{{ s.num }}</span>{{ s.title }}</h3>
+      {{ s.body | mdSection | safe }}
     </section>
-    <section id="s3">
-      <h2 class="s"><span class="num">3</span>Contact</h2>
-      <p>Questions about this reservation? Email {{ mail.email() }}. The full policy set is on the <a href="/policies/">Policies</a> page, and the reserved file itself is in the <a href="https://github.com/uncost-org/uncost/blob/main/policies/" target="_blank" rel="noopener">public repository</a>.</p>
-    </section>
+    {% endfor %}
+    <section id="s{{ policy.sections | length + 1 }}"><h3 class="s"><span class="num">{{ policy.sections | length + 1 }}</span>Contact</h3><p>Questions about this policy? Email {{ mail.email() }}. The full policy set is on the <a href="/policies/">Policies</a> page.</p></section>
+    {% endif %}
   </div>
 </div>
-{% else %}
-<article class="prose-60">
-{{ policy.body | md | safe }}
-</article>
-{% endif %}
+<section class="blk blk--coral" data-screen-label="Privacy CTA">
+  <h2 class="sec mw-20ch">Read it before it binds anything.</h2>
+  <p class="lead lead-52">Every policy is published as a draft so it can be argued with first. Tell us where this one is wrong.</p>
+  <div class="btn-row">
+    <a href="/contact/" class="u-btn u-btn--ink">Contact us</a>
+    <a href="/policies/" class="u-btn u-btn--ghost">All policies</a>
+  </div>
+</section>

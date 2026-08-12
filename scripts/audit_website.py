@@ -301,9 +301,24 @@ def entry_source_texts(entries: List[Dict[str, str]]) -> List[Tuple[str, str]]:
     return texts
 
 
+# A built fragment counts as covered only when it appears verbatim inside a
+# SOURCE line that a human allowlisted FOR THE SAME RULE. The length floor stops
+# a two-word fragment from coincidentally matching an unrelated justified line.
+#
+# 25 was too high for headings: a disavowal like "No crypto treasury" (18 chars)
+# names the mechanism precisely in order to rule it out, sits in a source line
+# that is already allowlisted with a written justification, and could never be
+# covered — so the built audit failed on a sentence the source audit had already
+# accepted. The floor is 15, which still rejects the ambiguous short fragments
+# the selftest pins ("a token", 7). The rule-scoping and the verbatim-substring
+# requirement are unchanged, so the crypto guard is intact everywhere else:
+# nothing is covered without its own justified source line.
+COVERAGE_MIN_FRAGMENT = 15
+
+
 def covered_by_source(rule: str, chunk: str, texts: List[Tuple[str, str]]) -> bool:
     fragment = normalize(chunk)
-    if len(fragment) < 25:
+    if len(fragment) < COVERAGE_MIN_FRAGMENT:
         return False
     return any(rule == entry_rule and fragment in text for entry_rule, text in texts)
 
@@ -834,6 +849,17 @@ def selftest() -> int:
         "coverage is rule-scoped",
     )
     expect(not covered_by_source("crypto-token", "a token", texts), "short fragments are never covered")
+    disavowal = [("crypto-generic", normalize(
+        "<div><h3><i></i>No crypto treasury</h3><p>No cryptocurrency, no on-chain mechanics — "
+        "segregated accounts under a confirmed lawful structure only.</p></div>"))]
+    expect(
+        covered_by_source("crypto-generic", "No crypto treasury", disavowal),
+        "a justified disavowal heading is covered by its own allowlisted source line",
+    )
+    expect(
+        not covered_by_source("crypto-generic", "No crypto treasury", texts),
+        "coverage still requires an allowlisted line for that rule",
+    )
     expect(
         not covered_by_source("crypto-token", "an edited sentence mentioning a token somewhere else entirely", texts),
         "non-matching fragment is not covered",

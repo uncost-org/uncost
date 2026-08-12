@@ -1,18 +1,26 @@
 ---
 layout: layouts/base.njk
-title: "Dashboard"
-noindex: true
-eleventyComputed:
-  title: "The Dashboard · The Case"
-  description: "The public Human Essentials Dashboard is planned, not yet built. What one human needs, what it costs by region, and where automation could cut those costs."
-pageId: "later/case-dashboard"
+permalink: "/case/dashboard/"
+pageId: "later-case-dashboard"
+title: "The Dashboard"
+description: "Planned — the public Human Essentials Dashboard"
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
-<section class="blk blk--first">
-  <p class="eyebrow">Planned tool · The Case</p>
-  <h1 class="sec">The Dashboard.</h1>
-  <p class="lead">The public interface of the Human Essentials Dashboard: what one human needs, what it costs by region, and where automation could cut those costs. It is on the way — not yet built.</p>
-  <p>Every figure will carry a source, a date, and a confidence label — and anything hypothetical will be marked illustrative. We won't publish a number we can't stand behind.</p>
-  {{ gap("dashboard-later", "planned; not built for launch — timeline, region count, and prototype scope are movable planning targets and must be authored against the July source, not committed here") }}
-  <p><a href="/movement" class="u-btn u-btn--ink">How we source it</a></p>
-</section>
+{#- Markup taken verbatim from design-source/pages/later/case-dashboard.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: later/case-dashboard.Dashboard — title -->
+<div class="titleband" data-screen-label="Dashboard — title"><h1>The <span class="t-coral">Dashboard</span></h1></div>
+<div class="sys">
+  <!-- SECTION: later/case-dashboard.Dashboard -->
+  <div class="card" data-screen-label="Dashboard">
+    <div class="cap"><span class="status status--planned">Planned</span></div>
+    <div class="bd">
+      <div class="eq">Planned tool · The Case</div>
+      <h2>The Dashboard is on the way.</h2>
+      <p>The public interface of the Human Essentials Dashboard: what one human needs, what it costs by region, and where automation could cut those costs.</p>
+      <p>Every figure will carry a source, a date, and a confidence label — and anything hypothetical will be marked illustrative. We won&rsquo;t publish a number we can&rsquo;t stand behind.</p>
+      <div class="whenrow"><b>When</b><span>Months 4–6 — first prototype, 2–3 regions</span></div>
+      <div class="actions"><a href="/projects/human-essentials-dashboard/" class="u-btn u-btn--ink">See the project brief</a><a href="/receipts/" class="u-btn u-btn--ghost">How we source it</a></div>
+    </div>
+  </div>
+</div>
