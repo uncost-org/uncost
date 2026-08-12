@@ -7,19 +7,15 @@
  * no spacing, no geometry. Anything visual belongs in the design canvas and
  * arrives by re-export.
  *
- * Rule 1 — responsive images.
- * The export writes plain <img>. This repository renders every brand image
- * through the manifest-pinned {% image %} pipeline (AUTHORITY.md: the asset
- * manifest is the sole path/alt authority), which emits <picture><source…><img>
- * so the browser can pick avif/webp. `display: contents` makes that <picture>
- * wrapper transparent to layout, so the design's own `img` rules — .hd .brand
- * img, .hd-mega .mg-pic img, .robot, .focus3 .img img — apply exactly as
- * authored against a bare <img>. Without it the wrapper would become the flex
- * or grid item and the design's sizing would not reach the image.
+ * Rule 1 — (removed) responsive-image wrapper.
+ * The pipeline used to emit <picture><source…><img>, and this file made the
+ * wrapper `display: contents` so the design's img rules still applied. That was
+ * wrong: display:contents promotes the <source> elements into the parent's
+ * grid/flex layout, so .hero-grid received four children instead of two and the
+ * hero robot dropped below the text instead of sitting beside it. The shortcode
+ * now emits a bare <img srcset>, exactly like the export, so no wrapper rule is
+ * needed.
  */
-picture {
-  display: contents;
-}
 
 /* Rule 2 — .logo-44, which the export names but never defines.
  *

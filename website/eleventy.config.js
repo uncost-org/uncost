@@ -77,9 +77,18 @@ module.exports = function (eleventyConfig) {
       throw new Error(`image shortcode: missing alt text for ${src}`);
     }
     const input = path.join(BRAND_ROOT, src);
+    // ONE format, so eleventy-img emits a bare <img srcset> and never a
+    // <picture> wrapper. The design's CSS is written against a bare <img> as
+    // the direct child of its container — .hero-grid is a two-column grid whose
+    // second child IS the robot — and a wrapper changes which element is the
+    // grid/flex item. `picture { display: contents }` did not save it: that
+    // promotes the <source> elements to grid items too, so .hero-grid got four
+    // children and the robot dropped to a second row. Responsive widths are
+    // kept via srcset; the format matches the manifest's PNG so the markup is
+    // shaped exactly like the export's.
     const metadata = await Image(input, {
       widths: [...widths, null], // null keeps an original-width fallback
-      formats: ["avif", "webp", "png"],
+      formats: ["png"],
       outputDir: path.join(__dirname, "dist", "img"),
       urlPath: "/img/",
       // Deterministic, content-addressed names: reproducible builds, so the
