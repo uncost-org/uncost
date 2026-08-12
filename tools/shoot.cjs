@@ -9,6 +9,20 @@ const puppeteer = require(require.resolve("puppeteer", {
 }));
 const fs = require("node:fs");
 
+// Regions permitted to differ, masked in BOTH renders before the pixel compare.
+// These are the documented WCAG 2.2 AA corrections applied on adoption: the
+// export puts white on brand coral (4.32:1) and coral on cream (4.04:1), which
+// fail AA, so this build darkens the text. Recorded in design-system/AUTHORITY.md
+// and approved by the founder as an intentional divergence from the export.
+const ALLOWLIST = [
+  ".hd .cta-btn",          // header CTA: white -> near-black on coral
+  ".pledgebar a",          // sticky mobile CTA, same coral fill
+  ".hd-mega .mg-num",      // coral -> coral-deep, small text on cream-2
+  ".hd-mega .mg-go a .ar",
+  ".drawer-acc > button .pm",
+  ".drawer-acc .in a .ar",
+];
+
 (async () => {
   const [baseUrl, outDir, widthsCsv, ...routes] = process.argv.slice(2);
   const widths = widthsCsv.split(",").map(Number);
@@ -27,6 +41,19 @@ const fs = require("node:fs");
       const name = route.replace(/^\//, "").replace(/\/$/, "").replace(/[\/.]/g, "_") || "index";
       const file = path.join(outDir, `${name}@${w}.png`);
       await page.screenshot({ path: file, fullPage: true });
+      // Section boxes let the gate compare each band against its own origin, so
+      // one content-driven height change does not cascade into every section
+      // below it. Allowlist boxes are masked before diffing.
+      const meta = await page.evaluate((allow) => {
+        const box = (el) => { const r = el.getBoundingClientRect();
+          return [Math.round(r.x), Math.round(r.y + window.scrollY), Math.round(r.width), Math.round(r.height)]; };
+        const main = document.querySelector("main");
+        return {
+          sections: main ? [...main.children].map(box) : [],
+          masks: allow.flatMap((s) => [...document.querySelectorAll(s)].map(box)),
+        };
+      }, ALLOWLIST);
+      fs.writeFileSync(file.replace(/\.png$/, ".json"), JSON.stringify(meta));
       console.log(`shot ${file}`);
     }
   }

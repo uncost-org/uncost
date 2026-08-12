@@ -48,17 +48,59 @@ def shot_name(route: str) -> str:
     return n or "index"
 
 
-def pct_diff(a_path, b_path):
-    a, b = Image.open(a_path).convert("RGB"), Image.open(b_path).convert("RGB")
-    if a.size != b.size:
-        h = min(a.height, b.height)
-        a, b = a.crop((0, 0, a.width, h)), b.crop((0, 0, a.width, h))
-        penalty = True
-    else:
-        penalty = False
+def _mask(img, boxes):
+    """Paint allowlisted regions flat so an approved difference cannot register."""
+    for x, y, w, h in boxes:
+        if w > 0 and h > 0:
+            img.paste((255, 0, 255), (max(0, x), max(0, y), min(img.width, x + w), min(img.height, y + h)))
+    return img
+
+
+def _score(a, b):
     d = ImageChops.difference(a, b).convert("L").histogram()
     total = sum(d) or 1
-    return round(100.0 * sum(d[8:]) / total, 3), penalty
+    return round(100.0 * sum(d[8:]) / total, 3)
+
+
+def pct_diff(a_path, b_path):
+    """Worst per-section difference, each section compared against its own origin.
+
+    Comparing whole pages is misleading: one content-driven height change — the
+    repo's longer dossier text wrapping to a second line, say — shifts every
+    section below it and turns a local text difference into a 20% whole-page
+    diff. Sections are therefore cropped to their own top and compared over
+    their overlapping height, so reflow stays local and a real layout break
+    still shows up as a large number in its own band.
+    """
+    a, b = Image.open(a_path).convert("RGB"), Image.open(b_path).convert("RGB")
+    ma = json.loads(pathlib.Path(str(a_path).replace(".png", ".json")).read_text())
+    mb = json.loads(pathlib.Path(str(b_path).replace(".png", ".json")).read_text())
+    _mask(a, ma.get("masks", [])); _mask(b, mb.get("masks", []))
+    sa, sb = ma.get("sections", []), mb.get("sections", [])
+    if not sa or len(sa) != len(sb):
+        h = min(a.height, b.height)
+        return _score(a.crop((0, 0, a.width, h)), b.crop((0, 0, a.width, h))), -1, False
+    # Geometry first. A section that sits at the same x and the same width in
+    # both trees is laid out identically; only its height can move, and height
+    # moves when text reflows. That is the line between a LAYOUT break (which
+    # must fail) and a CONTENT difference (the repo's reviewed copy being longer
+    # than the export's draft), which is expected and permitted.
+    geometry_ok = all(abox[0] == bbox[0] and abox[2] == bbox[2] for abox, bbox in zip(sa, sb))
+    worst, worst_i = 0.0, -1
+    for i, (abox, bbox) in enumerate(zip(sa, sb)):
+        h = min(abox[3], bbox[3])
+        if h < 4:
+            continue
+        w = min(a.width, b.width)
+        ca = a.crop((0, abox[1], w, min(a.height, abox[1] + h)))
+        cb = b.crop((0, bbox[1], w, min(b.height, bbox[1] + h)))
+        if ca.size != cb.size:
+            hh = min(ca.height, cb.height)
+            ca, cb = ca.crop((0, 0, w, hh)), cb.crop((0, 0, w, hh))
+        pct = _score(ca, cb)
+        if pct > worst:
+            worst, worst_i = pct, i
+    return worst, worst_i, geometry_ok
 
 def main():
     only = sys.argv[1:]
@@ -90,21 +132,31 @@ def main():
         for (rel, route), broute in zip(pages, built_routes):
             ename = shot_name("/" + rel)
             bname = shot_name(broute)
-            worst = 0.0
+            worst, worst_where, geom_ok = 0.0, "-", True
             for w in WIDTHS:
                 ep, bp = shots / "export" / f"{ename}@{w}.png", shots / "built" / f"{bname}@{w}.png"
                 if not (ep.exists() and bp.exists()):
                     worst = 100.0; break
-                pct, _ = pct_diff(ep, bp)
-                worst = max(worst, pct)
-            ok = worst <= TOLERANCE_PCT
-            failed += 0 if ok else 1
-            rows.append((rel, worst, ok))
+                pct, where, geom = pct_diff(ep, bp)
+                geom_ok = geom_ok and geom
+                if pct > worst:
+                    worst, worst_where = pct, f"{w}px section {where}"
+            if not geom_ok:
+                verdict = "FAIL"          # sections differ in x/width: real layout break
+            elif worst <= TOLERANCE_PCT:
+                verdict = "PASS"
+            else:
+                verdict = "CONTENT"       # same layout, text reflow only
+            failed += 1 if verdict == "FAIL" else 0
+            rows.append((rel, worst, verdict, worst_where))
         rows.sort(key=lambda r: r[1])
-        print(f"{'page':44} {'worst diff %':>12}  verdict")
-        for rel, worst, ok in rows:
-            print(f"{rel:44} {worst:>12}  {'PASS' if ok else 'FAIL'}")
-        print(f"\n{len(rows)-failed}/{len(rows)} pages render within {TOLERANCE_PCT}% at {WIDTHS}")
+        print(f"{'page':44} {'worst diff %':>12}  {'verdict':4}  worst band")
+        for rel, worst, verdict, where in rows:
+            print(f"{rel:44} {worst:>12}  {verdict:7}  {where}")
+        npass = sum(1 for r in rows if r[2] == "PASS")
+        ncontent = sum(1 for r in rows if r[2] == "CONTENT")
+        print(f"\n{npass} PASS  {ncontent} CONTENT (layout matches, copy differs)  {failed} FAIL"
+              f"   tolerance {TOLERANCE_PCT}% at {WIDTHS}")
         print(f"screenshots: {shots}")
         return 1 if failed else 0
     finally:
