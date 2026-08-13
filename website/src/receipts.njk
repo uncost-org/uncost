@@ -1,74 +1,105 @@
 ---
 layout: layouts/base.njk
-title: "The Receipts — sources & methodology"
-description: "The methodology and source layer under everything Uncost publishes: every number has a source, every source a date, and every model states its assumptions."
+permalink: "/receipts/"
 pageId: "receipts"
+title: "The Receipts"
+description: "Our open methodology and source layer. Every number has a source, every source has a date, every model states its assumptions."
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
-{% import "partials/figure.njk" as fig %}
-<section class="blk blk--first">
-  <p class="eyebrow">Sources and methodology</p>
-  <h1>The Receipts</h1>
-</section>
+{#- Markup taken verbatim from design-source/pages/receipts.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: receipts.Receipts — title -->
+<div class="titleband" data-screen-label="Receipts — title"><h1>The <span class="t-coral">Receipts</span></h1></div>
+<div class="introband">
+  <h2>Every number, out in the open.</h2>
+  <p>The Receipts is the methodology and source layer under everything we publish. The rule is simple: every number has a source, every source has a date, and every model states its assumptions. If a claim can&rsquo;t be sourced, we label it — plainly — as an estimate, a scenario, or a hypothesis, not a fact.</p>
+</div>
 
-<section class="blk">
-  <h2 class="sec">Every number, out in the open.</h2>
-  <p class="lead">The Receipts is the methodology and source layer under everything we publish. The rule is simple: every number has a source, every source has a date, and every model states its assumptions. If a claim can&rsquo;t be sourced, we label it — plainly — as an estimate, a scenario, or a hypothesis, not a fact.</p>
-</section>
-
-<section class="blk" id="register">
-  <p class="eyebrow">The source register</p>
-  <h2 class="sec">Every figure, with its receipt.</h2>
-  <p>These are the sources behind the numbers on this site — each with its publisher, its date, its licence, and the verbatim line it came from. The register is also in the <a href="https://github.com/uncost-org/uncost/blob/main/sources/register.csv">public repository</a>.</p>
-  {% for row in register.stats %}
-  {%- if row.placement == "durable-page" %}
-  <div class="rcpt-row" id="{{ row.source_id }}" data-source="{{ row.source_id }}">
-    <h3>{{ row.display_caption }}</h3>
-    <p class="rcpt-src">{{ row.source_line }} — {{ row.publisher }}, {{ row.publication_date }} · {{ row.license }} · last checked {{ row.last_checked }}</p>
-    <p class="cap">{{ row.receipt }}</p>
+<!-- SECTION: receipts.The rule -->
+<section class="blk blk--cream u-8" data-screen-label="The rule">
+  <div class="eyebrow">The rule, three ways</div>
+  <div class="rule3 mt-8">
+    <div><div class="n">01</div><h3>Sourced</h3><p>Every figure carries a source and a license, so anyone can trace it back and reuse it lawfully.</p></div>
+    <div><div class="n">02</div><h3>Dated</h3><p>Every source shows when it was captured and when it was last reviewed. Stale data is flagged, not hidden.</p></div>
+    <div><div class="n">03</div><h3>Labelled</h3><p>Every figure carries a confidence tag, and anything hypothetical is marked illustrative — unmissably.</p></div>
   </div>
-  {%- endif %}
-  {% endfor %}
 </section>
 
-<section class="blk blk--cream2">
-  <h2 class="sec">The rule, three ways.</h2>
-  <h3>01 — Sourced</h3>
-  <p>Every figure carries a source and a license, so anyone can trace it back and reuse it lawfully.</p>
-  <h3>02 — Dated</h3>
-  <p>Every source shows when it was captured and when it was last reviewed. Stale data is flagged, not hidden.</p>
-  <h3>03 — Labelled</h3>
-  <p>Every figure carries a confidence tag, and anything hypothetical is marked illustrative — unmissably.</p>
+<!-- SECTION: receipts.Confidence labels -->
+<section class="blk blk--cream2" data-screen-label="Confidence labels">
+  <div class="eyebrow">What the confidence tags mean</div>
+  <h2 class="sec u-11">Four honest labels.</h2>
+  <table class="conftable">
+    <thead><tr><th>Label</th><th>What it tells you</th></tr></thead>
+    <tbody>
+      <tr><td><span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span></td><td>Drawn directly from a named, dated, licensed public source. Check it yourself.</td></tr>
+      <tr><td><span class="rcpt-conf rcpt-conf--estimate">Estimate</span></td><td>Derived from sourced inputs plus stated assumptions. The assumptions are published alongside.</td></tr>
+      <tr><td><span class="rcpt-conf rcpt-conf--scenario">Scenario</span></td><td>A modelled &ldquo;what if&rdquo; — a possible outcome under specific conditions, not a prediction.</td></tr>
+      <tr><td><span class="rcpt-conf rcpt-conf--needs-refresh">Needs refresh</span></td><td>The underlying source is past its review date. Treat with caution until updated.</td></tr>
+    </tbody>
+  </table>
+  <div class="u-94"><span class="rcpt-illus">Illustrative only</span> <span class="u-95">— any hypothetical figure on the site carries this hatched marker, so a placeholder is never mistaken for real data.</span></div>
 </section>
 
-<section class="blk">
-  <p class="eyebrow">What the confidence tags mean</p>
-  <h2 class="sec">Four honest labels.</h2>
-  {{ gap("receipts-confidence-labels", "the four-label confidence vocabulary (Confirmed / Estimate / Scenario / Needs refresh) and its definitions are design-authored — the July source references 'confidence' but does not enumerate these labels, and they differ from the fixed honest-status vocabulary in CONTROL.md; author against a controlling source before it ships") }}
+<!-- SECTION: receipts.Worked example -->
+<section class="blk blk--cream" data-screen-label="Worked example">
+  <div class="eyebrow">What the furniture looks like in place</div>
+  <h2 class="sec u-11">A figure, fully dressed.</h2>
+  <div class="rcpt rcpt-figure--illus demo">
+    <div class="fig">$X</div>
+    <div class="cap">Monthly essential basket for one adult, Region A</div>
+    <div class="rcpt-row rcpt-row--hair">
+      <span class="rcpt-src">SOURCE — <b>Uncost Basic Needs Cost Model</b></span>
+      <span class="rcpt-updated rcpt-updated--stale">Last updated: [date]</span>
+      <span class="rcpt-conf rcpt-conf--scenario">Scenario</span>
+      <span class="rcpt-illus">Illustrative only</span>
+    </div>
+  </div>
+  <p class="u-96">Placeholder figure shown to demonstrate the format. Real dashboard figures will replace <b>$X</b> and <b>[date]</b> with sourced values, and drop the illustrative marker only when a real, dated source stands behind them.</p>
 </section>
 
-<section class="blk blk--cream2">
-  <p class="eyebrow">What the furniture looks like in place</p>
-  <h2 class="sec">A figure, fully dressed.</h2>
-  {{ gap("receipts-worked-example", "the worked-example figure card is an explicitly illustrative placeholder demo ($X / [date]); author a real dressed example once a sourced, dated figure exists — do not ship the placeholder as final layout copy") }}
+<!-- SECTION: receipts.Keeping current -->
+<section class="blk blk--ink u-block--ink" data-screen-label="Keeping current">
+  <div class="eyebrow u-10">Because data goes stale</div>
+  <h2 class="sec u-12">Built to stay current.</h2>
+  <p class="lead u-97">The dashboards pull from public sources where possible, show visible &ldquo;last updated&rdquo; dates, and follow a regular review cadence. Automating those data pipelines is a funding priority — precisely so the evidence stays fresh instead of decaying quietly.</p>
 </section>
 
-<section class="blk">
-  <p class="eyebrow">Because data goes stale</p>
-  <h2 class="sec">Built to stay current.</h2>
-  <p>The dashboards pull from public sources where possible, show visible &ldquo;last updated&rdquo; dates, and follow a regular review cadence. Automating those data pipelines is a funding priority — precisely so the evidence stays fresh instead of decaying quietly.</p>
+<!-- SECTION: receipts.Corrections -->
+<section class="blk blk--cream" id="corrections" data-screen-label="Corrections">
+  <div class="eyebrow">Corrections &amp; changelog</div>
+  <h2 class="sec u-98">We log our mistakes.</h2>
+  <p class="lead u-12">Every correction is recorded publicly with a date and a plain description of what changed and why. Nothing is quietly edited. The full version-controlled history lives in the public records.</p>
+  <div class="u-99">
+    <span class="status status--planned">Log begins at launch</span>
+    <p class="u-100">No public figures have been published yet, so there&rsquo;s nothing to correct. The moment the first sourced number goes live, this log starts — and stays append-only.</p>
+  </div>
+  <p class="u-3"><a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--ghost">View public records on GitHub</a></p>
 </section>
 
-<section class="blk blk--ink" id="corrections">
-  <p class="eyebrow">Corrections and changelog</p>
-  <h2 class="sec">We log our mistakes.</h2>
-  <p>Every correction is recorded publicly with a date and a plain description of what changed and why. Nothing is quietly edited.</p>
-  {{ gap("receipts-corrections-records", "the 'version-controlled corrections history in the public records' claim points at github.com/uncost-org/uncost, which diverges from the canon repo named in CONTROL.md (dafuqindustries/portfolio-canon) and is itself uncited; wire the public-records pointer only from the controlling source") }}
-  <h3>Log begins at launch</h3>
-  {{ gap("receipts-corrections-launch-state", "the 'no public figures have been published yet' state assertion is uncited on this page; confirm against a controlling source before publishing rather than rendering it as fact") }}
+<!-- SECTION: receipts.The register -->
+<section class="blk" id="register" data-screen-label="The register">
+  <div class="eyebrow">The register</div>
+  <h2>Every source, with its receipt.</h2>
+  <p class="prose-60">Every figure published on this site cites a row below by its permanent <b>SRC</b> id. The register is public in the repository as <a href="https://github.com/uncost-org/uncost/blob/main/sources/register.csv" target="_blank" rel="noopener">sources/register.csv</a>.</p>
+{% for row in register.stats %}
+  <div class="rcpt" id="{{ row.source_id }}" data-source="{{ row.source_id }}">
+    <div class="cap">{{ row.display_caption }}</div>
+    <div class="rcpt-row rcpt-row--hair">
+      <span class="rcpt-src">SOURCE &mdash; <b>{{ row.publisher }}</b>, {{ row.publication_work }}</span>
+      <span class="rcpt-updated">Last checked: {{ row.last_checked }}</span>
+      <span class="rcpt-conf rcpt-conf--{{ 'confirmed' if row.confidence.startsWith('confirmed') else 'estimate' }}">{{ 'Confirmed' if row.confidence.startsWith('confirmed') else 'Estimate' }}</span>
+    </div>
+  </div>
+{% endfor %}
 </section>
 
-<section class="blk blk--coral">
-  <h2 class="sec">Found a number we got wrong?</h2>
-  {{ gap("receipts-cta", "the corrections-CTA copy and its buttons (report a correction / back to The Case) are design-authored and point at routes not in the confirmed link set; author the pitch and wire buttons to confirmed root-absolute paths before it ships") }}
+<!-- SECTION: receipts.Receipts CTA -->
+<section class="blk blk--coral" data-screen-label="Receipts CTA">
+  <h2 class="sec mw-20ch">Found a number we got wrong?</h2>
+  <p class="lead lead-52">Corrections get priority. Tell us what&rsquo;s off and point us at the better source.</p>
+  <div class="btn-row">
+    <a href="/contact/" class="u-btn u-btn--ink">Report a correction</a>
+    <a href="/case/" class="u-btn u-btn--ghost">Back to The Case</a>
+  </div>
 </section>

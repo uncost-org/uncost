@@ -1,37 +1,58 @@
 ---
 layout: layouts/base.njk
-title: "The Projects"
-description: "Uncost's project briefs — public review drafts. No budget, build, pilot, or launch is approved."
+permalink: "/projects/"
 pageId: "projects"
+title: "The Projects"
+description: "A transparent registry of open tools, data models, and studies that turn evidence into real cost reduction communities can run."
+mainClass: "bg-wheat"
 ---
-<section class="blk blk--first">
-  <p class="eyebrow">The Projects</p>
-  <h1 class="sec">From evidence to real cost reduction.</h1>
-  <p class="lead">Public review drafts. No budget, build, pilot, or launch is approved; every brief is a reviewed dossier, not a shipped product.</p>
-  <p>The Projects are how Uncost moves from evidence to action: open-source tools, data models, and playbooks that communities and qualified partners can run themselves. We don’t own the farm — we publish the model, the sources, and the playbook, and local operators decide and act.</p>
+{#- Markup taken verbatim from design-source/pages/projects.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: projects.Projects — title -->
+<div class="titleband" data-screen-label="Projects — title"><h1>The <span class="t-coral">Projects</span></h1></div>
+<div class="introband bg-cream">
+  <h2>From evidence to real cost reduction.</h2>
+  <p>The Projects are how Uncost moves from evidence to action: open-source tools, data models, and automation playbooks that communities, co-ops, nonprofits, public agencies, and builders can run themselves. We don&rsquo;t own the farm — we publish the model, the sources, and the playbook so others can adopt and improve them.</p>
+</div>
+
+<div class="grouphd bg-wheat"><h3>Now</h3><span>One system, three parts</span></div>
+<!-- SECTION: projects.Now -->
+<div class="plist" data-screen-label="Now">
+  <a class="prow" href="/projects/human-essentials-dashboard/"><span class="pid">PRJ-001</span><div><h4>Human Essentials Dashboard</h4><p>What one human actually needs, what it costs by region, and how that compares to income.</p></div><div class="rt"><span class="status status--dev">In development</span></div></a>
+  <a class="prow" href="/projects/cost-of-living-tracker/"><span class="pid">PRJ-002</span><div><h4>Cost-of-Living Tracker</h4><p>Familiar prices over time — rent, food, energy, wages — with visible sources and dates.</p></div><div class="rt"><span class="status status--dev">In development</span></div></a>
+  <div class="prow"><span class="pid">PRJ-003</span><div><h4>Basic Needs Cost Model</h4><p>The math and receipts: how automation, renewables, and shared infrastructure could reduce costs.</p></div><div class="rt"><span class="status status--dev">In development</span></div></div>
+</div>
+
+<div class="grouphd"><h3>Next</h3><span>Planning tools &amp; shared-access kits</span></div>
+<!-- SECTION: projects.Next -->
+<div class="plist" data-screen-label="Next">
+  <div class="prow"><span class="pid">PRJ-004</span><div><h4>Community Resource Simulator</h4><p>Compares alternative scenarios for an existing community across food, housing, energy, and transport.</p></div><div class="rt"><span class="status status--planned">Planned</span></div></div>
+  <div class="prow"><span class="pid">PRJ-005</span><div><h4>Library of Things Kit</h4><p>Open software-and-operations model for shared tools, appliances, and repair — communities run it.</p></div><div class="rt"><span class="status status--planned">Planned</span></div></div>
+  <div class="prow"><span class="pid">PRJ-006</span><div><h4>Automation Dividend Study</h4><p>A nonpartisan study of where the gains from AI and robotics go — and how they could lower living costs.</p></div><div class="rt"><span class="status status--planned">Planned</span></div></div>
+  <div class="prow"><span class="pid">PRJ-007</span><div><h4>Basic Needs Planner</h4><p>Sizes the baseline infrastructure a proposed site or program would need to support the basics locally.</p></div><div class="rt"><span class="status status--planned">Planned</span></div></div>
+</div>
+
+<!-- SECTION: projects.Later -->
+<section class="blk blk--ink u-block--ink" data-screen-label="Later">
+  <div class="eyebrow u-10">Later — studies &amp; demonstrations</div>
+  <h2 class="sec u-91">Gated on funding and safety.</h2>
+  <p class="lead u-92">Longer-term studies and partner-led physical demonstrations — greenhouses, filtration, solar, storage, circular materials — are treated as research and design tracks until there is funding, a local operator, safety review, legal capacity, insurance, and site permissions. None involves Uncost directly providing healthcare, care, child-facing education, or safety services.</p>
 </section>
 
-<section class="blk blk--cream2">
-  <p class="eyebrow">The briefs</p>
-  <h2 class="sec">{{ catalog.projects.length }} briefs, all in review.</h2>
-  <div class="plist">
-{%- for project in catalog.projects %}
-    <a class="prow" href="/projects/{{ project.slug }}/"><span class="pid">{{ project.id }}</span><span >{{ project.display }}</span><span class="status status--planned">Draft</span></a>
-{%- endfor %}
-  </div>
+<!-- SECTION: projects.How they help -->
+<section class="blk blk--cream" data-screen-label="How they help">
+  <div class="eyebrow">The honest chain</div>
+  <h2 class="sec u-93">Every project has to earn its cost claim.</h2>
+  <p class="lead u-9">A project only counts as a cost-reduction path where energy, capital, maintenance, and local conditions make a net reduction plausible. Where the model shows it doesn&rsquo;t beat the status quo, we publish that negative result too. Where a cost driver is policy rather than technology, our role is open data and nonpartisan analysis — never partisan lobbying.</p>
 </section>
 
-<section class="blk">
-  <p class="eyebrow">How they help</p>
-  <h2 class="sec">Every project has to earn its cost claim.</h2>
-  <p>A project only counts as a cost-reduction path where energy, capital, maintenance, and local conditions make a net reduction plausible. Where the model shows it doesn’t beat the status quo, we publish that negative result too. Where a cost driver is policy rather than technology, our role is open data and nonpartisan analysis — never partisan lobbying.</p>
-</section>
-
-<section class="blk blk--cream2">
-  <p class="eyebrow">Longer horizon</p>
-  <h2 class="sec">Later — gated on funding and safety.</h2>
-  <p>Longer-term studies and partner-led physical demonstrations stay research-and-design tracks until there is funding, a local operator, safety review, legal capacity, insurance, and site permissions. None of it involves Uncost directly providing healthcare, care, child-facing education, or safety services.</p>
-  <div class="prose-60">
-  {{ catalog.longerHorizon | mdSection | safe }}
+<!-- SECTION: projects.Projects CTA -->
+<section class="blk blk--coral" data-screen-label="Projects CTA">
+  <h2 class="sec mw-20ch">Want to build one of these?</h2>
+  <p class="lead lead-52">The tools don&rsquo;t build themselves. Engineering, data, and sector expertise move them from planned to live.</p>
+  <div class="btn-row">
+    <a href="/join/" class="u-btn u-btn--ink">Take Part</a>
+    <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--ghost">Build on GitHub</a>
   </div>
 </section>

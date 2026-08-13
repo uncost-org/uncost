@@ -28,6 +28,19 @@ PAGES = {
     "later/press.html":          ("press.njk", "/press/"),
     "later/quiz.html":           ("quiz.njk", "/quiz/"),
     "later/share.html":          ("share.njk", "/share/"),
+    # Final tranche. These carry repo-authoritative content and/or forms, so the
+    # generated body is the export's markup and the dynamic regions are wired
+    # afterwards (see the per-page patches in tools/wire_tranche.py).
+    "faq.html":                  ("faq.njk", "/faq/"),
+    "news.html":                 ("news/index.njk", "/news/"),
+    "receipts.html":             ("receipts.njk", "/receipts/"),
+    "contact.html":              ("contact.njk", "/contact/"),
+    "privacy.html":              ("privacy.njk", "/privacy/"),
+    "policies.html":             ("policies/index.njk", "/policies/"),
+    "projects.html":             ("projects/index.njk", "/projects/"),
+    "pledge.html":               ("pledge/index.njk", "/pledge/"),
+    "pledge-resend.html":        ("pledge/resent.njk", "/pledge/resent/"),
+    "join.html":                 ("join.njk", "/join/"),
 }
 SRC = pathlib.Path("website/src")
 

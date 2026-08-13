@@ -1,33 +1,46 @@
 ---
 layout: layouts/base.njk
-title: "News"
-description: "Pre-launch updates from the Uncost movement — what we have published and why, dated and honest about what is and isn't done."
+permalink: "/news/"
 pageId: "news"
+title: "News"
+description: "Movement updates and a curated Cost Watch of external reporting on the cost of living, automation, and essentials."
 ---
-<section class="blk blk--first">
-  <p class="eyebrow">News</p>
-  <h1 class="sec">News.</h1>
-  <p class="lead">Pre-launch updates from the movement — what we’ve published and why. Dated, and honest about what is and isn’t done.</p>
-</section>
+{% from "partials/content-needed.njk" import block as gap %}
+{#- Markup taken verbatim from design-source/pages/news.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: news.News — title -->
+<div class="titleband" data-screen-label="News — title"><h1><span class="t-coral">News</span></h1></div>
+<div class="introband">
+  <h2>What&rsquo;s moving — ours and the world&rsquo;s.</h2>
+  <p>Movement updates on the left. On the right, a curated <b>Cost Watch</b> of external reporting we think is worth your time — links out, no reposting.</p>
+</div>
 
-<section class="blk">
-  <p class="eyebrow">Updates</p>
-  <h2 class="sec">Movement updates.</h2>
-  {% for item in news %}
-  <article class="up-item">
-    <h3>{{ item.title }}</h3>
-    <p class="date"><time datetime="{{ item.dateISO }}">{{ item.date }}</time></p>
-    <p>{{ item.body }}</p>
-  </article>
-  {% endfor %}
-</section>
-
-<section class="blk blk--ink" id="rss">
-  <p class="eyebrow">Get updates</p>
-  <h2 class="sec">Stay in the loop.</h2>
-  <p>Email updates open when there’s a real route for them. For now, signing the pledge is how to be counted — and this page and its <a href="/news/feed.xml">RSS feed</a> are where new updates land.</p>
-  <div class="row-16">
-    <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
-    <a href="/join" class="u-btn u-btn--outline-cream">Take part</a>
+<div class="newswrap">
+  <!-- SECTION: news.Updates -->
+  <div class="updates" data-screen-label="Updates">
+    <div class="up-item">
+      <div class="date">Pre-launch · 2026</div>
+      <h3>The plan is public. The build begins.</h3>
+      <p>The movement plan, brand system, website, and project architecture are complete. Next: fiscal sponsorship, public launch, the first contributors, and the first Human Essentials Dashboard prototype. Sign the Pledge to be here when it opens.</p>
+    </div>
+    <div class="up-item">
+      <div class="date">Pre-launch · 2026</div>
+      <h3>Why we&rsquo;re starting with Shelter, Food, and Energy.</h3>
+      <p>All fifteen sectors stay visible, but the first evidence work goes deep on three high-pressure essentials — to prove the model honestly before expanding. Here&rsquo;s the reasoning and the guardrails.</p>
+    </div>
+    <div class="up-item">
+      <div class="date">Pre-launch · 2026</div>
+      <h3>Receipts first: how we&rsquo;ll publish numbers.</h3>
+      <p>Every figure will carry a source, a date, and a confidence label — and anything hypothetical will be marked illustrative. A short tour of the methodology that keeps us honest.</p>
+    </div>
+    <p class="u-80" id="rss">More updates arrive as the movement launches. An RSS feed will be published here at launch.</p>
   </div>
-</section>
+
+  <!-- SECTION: news.Cost Watch -->
+  <aside class="costwatch" data-screen-label="Cost Watch">
+    <h3>Cost Watch</h3>
+    <p class="cwsub">External reporting on the cost of living and automation. We link out and summarise briefly — read the original at the source.</p>
+    <p class="u-81">Links are to third-party sites. Inclusion isn&rsquo;t endorsement — it&rsquo;s a reading list.</p>
+  </aside>
+</div>

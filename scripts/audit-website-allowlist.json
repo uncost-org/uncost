@@ -198,9 +198,23 @@
   {
     "rule": "crypto-dao",
     "path": "website/src/faq.njk",
+    "line_sha256": "0bb4a7320c9947c2203f80eedc3cb20279a8ce9192a64fb6ec95806ca66afeb8",
+    "justification": "Disavowal sentence carried from the design export: it names the mechanism in order to rule it out, matching the canon quarantine and the published 'no coin, no wallet, nothing on-chain'. Removing the vocabulary would weaken the disavowal (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-13"
+  },
+  {
+    "rule": "crypto-dao",
+    "path": "website/src/faq.njk",
     "line_sha256": "bce8aaf21ed2362ef0d73b811aa1f832f38a4c798febff865abbdf903fa54bc7",
     "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
     "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "website/src/faq.njk",
+    "line_sha256": "0bb4a7320c9947c2203f80eedc3cb20279a8ce9192a64fb6ec95806ca66afeb8",
+    "justification": "Disavowal sentence carried from the design export: it names the mechanism in order to rule it out, matching the canon quarantine and the published 'no coin, no wallet, nothing on-chain'. Removing the vocabulary would weaken the disavowal (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-13"
   },
   {
     "rule": "crypto-generic",
@@ -219,9 +233,23 @@
   {
     "rule": "crypto-on-chain",
     "path": "website/src/faq.njk",
+    "line_sha256": "0bb4a7320c9947c2203f80eedc3cb20279a8ce9192a64fb6ec95806ca66afeb8",
+    "justification": "Disavowal sentence carried from the design export: it names the mechanism in order to rule it out, matching the canon quarantine and the published 'no coin, no wallet, nothing on-chain'. Removing the vocabulary would weaken the disavowal (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-13"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "website/src/faq.njk",
     "line_sha256": "f78c5a51de1330876fbc285f11725da5968e660e1af0dd8999ac5831917f748d",
     "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
     "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-token",
+    "path": "website/src/faq.njk",
+    "line_sha256": "0bb4a7320c9947c2203f80eedc3cb20279a8ce9192a64fb6ec95806ca66afeb8",
+    "justification": "Disavowal sentence carried from the design export: it names the mechanism in order to rule it out, matching the canon quarantine and the published 'no coin, no wallet, nothing on-chain'. Removing the vocabulary would weaken the disavowal (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-13"
   },
   {
     "rule": "crypto-token",
@@ -238,6 +266,20 @@
     "added": "2026-07-23"
   },
   {
+    "rule": "tax-deductibility-claim",
+    "path": "website/src/faq.njk",
+    "line_sha256": "f5e76c374a59fd584c23de18d0c9717675c0bc553121bdea03187c035e99489c",
+    "justification": "Conditional statement, not a tax-status claim: it states donations are NOT open and that deductibility depends on fiscal sponsorship being confirmed first. The sentence exists to withhold the claim.",
+    "added": "2026-08-13"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "website/src/privacy.njk",
+    "line_sha256": "0e1763b2d9068c845334db02756813ace49239c282642adc18675ecb27745394",
+    "justification": "Disavowal sentence carried from the design export: it names the mechanism in order to rule it out, matching the canon quarantine and the published 'no coin, no wallet, nothing on-chain'. Removing the vocabulary would weaken the disavowal (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-13"
+  },
+  {
     "rule": "crypto-generic",
     "path": "website/src/privacy.njk",
     "line_sha256": "86c7402331f3cb9153373007033f860da02136480c37389498f228ccebc09aa3",
@@ -247,9 +289,23 @@
   {
     "rule": "crypto-on-chain",
     "path": "website/src/privacy.njk",
+    "line_sha256": "0e1763b2d9068c845334db02756813ace49239c282642adc18675ecb27745394",
+    "justification": "Disavowal sentence carried from the design export: it names the mechanism in order to rule it out, matching the canon quarantine and the published 'no coin, no wallet, nothing on-chain'. Removing the vocabulary would weaken the disavowal (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-13"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "website/src/privacy.njk",
     "line_sha256": "86c7402331f3cb9153373007033f860da02136480c37389498f228ccebc09aa3",
     "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
     "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-token",
+    "path": "website/src/privacy.njk",
+    "line_sha256": "0e1763b2d9068c845334db02756813ace49239c282642adc18675ecb27745394",
+    "justification": "Disavowal sentence carried from the design export: it names the mechanism in order to rule it out, matching the canon quarantine and the published 'no coin, no wallet, nothing on-chain'. Removing the vocabulary would weaken the disavowal (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-13"
   },
   {
     "rule": "crypto-token",

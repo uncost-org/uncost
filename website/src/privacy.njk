@@ -1,56 +1,95 @@
 ---
 layout: layouts/base.njk
-title: "Privacy"
-description: "The plain-language privacy notice for uncost.org. Today it collects nothing — no form on this site is live yet."
+permalink: "/privacy/"
 pageId: "privacy"
+title: "Privacy &amp; Data Protection (POL-001)"
+description: "POL-001 — how Uncost collects, uses, and protects your data. We use your details only for what you asked for; we don't sell data or use it for partisan targeting."
 ---
-{% import "partials/mailto.njk" as mail %}
+{#- Markup taken verbatim from design-source/pages/privacy.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: privacy.Policy header -->
+<header class="pol-hd" data-screen-label="Policy header">
+  <div class="meta">
+    <span class="ref">POL-001</span>
+    <span class="m">Version 0.1 — Draft</span>
+    <span class="m">Last updated: pre-launch</span>
+    <span class="m">Public review</span>
+  </div>
+  <h1>Privacy &amp; Data Protection Policy</h1>
+</header>
 
-<section class="blk blk--first">
-  <p class="eyebrow">Privacy notice</p>
-  <h1>Privacy</h1>
-  <p class="lead">The honest version is short: right now, this site collects nothing about you, because no form on it is live yet. This notice explains who is responsible, what will change when a sign-up does go live, and what we will never do.</p>
-</section>
+<div class="pol-wrap">
+  <!-- SECTION: privacy.TOC -->
+  <nav class="pol-toc" aria-label="Contents" data-screen-label="TOC">
+    <h2>Contents</h2>
+    <a href="#s1">1 · Who we are</a>
+    <a href="#s2">2 · What we collect</a>
+    <a href="#s3">3 · How we use it</a>
+    <a href="#s4">4 · What we never do</a>
+    <a href="#s5">5 · Sharing &amp; processors</a>
+    <a href="#s6">6 · Retention</a>
+    <a href="#s7">7 · Your rights</a>
+    <a href="#s8">8 · Security</a>
+    <a href="#s9">9 · Changes to this policy</a>
+    <a href="#s10">10 · Contact</a>
+  </nav>
 
-<section class="blk">
-  <p class="eyebrow">01 · What we collect today</p>
-  <h2 class="sec">Today, nothing.</h2>
-  <p>There is no live sign-up, pledge, or contact form on this site yet, so there is nothing for us to collect and nothing stored about your visit. The site sets no cookies, runs no analytics, and makes no third-party requests — every asset is served from uncost.org, which you can confirm in your browser’s network tab. That is why there is no cookie banner: there is nothing to consent to.</p>
-  <p>When a sign-up form does go live, it will collect only what you type in (an email address, and anything else you choose to add), this notice will be updated to say so before that happens, and nothing here is retroactive.</p>
-</section>
+  <!-- SECTION: privacy.Policy body -->
+  <div class="pol-body" data-screen-label="Policy body">
+    <div class="callout">
+      <h3>The plain-language version</h3>
+      <p>We only ask for what we need — mainly your email if you sign the Pledge or ask for updates. We use it for the thing you asked for, nothing else. We don&rsquo;t sell your data, and we never use your pledge for partisan targeting. You can unsubscribe or ask us to delete your data anytime.</p>
+    </div>
 
-<section class="blk blk--cream2">
-  <p class="eyebrow">02 · Who is responsible</p>
-  <h2 class="sec">Who holds your data.</h2>
-  {#- INCORPORATION-GATED · SPONSOR-GATED · COUNSEL-GATED: the data controller below is PROVISIONAL.
-     The controller identity changes once Uncost is incorporated and/or a fiscal
-     sponsor is confirmed, and the wording must be confirmed with counsel before
-     any form goes live. See records/SPONSOR_TRANSITION.md. -#}
-  <p>Uncost is not yet incorporated. Until it is, the person responsible for any personal data this project handles is the founder operating the unincorporated project Uncost. This is provisional and will be confirmed with counsel, and updated here, once the legal home (incorporation or a fiscal sponsor) is settled.</p>
-</section>
+    <section id="s1"><h3 class="s"><span class="num">1</span>Who we are</h3><p>Uncost (&ldquo;we&rdquo;, &ldquo;us&rdquo;) is a nonprofit, nonpartisan movement to reduce the cost of living. This policy explains how we handle personal data across uncost.org and our community channels. Until fiscal sponsorship is confirmed, data is handled under this draft standard; the adopted version will name the responsible legal entity.</p></section>
 
-<section class="blk">
-  <p class="eyebrow">03 · Minimum age</p>
-  <h2 class="sec">Who can sign up.</h2>
-  {#- COUNSEL-GATED: the minimum-age threshold below is the intended DESIGN, not a
-     finalised legal position. Confirm 18+ (and any guardian handling) with counsel
-     before a sign-up form goes live. -#}
-  <p>The design is that sign-ups are for adults: when a form goes live, signing up will ask you to confirm you are 18 or older. This is the intended rule and will be confirmed with counsel before any form opens.</p>
-</section>
+    <section id="s2"><h3 class="s"><span class="num">2</span>What we collect</h3><p>We practise data minimisation — we collect as little as possible:</p><ul>
+      <li><b>Email address</b> — when you sign the Pledge or subscribe to updates.</li>
+      <li><b>Optional details</b> — a name or message you choose to send us, or how you&rsquo;d like to help.</li>
+      <li><b>Basic, privacy-respecting analytics</b> — aggregate page usage, without building advertising profiles.</li>
+      <li><b>Anti-manipulation signals</b> — the minimum needed to reduce duplicate accounts and automated abuse in the Assembly.</li>
+    </ul></section>
 
-<section class="blk blk--cream2">
-  <p class="eyebrow">04 · What we never do</p>
-  <h2 class="sec">What we never do.</h2>
-  <ul>
-    <li>We never sell, rent, or trade your personal data.</li>
-    <li>We never use your details for partisan political targeting.</li>
-    <li>We never require payment to take part.</li>
-    <li>We never track you across other sites.</li>
-  </ul>
-</section>
+    <section id="s3"><h3 class="s"><span class="num">3</span>How we use it</h3><ul>
+      <li>To send the updates or confirmations you asked for.</li>
+      <li>To record and count Pledge signatures as public support.</li>
+      <li>To reply to your messages and in-kind or partnership offers.</li>
+      <li>To operate the advisory Assembly fairly (one person, one vote).</li>
+      <li>To meet legal, accounting, and safeguarding obligations.</li>
+    </ul></section>
 
-<section class="blk">
-  <p class="eyebrow">05 · Reach us</p>
-  <h2 class="sec">Questions about privacy.</h2>
-  <p>If you have a question about privacy — now, or once sign-ups open — write to us at {{ mail.email() }} and a human will reply.</p>
+    <section id="s4"><h3 class="s"><span class="num">4</span>What we never do</h3><ul>
+      <li>We never sell, rent, or trade your personal data.</li>
+      <li>We never use your pledge or contact details for partisan political targeting.</li>
+      <li>We never require payment to vote or to take part.</li>
+      <li>We don&rsquo;t use tokens, on-chain voting, or crypto mechanics that expose your identity or funds.</li>
+    </ul></section>
+
+    <section id="s5"><h3 class="s"><span class="num">5</span>Sharing &amp; processors</h3><p>We share data only with service providers who help us operate (for example, email delivery and hosting), under contracts that limit them to processing on our instructions. Once fiscal sponsorship is confirmed, the sponsor may process donation data under its own compliant rules. We disclose data if the law requires it, and we&rsquo;ll say so where we&rsquo;re permitted to.</p></section>
+
+    <section id="s6"><h3 class="s"><span class="num">6</span>Retention</h3><p>We keep personal data only as long as needed for the purpose you gave it, or as the law requires. If you unsubscribe or ask for deletion, we remove your data from active systems promptly, keeping only what we&rsquo;re legally required to retain.</p></section>
+
+    <section id="s7"><h3 class="s"><span class="num">7</span>Your rights</h3><p>Depending on where you live, you may have the right to access, correct, export, or delete your data, to object to certain processing, and to withdraw consent. To exercise any of these, email us — see section&nbsp;10. We won&rsquo;t make you jump through hoops.</p></section>
+
+    <section id="s8"><h3 class="s"><span class="num">8</span>Security</h3><p>We protect data with reasonable technical and organisational measures and keep collection minimal, so there&rsquo;s less to protect in the first place. No system is perfectly secure, but we treat your trust as the whole point of the movement.</p></section>
+
+    <section id="s9"><h3 class="s"><span class="num">9</span>Changes to this policy</h3><p>This policy is version-controlled. Its reference number (POL-001) stays fixed while the version increments, and every change is logged in the public record with a date and reason. Supporters can propose changes through the advisory Assembly; requirements carrying legal or safeguarding duty are approved by the responsible leadership and fiscal sponsor.</p>
+      <table class="vhist"><thead><tr><th class="w-90">Version</th><th class="w-150">Date</th><th>Change</th></tr></thead><tbody>
+        <tr><td>0.1</td><td>Pre-launch</td><td>Initial public review draft.</td></tr>
+      </tbody></table>
+    </section>
+
+    <section id="s10"><h3 class="s"><span class="num">10</span>Contact</h3><p>Questions about privacy or a request about your data? Email <a class="t-coral" href="mailto:contact@uncost.org">contact@uncost.org</a> or use the <a class="t-coral" href="/contact/">contact form</a>. The full policy set lives on the <a class="t-coral" href="/policies/">Policies</a> page.</p></section>
+  </div>
+</div>
+
+<!-- SECTION: privacy.Privacy CTA -->
+<section class="blk blk--coral" data-screen-label="Privacy CTA">
+  <h2 class="sec mw-20ch">Your data, your call.</h2>
+  <p class="lead lead-52">Unsubscribe or request deletion anytime — one email, no friction.</p>
+  <div class="btn-row">
+    <a href="/contact/" class="u-btn u-btn--ink">Contact us</a>
+    <a href="/policies/" class="u-btn u-btn--ghost">All policies</a>
+  </div>
 </section>

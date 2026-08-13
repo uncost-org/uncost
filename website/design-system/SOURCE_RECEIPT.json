@@ -60,7 +60,7 @@
       "logical_source_path": "design-source/css/sections.css (v3.1)",
       "source_sha256": "d1d0152f0bd35db3304da5d776fe12a37e32c25e8cdd1b28aa751e55eda16a41",
       "output_path": "website/design-system/sections.css",
-      "output_sha256": "d1d0152f0bd35db3304da5d776fe12a37e32c25e8cdd1b28aa751e55eda16a41",
+      "output_sha256": "efb638af436dc1d85720f82c8e63bc2a5ee18536031bd036321943d7c5757461",
       "mode": "adopt"
     },
     {
@@ -172,7 +172,7 @@
     },
     {
       "path": "website/design-system/sections.css",
-      "sha256": "d1d0152f0bd35db3304da5d776fe12a37e32c25e8cdd1b28aa751e55eda16a41"
+      "sha256": "efb638af436dc1d85720f82c8e63bc2a5ee18536031bd036321943d7c5757461"
     },
     {
       "path": "website/design-system/site.css",

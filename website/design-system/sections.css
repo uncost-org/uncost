@@ -53,16 +53,16 @@
 .seqhd h2{font-family:var(--font-display);font-weight:700;font-size:clamp(32px,4.5vw,52px);letter-spacing:-.02em;margin:0}
 .step{display:grid;grid-template-columns:90px 1fr;gap:24px;align-items:start;padding:24px clamp(24px,6vw,80px);border-top:2px solid var(--ink)}
 .step .num{font-family:var(--font-display);font-weight:900;font-size:56px;color:var(--coral);letter-spacing:-.03em;line-height:.85;font-variant-numeric:tabular-nums}
-.step h4{font-family:var(--font-display);font-weight:700;font-size:24px;letter-spacing:-.01em;margin:0 0 6px}
+.step h3,.step h4{font-family:var(--font-display);font-weight:700;font-size:24px;letter-spacing:-.01em;margin:0 0 6px}
 .step p{font-size:15px;line-height:1.6;color:var(--fg-2);margin:0;max-width:66ch}
 /* SHARED · used on 2 pages */
 .prin{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--cream);border:2px solid var(--cream)}
 /* SHARED · used on 2 pages */
 .prin>div{background:var(--ink-2, var(--ink-2));padding:26px 24px}
 /* SHARED · used on 2 pages */
-.prin h4{font-family:var(--font-display);font-weight:700;font-size:20px;margin:0 0 8px;display:flex;gap:10px;align-items:center;color:var(--cream)}
+.prin h3,.prin h4{font-family:var(--font-display);font-weight:700;font-size:20px;margin:0 0 8px;display:flex;gap:10px;align-items:center;color:var(--cream)}
 /* SHARED · used on 2 pages */
-.prin h4 i{width:11px;height:11px;background:var(--coral);flex:0 0 auto}
+.prin h3 i,.prin h4 i{width:11px;height:11px;background:var(--coral);flex:0 0 auto}
 /* SHARED · used on 2 pages */
 .prin p{font-size:14.5px;line-height:1.55;color:var(--fg-2-on-ink);margin:0}
 .isnot{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--ink);border:2px solid var(--ink);margin-top:36px}
@@ -506,7 +506,7 @@ details.qa .a a{color:var(--coral)}
 .polrow{background:var(--cream);display:grid;grid-template-columns:110px 1fr 180px;gap:20px;padding:22px 26px;text-decoration:none;color:var(--ink);align-items:center}
 a.polrow:hover{background:var(--cream-2)}
 .polrow .pid{font-family:var(--font-display);font-weight:900;font-size:16px;color:var(--coral)}
-.polrow h4{font-family:var(--font-display);font-weight:700;font-size:21px;margin:0 0 3px}
+.polrow h3,.polrow h4{font-family:var(--font-display);font-weight:700;font-size:21px;margin:0 0 3px}
 .polrow p{font-size:14px;line-height:1.5;color:var(--fg-2);margin:0}
 .polrow .rt{text-align:right}
 .high{border:2px solid var(--ink);background:var(--wheat);padding:14px 18px;font-size:14px;font-weight:600;display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:16px clamp(24px,6vw,80px) 0}
@@ -579,9 +579,9 @@ a.prow:hover{background:var(--cream-2)}
 /* SHARED · used on 3 pages */
 .grid3>div{background:var(--cream);padding:30px 26px}
 /* SHARED · used on 3 pages */
-.grid3 h3{font-family:var(--font-display);font-weight:700;font-size:21px;margin:0 0 10px;display:flex;gap:10px;align-items:center}
+.grid3 h2,.grid3 h3{font-family:var(--font-display);font-weight:700;font-size:21px;margin:0 0 10px;display:flex;gap:10px;align-items:center}
 /* SHARED · used on 3 pages */
-.grid3 h3 i{width:11px;height:11px;background:var(--coral);flex:0 0 auto}
+.grid3 h2 i,.grid3 h3 i{width:11px;height:11px;background:var(--coral);flex:0 0 auto}
 /* SHARED · used on 3 pages */
 .grid3 p{font-size:15px;line-height:1.6;color:var(--fg-2);margin:0}
 /* SHARED · used on 3 pages */

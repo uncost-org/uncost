@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import html
 import json
 import os
 import re
@@ -254,7 +255,10 @@ def line_is_cited(line: str, register_ids: set) -> bool:
 
 
 def normalize(text: str) -> str:
-    return re.sub(r"\s+", " ", clean(text)).strip()
+    # Entities are decoded first: source markup writes don&rsquo;t where the
+    # rendered page has don’t, so without this a built fragment could never be
+    # matched against the source line a human allowlisted.
+    return re.sub(r"\s+", " ", html.unescape(clean(text))).strip()
 
 
 def load_queue() -> List[Dict[str, str]]:
