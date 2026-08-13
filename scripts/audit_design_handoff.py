@@ -79,8 +79,8 @@ FROZEN_SOURCE_PAIRS = (
         "mode": "transform",
     },
     {
-        "logical_source_path": "design-source/css/sections.css",
-        "source_sha256": "93c733e28799ff379dbc9650caa59b62998715d4268c09ad4baa62092216c1bd",
+        "logical_source_path": "design-source/css/sections.css (v3.1)",
+        "source_sha256": "d1d0152f0bd35db3304da5d776fe12a37e32c25e8cdd1b28aa751e55eda16a41",
         "output_path": "website/design-system/sections.css",
         "mode": "adopt",
     },

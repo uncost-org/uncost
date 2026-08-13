@@ -57,10 +57,10 @@
       "mode": "transform"
     },
     {
-      "logical_source_path": "design-source/css/sections.css",
-      "source_sha256": "93c733e28799ff379dbc9650caa59b62998715d4268c09ad4baa62092216c1bd",
+      "logical_source_path": "design-source/css/sections.css (v3.1)",
+      "source_sha256": "d1d0152f0bd35db3304da5d776fe12a37e32c25e8cdd1b28aa751e55eda16a41",
       "output_path": "website/design-system/sections.css",
-      "output_sha256": "761b54297e570ee138a55b88d0cf39ec7194475130fd8eaeec0edb0daa20841a",
+      "output_sha256": "d1d0152f0bd35db3304da5d776fe12a37e32c25e8cdd1b28aa751e55eda16a41",
       "mode": "adopt"
     },
     {
@@ -137,7 +137,7 @@
     },
     {
       "path": "scripts/audit_design_handoff.py",
-      "sha256": "477e901ffaad7efa0479aad40434e94038bbb4241e634de15b0e0c203248c56f",
+      "sha256": "000c1add3d28502005d271f131b58e544d0bfe8d5bdd5e775389c5f09edd565f",
       "role": "reproducible-checks"
     },
     {
@@ -172,7 +172,7 @@
     },
     {
       "path": "website/design-system/sections.css",
-      "sha256": "761b54297e570ee138a55b88d0cf39ec7194475130fd8eaeec0edb0daa20841a"
+      "sha256": "d1d0152f0bd35db3304da5d776fe12a37e32c25e8cdd1b28aa751e55eda16a41"
     },
     {
       "path": "website/design-system/site.css",

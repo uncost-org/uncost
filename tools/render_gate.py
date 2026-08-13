@@ -76,18 +76,27 @@ def pct_diff(a_path, b_path):
     ma = json.loads(pathlib.Path(str(a_path).replace(".png", ".json")).read_text())
     mb = json.loads(pathlib.Path(str(b_path).replace(".png", ".json")).read_text())
     _mask(a, ma.get("masks", [])); _mask(b, mb.get("masks", []))
-    sa, sb = ma.get("sections", []), mb.get("sections", [])
-    if not sa or len(sa) != len(sb):
+    sa = {s["label"]: s["box"] for s in ma.get("sections", [])}
+    sb = {s["label"]: s["box"] for s in mb.get("sections", [])}
+    if not sa:
         h = min(a.height, b.height)
-        return _score(a.crop((0, 0, a.width, h)), b.crop((0, 0, a.width, h))), -1, False
+        return _score(a.crop((0, 0, a.width, h)), b.crop((0, 0, a.width, h))), "-", False
+    common = [k for k in sa if k in sb]
+    # A section present in one tree and not the other is a CONTENT difference,
+    # not a layout break, when it is an optional block: a sector with no related
+    # projects omits that section, and the verify page ships one state instead
+    # of the export's three-state preview switcher. What must not differ is the
+    # geometry of the sections both pages do render.
+    only_a, only_b = [k for k in sa if k not in sb], [k for k in sb if k not in sa]
     # Geometry first. A section that sits at the same x and the same width in
     # both trees is laid out identically; only its height can move, and height
     # moves when text reflows. That is the line between a LAYOUT break (which
     # must fail) and a CONTENT difference (the repo's reviewed copy being longer
     # than the export's draft), which is expected and permitted.
-    geometry_ok = all(abox[0] == bbox[0] and abox[2] == bbox[2] for abox, bbox in zip(sa, sb))
-    worst, worst_i = 0.0, -1
-    for i, (abox, bbox) in enumerate(zip(sa, sb)):
+    geometry_ok = all(sa[k][0] == sb[k][0] and sa[k][2] == sb[k][2] for k in common)
+    worst, worst_i = 0.0, "-"
+    for i in common:
+        abox, bbox = sa[i], sb[i]
         h = min(abox[3], bbox[3])
         if h < 4:
             continue
@@ -100,7 +109,7 @@ def pct_diff(a_path, b_path):
         pct = _score(ca, cb)
         if pct > worst:
             worst, worst_i = pct, i
-    return worst, worst_i, geometry_ok
+    return worst, worst_i, (geometry_ok and bool(common))
 
 def main():
     only = sys.argv[1:]

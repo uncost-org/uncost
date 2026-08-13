@@ -49,7 +49,15 @@ const ALLOWLIST = [
           return [Math.round(r.x), Math.round(r.y + window.scrollY), Math.round(r.width), Math.round(r.height)]; };
         const main = document.querySelector("main");
         return {
-          sections: main ? [...main.children].map(box) : [],
+          // Label each section so the gate can match by identity rather than by
+          // index: a page that legitimately omits an optional section (a sector
+          // with no related projects) should not read as a layout break.
+          sections: main ? [...main.children].map((el) => ({
+            label: el.getAttribute("data-screen-label")
+              || el.id
+              || (el.tagName.toLowerCase() + "." + (el.className || "").toString().trim().split(/\s+/).join(".")),
+            box: box(el),
+          })) : [],
           masks: allow.flatMap((s) => [...document.querySelectorAll(s)].map(box)),
         };
       }, ALLOWLIST);

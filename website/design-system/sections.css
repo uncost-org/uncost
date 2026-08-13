@@ -53,16 +53,16 @@
 .seqhd h2{font-family:var(--font-display);font-weight:700;font-size:clamp(32px,4.5vw,52px);letter-spacing:-.02em;margin:0}
 .step{display:grid;grid-template-columns:90px 1fr;gap:24px;align-items:start;padding:24px clamp(24px,6vw,80px);border-top:2px solid var(--ink)}
 .step .num{font-family:var(--font-display);font-weight:900;font-size:56px;color:var(--coral);letter-spacing:-.03em;line-height:.85;font-variant-numeric:tabular-nums}
-.step h3,.step h4{font-family:var(--font-display);font-weight:700;font-size:24px;letter-spacing:-.01em;margin:0 0 6px}
+.step h4{font-family:var(--font-display);font-weight:700;font-size:24px;letter-spacing:-.01em;margin:0 0 6px}
 .step p{font-size:15px;line-height:1.6;color:var(--fg-2);margin:0;max-width:66ch}
 /* SHARED · used on 2 pages */
 .prin{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--cream);border:2px solid var(--cream)}
 /* SHARED · used on 2 pages */
 .prin>div{background:var(--ink-2, var(--ink-2));padding:26px 24px}
 /* SHARED · used on 2 pages */
-.prin h3,.prin h4{font-family:var(--font-display);font-weight:700;font-size:20px;margin:0 0 8px;display:flex;gap:10px;align-items:center;color:var(--cream)}
+.prin h4{font-family:var(--font-display);font-weight:700;font-size:20px;margin:0 0 8px;display:flex;gap:10px;align-items:center;color:var(--cream)}
 /* SHARED · used on 2 pages */
-.prin h3 i,.prin h4 i{width:11px;height:11px;background:var(--coral);flex:0 0 auto}
+.prin h4 i{width:11px;height:11px;background:var(--coral);flex:0 0 auto}
 /* SHARED · used on 2 pages */
 .prin p{font-size:14.5px;line-height:1.55;color:var(--fg-2-on-ink);margin:0}
 .isnot{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--ink);border:2px solid var(--ink);margin-top:36px}
@@ -248,10 +248,10 @@ details.qa .a a{color:var(--coral)}
 .fact .n.cmp .vs{font-family:var(--font-body);font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-4-on-ink)}
 .fact .n.cmp .b{color:var(--cream)}
 .fact .l{font-family:var(--font-display);font-weight:700;font-size:clamp(17px,1.55vw,21px);letter-spacing:-.01em;line-height:1.22;margin:16px 0 auto;text-wrap:pretty;color:var(--cream)}
-.fact .src{border-top:2px solid var(--rule-on-ink);margin-top:18px;padding-top:12px;font-size:12.5px;line-height:1.45;color:var(--fg-2-on-ink)}
+.fact .src{border-top:2px solid var(--rule-on-ink);margin-top:18px;padding-top:12px;font-size:12.5px;line-height:1.45;color:var(--fg-2-on-ink);text-wrap:pretty;overflow-wrap:break-word}
 .fact .src b{display:block;font-family:var(--font-body);font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:4px}
 .fact .src .dt{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.fact .src .dt span{border:1.5px solid var(--rule-on-ink-hard);padding:3px 8px;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-2-on-ink)}
+.fact .src .dt span{border:1.5px solid var(--rule-on-ink-hard);padding:3px 8px;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-2-on-ink);white-space:nowrap}
 .intent{display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(32px,5vw,72px);align-items:start}
 .intent p{font-size:17px;line-height:1.65;color:var(--fg-2);margin:0 0 16px;text-wrap:pretty}
 .runs{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--ink);border:2px solid var(--ink)}
@@ -579,9 +579,9 @@ a.prow:hover{background:var(--cream-2)}
 /* SHARED · used on 3 pages */
 .grid3>div{background:var(--cream);padding:30px 26px}
 /* SHARED · used on 3 pages */
-.grid3 h2,.grid3 h3{font-family:var(--font-display);font-weight:700;font-size:21px;margin:0 0 10px;display:flex;gap:10px;align-items:center}
+.grid3 h3{font-family:var(--font-display);font-weight:700;font-size:21px;margin:0 0 10px;display:flex;gap:10px;align-items:center}
 /* SHARED · used on 3 pages */
-.grid3 h2 i,.grid3 h3 i{width:11px;height:11px;background:var(--coral);flex:0 0 auto}
+.grid3 h3 i{width:11px;height:11px;background:var(--coral);flex:0 0 auto}
 /* SHARED · used on 3 pages */
 .grid3 p{font-size:15px;line-height:1.6;color:var(--fg-2);margin:0}
 /* SHARED · used on 3 pages */
@@ -1229,3 +1229,26 @@ body[data-page="treasury"] .prin p{font-size:14.5px;line-height:1.55;color:var(-
 .u-107{width:8px;height:8px;background:var(--coral);display:inline-block;flex:none;margin-top:4px}
 /* 1× · treasury.html */
 .u-108{color:var(--fg-2-on-ink);margin-top:22px;max-width:54ch}
+
+/* ===================== S2 STAT CARD — CHIP ROW (v3.1) =====================
+   The three meta chips (PUBLISHED / DATA PERIOD / REGION) are designed as ONE row.
+   Measured intrinsic width with Inter loaded: 118.99 + 83.59 + 111.66 + 2x6px gap
+   = 326.24px, so the card must be >= 375px wide (326.24 + 48px padding) for one row.
+
+   At a 1440 viewport:  section padding clamp(20px,5vw,80px) = 72px
+                        .facts width = 1296px
+                        card width   = (1296 - 4 border - 4 gap) / 3 = 429.33px
+                        429.33 >= 375  ->  ONE ROW, with 54.33px of slack.
+   The crossover is a 1259px viewport; below that the chips legitimately wrap.
+
+   That 54px of slack is font-metric dependent. If Inter fails to load, the fallback
+   renders these letter-spaced uppercase labels 15-20% wider and the row wraps — which
+   is the usual cause of a headless render disagreeing with the browser. The rule below
+   pins the intended single row across the whole 3-up range so the layout no longer
+   depends on that margin. VERIFY FONTS LOAD FIRST: document.fonts.check("600 10.5px Inter")
+   must return true, and /assets/fonts/Inter-variable.woff2 must return 200.
+   ========================================================================= */
+@media (min-width:901px){
+  .fact .src .dt{flex-wrap:nowrap}
+  .fact .src .dt span{flex:0 1 auto;min-width:0}
+}
