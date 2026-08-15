@@ -94,8 +94,8 @@ sub(C, ".site-foot .foot-col a:hover { color: var(--coral); }",
 # v4.2 hardcodes #5B574F here; on the wheat band that is 3.68:1.
 sub(S, ".ft-updates .chk{color:#5B574F}",
     ".ft-updates .chk{color:var(--fg-2)}", "updates checkbox on wheat", required=False)
-sub(S, ".ft-updates .ft-form button:hover{background:var(--coral);color:var(--ink);",
-    ".ft-updates .ft-form button:hover{background:var(--coral);color:var(--ink-on-coral);",
+sub(S, ".ft-updates .ft-form button:hover{background:var(--coral);color:#0E0E0C;border-color:#0E0E0C}",
+    ".ft-updates .ft-form button:hover{background:var(--coral);color:var(--ink-on-coral);border-color:var(--ink-on-coral)}",
     "updates form button hover", required=False)
 
 t = S.read_text(encoding="utf-8")

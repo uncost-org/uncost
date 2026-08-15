@@ -29,20 +29,13 @@
   --cream:        #FAF7F0;
   --cream-2:      #F2EDE1;   /* subtle band separation on cream */
   --ink:          #0E0E0C;
-
-  /* ink-on-coral — AA correction applied on adoption (integration branch).
-     The export sets text on coral surfaces to --ink (#0E0E0C), which measures
-     4.47:1 on --coral (#D64A1E) — below the 4.5:1 WCAG 2.2 AA floor for normal
-     text. #0A0A0A measures 4.58:1 and is visually indistinguishable. This is
-     the same correction this repository applied when the previous export was
-     adopted. design-source/README.md §8.11 flags the contrast sweep as
-     unfinished; the design canvas should carry this so the next re-export
-     already passes. */
+  /* ink-on-coral — AA correction applied on adoption. The export puts --ink
+     (4.47:1) or #FFFFFF (4.32:1) on brand coral; both miss the 4.5 floor for
+     normal text. #0A0A0A measures 4.58:1 and is visually indistinguishable. */
   --ink-on-coral: #0A0A0A;
-
-  /* AA text variants — see DESIGN-TOKENS.md §Contrast.
-     --coral-deep   : coral text < 24px on cream/wheat surfaces (5.6:1)
-     --coral-on-ink : coral text < 24px on ink surfaces        (6.4:1) */
+  /* AA text variants (see DESIGN-TOKENS.md §Contrast)
+     --coral-deep   : coral text <24px on cream/wheat  5.60:1
+     --coral-on-ink : coral text <24px on ink          6.40:1 */
   --coral-on-ink: #E8734A;
   --ink-2:        #1A1A17;   /* band separation on ink */
 
@@ -72,20 +65,9 @@
   --fg-2:         #2A2A26;          /* secondary text */
   --fg-3:         #5A574F;          /* tertiary / meta */
   --fg-on-ink:    var(--cream);
-  /* Text on ink surfaces. Promoted to first-class tokens so no page hardcodes them.
-     Contrast vs --ink #0E0E0C:  fg-1 13.2:1 (AAA) · fg-2 11.2:1 (AAA) · fg-3 5.7:1 (AA) */
-  --fg-1-on-ink:  #D9D5CB;   /* lead paragraphs on ink */
-  --fg-2-on-ink:  #C9C5BA;   /* secondary text on ink */
-  --fg-3-on-ink:  #8E8B82;   /* tertiary / meta on ink */
-  --fg-4-on-ink:  #A9A59C;   /* faintest meta on ink (7.9:1, AAA) */
-  --fg-4:         #6B675E;   /* faintest meta on cream (5.3:1, AA) */
-  --white:        #FFFFFF;   /* pure white card fills inside bordered grids */
-  --rule-on-ink:      #3A3A36;   /* hairline rule on ink */
-  --rule-on-ink-soft: #2E2E2A;   /* faintest rule on ink */
-  --rule-on-ink-hard: #4A4A44;   /* chip border on ink */
   --fg-on-spark:  var(--ink);       /* ink-on-coral is the canonical CTA */
 
-  --link:         var(--coral-deep);   /* AA: coral is 4.04:1 on cream; coral-deep is 5.59:1 */
+  --link:         var(--coral-deep);   /* AA: coral is 4.04:1 on cream */
   --link-hover:   var(--coral-deep);
 
   --divider:      var(--rule);

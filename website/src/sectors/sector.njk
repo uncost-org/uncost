@@ -7,42 +7,27 @@ pagination:
   addAllPagesToCollections: true
 permalink: "/sectors/{{ sector.slug }}/"
 eleventyComputed:
-  pageId: "sectors/{{ sector.slug }}"
+  pageId: "sectors-{{ sector.slug }}"
   title: "{{ sector.name | safe }} — Sector dossier"
   description: "{{ sector.id }} {{ sector.name }}: what the sector includes, where AI and robotics could reduce costs, the guardrails, and the honest evidence status."
 ---
-{#-
-  One design for all 15 sector dossiers (design-source/pages/sectors/*.html).
-
-  DESIGN: structure, classes and section order from the export. The hero
-  geometry is load-bearing — .sector-title / .sector-sub min-heights and the
-  .sector-illus-slot offset hold the illustration at an identical Y on all 15;
-  removing any of them reintroduces the drift the export warns about.
-
-  CONTENT: every field comes from the repository's own dossier
-  (sectors/SEC-0NN-*.md via _data/catalog.js) and _data/sectorContent.js — never
-  from the export's draft sectors.json. Sector names are canonical: always in
-  full, never abbreviated. A field the dossier does not carry renders a visible
-  [CONTENT NEEDED] marker rather than filler.
--#}
+{#- Re-derived from the export's sectors/food.html so the .u-N classes match this
+    export. Every field comes from the repository's own dossier via _data/catalog.js
+    and _data/sectorContent.js; a field the dossier lacks renders [CONTENT NEEDED].
+    Regenerate with tools/rederive_collections.py. -#}
 {% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
 {% import "partials/figure.njk" as fig %}
 {% set sc = sectorContent[sector.slug] %}
-{% set headlineRow = register.byId[sc.headlineSrc] if sc.headlineSrc else null %}
-{#- Related sectors come from _data/relatedSectors.json, extracted verbatim from
-    the export's own sector pages: which neighbours to show and each swatch colour
-    are the design's editorial choices, not a rule to re-derive. -#}
-
-<!-- SECTION: sectors/{{ sector.slug }}.Sector head -->
+<!-- SECTION: sectors/food.Sector head -->
 <section class="sector-head" data-screen-label="Sector head">
-  <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/sectors/">Sectors</a> &nbsp;/&nbsp; <span>{{ sector.name }}</span></div>
+  <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/sectors/">Sectors</a> &nbsp;/&nbsp; <span>Food</span></div>
   <div class="sector-head-grid">
     <div>
       <h1 class="sector-title">{{ sector.name }}.</h1>
       <p class="sector-sub">{% if sector.includes %}{{ sector.includes }}{% else %}{{ gapInline("sector-includes") }}{% endif %}</p>
       <div class="sector-num"><span class="nb">Sector <b>{{ sector.num }} / 15</b></span> &middot; <span class="nb"><span class="status status--{{ sector.statusClass }}">{{ sector.status }}</span></span> &middot; <span class="nb">Dossier <b>{{ sector.id }}</b></span></div>
     </div>
-    <div class="sector-illus-slot">{% image sector.illustration.src, sector.illustration.alt, "(max-width: 920px) 90vw, 460px", [280, 620, 1024], "lazy", "sector-illus" %}</div>
+    <div class="sector-illus-slot">{% image sector.illustration.src, sector.illustration.alt, "100vw", [320, 640, 960], "lazy", "sector-illus" %}</div>
   </div>
 </section>
 
@@ -50,134 +35,97 @@ eleventyComputed:
   <a href="#scope">Scope &amp; opportunity <span class="cnt">01</span></a>
   <a href="#evidence">Evidence status <span class="cnt">02</span></a>
   <a href="#worked">Worked example <span class="cnt">03</span></a>
-  {% if sector.relatedProjects.length %}<a href="#projects">Related projects <span class="cnt">04</span></a>{% endif %}
-  <a href="#sources">Sources <span class="cnt">{% if sector.relatedProjects.length %}05{% else %}04{% endif %}</span></a>
+  <a href="#projects">Related projects <span class="cnt">04</span></a>
+  <a href="#sources">Sources <span class="cnt">05</span></a>
 </nav>
 
-<!-- SECTION: sectors/{{ sector.slug }}.Scope -->
-<section id="scope" class="block block--ink bt-0" data-screen-label="Scope">
-  <div class="eyebrow">01 &middot; Scope, opportunity, guardrail</div>
-  <h2>Where automation could bite &mdash; and what stays visible.</h2>
+<!-- SECTION: sectors/food.Scope -->
+<section id="scope" class="u-15 block block--ink" data-screen-label="Scope">
+  <div class="eyebrow">01 · Scope, opportunity, guardrail</div>
+  <h2>Where automation could bite — and what stays visible.</h2>
   <div class="scope">
     <div><h3><i></i>What it includes</h3><p>{% if sector.includes %}{{ sector.includes }}{% else %}{{ gapInline("sector-includes") }}{% endif %}</p></div>
     <div><h3><i></i>The opportunity</h3><p>{% if sector.opportunity %}{{ sector.opportunity }}{% else %}{{ gapInline("sector-opportunity") }}{% endif %}</p></div>
     <div><h3><i></i>The guardrail</h3><p>{% if sector.guardrail %}{{ sector.guardrail }}{% else %}{{ gapInline("sector-guardrail") }}{% endif %}</p></div>
   </div>
-  <p class="note-on-ink">Roadmap status: <b class="t-cream">{{ sector.status }}</b> &mdash; status is sequencing, not importance.</p>
+  <p class="u-139">Roadmap status: <b class="u-140">Focus</b> — one of the three first-phase sectors, with Shelter and Energy. Status is sequencing, not importance.</p>
 </section>
 
-<!-- SECTION: sectors/{{ sector.slug }}.Evidence status -->
+<!-- SECTION: sectors/food.Evidence status -->
 <section id="evidence" class="block block--ink" data-screen-label="Evidence status">
-  <div class="eyebrow">02 &middot; Evidence status</div>
-  <h2>No number ships without a <span class="t-coral">receipt</span>.</h2>
-  {% if headlineRow %}
-  <div class="evd-empty">
-    {{ fig.stat(headlineRow) }}
-    <p>Every figure on this page carries: value, unit, region, date observed, a source ID from the public register, a confidence label, and the collection method.</p>
-    <div class="chip-row">
-      <span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span>
-      <span class="rcpt-conf rcpt-conf--estimate">Estimate</span>
-      <span class="rcpt-conf rcpt-conf--scenario">Scenario</span>
-      <span class="rcpt-conf rcpt-conf--needs-refresh">Needs refresh</span>
-    </div>
-  </div>
-  {% else %}
+  <div class="eyebrow">02 · Evidence status</div>
+  <h2>No number ships without a <span class="u-1">receipt</span>.</h2>
   <div class="evd-empty">
     {% if sector.evidence %}<h3>{{ sector.evidence }}</h3>{% else %}{{ gap("sector-evidence") }}{% endif %}
-    <p>Reviewed source records come before figures. When the first {{ sector.name }} figures publish, each line will carry: value, unit, region, date observed, a source ID from the public register, a confidence label, and the collection method.</p>
-    <div class="chip-row">
+    <p>Reviewed source records come before figures. When the first Food figures publish, each line will carry: value, unit, region, date observed, a source ID from the public register, a confidence label, and the collection method.</p>
+    <div class="u-141">
       <span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span>
       <span class="rcpt-conf rcpt-conf--estimate">Estimate</span>
       <span class="rcpt-conf rcpt-conf--scenario">Scenario</span>
       <span class="rcpt-conf rcpt-conf--needs-refresh">Needs refresh</span>
     </div>
   </div>
-  {% endif %}
-  <div class="rcpt-row rcpt-row-on-ink"><span class="rcpt-src t-on-ink-2"><b class="t-on-ink-2">Register</b>sources/register.csv &mdash; public on GitHub</span><span class="rcpt-updated">Checked {{ register.lastChecked }}</span></div>
+  <div class="u-142 rcpt-row"><span class="u-143 rcpt-src"><b class="u-143">Register</b>sources/register.csv — public on GitHub</span><span class="rcpt-updated">Checked July 19, 2026</span></div>
 </section>
 
-<!-- SECTION: sectors/{{ sector.slug }}.Worked example -->
+<!-- SECTION: sectors/food.Worked example -->
 <section id="worked" class="block" data-screen-label="Worked example">
-  {% if sc.workedExample.measurement %}
-  <div class="eyebrow">03 &middot; Where the method stops</div>
-  <h2>How far the method goes in {{ sector.name }} &mdash; and where it stops.</h2>
+  <div class="eyebrow">03 · How {{ sector.name | lower }} gets uncosted</div>
+  <h2>The worked example: fresh produce in a confined urban space.</h2>
   <div class="steps6">
-    {% for step in sc.workedExample.steps %}
+{% for step in sc.workedExample.steps %}
     {% set bits = step.split(" — ") %}
     <div class="step6"><div class="n">{{ loop.index }}</div><div><h3><b>{{ bits[0] }}</b></h3><p>{{ bits | slice(1) | first | join(" — ") if bits.length > 1 else step }}</p></div></div>
-    {% endfor %}
+{% endfor %}
   </div>
-  <p class="prose-60"><b>Then we stop.</b> Steps 4 to 6 &mdash; matching a mechanism, packaging it for others to run, and tracking whether the cost falls &mdash; would put a tool between a person and their {{ sc.workedExample.stopBetween }}. That needs {{ sc.workedExample.stopReason }} &mdash; and none of that exists yet. Until it does, {{ sector.name }} is a measurement sector: we can show what it costs and where the cost sits. We will not package something for a community group to run.</p>
-  {% else %}
-  <div class="eyebrow">03 &middot; How a {{ sector.name | lower }} cost gets uncosted</div>
-  <h2>{{ sc.workedExample.scenario }}</h2>
-  <div class="steps6">
-    {% for step in sc.workedExample.steps %}
-    {% set bits = step.split(" — ") %}
-    <div class="step6"><div class="n">{{ loop.index }}</div><div><h3><b>{{ bits[0] }}</b></h3><p>{{ bits | slice(1) | first | join(" — ") if bits.length > 1 else step }}</p></div></div>
-    {% endfor %}
-  </div>
-  {% endif %}
 </section>
 
-{% if sector.guardrail %}
-<!-- SECTION: sectors/{{ sector.slug }}.Guardrail callout -->
+<!-- SECTION: sectors/food.Guardrail callout -->
 <section class="callout" data-screen-label="Guardrail callout">
   <blockquote>&ldquo;{{ sector.guardrail }}&rdquo;</blockquote>
   <div class="attr">&mdash; The {{ sector.name }} guardrail &middot; dossier {{ sector.id }}</div>
 </section>
-{% endif %}
 
-{% if sector.relatedProjects.length %}
-<!-- SECTION: sectors/{{ sector.slug }}.Related projects -->
-<section id="projects" class="block block--cream2 bt-0" data-screen-label="Related projects">
-  <div class="eyebrow">04 &middot; Related projects</div>
+<!-- SECTION: sectors/food.Related projects -->
+<section id="projects" class="u-15 block block--cream2" data-screen-label="Related projects">
+  <div class="eyebrow">04 · Related projects</div>
   <h2>Where {{ sector.name }} shows up in The Projects.</h2>
   <table class="prj-table">
     <thead><tr><th>ID</th><th>Project</th><th>Role for {{ sector.name }}</th><th>Status</th></tr></thead>
     <tbody>
-    {% for p in sector.relatedProjects %}
-      <tr>
-        <td class="id">{{ p.id }}</td>
-        <td class="title"><a href="/projects/{{ p.slug }}/">{{ p.display }}</a><span class="sum">{{ p.line }}</span></td>
-        <td class="role">{% if p.layer %}{{ p.layer }}{% else %}{{ p.tag | capitalize }}{% endif %}</td>
-        <td><span class="status status--planned">Draft &mdash; not approved for build</span></td>
-      </tr>
-    {% endfor %}
+{% for p in sector.relatedProjects %}
+      <tr><td class="id">{{ p.id }}</td><td class="title"><a href="/projects/{{ p.slug }}/">{{ p.display }}</a><span class="sum">{{ p.line }}</span></td><td class="role">{% if p.layer %}{{ p.layer }}{% else %}{{ p.tag | capitalize }}{% endif %}</td><td><span class="status status--planned">Draft &mdash; not approved for build</span></td></tr>
+{% endfor %}
     </tbody>
   </table>
 </section>
-{% endif %}
 
-<!-- SECTION: sectors/{{ sector.slug }}.Sources -->
+<!-- SECTION: sectors/food.Sources -->
 <section id="sources" class="block" data-screen-label="Sources">
-  <div class="eyebrow">{% if sector.relatedProjects.length %}05{% else %}04{% endif %} &middot; Sources</div>
+  <div class="eyebrow">05 · Sources</div>
   <h2>The register comes before the figures.</h2>
-  <p class="prose-60">Every source Uncost uses gets a public ID, publisher, date, licence, refresh cadence and region coverage. The {{ sector.name }} dossier draws on the register as reviewed records are added.</p>
-  {% if headlineRow %}
-  <div class="src" data-source="{{ headlineRow.source_id }}"><div class="src-num">{{ headlineRow.source_id }}</div><div class="src-body"><a href="/receipts/#{{ headlineRow.source_id }}">{{ headlineRow.title }}</a><span class="meta">{{ headlineRow.publisher }} &middot; {{ headlineRow.publication_date }} &middot; confidence: {{ headlineRow.confidence }}</span></div></div>
-  {% endif %}
-  <div class="src" data-source="SRC-001"><div class="src-num">SRC-001</div><div class="src-body"><a href="https://github.com/uncost-org/uncost/blob/main/sources/register.csv" target="_blank" rel="noopener">{{ register.byId["SRC-001"].title }}</a><span class="meta">Governance-control source &middot; {{ register.byId["SRC-001"].publication_date }} &middot; confidence: {{ register.byId["SRC-001"].confidence }}</span></div></div>
-  <div class="src bb-soft"><div class="src-num">&mdash;</div><div class="src-body">Sector-specific source records are added with review. <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener">Propose a source on GitHub</a><span class="meta">Official statistics first &middot; licences recorded at intake</span></div></div>
+  <p class="u-144">Every source Uncost uses gets a public ID, publisher, date, license, refresh cadence, and region coverage. The Food dossier draws on the register as reviewed records are added.</p>
+  <div class="src"><div class="src-num">SRC-001</div><div class="src-body"><a href="https://github.com/uncost-org/uncost/blob/main/sources/register.csv" target="_blank" rel="noopener">Uncost final external Movement Plan and Roadmap</a><span class="meta">Governance-control source · 2026-07-15 · confidence: confirmed</span></div></div>
+  <div class="u-145 src"><div class="src-num">—</div><div class="src-body">Sector-specific source records are added with review. <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener">Propose a source on GitHub</a><span class="meta">Official statistics first · licenses recorded at intake</span></div></div>
 </section>
 
-<!-- SECTION: sectors/{{ sector.slug }}.Related sectors -->
+<!-- SECTION: sectors/food.Related sectors -->
 <section class="block block--cream2" data-screen-label="Related sectors">
   <div class="eyebrow">Related sectors</div>
   <h2>Keep reading.</h2>
   <div class="related">
-    {% for rel in relatedSectors[sector.slug] %}
-    <a href="/sectors/{{ rel.slug }}/"><span class="sq {{ rel.sq }}"></span> {{ rel.name }}</a>
-    {% endfor %}
-    <a class="bd-dashed" href="/sectors/"><span class="sq sq-outline"></span> All 15 sectors &rarr;</a>
+{% for rel in relatedSectors[sector.slug] %}
+    <a href="/sectors/{{ rel.slug }}/"><span class="{{ rel.sq }}"></span> {{ rel.name }}</a>
+{% endfor %}
+    <a class="{{ relatedSectors._allLink.linkClass }}" href="/sectors/"><span class="{{ relatedSectors._allLink.squareClass }}"></span> All 15 sectors &rarr;</a>
   </div>
 </section>
 
-<!-- SECTION: sectors/{{ sector.slug }}.Sector CTA -->
+<!-- SECTION: sectors/food.Sector CTA -->
 <section class="block block--ink" data-screen-label="Sector CTA">
-  <h2 class="sec-cta">Help build the {{ sector.name | lower }} evidence.<br><span class="t-coral">Sources before slogans.</span></h2>
-  <p class="lead-on-ink">Early useful roles: {{ sc.ctaRoles | join(", ") }} &mdash; and, as the work grows, a volunteer {{ sector.name }} sector lead.</p>
-  <div class="row-16">
+  <h2 class="u-146">Help build the {{ sector.name | lower }} evidence.<br><span class="u-1">Sources before slogans.</span></h2>
+  <p class="u-147">Early useful roles: source and license review, data methodology, sector research, and — as the work grows — a volunteer Food sector lead.</p>
+  <div class="u-148">
     <a href="/join/" class="u-btn u-btn--primary">Take part</a>
     <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--outline-cream">The public records</a>
   </div>

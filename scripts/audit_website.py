@@ -134,6 +134,12 @@ ALLOWED_NAV_HOSTS = {
     "youtube.com",
     "reddit.com",
     "tiktok.com",
+    # Cost Watch reading list — designed, deliberate outbound links to publishers
+    # the register already cites. COMING-SOON.md: "links out only, never
+    # republished… Inclusion isn't endorsement — it's a reading list."
+    "www.jchs.harvard.edu",
+    "www.bls.gov",
+    "www.imf.org",
 }
 URL_RE = re.compile(r"https?://([^/\s\"'<>)]+)", re.IGNORECASE)
 

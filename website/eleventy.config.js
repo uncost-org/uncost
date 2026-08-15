@@ -51,6 +51,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({ "design-system/sections.css": "css/sections.css" });
   // Repo-owned build shim, loaded last. Carries no design values.
   eleventyConfig.addPassthroughCopy({ "src/css/integration.css": "css/integration.css" });
+  eleventyConfig.addPassthroughCopy({ "src/css/integration-v43-gap.css": "css/integration-v43-gap.css" });
   // Curated icon sprite, served where the export's markup references it. The
   // `vote` and `dollar` symbols the export ships are withheld per EXCLUSIONS.md.
   eleventyConfig.addPassthroughCopy({ "design-system/icons/icons.svg": "assets/icons.svg" });

@@ -5,16 +5,11 @@ pageId: "sectors"
 title: "The Sectors"
 description: "Fifteen sectors, one plan each. Every essential of a decent life — what it covers, where the cost pressure is, and where we are on it."
 ---
-{#-
-  Markup is the design export's own (design-source/pages/sectors.html), taken
-  verbatim; only the 15 cards are dynamic. Each card's number, name, status
-  chip, illustration and "what it includes" line come from the repository's
-  sector dossiers via _data/catalog.js — the export's literal cards are
-  replaced by the loop, nothing else is re-authored.
--#}
+{#- Re-derived from the export's sectors.html; the 15 cards loop over the
+    repository's sector dossiers. Regenerate with tools/rederive_collections.py. -#}
 {% from "partials/content-needed.njk" import inline as gapInline %}
 <!-- SECTION: sectors.Sectors — title -->
-<div class="titleband" data-screen-label="Sectors — title"><h1>The <span class="t-coral">Sectors</span></h1></div>
+<div class="titleband" data-screen-label="Sectors — title"><h1>The <span class="u-1">Sectors</span></h1></div>
 <div class="introband">
   <h2>Fifteen costs. One plan each.</h2>
   <p>Living isn&rsquo;t one bill — it&rsquo;s fifteen. We map every essential of a decent life, go deep on three first, and keep all fifteen visible so nothing quietly falls off the list. Status is sequencing, not importance.</p>
@@ -22,24 +17,36 @@ description: "Fifteen sectors, one plan each. Every essential of a decent life �
 <!-- SECTION: sectors.Legend -->
 <div class="legend" data-screen-label="Legend">
   <span>Status:</span>
-  <span class="status status--focus">Focus</span> <span class="t-fg2-500">building now</span>
-  <span class="status s-next">Next</span> <span class="t-fg2-500">next wave</span>
-  <span class="status s-future">Future study</span> <span class="t-fg2-500">high-safety, studied cautiously</span>
-  <span class="status s-dossier">Dossier</span> <span class="t-fg2-500">research scaffold</span>
+  <span class="status status--focus">Focus</span> <span class="u-138">building now</span>
+  <span class="status s-next">Next</span> <span class="u-138">next wave</span>
+  <span class="status s-future">Future study</span> <span class="u-138">high-safety, studied cautiously</span>
+  <span class="status s-dossier">Dossier</span> <span class="u-138">research scaffold</span>
 </div>
 
 <!-- SECTION: sectors.15 sectors -->
 <div class="sgrid" data-screen-label="15 sectors">
-{% for sector in catalog.sectors %}
-  <a class="scard{% if sector.statusClass == 'focus' %} focus{% endif %}" href="/sectors/{{ sector.slug }}/"><div class="top"><span class="idx">{{ sector.num }}</span><span class="status {{ sector.chipClass }}">{{ sector.status }}</span></div>{% image sector.illustration.src, sector.illustration.alt %}<h3>{{ sector.name }}</h3><p>{% if sector.includes %}{{ sector.includes }}{% else %}{{ gapInline("sector-includes") }}{% endif %}</p><span class="go">Read the dossier &rarr;</span></a>
-{% endfor %}
+  <a class="scard focus" href="/sectors/food/"><div class="top"><span class="idx">01</span><span class="status status--focus">Focus</span></div>{% image "sectors/sector-food.png", "Food" %}<h3>Food</h3><p>Nutrition, farming, storage, cooking, distribution.</p><span class="go">Read the dossier →</span></a>
+  <a class="scard" href="/sectors/water/"><div class="top"><span class="idx">02</span><span class="status s-next">Next</span></div>{% image "sectors/sector-water.png", "Water" %}<h3>Water</h3><p>Drinking water, sanitation, filtration, reuse.</p><span class="go">Read the dossier →</span></a>
+  <a class="scard focus" href="/sectors/shelter/"><div class="top"><span class="idx">03</span><span class="status status--focus">Focus</span></div>{% image "sectors/sector-shelter.png", "Shelter" %}<h3>Shelter</h3><p>Housing, land, construction, heating, cooling.</p><span class="go">Read the dossier →</span></a>
+  <a class="scard focus" href="/sectors/energy/"><div class="top"><span class="idx">04</span><span class="status status--focus">Focus</span></div>{% image "sectors/sector-energy.png", "Energy" %}<h3>Energy</h3><p>Electricity, heat, storage, microgrids.</p><span class="go">Read the dossier →</span></a>
+  <a class="scard" href="/sectors/healthcare/"><div class="top"><span class="idx">05</span><span class="status s-future">Future study</span></div>{% image "sectors/sector-healthcare.png", "Healthcare" %}<h3>Healthcare</h3><p>Prevention, diagnostics, medicine, monitoring.</p><span class="go">Read the dossier →</span></a>
+  <a class="scard" href="/sectors/care/"><div class="top"><span class="idx">06</span><span class="status s-future">Future study</span></div>{% image "sectors/sector-care.png", "Care" %}<h3>Care</h3><p>Childcare, eldercare, disability, family support.</p><span class="go">Read the dossier →</span></a>
+  <a class="scard" href="/sectors/education/"><div class="top"><span class="idx">07</span><span class="status s-next">Next</span></div>{% image "sectors/sector-education.png", "Education" %}<h3>Education</h3><p>Tutoring, skills, public knowledge, lifelong learning.</p><span class="go">Read the dossier →</span></a>
+  <a class="scard" href="/sectors/transportation/"><div class="top"><span class="idx">08</span><span class="status s-next">Next</span></div>{% image "sectors/sector-transportation.png", "Transportation" %}<h3>Transportation</h3><p>Transit, mobility, logistics, delivery.</p><span class="go">Read the dossier →</span></a>
+  <a class="scard" href="/sectors/clothing/"><div class="top"><span class="idx">09</span><span class="status s-dossier">Dossier</span></div>{% image "sectors/sector-clothing.png", "Clothing" %}<h3>Clothing</h3><p>Clothes, shoes, laundry, repair, textiles.</p><span class="go">Read the dossier →</span></a>
+  <a class="scard" href="/sectors/goods/"><div class="top"><span class="idx">10</span><span class="status s-next">Next</span></div>{% image "sectors/sector-goods.png", "Goods" %}<h3>Goods</h3><p>Tools, appliances, furniture, shared access.</p><span class="go">Read the dossier →</span></a>
+  <a class="scard" href="/sectors/materials/"><div class="top"><span class="idx">11</span><span class="status s-next">Next</span></div>{% image "sectors/sector-materials.png", "Materials" %}<h3>Materials</h3><p>Raw materials, recycling, reuse, manufacturing inputs.</p><span class="go">Read the dossier →</span></a>
+  <a class="scard" href="/sectors/communication/"><div class="top"><span class="idx">12</span><span class="status s-dossier">Dossier</span></div>{% image "sectors/sector-communication.png", "Communication" %}<h3>Communication</h3><p>Internet, devices, public information, access.</p><span class="go">Read the dossier →</span></a>
+  <a class="scard" href="/sectors/safety/"><div class="top"><span class="idx">13</span><span class="status s-dossier">Dossier</span></div>{% image "sectors/sector-safety.png", "Safety" %}<h3>Safety</h3><p>Emergency response, disaster readiness, prevention.</p><span class="go">Read the dossier →</span></a>
+  <a class="scard" href="/sectors/environment/"><div class="top"><span class="idx">14</span><span class="status s-dossier">Dossier</span></div>{% image "sectors/sector-environment.png", "Environment" %}<h3>Environment</h3><p>Air, land, soil, climate resilience, restoration.</p><span class="go">Read the dossier →</span></a>
+  <a class="scard" href="/sectors/leisure/"><div class="top"><span class="idx">15</span><span class="status s-dossier">Dossier</span></div>{% image "sectors/sector-leisure.png", "Leisure" %}<h3>Leisure</h3><p>Rest, culture, art, sport, parks, belonging.</p><span class="go">Read the dossier →</span></a>
 </div>
 
 <!-- SECTION: sectors.Sectors CTA -->
 <section class="blk blk--coral" data-screen-label="Sectors CTA">
-  <h2 class="sec mw-18ch">Want a sector moved up the list?</h2>
-  <p class="lead lead-52">Supporters help set what comes next through the advisory Assembly. The first step is free.</p>
-  <div class="btn-row">
+  <h2 class="u-74 sec">Want a sector moved up the list?</h2>
+  <p class="u-44 lead">Supporters help set what comes next through the advisory Assembly. The first step is free.</p>
+  <div class="u-40">
     <a href="/pledge/" class="u-btn u-btn--ink">Sign the Pledge</a>
     <a href="/assembly/" class="u-btn u-btn--ghost">How the Assembly works</a>
   </div>

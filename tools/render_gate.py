@@ -17,11 +17,14 @@ from PIL import Image, ImageChops
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 EXPORT = pathlib.Path(os.environ.get("UNCOST_DESIGN_SOURCE", "../uncost-private/design-source"))
 DIST = ROOT / "website" / "dist"
-WIDTHS = [1440, 390]
+WIDTHS = [1440, 1290, 390]
 # Pixels may differ slightly wherever a responsive derivative is shown instead of
 # the export's full-size original — same box, softer pixels. Layout differences
 # are far larger than this.
 TOLERANCE_PCT = float(os.environ.get("RENDER_TOLERANCE", "3.0"))
+# Above this, a difference cannot be explained by the repo's copy being longer
+# than the export's draft; it means the page is missing styling.
+CONTENT_CEILING_PCT = float(os.environ.get("RENDER_CONTENT_CEILING", "35.0"))
 
 sys.path.insert(0, str(ROOT / "tools"))
 from design_diff import route_for  # same export-page -> built-route map
@@ -150,10 +153,19 @@ def main():
                 geom_ok = geom_ok and geom
                 if pct > worst:
                     worst, worst_where = pct, f"{w}px section {where}"
+            # CONTENT has a ceiling. Section geometry only compares x and width,
+            # so styling lost INSIDE a section — a dropped utility class taking a
+            # max-width, colour or margin with it — leaves x/width intact and used
+            # to pass as "copy differs". A v4.3 trial rendered the homepage 48%
+            # different and sector pages 100% different and still read CONTENT.
+            # Beyond the ceiling the difference is too large to be reflow,
+            # whatever the geometry says.
             if not geom_ok:
-                verdict = "FAIL"          # sections differ in x/width: real layout break
+                verdict = "FAIL"          # sections differ in x/width: layout break
             elif worst <= TOLERANCE_PCT:
                 verdict = "PASS"
+            elif worst > CONTENT_CEILING_PCT:
+                verdict = "FAIL"          # too big to be copy: styling is missing
             else:
                 verdict = "CONTENT"       # same layout, text reflow only
             failed += 1 if verdict == "FAIL" else 0
@@ -165,7 +177,7 @@ def main():
         npass = sum(1 for r in rows if r[2] == "PASS")
         ncontent = sum(1 for r in rows if r[2] == "CONTENT")
         print(f"\n{npass} PASS  {ncontent} CONTENT (layout matches, copy differs)  {failed} FAIL"
-              f"   tolerance {TOLERANCE_PCT}% at {WIDTHS}")
+              f"   tolerance {TOLERANCE_PCT}%, content ceiling {CONTENT_CEILING_PCT}% at {WIDTHS}")
         print(f"screenshots: {shots}")
         return 1 if failed else 0
     finally:

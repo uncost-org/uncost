@@ -22,11 +22,12 @@
     "review_branch": "feat/design-v2-integration"
   },
   "archive": {
-    "filename": "uncost design system v3.zip",
-    "sha256": "e68ca4c7f0c491392fdb9f5dac63dcdb45e800a75abdda78e783c8f3b62de44e",
-    "bytes": 30880727,
-    "member_count": 124,
-    "root_prefix": "design-source/"
+    "filename": "Uncost Design System v4.3",
+    "sha256": "12bdbebb98e8e106f8b9274b060b61abff14d6f7cc0428691d9b558f7ac2fb1f",
+    "bytes": 0,
+    "member_count": 127,
+    "root_prefix": "design-source/",
+    "note": "v4.3 delivered unpacked; CHECKLIST.md hash pins the tree revision."
   },
   "governance_inputs": {
     "accepted_roadmap_issue": "UNP-39",
@@ -37,9 +38,9 @@
   "source_transformations": [
     {
       "logical_source_path": "design-source/css/tokens.css",
-      "source_sha256": "57944478df8b7172f02c3de8381b2f26f135b5ba48d603d34ccb16251b8a6934",
+      "source_sha256": "f51d6ddf4170589f45b23309f747d6b09551b33b34bc62be301bad74a526488f",
       "output_path": "website/design-system/tokens.css",
-      "output_sha256": "ad27c01016dfe8010ebb59c7c9ed34a431439ecfdd8da54e79364c807a99a77e",
+      "output_sha256": "baa28aa90f10bd9103b9fc62775bc0a192f8a0c10f7f778999f12c947c33938d",
       "mode": "transform"
     },
     {
@@ -51,16 +52,16 @@
     },
     {
       "logical_source_path": "design-source/css/site.css",
-      "source_sha256": "c323eeb146e6aa110040c40735503e4ed0e63005807fa0d42fc01c87de7b8693",
+      "source_sha256": "5bfeef94d074e549385c057103439215f63cc31fc02331a0145e8ce51e2d5cd1",
       "output_path": "website/design-system/site.css",
-      "output_sha256": "593f22cb52e9fd6f4707c16d54d130c2e910a56889c57533da91eccf6abd717a",
+      "output_sha256": "ba3a8f11567135a822298a6be8504567a76ff61d717daaaf9a27f313e627821c",
       "mode": "transform"
     },
     {
-      "logical_source_path": "design-source/css/sections.css (v3.1)",
-      "source_sha256": "d1d0152f0bd35db3304da5d776fe12a37e32c25e8cdd1b28aa751e55eda16a41",
+      "logical_source_path": "design-source/css/sections.css",
+      "source_sha256": "4a194a912215a739ad2a257ed80597e1f67922c6b73983cbef31a703e064f7f0",
       "output_path": "website/design-system/sections.css",
-      "output_sha256": "efb638af436dc1d85720f82c8e63bc2a5ee18536031bd036321943d7c5757461",
+      "output_sha256": "e2b0d72e16350dc0598f805ad6d1824b16c1e3f62e95235686e4cd4839a428f6",
       "mode": "adopt"
     },
     {
@@ -137,7 +138,7 @@
     },
     {
       "path": "scripts/audit_design_handoff.py",
-      "sha256": "000c1add3d28502005d271f131b58e544d0bfe8d5bdd5e775389c5f09edd565f",
+      "sha256": "adb1eacfa36bf158a46ebdf661f73f081208832a8904774e115a39b2e39f2752",
       "role": "reproducible-checks"
     },
     {
@@ -162,7 +163,7 @@
     },
     {
       "path": "website/design-system/tokens.css",
-      "sha256": "ad27c01016dfe8010ebb59c7c9ed34a431439ecfdd8da54e79364c807a99a77e",
+      "sha256": "baa28aa90f10bd9103b9fc62775bc0a192f8a0c10f7f778999f12c947c33938d",
       "role": "semantic-tokens"
     },
     {
@@ -172,11 +173,11 @@
     },
     {
       "path": "website/design-system/sections.css",
-      "sha256": "efb638af436dc1d85720f82c8e63bc2a5ee18536031bd036321943d7c5757461"
+      "sha256": "e2b0d72e16350dc0598f805ad6d1824b16c1e3f62e95235686e4cd4839a428f6"
     },
     {
       "path": "website/design-system/site.css",
-      "sha256": "593f22cb52e9fd6f4707c16d54d130c2e910a56889c57533da91eccf6abd717a"
+      "sha256": "ba3a8f11567135a822298a6be8504567a76ff61d717daaaf9a27f313e627821c"
     },
     {
       "path": "website/design-system/icons/icons.svg",

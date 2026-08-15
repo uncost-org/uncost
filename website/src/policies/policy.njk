@@ -7,81 +7,70 @@ pagination:
   addAllPagesToCollections: true
 permalink: "/policies/{{ policy.slug }}/"
 eleventyComputed:
-  pageId: "policies/{{ policy.slug }}"
+  pageId: "policies-{{ policy.slug }}"
   title: "{{ policy.display | safe }} ({{ policy.id }})"
   description: "{{ policy.id }} — {{ policy.display }}.{% if policy.reserved %} Reference number reserved; the policy is not yet drafted.{% else %} Public review draft; not adopted, not in force.{% endif %}"
 ---
-{#-
-  One template, two states, both on the export's policy shell
-  (design-source/pages/policies/*.html and pages/privacy.html): .pol-hd header,
-  .pol-wrap > .pol-toc + .pol-body, then the closing CTA band.
-
-  DRAFTED  — POL-001…010. The reviewed markdown from policies/POL-0NN-*.md fills
-             the design's numbered sections; the prose is the repository's, only
-             the container is the design's. Nothing is re-authored here.
-  RESERVED — POL-011. The export's not-yet-drafted stub: reserved number, honest
-             status, a version-history table recording only the reservation, and
-             a contact route. No policy content is invented.
--#}
+{#- Re-derived from the export's policy page. Two states: RESERVED keeps the
+    export's not-yet-drafted stub (POL-011); DRAFTED fills the same numbered
+    sections with the repository's reviewed markdown. No policy text is invented.
+    Regenerate with tools/rederive_collections.py. -#}
 {% import "partials/mailto.njk" as mail %}
+<!-- SECTION: privacy.Policy header -->
 <header class="pol-hd" data-screen-label="Policy header">
   <div class="meta">
     <span class="ref">{{ policy.id }}</span>
-    {% if policy.reserved %}
-    <span class="m">Not yet drafted</span>
-    <span class="m">Last updated: pre-launch</span>
-    <span class="m">Public review</span>
-    {% else %}
-    <span class="m">Draft &mdash; not in force</span>
-    <span class="m">Version {{ policy.frontmatter.version }}</span>
-    <span class="m">Public review</span>
-    {% endif %}
-  </div>
+    {% if policy.reserved %}<span class="m">Not yet drafted</span><span class="m">Last updated: pre-launch</span><span class="m">Public review</span>{% else %}<span class="m">Draft &mdash; not in force</span><span class="m">Version {{ policy.frontmatter.version }}</span><span class="m">Public review</span>{% endif %}</div>
   <h1>{{ policy.display }}</h1>
 </header>
+
 <div class="pol-wrap">
+  <!-- SECTION: privacy.TOC -->
   <nav class="pol-toc" aria-label="Contents" data-screen-label="TOC">
     <h2>Contents</h2>
-    {% if policy.reserved %}
+{% if policy.reserved %}
     <a href="#s1">1 &middot; Status</a>
     <a href="#s2">2 &middot; Version history</a>
     <a href="#s3">3 &middot; Contact</a>
-    {% else %}
-    {% for s in policy.sections %}
+{% else %}
+{% for s in policy.sections %}
     <a href="#{{ s.anchor }}">{{ s.num }} &middot; {{ s.title }}</a>
-    {% endfor %}
-    {% endif %}
+{% endfor %}
+{% endif %}
   </nav>
+
+  <!-- SECTION: privacy.Policy body -->
   <div class="pol-body" data-screen-label="Policy body">
-    {% if policy.reserved %}
+{% if policy.reserved %}
     <div class="callout">
       <h3>The plain-language version</h3>
-      <p>This policy has not been written. Its reference number is reserved and permanent, so it can be cited now and will still point here once there is something to point at.</p>
+      <p>This policy is being drafted. When published it will follow the same shape as POL-001: a plain-language summary, numbered sections, a version-history table and a contact route. Its reference number is permanent, so it can be cited before it is complete.</p>
     </div>
-    <section id="s1"><h3 class="s"><span class="num">1</span>Status</h3><p>Not yet drafted. {{ policy.id }} is held in the public record as a reserved reference: there is no policy text, no scope and no rules, nothing here is in force, and a reserved reference is not an adopted policy. Drafting it means writing it against the controlling source, stamping its derivation, adding it to the policy pack and moving its status to draft &mdash; the same route every other policy took. Until then, do not cite this page as authority for anything.</p></section>
+
+    <section id="s1"><h3 class="s"><span class="num">1</span>Status</h3><p>Not yet drafted. Tracked in the public record with the reference POL-002. Supporters can propose content through the advisory Assembly; requirements carrying legal, fiduciary or safeguarding duty are approved by responsible leadership and the fiscal sponsor.</p></section>
+
     <section id="s2"><h3 class="s"><span class="num">2</span>Version history</h3>
       <table class="vhist"><thead><tr><th class="w-90">Version</th><th class="w-150">Date</th><th>Change</th></tr></thead><tbody>
-        <tr><td>&mdash;</td><td>Pre-launch</td><td>Reference number reserved. Drafting not started.</td></tr>
+        <tr><td>—</td><td>Pre-launch</td><td>Reference number reserved. Drafting not started.</td></tr>
       </tbody></table>
     </section>
-    <section id="s3"><h3 class="s"><span class="num">3</span>Contact</h3><p>Questions about this reservation? Email {{ mail.email() }}. The full policy set is on the <a href="/policies/">Policies</a> page.</p></section>
-    {% else %}
-    <div class="callout">
-      <h3>The plain-language version</h3>
-      {{ policy.preamble | md | safe }}
-    </div>
-    {% for s in policy.sections %}
-    <section id="{{ s.anchor }}"><h3 class="s"><span class="num">{{ s.num }}</span>{{ s.title }}</h3>
-      {{ s.body | mdSection | safe }}
-    </section>
-    {% endfor %}
+
+    <section id="s3"><h3 class="s"><span class="num">3</span>Contact</h3><p>Questions about this policy? Email <a href="mailto:contact@uncost.org">contact@uncost.org</a>. The full policy set is on the <a href="/policies/">Policies</a> page.</p></section>
+
+{% else %}
+    <div class="callout"><h3>The plain-language version</h3>{{ policy.preamble | md | safe }}</div>
+{% for s in policy.sections %}
+    <section id="{{ s.anchor }}"><h3 class="s"><span class="num">{{ s.num }}</span>{{ s.title }}</h3>{{ s.body | mdSection | safe }}</section>
+{% endfor %}
     <section id="s{{ policy.sections | length + 1 }}"><h3 class="s"><span class="num">{{ policy.sections | length + 1 }}</span>Contact</h3><p>Questions about this policy? Email {{ mail.email() }}. The full policy set is on the <a href="/policies/">Policies</a> page.</p></section>
-    {% endif %}
+{% endif %}
   </div>
 </div>
+
+<!-- SECTION: privacy.Privacy CTA -->
 <section class="blk blk--coral" data-screen-label="Privacy CTA">
-  <h2 class="sec mw-20ch">Read it before it binds anything.</h2>
-  <p class="lead lead-52">Every policy is published as a draft so it can be argued with first. Tell us where this one is wrong.</p>
+  <h2 class="sec mw-20ch">Your data, your call.</h2>
+  <p class="lead lead-52">Unsubscribe or request deletion anytime — one email, no friction.</p>
   <div class="btn-row">
     <a href="/contact/" class="u-btn u-btn--ink">Contact us</a>
     <a href="/policies/" class="u-btn u-btn--ghost">All policies</a>

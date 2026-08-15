@@ -9,13 +9,22 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(-
 .blk--first{border-top:0}
 .blk--cream{background:var(--cream);color:var(--ink)}
 .blk--cream2{background:var(--cream-2);color:var(--ink)}
-.blk--ink{background:var(--ink);color:var(--cream);--fg:var(--cream);--fg-2:var(--fg-2-on-ink);--fg-3:var(--fg-3-on-ink);--rule-soft:var(--rule-on-ink);--rule-hair:var(--rule-on-ink-soft)}
+.blk--ink{background:var(--ink);color:var(--cream);--fg:#EDEAE3;--fg-2:#C9C5BA;--fg-3:#8E8B82;--rule-soft:#3A3A36;--rule-hair:#2E2E2A}
 .blk--ink :is(h1,h2,h3,h4,h5,h6),.u-block--ink :is(h1,h2,h3,h4,h5,h6),.block--ink :is(h1,h2,h3,h4,h5,h6){color:inherit}
 .blk--wheat{background:var(--wheat);color:var(--ink)}
 .blk--sage{background:var(--sage);color:var(--ink)}
 .blk--coral{background:var(--coral);color:var(--ink-on-coral);border-top-color:var(--ink);border-bottom:4px solid var(--ink);margin-bottom:-4px;z-index:1}
+/* DIVIDER RULE: an orange section always carries INK rules top and bottom — a coral rule on
+   coral is invisible. Specificity (0,2,0) so page-scoped sheets cannot regress it. */
+.blk.blk--coral,.block.block--coral,section.blk--coral{border-top:4px solid var(--ink);border-bottom:4px solid var(--ink)}
+.blk.blk--coral+.blk,.blk--coral+.blk{border-top-color:var(--ink)}
 .eyebrow{font-family:var(--font-body);font-weight:500;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:16px;opacity:.7}
 .blk h2.sec{font-family:var(--font-display);font-weight:700;font-size:clamp(40px,6vw,72px);letter-spacing:-.02em;line-height:1;margin:0;text-wrap:balance}
+/* HEADING/BOX CLEARANCE: line-height:1 clips descenders against a bordered box, so any heading
+   with a sibling after it gets a floor of 36px. An inline margin-bottom still wins where set. */
+h2.sec:not(:last-child),.blk h2.sec:not(:last-child),.block h2:not(:last-child),h2.sec+*{margin-block-start:0}
+h2.sec:not(:last-child){margin-bottom:36px}
+.blk h2.sec:not(:last-child){margin-bottom:36px}
 .lead{font-size:18px;line-height:1.55;max-width:60ch;text-wrap:pretty}
 /* ---------- header ---------- */
 .hd{position:sticky;top:0;z-index:40;background:var(--cream);border-bottom:2px solid var(--ink)}
@@ -45,7 +54,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(-
 .hd-mega .mg-go a .ar{font-size:17px;color:var(--coral-deep)}
 .hd-mega .mg-go a .plan{font-family:var(--font-body);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3);margin-left:10px}
 .hd-mega .mg-pic{background:var(--wheat);border-left:2px solid var(--ink);display:flex;align-items:flex-end;justify-content:center;padding:10px}
-.hd-mega .mg-pic img{max-width:100%;max-height:140px;height:auto;display:block}
+.hd-mega .mg-pic img{max-width:100%;max-height:140px;width:auto;height:auto;object-fit:contain;flex:0 0 auto;align-self:flex-end;display:block}
 .hd-actions{display:flex;align-items:center;gap:14px}
 .hd-search{width:42px;height:42px;background:var(--cream);border:2px solid var(--ink);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;padding:0}
 .hd-search:hover{background:var(--wheat)}
@@ -97,43 +106,43 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(-
 .ft{background:var(--ink);color:var(--cream);border-top:4px solid var(--coral)}
 .ft a{color:var(--cream);text-decoration:none}
 .ft a:hover{color:var(--coral)}
-.ft-updates{display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.4fr);gap:28px 48px;padding:44px 28px;border-bottom:4px solid var(--coral);align-items:start;background:var(--wheat);color:var(--ink)}
-.ft-updates h2,.ft-updates h3{font-family:var(--font-display);font-weight:700;font-size:24px;margin:0 0 6px;color:var(--ink)}
+.ft-updates{display:grid;grid-template-columns:minmax(220px,1fr) minmax(300px,1.4fr);gap:28px 48px;padding:44px 28px;border-bottom:4px solid var(--coral);align-items:start;background:#F5AB2E;color:#0E0E0C}
+.ft-updates h2,.ft-updates h3{font-family:var(--font-display);font-weight:700;font-size:24px;margin:0 0 6px;color:#0E0E0C}
 .ft-updates .up-sub{font-size:14px;color:var(--fg-2);line-height:1.5;max-width:44ch}
-.ft-updates a{color:var(--ink)}
+.ft-updates a{color:#0E0E0C}
 .ft-updates a:hover{color:var(--coral-deep)}
 .ft-updates .chk{color:var(--fg-2)}
-.ft-updates .chk input{border-color:var(--ink)}
-.ft-updates .chk input:checked{background:var(--coral);box-shadow:inset 0 0 0 3px var(--wheat)}
-.ft-updates .ft-note{color:var(--ink);opacity:.7}
-.ft-updates .ft-form input[type=email]{background:var(--cream);border-color:var(--ink);color:var(--ink)}
-.ft-updates .ft-form input[type=email]::placeholder{color:var(--fg-4)}
-.ft-updates .ft-form button{background:var(--ink);color:var(--cream);border-color:var(--ink)}
-.ft-updates .ft-form button:hover{background:var(--coral);color:var(--ink-on-coral);border-color:var(--ink)}
+.ft-updates .chk input{border-color:#0E0E0C}
+.ft-updates .chk input:checked{background:var(--coral);box-shadow:inset 0 0 0 3px #F5AB2E}
+.ft-updates .ft-note{color:#0E0E0C;opacity:.7}
+.ft-updates .ft-form input[type=email]{background:var(--cream);border-color:#0E0E0C;color:#0E0E0C}
+.ft-updates .ft-form input[type=email]::placeholder{color:#6B675E}
+.ft-updates .ft-form button{background:#0E0E0C;color:var(--cream);border-color:#0E0E0C}
+.ft-updates .ft-form button:hover{background:var(--coral);color:var(--ink-on-coral);border-color:var(--ink-on-coral)}
 .ft-form{display:flex;flex-wrap:wrap;gap:10px}
 .ft-form input[type=email]{flex:1;min-width:220px;background:var(--ink);border:2px solid var(--cream);color:var(--cream);font-family:var(--font-body);font-size:15px;padding:11px 14px}
-.ft-form input[type=email]::placeholder{color:var(--fg-3-on-ink)}
+.ft-form input[type=email]::placeholder{color:#8E8B82}
 .ft-form button{background:var(--cream);color:var(--ink);border:2px solid var(--cream);font-family:var(--font-display);font-weight:700;font-size:14px;padding:11px 20px;cursor:pointer}
 .ft-form button:hover{background:var(--coral);border-color:var(--cream);color:var(--ink-on-coral)}
-.chk{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;color:var(--fg-2-on-ink);margin-top:12px;cursor:pointer}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5;color:#C9C5BA;margin-top:12px;cursor:pointer}
 .chk input{appearance:none;width:18px;height:18px;border:2px solid var(--cream);background:transparent;flex:0 0 auto;margin:1px 0 0;cursor:pointer}
 .chk input:checked{background:var(--coral);box-shadow:inset 0 0 0 3px var(--ink)}
 .chk a{text-decoration:underline;text-underline-offset:2px}
-.ft-note{font-size:13px;color:var(--fg-3-on-ink);margin-top:10px}
+.ft-note{font-size:13px;color:#8E8B82;margin-top:10px}
 .ft-grid{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:48px;padding:56px 28px}
 .ft-grid img{height:110px;width:auto;display:block}
-.ft-tag{font-size:14px;color:var(--fg-2-on-ink);margin-top:18px;max-width:260px;line-height:1.55}
-.ft-mail{display:inline-block;font-size:14px;color:var(--fg-2-on-ink);margin-top:10px}
-.ft-col h3,.ft-col h4{font-family:var(--font-body);font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3-on-ink);margin:0 0 14px}
+.ft-tag{font-size:14px;color:#C9C5BA;margin-top:18px;max-width:260px;line-height:1.55}
+.ft-mail{display:inline-block;font-size:14px;color:#C9C5BA;margin-top:10px}
+.ft-col h3,.ft-col h4{font-family:var(--font-body);font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#8E8B82;margin:0 0 14px}
 .ft-col a{display:block;padding:6px 0;font-size:15px}
 .soc{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
 .soc a{width:34px;height:34px;border:2px solid rgba(237,234,227,.4);display:inline-flex;align-items:center;justify-content:center}
 .soc a:hover{border-color:var(--coral)}
 .soc svg{width:16px;height:16px;display:block;fill:var(--cream);stroke:none}
 .soc a:hover svg{fill:var(--coral)}
-.ft-bar{border-top:2px solid rgba(237,234,227,.2);margin:0 28px;padding:20px 0 28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px 24px;font-size:13px;color:var(--fg-3-on-ink)}
+.ft-bar{border-top:2px solid rgba(237,234,227,.2);margin:0 28px;padding:20px 0 28px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px 24px;font-size:13px;color:#8E8B82}
 .ft-bar .fb-links{display:flex;flex-wrap:wrap;gap:18px}
-.ft-bar a{color:var(--fg-2-on-ink)}
+.ft-bar a{color:#C9C5BA}
 @media (max-width:940px){.ft-updates{grid-template-columns:1fr}.ft-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:560px){.ft-grid{grid-template-columns:1fr}}
 /* ---------- shared page patterns ---------- */
@@ -147,23 +156,16 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(-
 .form-off .form-off-sub{font-size:13.5px;line-height:1.5;color:var(--fg-2);max-width:46ch}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}}
 
-/* AA correction on adoption — focus ring visibility on saturated fills.
-   sections.css switches the ring to --coral-on-ink for ink blocks; these are
-   the remaining full-bleed fills, where a --coral ring has almost no contrast
-   against its own background. Non-text contrast floor is 3.0:1; --ink clears it
-   on all of them. Carry this back to the design canvas. */
+/* AA correction on adoption — focus-ring visibility on saturated fills.
+   sections.css switches the ring to --coral-on-ink for ink blocks; on a coral,
+   wheat or sage fill a --coral ring measures ~1:1 against its own background.
+   --ink clears the 3.0:1 non-text floor on those; --cream clears it on the deep
+   fills. Carry back to the design canvas. */
 .blk--coral :focus-visible,
 .blk--wheat :focus-visible,
 .blk--sage :focus-visible,
 .u-block--coral :focus-visible,
-.u-block--wheat :focus-visible,
 .hd .cta-btn:focus-visible,
 .pledgebar :focus-visible { outline-color: var(--ink); }
-
-/* …and the deep fills, where a dark ring is the one that disappears. --cream
-   measures 5.0:1 on --clay, 6.3:1 on --ink-blue and 5.6:1 on --coral-deep. */
 .bg-clay :focus-visible,
-.bg-ink-blue :focus-visible,
-.blk--clay :focus-visible,
-.blk--ink-blue :focus-visible,
-.hd .cta-btn:hover:focus-visible { outline-color: var(--cream); }
+.bg-ink-blue :focus-visible { outline-color: var(--cream); }

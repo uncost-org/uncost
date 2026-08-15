@@ -62,7 +62,7 @@ FROZEN_ARCHIVE_ROOT_PREFIX = "design-source/"
 FROZEN_SOURCE_PAIRS = (
     {
         "logical_source_path": "design-source/css/tokens.css",
-        "source_sha256": "57944478df8b7172f02c3de8381b2f26f135b5ba48d603d34ccb16251b8a6934",
+        "source_sha256": "f51d6ddf4170589f45b23309f747d6b09551b33b34bc62be301bad74a526488f",
         "output_path": "website/design-system/tokens.css",
         "mode": "transform",
     },
@@ -74,13 +74,13 @@ FROZEN_SOURCE_PAIRS = (
     },
     {
         "logical_source_path": "design-source/css/site.css",
-        "source_sha256": "c323eeb146e6aa110040c40735503e4ed0e63005807fa0d42fc01c87de7b8693",
+        "source_sha256": "5bfeef94d074e549385c057103439215f63cc31fc02331a0145e8ce51e2d5cd1",
         "output_path": "website/design-system/site.css",
         "mode": "transform",
     },
     {
-        "logical_source_path": "design-source/css/sections.css (v3.1)",
-        "source_sha256": "d1d0152f0bd35db3304da5d776fe12a37e32c25e8cdd1b28aa751e55eda16a41",
+        "logical_source_path": "design-source/css/sections.css",
+        "source_sha256": "4a194a912215a739ad2a257ed80597e1f67922c6b73983cbef31a703e064f7f0",
         "output_path": "website/design-system/sections.css",
         "mode": "adopt",
     },

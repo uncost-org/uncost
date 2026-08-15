@@ -5,12 +5,11 @@ pageId: "news"
 title: "News"
 description: "Movement updates and a curated Cost Watch of external reporting on the cost of living, automation, and essentials."
 ---
-{% from "partials/content-needed.njk" import block as gap %}
 {#- Markup taken verbatim from design-source/pages/news.html. CONTENT.md marks this
     page's copy "inline (draft)", so the export supplies both; only asset
     references and routes are rewritten. Do not re-author. -#}
 <!-- SECTION: news.News — title -->
-<div class="titleband" data-screen-label="News — title"><h1><span class="t-coral">News</span></h1></div>
+<div class="titleband" data-screen-label="News — title"><h1><span class="u-1">News</span></h1></div>
 <div class="introband">
   <h2>What&rsquo;s moving — ours and the world&rsquo;s.</h2>
   <p>Movement updates on the left. On the right, a curated <b>Cost Watch</b> of external reporting we think is worth your time — links out, no reposting.</p>
@@ -34,13 +33,29 @@ description: "Movement updates and a curated Cost Watch of external reporting on
       <h3>Receipts first: how we&rsquo;ll publish numbers.</h3>
       <p>Every figure will carry a source, a date, and a confidence label — and anything hypothetical will be marked illustrative. A short tour of the methodology that keeps us honest.</p>
     </div>
-    <p class="u-80" id="rss">More updates arrive as the movement launches. An RSS feed will be published here at launch.</p>
+    <p class="u-96" id="rss">More updates arrive as the movement launches. An RSS feed will be published here at launch.</p>
   </div>
 
   <!-- SECTION: news.Cost Watch -->
   <aside class="costwatch" data-screen-label="Cost Watch">
     <h3>Cost Watch</h3>
     <p class="cwsub">External reporting on the cost of living and automation. We link out and summarise briefly — read the original at the source.</p>
-    <p class="u-81">Links are to third-party sites. Inclusion isn&rsquo;t endorsement — it&rsquo;s a reading list.</p>
+
+    <a class="cw" href="https://www.jchs.harvard.edu/state-nations-housing-2025" target="_blank" rel="noopener">
+      <div class="src"><span>Harvard JCHS</span><span>2025</span></div>
+      <h4>The State of the Nation&rsquo;s Housing 2025</h4>
+      <span class="ext">Read at jchs.harvard.edu →</span>
+    </a>
+    <a class="cw" href="https://www.bls.gov/cpi/" target="_blank" rel="noopener">
+      <div class="src"><span>US BLS</span><span>Monthly</span></div>
+      <h4>Consumer Price Index — food, rent, and energy</h4>
+      <span class="ext">Read at bls.gov →</span>
+    </a>
+    <a class="cw" href="https://www.imf.org/en/Blogs" target="_blank" rel="noopener">
+      <div class="src"><span>IMF Blog</span><span>Ongoing</span></div>
+      <h4>Analysis on AI, productivity, and the economy</h4>
+      <span class="ext">Read at imf.org →</span>
+    </a>
+    <p class="u-97">Links are to third-party sites. Inclusion isn&rsquo;t endorsement — it&rsquo;s a reading list.</p>
   </aside>
 </div>

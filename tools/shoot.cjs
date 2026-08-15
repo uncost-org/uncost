@@ -38,6 +38,21 @@ const ALLOWLIST = [
       const res = await page.goto(url, { waitUntil: "networkidle0", timeout: 60000 });
       if (!res || !res.ok()) { console.error(`MISS ${url} ${res && res.status()}`); continue; }
       await page.evaluate(() => document.fonts && document.fonts.ready);
+      // Force lazy images to load before capturing. The build serves brand
+      // images through the {% image %} pipeline with loading="lazy"; the export
+      // writes plain <img>. In a fullPage screenshot the lazy ones below the
+      // fold stay unloaded, so an identical section captures as blank boxes and
+      // scores ~100% different. That is the instrument, not the page.
+      await page.evaluate(async () => {
+        for (const img of document.querySelectorAll('img[loading="lazy"]')) {
+          img.loading = "eager";
+          if (img.dataset.src) img.src = img.dataset.src;
+        }
+        await Promise.all([...document.images]
+          .filter((i) => !i.complete)
+          .map((i) => new Promise((res) => { i.onload = i.onerror = res; })));
+      });
+      await new Promise((r) => setTimeout(r, 150));
       const name = route.replace(/^\//, "").replace(/\/$/, "").replace(/[\/.]/g, "_") || "index";
       const file = path.join(outDir, `${name}@${w}.png`);
       await page.screenshot({ path: file, fullPage: true });

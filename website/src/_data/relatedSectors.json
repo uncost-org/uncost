@@ -1,187 +1,191 @@
 {
-  "_note": "Per-sector 'Keep reading' lists, extracted verbatim from the design export's own sector pages (design-source/pages/sectors/*.html). These are the design's editorial choices \u2014 which neighbours to show and the swatch colour for each \u2014 so they are carried across rather than re-derived; a mechanical rule produced a different set and a different node count.",
+  "_note": "Per-sector 'Keep reading' lists, extracted verbatim from the export's own sector pages. The design picks which neighbours to show and each swatch colour; the export renumbers those classes every regeneration, so this is re-extracted by tools/rederive_collections.py rather than hand-maintained.",
+  "_allLink": {
+    "linkClass": "u-120",
+    "squareClass": "u-121 sq"
+  },
   "care": [
     {
       "slug": "healthcare",
-      "sq": "bg-coral",
+      "sq": "u-119 sq",
       "name": "Healthcare"
     },
     {
       "slug": "shelter",
-      "sq": "bg-clay",
+      "sq": "u-118 sq",
       "name": "Shelter"
     }
   ],
   "clothing": [
     {
       "slug": "materials",
-      "sq": "bg-ink-blue",
+      "sq": "u-149 sq",
       "name": "Materials"
     },
     {
       "slug": "goods",
-      "sq": "bg-wheat",
+      "sq": "u-115 sq",
       "name": "Goods"
     }
   ],
   "communication": [
     {
       "slug": "education",
-      "sq": "bg-ink-blue",
+      "sq": "u-149 sq",
       "name": "Education"
     },
     {
       "slug": "safety",
-      "sq": "bg-clay",
+      "sq": "u-118 sq",
       "name": "Safety"
     }
   ],
   "education": [
     {
       "slug": "communication",
-      "sq": "bg-ink-blue",
+      "sq": "u-149 sq",
       "name": "Communication"
     },
     {
       "slug": "healthcare",
-      "sq": "bg-coral",
+      "sq": "u-119 sq",
       "name": "Healthcare"
     }
   ],
   "energy": [
     {
       "slug": "shelter",
-      "sq": "bg-clay",
+      "sq": "u-118 sq",
       "name": "Shelter"
     },
     {
       "slug": "food",
-      "sq": "bg-sage",
+      "sq": "u-117 sq",
       "name": "Food"
     }
   ],
   "environment": [
     {
       "slug": "materials",
-      "sq": "bg-ink-blue",
+      "sq": "u-149 sq",
       "name": "Materials"
     },
     {
       "slug": "water",
-      "sq": "bg-wheat",
+      "sq": "u-115 sq",
       "name": "Water"
     }
   ],
   "food": [
     {
       "slug": "water",
-      "sq": "bg-ink-blue",
+      "sq": "u-149 sq",
       "name": "Water"
     },
     {
       "slug": "shelter",
-      "sq": "bg-clay",
+      "sq": "u-118 sq",
       "name": "Shelter"
     },
     {
       "slug": "energy",
-      "sq": "bg-coral",
+      "sq": "u-119 sq",
       "name": "Energy"
     }
   ],
   "goods": [
     {
       "slug": "materials",
-      "sq": "bg-ink-blue",
+      "sq": "u-149 sq",
       "name": "Materials"
     },
     {
       "slug": "clothing",
-      "sq": "bg-clay",
+      "sq": "u-118 sq",
       "name": "Clothing"
     }
   ],
   "healthcare": [
     {
       "slug": "care",
-      "sq": "bg-wheat",
+      "sq": "u-115 sq",
       "name": "Care"
     },
     {
       "slug": "education",
-      "sq": "bg-ink-blue",
+      "sq": "u-149 sq",
       "name": "Education"
     }
   ],
   "leisure": [
     {
       "slug": "goods",
-      "sq": "bg-wheat",
+      "sq": "u-115 sq",
       "name": "Goods"
     },
     {
       "slug": "communication",
-      "sq": "bg-ink-blue",
+      "sq": "u-149 sq",
       "name": "Communication"
     }
   ],
   "materials": [
     {
       "slug": "goods",
-      "sq": "bg-wheat",
+      "sq": "u-115 sq",
       "name": "Goods"
     },
     {
       "slug": "environment",
-      "sq": "bg-sage",
+      "sq": "u-117 sq",
       "name": "Environment"
     }
   ],
   "safety": [
     {
       "slug": "communication",
-      "sq": "bg-ink-blue",
+      "sq": "u-149 sq",
       "name": "Communication"
     },
     {
       "slug": "environment",
-      "sq": "bg-sage",
+      "sq": "u-117 sq",
       "name": "Environment"
     }
   ],
   "shelter": [
     {
       "slug": "energy",
-      "sq": "bg-coral",
+      "sq": "u-119 sq",
       "name": "Energy"
     },
     {
       "slug": "food",
-      "sq": "bg-sage",
+      "sq": "u-117 sq",
       "name": "Food"
     }
   ],
   "transportation": [
     {
       "slug": "goods",
-      "sq": "bg-wheat",
+      "sq": "u-115 sq",
       "name": "Goods"
     },
     {
       "slug": "environment",
-      "sq": "bg-sage",
+      "sq": "u-117 sq",
       "name": "Environment"
     }
   ],
   "water": [
     {
       "slug": "shelter",
-      "sq": "bg-clay",
+      "sq": "u-118 sq",
       "name": "Shelter"
     },
     {
       "slug": "environment",
-      "sq": "bg-sage",
+      "sq": "u-117 sq",
       "name": "Environment"
     }
   ]

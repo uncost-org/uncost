@@ -329,6 +329,13 @@
     "added": "2026-07-23"
   },
   {
+    "rule": "sector-transit",
+    "path": "website/src/sectors/index.njk",
+    "line_sha256": "077a5048d7112f41979b0a137d7c3d761776eeec0c1ecb842bba5e6a9c888878",
+    "justification": "Scope description from the repository's own SEC-008 dossier ('Transit, mobility, logistics, delivery'), not a name substitution: the sector is named Transportation in full on the same card, in the heading, and everywhere else. The rule guards against Transportation being RENAMED Transit; listing transit as one thing the sector covers is the dossier's reviewed wording.",
+    "added": "2026-08-15"
+  },
+  {
     "rule": "crypto-generic",
     "path": "website/src/treasury.njk",
     "line_sha256": "69d903262d49b8edc8be1747983d6875711ec2ee008aeeab5d32ba0a62d45fd4",
