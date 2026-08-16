@@ -50,6 +50,9 @@ SECTION_EXEMPTIONS = [
     ("projects.html", "How they help",
      "Approved change: 'Every project has to earn its cost claim.' is matched to "
      "the page's other section-heading size. CANVAS-SYNC item 8."),
+    ("sectors/", "Related projects",
+     "Approved change: the canvas Ledger component (.lg) replaces the previous "
+     "prj-table list — same rows and content, new table markup. CANVAS-SYNC item 5."),
     ("receipts", "The rule",
      "Approved change: the ink headline the export omits below the eyebrow is "
      "added. CANVAS-SYNC item 9."),

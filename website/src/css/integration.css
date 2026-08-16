@@ -83,3 +83,49 @@ body[data-page="projects"] .blk--ink h2 {
   letter-spacing: -.02em;
   line-height: 1.02;
 }
+
+/* 5 — ledger-table ("Option A — The Ledger"), the canvas component for the
+ *     sector pages' Related projects section. Delivered as a standalone
+ *     snippet with its rules in a <style> block; moved here verbatim because
+ *     this site's CSP is style-src 'self' and the extraction rule holds — an
+ *     inline <style> in a page would not survive either. Class names are
+ *     unchanged (.lg, .lg-col-*, .fig, .claim, .src, .id) so the component
+ *     drops straight in when the canvas ships it in sections.css, at which
+ *     point this block and its gate exemption both come out.
+ *
+ *     Two nits for the canvas, adopted as-delivered rather than "corrected":
+ *     .lg uses a raw #FFF where --white exists, and .src a has a #B23A14
+ *     literal as the var(--coral-deep, …) fallback.
+ */
+/* ---- ledger-table component (depends on tokens.css; chips from components.css) ---- */
+.lg{width:100%;border-collapse:collapse;border:2px solid var(--ink);background:#FFF;font-variant-numeric:tabular-nums}
+.lg thead th{background:var(--ink);color:var(--cream);font-family:var(--font-display);font-weight:700;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;text-align:left;padding:12px 14px;white-space:nowrap}
+.lg tbody tr+tr{border-top:2px solid var(--ink)}
+.lg tbody tr:nth-child(even){background:var(--cream-2)}
+.lg td{padding:14px;vertical-align:top}
+.lg .fig{font-family:var(--font-display);font-weight:900;font-size:clamp(26px,2.6vw,38px);line-height:.9;letter-spacing:-.03em;color:var(--coral);white-space:nowrap}
+.lg .claim{font-size:14.5px;line-height:1.45;color:var(--fg-2);min-width:24ch}
+.lg .claim b{color:var(--ink);font-weight:600}
+.lg .src{font-size:13px;line-height:1.4}
+.lg .src a{color:var(--coral-deep,#B23A14);font-weight:600;text-decoration:none;border-bottom:1.5px solid currentColor}
+.lg .src span{display:block;color:var(--fg-3);font-size:12px;margin-top:3px}
+.lg .when{font-size:12.5px;color:var(--fg-2);white-space:nowrap}
+.lg .when b{display:block;font-family:var(--font-body);font-weight:600;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-3);margin-bottom:2px}
+.lg .rg{font-size:12.5px;color:var(--fg-2);white-space:nowrap}
+.lg .id{font-family:var(--font-display);font-weight:700;font-size:12px;color:var(--fg-3);white-space:nowrap}
+/* column widths — were inline th styles in the canvas; classes for CSP */
+.lg .lg-col-fig{width:150px}
+.lg .lg-col-src{width:240px}
+.lg .lg-col-when{width:120px}
+.lg .lg-col-rg{width:110px}
+.lg .lg-col-conf{width:104px}
+.lg .lg-col-id{width:96px}
+/* stacked-rows collapse */
+@media (max-width:1000px){
+  .lg thead{display:none}
+  .lg,.lg tbody,.lg tr,.lg td{display:block;width:100%}
+  .lg tr{border-top:2px solid var(--ink);padding:16px 14px}
+  .lg td{padding:2px 0}
+  .lg .fig{margin-bottom:6px}
+  .lg .when,.lg .rg{display:inline-block;width:auto;margin-right:14px}
+}

@@ -90,12 +90,24 @@ eleventyComputed:
 <section id="projects" class="u-15 block block--cream2" data-screen-label="Related projects">
   <div class="eyebrow">04 · Related projects</div>
   <h2>Where {{ sector.name }} shows up in The Projects.</h2>
-  <table class="prj-table">
-    <thead><tr><th>ID</th><th>Project</th><th>Role for {{ sector.name }}</th><th>Status</th></tr></thead>
+  <table class="lg">
+    <thead>
+      <tr>
+        <th class="lg-col-id">ID</th>
+        <th>Project</th>
+        <th class="lg-col-src">Role for {{ sector.name }}</th>
+        <th class="lg-col-conf">Status</th>
+      </tr>
+    </thead>
     <tbody>
-{% for p in sector.relatedProjects %}
-      <tr><td class="id">{{ p.id }}</td><td class="title"><a href="/projects/{{ p.slug }}/">{{ p.display }}</a><span class="sum">{{ p.line }}</span></td><td class="role">{% if p.layer %}{{ p.layer }}{% else %}{{ p.tag | capitalize }}{% endif %}</td><td><span class="status status--planned">Draft &mdash; not approved for build</span></td></tr>
-{% endfor %}
+    {% for p in sector.relatedProjects %}
+      <tr>
+        <td class="id">{{ p.id }}</td>
+        <td class="claim"><b><a href="/projects/{{ p.slug }}/">{{ p.display }}</a></b> &mdash; {{ p.line }}</td>
+        <td class="src">{% if p.layer %}{{ p.layer }}{% else %}{{ p.tag | capitalize }}{% endif %}</td>
+        <td><span class="status status--planned">Draft &mdash; not approved for build</span></td>
+      </tr>
+    {% endfor %}
     </tbody>
   </table>
 </section>
