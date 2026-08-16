@@ -82,7 +82,6 @@ description: "The essentials keep getting more expensive while the automation th
       <div class="eyebrow">{{ home.s5.eyebrow | safe }}</div>
       <h2 class="u-64 sec">{{ home.s5.headline | safe }}</h2>
     </div>
-    <a href="/sectors/" class="u-btn u-btn--ink">{{ home.s5.cta | safe }}</a>
   </div>
   <p class="u-65 lead">{{ home.s5.body | safe }}</p>
   <div class="focus3">
@@ -90,7 +89,7 @@ description: "The essentials keep getting more expensive while the automation th
     <a href="/sectors/{{ sector.slug }}/"><div class="img">{% image sector.illustration.src, sector.illustration.alt %}</div><div class="tx"><span class="status status--{{ sector.statusClass }}">{{ sector.status }}</span><h3>{{ sector.name }}</h3><p>{{ home.s5[sector.slug] | safe }}</p></div></a>
 {% endfor %}
   </div>
-  <p class="u-66">{{ home.s5.note | safe }}</p>
+  <a href="/sectors/" class="u-btn u-btn--ink">{{ home.s5.cta | safe }}</a>
 </section>
 
 <!-- SECTION: index.S6 Trust -->

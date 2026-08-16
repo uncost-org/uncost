@@ -58,3 +58,28 @@
   margin: 0;
   padding: 2px 6px;
 }
+
+/* ---------------------------------------------------------------------------
+ * APPROVED DIVERGENCES FROM THE EXPORT
+ * Each is a founder-approved change the canvas has not made yet, so each also
+ * carries a named render-gate exemption and a docs/CANVAS-SYNC.md entry. They
+ * live here, not in the design packet, so the next re-export does not silently
+ * revert them and so the diff against the canvas stays honest.
+ * ------------------------------------------------------------------------ */
+
+/* 7 — Sector hero illustration at double size, position and aspect unchanged.
+       The slot drives the geometry, so both grow together and the illustration
+       keeps its right-bottom anchor and its identical Y across all 15 pages. */
+.sector-illus-slot {
+  height: clamp(380px, 46vw, 580px);
+}
+
+/* 8 — /projects/ "Every project has to earn its cost claim." was rendering
+       smaller than the page's other section headings; matched to them. */
+body[data-page="projects"] .blk--ink h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(34px, 4.2vw, 56px);
+  letter-spacing: -.02em;
+  line-height: 1.02;
+}

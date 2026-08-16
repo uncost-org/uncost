@@ -1,5 +1,5 @@
 {
-  "_note": "DRAFT homepage copy, lifted verbatim from the export's data-content slots. Re-extracted on every re-derivation because the export renumbers its .u-N classes. The S2 statistics and S6 counts are NOT here — they render from sources/register.csv and the repository's registers.",
+  "_note": "DRAFT homepage copy, lifted verbatim from the export's data-content slots. Re-extracted on every re-derivation because the export renumbers its .u-N classes. The S2 statistics and S6 counts are NOT here — they render from sources/register.csv and the repository's registers. S5's closing note was removed and the 'All fifteen sectors' button moved into its place — an approved content change; see docs/CANVAS-SYNC.md.",
   "s1": {
     "cta1": "Sign the Pledge",
     "cta2": "See the evidence",
@@ -47,7 +47,6 @@
     "eyebrow": "Where we start",
     "food": "Nutrition, farming, storage, cooking and distribution.",
     "headline": "We start where the money <span class=\"u-1\">actually goes</span>.",
-    "note": "Water is next. The other eleven are mapped and waiting — status is sequencing, not importance.",
     "shelter": "Housing, land use, construction, heating and cooling."
   },
   "s6": {

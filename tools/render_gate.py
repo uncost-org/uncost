@@ -40,6 +40,19 @@ SECTION_EXEMPTIONS = [
     ("pledge-thanks", "Notable signers",
      "showCount:false is the intentional pre-launch state — founding-signer copy "
      "renders instead of a signer list, because there are no signers to invent."),
+    # Approved changes the canvas has not made yet — each has a CANVAS-SYNC entry.
+    ("index.html", "S5 Where we start",
+     "Approved content change: the closing note is removed and the 'All fifteen "
+     "sectors' button moved into its position. CANVAS-SYNC item 6."),
+    ("sectors/", "Sector head",
+     "Approved change: the hero illustration renders at double size, position and "
+     "aspect unchanged. CANVAS-SYNC item 7."),
+    ("projects.html", "How they help",
+     "Approved change: 'Every project has to earn its cost claim.' is matched to "
+     "the page's other section-heading size. CANVAS-SYNC item 8."),
+    ("receipts", "The rule",
+     "Approved change: the ink headline the export omits below the eyebrow is "
+     "added. CANVAS-SYNC item 9."),
 ]
 
 

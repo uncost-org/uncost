@@ -18,6 +18,7 @@ description: "Our open methodology and source layer. Every number has a source, 
 <!-- SECTION: receipts.The rule -->
 <section class="u-87 blk blk--cream" data-screen-label="The rule">
   <div class="eyebrow">The rule, three ways</div>
+  <h2 class="sec">If we can&rsquo;t show where a number came from, we don&rsquo;t print it.</h2>
   <div class="u-25 rule3">
     <div><div class="n">01</div><h3>Sourced</h3><p>Every figure carries a source and a license, so anyone can trace it back and reuse it lawfully.</p></div>
     <div><div class="n">02</div><h3>Dated</h3><p>Every source shows when it was captured and when it was last reviewed. Stale data is flagged, not hidden.</p></div>
@@ -67,7 +68,7 @@ description: "Our open methodology and source layer. Every number has a source, 
 {% for row in register.stats %}
     <div class="card" id="{{ row.source_id }}" data-source="{{ row.source_id }}">
       <div class="id">{{ row.source_id }}</div>
-      <div class="fig">{{ row.display_value or row.publication_year }}</div>
+      <div class="fig">{{ row.display_value }}</div>
       <div class="unit">{{ row.data_period }}</div>
       <div class="claim">{{ row.display_caption }}</div>
       <div class="foot">

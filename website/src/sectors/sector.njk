@@ -20,7 +20,7 @@ eleventyComputed:
 {% set sc = sectorContent[sector.slug] %}
 <!-- SECTION: sectors/food.Sector head -->
 <section class="sector-head" data-screen-label="Sector head">
-  <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/sectors/">Sectors</a> &nbsp;/&nbsp; <span>Food</span></div>
+  <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/sectors/">Sectors</a> &nbsp;/&nbsp; <span>{{ sector.name }}</span></div>
   <div class="sector-head-grid">
     <div>
       <h1 class="sector-title">{{ sector.name }}.</h1>
@@ -57,7 +57,7 @@ eleventyComputed:
   <h2>No number ships without a <span class="u-1">receipt</span>.</h2>
   <div class="evd-empty">
     {% if sector.evidence %}<h3>{{ sector.evidence }}</h3>{% else %}{{ gap("sector-evidence") }}{% endif %}
-    <p>Reviewed source records come before figures. When the first Food figures publish, each line will carry: value, unit, region, date observed, a source ID from the public register, a confidence label, and the collection method.</p>
+    <p>Reviewed source records come before figures. When the first {{ sector.name }} figures publish, each line will carry: value, unit, region, date observed, a source ID from the public register, a confidence label, and the collection method.</p>
     <div class="u-141">
       <span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span>
       <span class="rcpt-conf rcpt-conf--estimate">Estimate</span>
@@ -104,7 +104,7 @@ eleventyComputed:
 <section id="sources" class="block" data-screen-label="Sources">
   <div class="eyebrow">05 · Sources</div>
   <h2>The register comes before the figures.</h2>
-  <p class="u-144">Every source Uncost uses gets a public ID, publisher, date, license, refresh cadence, and region coverage. The Food dossier draws on the register as reviewed records are added.</p>
+  <p class="u-144">Every source Uncost uses gets a public ID, publisher, date, license, refresh cadence, and region coverage. The {{ sector.name }} dossier draws on the register as reviewed records are added.</p>
   <div class="src"><div class="src-num">SRC-001</div><div class="src-body"><a href="https://github.com/uncost-org/uncost/blob/main/sources/register.csv" target="_blank" rel="noopener">Uncost final external Movement Plan and Roadmap</a><span class="meta">Governance-control source · 2026-07-15 · confidence: confirmed</span></div></div>
   <div class="u-145 src"><div class="src-num">—</div><div class="src-body">Sector-specific source records are added with review. <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener">Propose a source on GitHub</a><span class="meta">Official statistics first · licenses recorded at intake</span></div></div>
 </section>
@@ -124,7 +124,7 @@ eleventyComputed:
 <!-- SECTION: sectors/food.Sector CTA -->
 <section class="block block--ink" data-screen-label="Sector CTA">
   <h2 class="u-146">Help build the {{ sector.name | lower }} evidence.<br><span class="u-1">Sources before slogans.</span></h2>
-  <p class="u-147">Early useful roles: source and license review, data methodology, sector research, and — as the work grows — a volunteer Food sector lead.</p>
+  <p class="u-147">Early useful roles: source and license review, data methodology, sector research, and — as the work grows — a volunteer {{ sector.name }} sector lead.</p>
   <div class="u-148">
     <a href="/join/" class="u-btn u-btn--primary">Take part</a>
     <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--outline-cream">The public records</a>

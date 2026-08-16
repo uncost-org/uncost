@@ -34,7 +34,9 @@ eleventyComputed:
 </section>
 <!-- SECTION: projects/human-essentials-dashboard.Overview -->
 <section class="blk blk--cream2" data-screen-label="Overview">
-  \1What this brief covers.\2\n  {% if project.publicSummary %}<p class="lead">{{ project.publicSummary }}</p>{% else %}{{ gap("project-public-summary") }}{% endif %}\n  </section>
+  <div class="eyebrow">Overview</div>
+  <h2>What this brief covers.</h2>
+  {% if project.publicSummary %}<p class="lead">{{ project.publicSummary }}</p>{% else %}{{ gap("project-public-summary") }}{% endif %}\n  </section>
 <!-- SECTION: projects/human-essentials-dashboard.Funding & status -->
 <section class="blk" data-screen-label="Funding & status">
   <div class="eyebrow">Funding &amp; status</div>
