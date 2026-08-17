@@ -18,17 +18,10 @@ measuring that section.
 | 8 | `/projects/` — "Every project has to earn its cost claim." matched to the page's other section-heading size. | `website/src/css/integration.css` | `projects.html :: How they help` |
 | 10 | Footer: the "RSS" link is removed — no feed or feed page exists. | `_data/chrome.json` | *(chrome; no section exemption — the footer sits outside `<main>`)* |
 | 11 | Footer: the bottom bar no longer repeats links already in the columns above it. Deduplicated by **target**, not label, since the columns carry "Corrections & changelog" pointing at the same `/receipts/#corrections`. Only "Accessibility" remains. | `_data/chrome.json` | *(chrome; outside `<main>`)* |
+| 13 | Nav labels: "Sectors" → "Cost of Living Sectors" (The Case); "Dashboard" → "Human Essentials Dashboard" and "Tracker" → "Cost of Living Tracker" (The Projects); "How it works" → "How the Assembly works" (The Assembly). "Dashboard" removed from The Case, ambiguous against the Projects entry. | `_data/chrome.json` | *(chrome; outside `<main>`)* |
+| 14 | `/accessibility/` — new page carrying the accessibility statement that was the bottom section of About; the footer "Accessibility" link now points at it. About keeps a `[CONTENT NEEDED]` marker where the section was, pending replacement copy. | `website/src/accessibility.njk`, `about.njk`, `_data/chrome.json` | *(new route; no export counterpart)* |
 | 12 | `/receipts/` — the "A figure, fully dressed" demo section is removed; the register band takes the whiter cream; each figure's title links to its registered source URL (all 22 rows have one). | `website/src/receipts.njk` | `receipts :: The register` |
 | 9 | `/receipts/` — add the ink headline below the "The rule, three ways" eyebrow: "If we can't show where a number came from, we don't print it." The export ships the eyebrow straight into the three-column grid with no headline. | `website/src/receipts.njk` | `receipts :: The rule` |
-
-## Flagged for Claude Design
-
-- **Related-sectors status chips.** The related-sectors block on sector pages was
-  asked to carry the coloured FOCUS / NEXT / FUTURE STUDY / DOSSIER chips the main
-  sector cards have. **The export does not define a chip there** — its markup is a
-  coloured square plus the sector name (`<span class="u-149 sq"></span> Water`) and
-  nothing else. Not added here: inventing a chip position for a named canvas block
-  is how the build and the canvas drift apart. Needs a canvas decision.
 
 ## Nits to fix in the canvas
 

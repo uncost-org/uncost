@@ -28,17 +28,12 @@
       "robot": "robots/19_presenting_transparent.png",
       "links": [
         {
-          "label": "Sectors",
+          "label": "Cost of Living Sectors",
           "url": "/sectors/"
         },
         {
           "label": "The Receipts",
           "url": "/receipts/"
-        },
-        {
-          "label": "Dashboard",
-          "url": "/case/dashboard/",
-          "badge": "Planned"
         }
       ]
     },
@@ -53,11 +48,11 @@
           "url": "/projects/"
         },
         {
-          "label": "Dashboard",
+          "label": "Human Essentials Dashboard",
           "url": "/projects/human-essentials-dashboard/"
         },
         {
-          "label": "Tracker",
+          "label": "Cost of Living Tracker",
           "url": "/projects/cost-of-living-tracker/"
         }
       ]
@@ -69,7 +64,7 @@
       "robot": "robots/21_holding_globe_transparent.png",
       "links": [
         {
-          "label": "How it works",
+          "label": "How the Assembly works",
           "url": "/assembly/"
         },
         {
@@ -199,7 +194,7 @@
   "footerBar": [
     {
       "label": "Accessibility",
-      "url": "/about/#accessibility"
+      "url": "/accessibility/"
     }
   ],
   "social": [

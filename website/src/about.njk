@@ -5,6 +5,7 @@ pageId: "about"
 title: "About"
 description: "What Uncost actually does: the four parts, the six-step uncosting mechanism, the working principles, and who is accountable."
 ---
+{% from "partials/content-needed.njk" import block as gap %}
 {#- Markup taken verbatim from design-source/pages/about.html. CONTENT.md marks this
     page's copy "inline (draft)", so the export supplies both; only asset
     references and routes are rewritten. Do not re-author. -#}
@@ -74,8 +75,6 @@ description: "What Uncost actually does: the four parts, the six-step uncosting 
 </section>
 
 <!-- SECTION: about.Accessibility -->
-<section class="blk blk--cream" id="accessibility" data-screen-label="Accessibility">
-  <div class="eyebrow">Accessibility</div>
-  <h2 class="u-12 sec">Built to WCAG 2.2 AA.</h2>
-  <p class="u-13 lead">Real text over images, visible keyboard focus, logical heading order, alt text on meaningful images, reduced-motion respected, and no meaning carried by color alone. Found something that falls short? Tell us: <a href="mailto:contact@uncost.org">contact@uncost.org</a> — accessibility reports get priority.</p>
+<section class="blk" id="accessibility">
+  {{ gap("about-accessibility-replacement", "the accessibility statement moved to its own page at /accessibility/; replacement copy for this slot is coming from content separately") }}
 </section>

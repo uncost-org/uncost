@@ -16,6 +16,11 @@ eleventyComputed:
     [CONTENT NEEDED] rather than the export's unreviewed draft prose.
     Regenerate with tools/rederive_collections.py. -#}
 {% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
+{#- Related-sectors swatches. The export's project pages cycle a positional
+    palette (slot 0/1/2), the same square the sector pages carry; it was lost
+    when this template was re-derived and the buttons rendered a colourless
+    .sq. Taken from the export's own project pages. -#}
+{% set relSq = ["u-117 sq", "u-118 sq", "u-119 sq"] %}
 <!-- SECTION: projects/human-essentials-dashboard.Project head -->
 <header class="p-head" data-screen-label="Project head">
   <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/projects/">Projects</a> &nbsp;/&nbsp; <span>{{ project.display }}</span></div>
@@ -54,7 +59,7 @@ eleventyComputed:
 <section class="blk blk--cream2" data-screen-label="Related sectors">
   <div class="eyebrow">Related sectors</div>
   <h2>Where it applies first.</h2>
-  <div class="rel">{% for s in project.sectors %}<a href="/sectors/{{ s.slug }}/"><span class="sq"></span> {{ s.name }}</a>{% endfor %}<a class="{{ relatedSectors._allLink.linkClass }}" href="/sectors/"><span class="{{ relatedSectors._allLink.squareClass }}"></span> All 15 sectors &rarr;</a></div>
+  <div class="rel">{% for s in project.sectors %}<a href="/sectors/{{ s.slug }}/"><span class="{{ relSq[loop.index0 % relSq.length] }}"></span> {{ s.name }}</a>{% endfor %}<a class="{{ relatedSectors._allLink.linkClass }}" href="/sectors/"><span class="{{ relatedSectors._allLink.squareClass }}"></span> All 15 sectors &rarr;</a></div>
 </section>
 <!-- SECTION: projects/human-essentials-dashboard.Project CTA -->
 <section class="u-122 blk blk--coral" data-screen-label="Project CTA">
