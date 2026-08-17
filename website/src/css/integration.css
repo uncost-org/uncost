@@ -67,11 +67,24 @@
  * revert them and so the diff against the canvas stays honest.
  * ------------------------------------------------------------------------ */
 
-/* 7 — Sector hero illustration at double size, position and aspect unchanged.
-       The slot drives the geometry, so both grow together and the illustration
-       keeps its right-bottom anchor and its identical Y across all 15 pages. */
+/* 7 — Sector hero illustration, sized to fit its column.
+ *     The first attempt set the slot to clamp(380px,46vw,580px). At 1440 that
+ *     made the box 580px tall inside a 564px-wide column, so object-fit:contain
+ *     letterboxed the artwork and the empty vertical space read as the
+ *     illustration wrapping below the title. Letting the width drive instead
+ *     gives the largest size that cannot overflow: the artwork fills the
+ *     column, and the slot takes its height from the fixed 1531x1029 aspect.
+ *     At 1440 that is 564x379 against the original 432x290 — about +30% linear,
+ *     +70% area, and no letterboxing at any width. All 15 illustrations share
+ *     that aspect, and .sector-illus-slot's margin-top is untouched, so the
+ *     identical-Y guarantee across the 15 pages holds. */
 .sector-illus-slot {
-  height: clamp(380px, 46vw, 580px);
+  height: auto;
+}
+
+.sector-illus {
+  width: 100%;
+  height: auto;
 }
 
 /* 8 — /projects/ "Every project has to earn its cost claim." was rendering
@@ -128,4 +141,12 @@ body[data-page="projects"] .blk--ink h2 {
   .lg td{padding:2px 0}
   .lg .fig{margin-bottom:6px}
   .lg .when,.lg .rg{display:inline-block;width:auto;margin-right:14px}
+}
+
+/* 1 — Homepage S5: the "All fifteen sectors" button moved up into the position
+ *     the removed closing note vacated (CANVAS-SYNC item 6) and inherited none
+ *     of its spacing, leaving it flush against the sector grid. Restores the
+ *     gap the note used to provide. */
+body[data-page="index"] .focus3 + .u-btn {
+  margin-top: clamp(28px, 3.4vw, 52px);
 }

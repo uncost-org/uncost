@@ -1,5 +1,5 @@
 {
-  "_note": "STRUCTURE from the design export (design-source/data/site.json): nav, footer and social ordering, labels and section order. Routes are reconciled to the repository's contractual URLs; feature flags live in _data/features.js; org identity lives in _data/site.js.",
+  "_note": "STRUCTURE from the design export (design-source/data/site.json): nav, footer and social ordering, labels and section order. Routes are reconciled to the repository's contractual URLs; feature flags live in _data/features.js; org identity lives in _data/site.js. footerBar keeps only links not already present in the columns above, and RSS is removed because no feed page exists. Approved change — docs/CANVAS-SYNC.md.",
   "nav": [
     {
       "label": "The Movement",
@@ -197,22 +197,6 @@
     }
   ],
   "footerBar": [
-    {
-      "label": "Privacy",
-      "url": "/privacy/"
-    },
-    {
-      "label": "Contact",
-      "url": "/contact/"
-    },
-    {
-      "label": "Corrections",
-      "url": "/receipts/#corrections"
-    },
-    {
-      "label": "RSS",
-      "url": "/news/#rss"
-    },
     {
       "label": "Accessibility",
       "url": "/about/#accessibility"

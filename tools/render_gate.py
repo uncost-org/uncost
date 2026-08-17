@@ -53,6 +53,10 @@ SECTION_EXEMPTIONS = [
     ("sectors/", "Related projects",
      "Approved change: the canvas Ledger component (.lg) replaces the previous "
      "prj-table list — same rows and content, new table markup. CANVAS-SYNC item 5."),
+    ("receipts", "The register",
+     "Approved changes: the 'A figure, fully dressed' demo section is removed, the "
+     "band is the whiter cream, and each title links its registered source URL. "
+     "CANVAS-SYNC items 10-12."),
     ("receipts", "The rule",
      "Approved change: the ink headline the export omits below the eyebrow is "
      "added. CANVAS-SYNC item 9."),

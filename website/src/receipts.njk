@@ -42,22 +42,6 @@ description: "Our open methodology and source layer. Every number has a source, 
   <div class="u-126"><span class="rcpt-illus">Illustrative only</span> <span class="u-127">— any hypothetical figure on the site carries this hatched marker, so a placeholder is never mistaken for real data.</span></div>
 </section>
 
-<!-- SECTION: receipts.Worked example -->
-<section class="blk blk--cream" data-screen-label="Worked example">
-  <div class="eyebrow">What the furniture looks like in place</div>
-  <h2 class="u-125 sec">A figure, fully dressed.</h2>
-  <div class="rcpt rcpt-figure--illus demo">
-    <div class="fig">$X</div>
-    <div class="cap">Monthly essential basket for one adult, Region A</div>
-    <div class="rcpt-row rcpt-row--hair">
-      <span class="rcpt-src">SOURCE — <b>Uncost Basic Needs Cost Model</b></span>
-      <span class="rcpt-updated rcpt-updated--stale">Last updated: [date]</span>
-      <span class="rcpt-conf rcpt-conf--scenario">Scenario</span>
-      <span class="rcpt-illus">Illustrative only</span>
-    </div>
-  </div>
-  <p class="u-128">Placeholder figure shown to demonstrate the format. Real dashboard figures will replace <b>$X</b> and <b>[date]</b> with sourced values, and drop the illustrative marker only when a real, dated source stands behind them.</p>
-</section>
 
 <!-- SECTION: receipts.The register -->
 <section class="blk blk--cream2" id="register" data-screen-label="The register">
@@ -73,7 +57,7 @@ description: "Our open methodology and source layer. Every number has a source, 
       <div class="claim">{{ row.display_caption }}</div>
       <div class="foot">
         <div class="pub">{{ row.publisher }}</div>
-        <div class="ttl">{{ row.publication_work }}</div>
+        <div class="ttl">{% if row.url %}<a href="{{ row.url }}" target="_blank" rel="noopener">{{ row.publication_work }}</a>{% else %}{{ row.publication_work }}{% endif %}</div>
         <div class="row">
           <span class="m">Checked {{ row.last_checked }}</span>
           <span class="m">{{ row.region }}</span>

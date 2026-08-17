@@ -219,6 +219,23 @@ FORBIDDEN_NAMES = ("Okonkwo",)
 GATED_MARKERS = ("SPONSOR-GATED", "COUNSEL-GATED", "INCORPORATION-GATED")
 
 
+def registered_source_hosts() -> Set[str]:
+    """Hosts of the sources the register itself cites.
+
+    The register IS the citation, so a link from a published figure to that
+    figure's own registered URL is the receipts rule made navigable — not a new
+    endorsement. Derived from sources/register.csv rather than hand-listed, so
+    the allowance cannot drift from what is actually cited: retire a source and
+    its host stops being allowed on the next run.
+    """
+    hosts: Set[str] = set()
+    if not REGISTER_PATH.exists():
+        return hosts
+    for m in re.finditer(r"https?://([^/\s,\"']+)", REGISTER_PATH.read_text(encoding="utf-8")):
+        hosts.add(m.group(1))
+    return hosts
+
+
 def host_allowed(host: str) -> bool:
     host = host.split("@")[-1].split(":")[0].rstrip(".").lower()
     if not host:
@@ -515,6 +532,7 @@ def scan_built_assertions(
 
     These are never allowlisted: a built-output leak is fixed at its source.
     """
+    source_hosts = registered_source_hosts()
     for path in sorted(built_dir.rglob("*")):
         if not path.is_file():
             continue
@@ -543,7 +561,7 @@ def scan_built_assertions(
                     host = match.group(1)
                     if host_allowed(host):
                         continue
-                    if host in nav_hosts and host in ALLOWED_NAV_HOSTS:
+                    if host in nav_hosts and (host in ALLOWED_NAV_HOSTS or host in source_hosts):
                         continue
                     findings.append(Finding("FAIL", "external-url", rel, number, match.group(0)[:90]))
                     line_texts[(rel, number)] = line
