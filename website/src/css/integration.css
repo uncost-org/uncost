@@ -150,3 +150,13 @@ body[data-page="projects"] .blk--ink h2 {
 body[data-page="index"] .focus3 + .u-btn {
   margin-top: clamp(28px, 3.4vw, 52px);
 }
+
+/* 15 — Receipts hero: the approved copy adds a one-line statement of the
+ *     publishing rule directly under the H1 (UNP-82 v1 §6). The export's
+ *     .titleband styles only its h1, so the band gains .u-block--ink for the
+ *     cream-on-ink inheritance it already defines, and the lead needs centring
+ *     inside the band's 60ch measure. Colour is inherited, not set.
+ *     CANVAS-SYNC item 15. */
+body[data-page="receipts"] .titleband .lead {
+  margin: 12px auto 0;
+}

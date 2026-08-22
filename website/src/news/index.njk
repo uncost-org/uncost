@@ -3,16 +3,21 @@ layout: layouts/base.njk
 permalink: "/news/"
 pageId: "news"
 title: "News"
-description: "Movement updates and a curated Cost Watch of external reporting on the cost of living, automation, and essentials."
+description: "Movement updates, and a Cost Watch of fast-moving prices — sourced and dated the same way as everything else on this site."
 ---
 {#- Markup taken verbatim from design-source/pages/news.html. CONTENT.md marks this
     page's copy "inline (draft)", so the export supplies both; only asset
-    references and routes are rewritten. Do not re-author. -#}
+    references and routes are rewritten. Do not re-author.
+    Exception, founder-approved under UNP-82 v1 §4b: Cost Watch is no longer a
+    hand-curated reading list of third-party articles. It renders the register's
+    own `placement=news-feed` rows, so every entry is a sourced, dated figure
+    under the same rule as the rest of the site. The export's three hardcoded
+    links and its "inclusion isn't endorsement" note went with that model. -#}
 <!-- SECTION: news.News — title -->
 <div class="titleband" data-screen-label="News — title"><h1><span class="u-1">News</span></h1></div>
 <div class="introband">
   <h2>What&rsquo;s moving — ours and the world&rsquo;s.</h2>
-  <p>Movement updates on the left. On the right, a curated <b>Cost Watch</b> of external reporting we think is worth your time — links out, no reposting.</p>
+  <p>Movement updates on the left. On the right, <b>Cost Watch</b> &mdash; fast-moving prices, sourced and dated the same way as everything else on this site.</p>
 </div>
 
 <div class="newswrap">
@@ -39,23 +44,14 @@ description: "Movement updates and a curated Cost Watch of external reporting on
   <!-- SECTION: news.Cost Watch -->
   <aside class="costwatch" data-screen-label="Cost Watch">
     <h3>Cost Watch</h3>
-    <p class="cwsub">External reporting on the cost of living and automation. We link out and summarise briefly — read the original at the source.</p>
-
-    <a class="cw" href="https://www.jchs.harvard.edu/state-nations-housing-2025" target="_blank" rel="noopener">
-      <div class="src"><span>Harvard JCHS</span><span>2025</span></div>
-      <h4>The State of the Nation&rsquo;s Housing 2025</h4>
-      <span class="ext">Read at jchs.harvard.edu →</span>
+    <p class="cwsub">Fast-moving prices, sourced and dated the same way as everything else on this site &mdash; refreshed on each source&rsquo;s own cadence, not curated commentary.</p>
+{% for row in register.newsFeed %}
+    <a class="cw" href="{{ row.url }}" target="_blank" rel="noopener" data-source="{{ row.source_id }}">
+      <div class="src"><span>{{ row.publisher }}</span><span>{{ row.data_period }}</span></div>
+      <h4>{{ row.display_caption }}</h4>
+      <span class="ext">Read at {{ row.url.split("/")[2] | replace("www.", "") }} &rarr;</span>
     </a>
-    <a class="cw" href="https://www.bls.gov/cpi/" target="_blank" rel="noopener">
-      <div class="src"><span>US BLS</span><span>Monthly</span></div>
-      <h4>Consumer Price Index — food, rent, and energy</h4>
-      <span class="ext">Read at bls.gov →</span>
-    </a>
-    <a class="cw" href="https://www.imf.org/en/Blogs" target="_blank" rel="noopener">
-      <div class="src"><span>IMF Blog</span><span>Ongoing</span></div>
-      <h4>Analysis on AI, productivity, and the economy</h4>
-      <span class="ext">Read at imf.org →</span>
-    </a>
-    <p class="u-97">Links are to third-party sites. Inclusion isn&rsquo;t endorsement — it&rsquo;s a reading list.</p>
+{% endfor %}
+    <p class="u-97">Checked {{ register.lastChecked }}. Every figure here has a <a href="/receipts#register">receipt</a>.</p>
   </aside>
 </div>

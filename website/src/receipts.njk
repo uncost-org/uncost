@@ -7,9 +7,16 @@ description: "Our open methodology and source layer. Every number has a source, 
 ---
 {#- Markup taken verbatim from design-source/pages/receipts.html. CONTENT.md marks this
     page's copy "inline (draft)", so the export supplies both; only asset
-    references and routes are rewritten. Do not re-author. -#}
+    references and routes are rewritten. Do not re-author.
+    Exceptions, all founder-approved under UNP-82 v1 (§4c, §6): the hero rule
+    line, the worked example (rendered FROM the register, never hardcoded), the
+    confidence-vs-status note, the corrections launch-state, and the corrections
+    CTA lead. The register count is rendered, not typed. -#}
 <!-- SECTION: receipts.Receipts — title -->
-<div class="titleband" data-screen-label="Receipts — title"><h1>The <span class="u-1">Receipts</span></h1></div>
+<div class="titleband u-block--ink" data-screen-label="Receipts — title">
+  <h1>The <span class="u-1">Receipts</span></h1>
+  <p class="lead">Source, date, region &mdash; or it doesn&rsquo;t publish.</p>
+</div>
 <div class="introband">
   <h2>Every number, out in the open.</h2>
   <p>The Receipts is the methodology and source layer under everything we publish. The rule is simple: every number has a source, every source has a date, and every model states its assumptions. If a claim can&rsquo;t be sourced, we label it — plainly — as an estimate, a scenario, or a hypothesis, not a fact.</p>
@@ -40,14 +47,35 @@ description: "Our open methodology and source layer. Every number has a source, 
     </tbody>
   </table>
   <div class="u-126"><span class="rcpt-illus">Illustrative only</span> <span class="u-127">— any hypothetical figure on the site carries this hatched marker, so a placeholder is never mistaken for real data.</span></div>
+  <p class="u-131">These four labels describe how much confidence a <b>figure</b> carries. They are a deliberately separate system from the status badges on sectors and projects, which describe what stage a <b>piece of work</b> is at. The two never mix: a confirmed figure can sit on a project that hasn&rsquo;t started, and a project already building can rest on an estimate.</p>
 </section>
 
+
+<!-- SECTION: receipts.Worked example -->
+{#- The export ships this section with a $X placeholder and illustrative
+    markers; UNP-82 v1 §4c dresses it with a real figure instead. Every value
+    below comes from the register row, so the example cannot drift from the
+    source it demonstrates. Supersedes CANVAS-SYNC item 12's removal. -#}
+{% set wex = register.byId["SRC-023"] %}
+<section class="blk blk--cream" data-screen-label="Worked example">
+  <div class="eyebrow">A worked example</div>
+  <h2 class="u-125 sec">A figure, fully dressed.</h2>
+  <div class="rcpt" data-source="{{ wex.source_id }}">
+    <div class="fig">{{ wex.display_value }}</div>
+    <div class="cap">{{ wex.display_caption }}</div>
+    <div class="rcpt-row rcpt-row--hair">
+      <span class="rcpt-src">SOURCE &mdash; <b>{{ wex.publisher }}, {{ wex.publication_work }}</b> &middot; {{ wex.license | replace("-", " ") }}</span>
+      <span class="rcpt-updated">Last checked: {{ wex.last_checked }}</span>
+      <span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span>
+    </div>
+  </div>
+</section>
 
 <!-- SECTION: receipts.The register -->
 <section class="blk blk--cream2" id="register" data-screen-label="The register">
   <div class="eyebrow">The register</div>
   <h2 class="u-129 sec">Every figure we publish, with its receipt.</h2>
-  <p class="u-130 lead">Eleven sourced figures, each with the publisher, the exact title, the date we last checked it and the region it covers. Nothing here is illustrative — every number is traceable to a named public source.</p>
+  <p class="u-130 lead">{{ register.stats | length }} sourced figures, each with the publisher, the exact title, the date we last checked it and the region it covers. Nothing here is illustrative — every number is traceable to a named public source.</p>
   <div class="cards">
 {% for row in register.stats %}
     <div class="card" id="{{ row.source_id }}" data-source="{{ row.source_id }}">
@@ -83,8 +111,8 @@ description: "Our open methodology and source layer. Every number has a source, 
   <h2 class="u-129 sec">We log our mistakes.</h2>
   <p class="u-133 lead">Every correction is recorded publicly with a date and a plain description of what changed and why. Nothing is quietly edited. The full version-controlled history lives in the public records.</p>
   <div class="u-135">
-    <span class="status status--planned">Log begins at launch</span>
-    <p class="u-136">No public figures have been published yet, so there&rsquo;s nothing to correct. The moment the first sourced number goes live, this log starts — and stays append-only.</p>
+    <span class="status status--planned">No corrections logged yet</span>
+    <p class="u-136">The corrections log is empty because nothing here has needed a correction yet &mdash; not because nothing&rsquo;s been published. Every figure on this page above already carries its source, date, and confidence label. The day one needs fixing, it&rsquo;ll be logged here: dated, with what changed and why.</p>
   </div>
   <p class="u-75"><a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--ghost">View public records on GitHub</a></p>
 </section>
@@ -92,7 +120,7 @@ description: "Our open methodology and source layer. Every number has a source, 
 <!-- SECTION: receipts.Receipts CTA -->
 <section class="blk blk--coral" data-screen-label="Receipts CTA">
   <h2 class="u-38 sec">Found a number we got wrong?</h2>
-  <p class="u-44 lead">Corrections get priority. Tell us what&rsquo;s off and point us at the better source.</p>
+  <p class="u-44 lead">Tell us and we&rsquo;ll check it. Every correction gets logged here, dated, with a plain description of what changed and why &mdash; nothing is quietly edited.</p>
   <div class="u-40">
     <a href="/contact/" class="u-btn u-btn--ink">Report a correction</a>
     <a href="/case/" class="u-btn u-btn--ghost">Back to The Case</a>

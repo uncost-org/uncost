@@ -62,6 +62,12 @@ module.exports = function (eleventyConfig) {
   // Behaviour only — menu, drawer, search overlay, accordion. No markup, no
   // dependencies, no third-party requests.
   eleventyConfig.addPassthroughCopy({ "src/js": "js" });
+  // First-party publication: "The Case for Uncost" (August 2026, 14 pages).
+  // Hash-pinned in docs/CONTROL.md; served from our own origin so the page has
+  // no third-party download host. Binary is committed — it IS the deliverable.
+  eleventyConfig.addPassthroughCopy({
+    "assets/downloads/the-case-for-uncost.pdf": "downloads/the-case-for-uncost.pdf",
+  });
   eleventyConfig.addPassthroughCopy({ "src/_headers": "_headers" });
 
   // Brand image pipeline. Source PNGs under assets/brand/ remain the sole

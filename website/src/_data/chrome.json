@@ -28,6 +28,10 @@
       "robot": "robots/19_presenting_transparent.png",
       "links": [
         {
+          "label": "The Case for Uncost",
+          "url": "/case/"
+        },
+        {
           "label": "Cost of Living Sectors",
           "url": "/sectors/"
         },

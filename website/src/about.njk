@@ -5,7 +5,6 @@ pageId: "about"
 title: "About"
 description: "What Uncost actually does: the four parts, the six-step uncosting mechanism, the working principles, and who is accountable."
 ---
-{% from "partials/content-needed.njk" import block as gap %}
 {#- Markup taken verbatim from design-source/pages/about.html. CONTENT.md marks this
     page's copy "inline (draft)", so the export supplies both; only asset
     references and routes are rewritten. Do not re-author. -#}
@@ -74,7 +73,15 @@ description: "What Uncost actually does: the four parts, the six-step uncosting 
   <p class="u-11 lead"><strong>Who runs it.</strong> Founder-led, with an advisory group forming. Sector and region leads are being recruited. We&rsquo;ll name people when there are people to name &mdash; not before. Where status matters, it&rsquo;s stated: on <a href="/contribute/">Contribute</a>, <a href="/treasury/">The Treasury</a>, and <a href="/policies/">Policies</a>.</p>
 </section>
 
-<!-- SECTION: about.Accessibility -->
-<section class="blk" id="accessibility">
-  {{ gap("about-accessibility-replacement", "the accessibility statement moved to its own page at /accessibility/; replacement copy for this slot is coming from content separately") }}
+<!-- SECTION: about.Your say -->
+<section class="blk" data-screen-label="Your say">
+  <div class="eyebrow">What kind of organisation this is</div>
+  <h2 class="u-9 sec">You get a genuine say, not a spectator seat.</h2>
+  <p class="u-10 lead">Supporters aren&rsquo;t an audience. <strong>The Assembly</strong> is Uncost&rsquo;s structured way to give supporters a real, recorded voice &mdash; proposing ideas, prioritising sectors and regions, and raising objections, one person, one vote, with no payment or donation buying extra weight. Right now the Assembly is advisory: it doesn&rsquo;t run formal votes yet, and won&rsquo;t until its governance policy clears independent review, founder review, and legal review. When it does, individual ballots stay private and outcomes are published.</p>
+  <p class="u-11 lead">Our privacy policy states it plainly: we never sell, rent, or trade personal data, and we never use pledge or supporter data for partisan targeting. That&rsquo;s a public draft commitment today, not yet an adopted policy &mdash; but it&rsquo;s the rule we&rsquo;re building to, not a marketing line.</p>
+  <p class="u-11 lead">The same principles that run through every number on this site run through how we treat you: receipts first, open and reusable wherever rights and safety allow, and nonpartisan &mdash; we critique systems and policies with evidence, never candidates or parties.</p>
+  <div class="btn-row">
+    <a href="/assembly/" class="u-btn u-btn--ink">Read the Assembly&rsquo;s standing rules</a>
+    <a href="/policies/privacy-data-protection/" class="u-btn u-btn--ghost">Read the privacy policy draft</a>
+  </div>
 </section>

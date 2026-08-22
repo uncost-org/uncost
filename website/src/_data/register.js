@@ -111,5 +111,10 @@ module.exports = function () {
   const [y, m] = (checked || "").split("-");
   const lastChecked = y && m ? `${MONTHS[Number(m) - 1]} ${y}` : "";
 
-  return { all, byId, stats, lastChecked };
+  // Cost Watch (/news/) renders exactly the rows the register itself tags as
+  // fast-moving. `placement` is the register's own column, so adding or
+  // retiring a Cost Watch entry is a register edit, never a template edit.
+  const newsFeed = stats.filter((r) => r.placement === "news-feed");
+
+  return { all, byId, stats, newsFeed, lastChecked };
 };

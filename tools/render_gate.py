@@ -54,12 +54,45 @@ SECTION_EXEMPTIONS = [
      "Approved change: the canvas Ledger component (.lg) replaces the previous "
      "prj-table list — same rows and content, new table markup. CANVAS-SYNC item 5."),
     ("receipts", "The register",
-     "Approved changes: the 'A figure, fully dressed' demo section is removed, the "
-     "band is the whiter cream, and each title links its registered source URL. "
-     "CANVAS-SYNC items 10-12."),
+     "Approved changes: the band is the whiter cream, each title links its "
+     "registered source URL, and the lead's figure count is rendered from the "
+     "register instead of the export's stale 'Eleven'. CANVAS-SYNC items 10-12, 18."),
     ("receipts", "The rule",
      "Approved change: the ink headline the export omits below the eyebrow is "
      "added. CANVAS-SYNC item 9."),
+    # UNP-82 content pass — founder-approved copy the canvas has not seen.
+    ("receipts", "Receipts — title",
+     "Approved copy: the hero gains the one-line publishing rule under the H1, in "
+     "the band's own ink treatment. CANVAS-SYNC item 15."),
+    ("receipts", "Worked example",
+     "Approved change: the export's $X placeholder and its illustrative markers are "
+     "replaced by a real register row (SRC-023), rendered from the register so the "
+     "example cannot drift from the source it demonstrates. CANVAS-SYNC item 12."),
+    ("receipts", "Confidence labels",
+     "Approved copy: a one-line note that figure-confidence labels and "
+     "sector/project status badges are deliberately separate systems. "
+     "CANVAS-SYNC item 16."),
+    ("receipts", "Corrections",
+     "Approved copy: the launch-state no longer claims nothing has been published, "
+     "which the 22-row register above it contradicted. CANVAS-SYNC item 17."),
+    ("news", "Cost Watch",
+     "Approved change: Cost Watch renders the register's own news-feed rows instead "
+     "of a hand-curated list of third-party articles, so its length now tracks the "
+     "register rather than the export's fixed three cards. CANVAS-SYNC item 19."),
+    ("news", "News — title",
+     "Approved copy: the intro band describes Cost Watch as sourced prices rather "
+     "than curated external reporting. CANVAS-SYNC item 19."),
+    ("sectors.html", "Sectors — title",
+     "Approved copy: the intro band names all fifteen sectors and states the "
+     "year-one order, replacing the one-line summary. CANVAS-SYNC item 20."),
+    ("projects/", "Related sectors",
+     "Approved copy: each project states its primary and secondary sectors and the "
+     "role each plays, above the swatch row the export ships alone. The line is "
+     "per-project and long on a 390px column. CANVAS-SYNC item 21."),
+    ("about", "Your say",
+     "Approved copy: the slot vacated by the accessibility statement carries the "
+     "member-voice section on the Assembly and the privacy commitment. There is no "
+     "export counterpart. CANVAS-SYNC item 22."),
 ]
 
 
