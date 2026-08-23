@@ -7,13 +7,45 @@ description: "The Case is Uncost's evidence layer: what humans need, what those 
 ---
 {#- Markup taken verbatim from design-source/pages/case.html. CONTENT.md marks this
     page's copy "inline (draft)", so the export supplies both; only asset
-    references and routes are rewritten. Do not re-author. -#}
+    references and routes are rewritten. Do not re-author.
+    Exception: the UNP-82 v2 (b) additions, founder-approved and wired verbatim —
+    b1 the mechanism section, b2 "How a cost gets uncosted" (inside the export's Methodology
+    drawer, the block v2 names), b3 the closing lead,
+    b5 the download line. b4 (SRC-021 after SRC-004) is NOT applied: v2 was
+    written against origin/main @ 94d2481, whose /case/ carried a register-backed
+    "What living costs" section. The v4.3 re-derivation replaced that page with
+    the export's dashboard preview, so there is no SRC-004 here for SRC-021 to
+    follow. Flagged for the founder rather than guessed at. -#}
+{% import "partials/figure.njk" as fig %}
 <!-- SECTION: case.The Case — title -->
 <div class="titleband" data-screen-label="The Case — title"><h1>The <span class="u-1">Case</span></h1></div>
 <div class="introband">
   <h2>The receipts behind <span class="u-1">every claim</span> we make.</h2>
   <p>The Case is Uncost&rsquo;s evidence layer — built to be useful to supporters, journalists, researchers, urban planners, funders, and skeptics alike. It covers what humans need, what those needs cost by region, where automation and shared infrastructure can plausibly help, and the open methodology behind every claim.</p>
+  <p class="u-11"><b>Want the whole argument in one document?</b> Download <em>The Case for Uncost</em> &mdash; the fourteen-page paper this page distills, with every figure&rsquo;s exact reference. <a href="/downloads/the-case-for-uncost.pdf">Download the Case for Uncost (PDF)</a></p>
 </div>
+
+<!-- SECTION: case.The mechanism -->
+<section class="blk blk--first" data-screen-label="The mechanism">
+  <div class="eyebrow">The mechanism</div>
+  <h2 class="sec">The technology that could make living cheaper is instead making ownership more valuable.</h2>
+  <p class="u-11 lead">Automation is extraordinarily effective at cutting the cost of producing things &mdash; that&rsquo;s not in dispute. The question is who receives the benefit when it does. When a company automates, its costs fall and its value rises, and that value accrues to whoever owns the company. Ownership itself is concentrated: the bottom half of American households collectively hold about 1% of the stocks and funds owned outside retirement accounts. The wealthiest 1% hold about half. On the broader measure &mdash; total household net worth &mdash; the top 1% still hold roughly thirty per cent.</p>
+  {{ fig.stat(register.byId["SRC-020"]) }}
+  {{ fig.stat(register.byId["SRC-024"]) }}
+  <p class="u-11">Nobody is doing the deliberate work of routing automation&rsquo;s gains back toward the price of rent, groceries, and electricity instead of the value of assets. That&rsquo;s not an accusation that anyone is doing something wrong &mdash; a system optimising for one outcome doesn&rsquo;t accidentally produce a different one. It&rsquo;s why Uncost exists: to measure where a specific technology could plausibly lower a specific cost, publish the method, and hand it to the people who can act on it.</p>
+</section>
+
+<!-- SECTION: case.What living costs -->
+<section class="blk blk--cream" data-screen-label="What living costs">
+  <div class="eyebrow">What living costs</div>
+  <h2 class="sec">The numbers, with their receipts.</h2>
+  <p class="u-11 lead">We go deep on Shelter, Food, and Energy first &mdash; the three that hit hardest &mdash; and keep all fifteen sectors visible. Every figure here traces to a public source.</p>
+  {{ fig.stat(register.byId["SRC-004"]) }}
+  {{ fig.stat(register.byId["SRC-021"]) }}
+  {{ fig.stat(register.byId["SRC-023"]) }}
+  {{ fig.stat(register.byId["SRC-005"]) }}
+  <p class="u-11"><a href="/sectors/">Every sector, with its evidence &rarr;</a></p>
+</section>
 
 <!-- SECTION: case.Controls -->
 <div class="ctrlbar" data-screen-label="Controls">
@@ -106,11 +138,25 @@ description: "The Case is Uncost's evidence layer: what humans need, what those 
       <p>Derived figures — calculated from two or more sources — display every contributing source, never a single badge.</p>
       <p>Full methodology, the source register, and the corrections log: <a class="u-1" href="/receipts/">The Receipts</a></p>
     </div>
+    <div>
+      <h4>How a cost gets uncosted</h4>
+      <p>Six steps, applied the same way every time, in every sector:</p>
+      <ol>
+        <li><b>Measure.</b> Establish what a household in a defined region actually spends on the thing in question, using public data, with the date and the region attached.</li>
+        <li><b>Publish.</b> Put the sources and assumptions up before the conclusions, so anyone can check the starting point rather than being asked to accept it.</li>
+        <li><b>Break down.</b> Separate the price into its real components &mdash; land, energy, labour, materials, finance, regulation, maintenance. A cost that can&rsquo;t be decomposed is a cost that can&rsquo;t be reduced.</li>
+        <li><b>Match.</b> Identify which components a specific, named mechanism could plausibly move &mdash; and count what it adds as well as what it saves.</li>
+        <li><b>Package.</b> Publish the model, the sources, the brief, and the playbook so a community group, co-operative, nonprofit, or public body can run it.</li>
+        <li><b>Track.</b> Follow whether the total cost actually falls where the approach is applied, and publish the answer either way.</li>
+      </ol>
+      <p>The sixth step is what makes the other five worth doing. Proposing that some technology would reduce a cost is easy. Going back afterwards to check honestly whether it did is rare &mdash; and it&rsquo;s usually the step that gets skipped.</p>
+    </div>
   </div>
 </details>
 
 <!-- SECTION: case.Case CTA -->
 <section class="blk blk--ink u-block--ink" data-screen-label="Case CTA">
+  <p class="u-39 lead">The question is no longer whether humanity can produce enough. The question is why living is not getting cheaper &mdash; and who is going to do something about it.</p>
   <h2 class="u-38 sec">Evidence first. <span class="u-1">Tools next.</span></h2>
   <p class="u-39 lead">The Case feeds The Projects: the Cost-of-Living Tracker supplies the data, the Basic Needs Cost Model tests scenarios, and the Human Essentials Dashboard presents both — openly, with receipts.</p>
   <div class="u-40">

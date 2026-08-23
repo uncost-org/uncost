@@ -89,6 +89,34 @@ SECTION_EXEMPTIONS = [
      "Approved copy: each project states its primary and secondary sectors and the "
      "role each plays, above the swatch row the export ships alone. The line is "
      "per-project and long on a 390px column. CANVAS-SYNC item 21."),
+    # UNP-82 v2. These six carry no export counterpart under their label — the
+    # movement page was rewritten section by section, and two /case/ sections are
+    # new — so the gate has nothing to compare them against by design.
+    ("movement", "What this is",
+     "Approved rewrite (v2 (a) block 1): replaces the export's introband. The h1 "
+     "stays in the titleband, so this block is eyebrow-less lead + body in the "
+     "export's own .blk--first. CANVAS-SYNC item 24."),
+    ("movement", "What we stand for",
+     "Approved rewrite (v2 (a) block 2): replaces the export's 'How it reaches "
+     "people' distribution-mechanics section. CANVAS-SYNC item 24."),
+    ("movement", "What taking part means",
+     "Approved rewrite (v2 (a) block 3): replaces the export's three "
+     "Pledge/quiz/share-a-stat cards with the community and Assembly argument. "
+     "CANVAS-SYNC item 24."),
+    ("movement", "How to take part",
+     "Approved rewrite (v2 (a) block 4): the export's .path grid with v2's three "
+     "ways in; the button row is dropped because the coral CTA below already "
+     "renders v2's two specified buttons. CANVAS-SYNC item 24."),
+    ("case", "The mechanism",
+     "Approved new section (v2 (b1)): the ownership-concentration argument, "
+     "SRC-020 and SRC-024 through the register macro. No export counterpart. "
+     "CANVAS-SYNC item 25."),
+    ("case", "What living costs",
+     "Content restoration, not a design change: the v4.3 re-derivation dropped "
+     "this register-backed section when it swapped the essay page for the export's "
+     "dashboard preview. Restored from origin/main @ 94d2481 with four figures "
+     "(SRC-004, SRC-021, SRC-023, SRC-005). No export counterpart on this page. "
+     "CANVAS-SYNC item 26."),
     ("about", "Your say",
      "Approved copy: the slot vacated by the accessibility statement carries the "
      "member-voice section on the Assembly and the privacy commitment. There is no "
