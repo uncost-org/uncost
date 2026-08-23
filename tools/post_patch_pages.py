@@ -190,4 +190,10 @@ patch("website/src/news/index.njk",
       '    <p class="u-97">Checked {{ register.lastChecked }}. Every figure here has a <a href="/receipts#register">receipt</a>.</p>\n',
       "Cost Watch rows")
 
+patch("website/src/news/index.njk",
+      r'<p class="u-96" id="rss">More updates arrive as the movement launches\. An RSS feed will be published here at launch\.</p>',
+      '<p class="u-96" id="rss">More updates arrive as the movement launches. Prefer a feed? '
+      '<a href="/news/feed.xml">Subscribe by RSS</a> &mdash; every update, no algorithm in between.</p>',
+      "RSS line (the feed exists; the export predates it)", flags=0)
+
 print("done")
