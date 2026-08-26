@@ -8,22 +8,18 @@ description: "Our open methodology and source layer. Every number has a source, 
 {#- Markup taken verbatim from design-source/pages/receipts.html. CONTENT.md marks this
     page's copy "inline (draft)", so the export supplies both; only asset
     references and routes are rewritten. Do not re-author.
-    Exceptions, all founder-approved under UNP-82 v1 (§4c, §6): the hero rule
-    line, the worked example (rendered FROM the register, never hardcoded), the
+    Exceptions, all founder-approved under UNP-82 v1 (§4c, §6): the worked example (rendered FROM the register, never hardcoded), the
     confidence-vs-status note, the corrections launch-state, and the corrections
     CTA lead. The register count is rendered, not typed. -#}
 <!-- SECTION: receipts.Receipts — title -->
-<div class="titleband u-block--ink" data-screen-label="Receipts — title">
-  <h1>The <span class="u-1">Receipts</span></h1>
-  <p class="lead">Source, date, region &mdash; or it doesn&rsquo;t publish.</p>
-</div>
+<div class="titleband" data-screen-label="Receipts — title"><h1>The <span class="u-1">Receipts</span></h1></div>
 <div class="introband">
   <h2>Every number, out in the open.</h2>
   <p>The Receipts is the methodology and source layer under everything we publish. The rule is simple: every number has a source, every source has a date, and every model states its assumptions. If a claim can&rsquo;t be sourced, we label it — plainly — as an estimate, a scenario, or a hypothesis, not a fact.</p>
 </div>
 
 <!-- SECTION: receipts.The rule -->
-<section class="u-87 blk blk--cream" data-screen-label="The rule">
+<section class="blk blk--wheat" data-screen-label="The rule">
   <div class="eyebrow">The rule, three ways</div>
   <h2 class="sec">If we can&rsquo;t show where a number came from, we don&rsquo;t print it.</h2>
   <div class="u-25 rule3">
@@ -56,19 +52,12 @@ description: "Our open methodology and source layer. Every number has a source, 
     markers; UNP-82 v1 §4c dresses it with a real figure instead. Every value
     below comes from the register row, so the example cannot drift from the
     source it demonstrates. Supersedes CANVAS-SYNC item 12's removal. -#}
+{% import "partials/figure.njk" as fig %}
 {% set wex = register.byId["SRC-023"] %}
 <section class="blk blk--cream" data-screen-label="Worked example">
   <div class="eyebrow">A worked example</div>
   <h2 class="u-125 sec">A figure, fully dressed.</h2>
-  <div class="rcpt" data-source="{{ wex.source_id }}">
-    <div class="fig">{{ wex.display_value }}</div>
-    <div class="cap">{{ wex.display_caption }}</div>
-    <div class="rcpt-row rcpt-row--hair">
-      <span class="rcpt-src">SOURCE &mdash; <b>{{ wex.publisher }}, {{ wex.publication_work }}</b> &middot; {{ wex.license | replace("-", " ") }}</span>
-      <span class="rcpt-updated">Last checked: {{ wex.last_checked }}</span>
-      <span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span>
-    </div>
-  </div>
+  {{ fig.fact(wex) }}
 </section>
 
 <!-- SECTION: receipts.The register -->

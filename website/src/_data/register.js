@@ -89,6 +89,15 @@ module.exports = function () {
         );
       }
     }
+    // A bare year is a PERIOD, not a figure. Two rows shipped with the
+    // caption's opening year ("2024,") in the big-figure slot, which passed the
+    // verbatim check above precisely because the caption starts with it. The
+    // year still shows in the period slot, where it belongs.
+    if (/^(19|20)\d{2}[.,;:]?$/.test(row.display_value.trim())) {
+      throw new Error(
+        `register: ${row.source_id} display_value "${row.display_value}" is a year, not a figure`
+      );
+    }
     // Region and period are shown on the face of every published figure (the
     // receipts rule); a displayed figure missing either is a build error.
     if (!row.region || !row.data_period) {

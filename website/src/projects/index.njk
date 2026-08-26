@@ -16,21 +16,25 @@ mainClass: "u-104"
   <p>The Projects are how Uncost moves from evidence to action: open-source tools, data models, and automation playbooks that communities, co-ops, nonprofits, public agencies, and builders can run themselves. We don&rsquo;t own the farm — we publish the model, the sources, and the playbook so others can adopt and improve them.</p>
 </div>
 
+{#- The export hardcoded these seven rows and linked only two of them, so five
+    project pages were unreachable from their own index. The list now loops
+    catalog.projects, so every project links to its page by construction and the
+    summary is the same founder-approved line the detail page shows. "Now" is
+    the three core projects (one system, three parts); "Next" is the rest. -#}
 <div class="u-104 grouphd"><h3>Now</h3><span>One system, three parts</span></div>
 <!-- SECTION: projects.Now -->
 <div class="plist" data-screen-label="Now">
-  <a class="prow" href="/projects/human-essentials-dashboard/"><span class="pid">PRJ-001</span><div><h4>Human Essentials Dashboard</h4><p>What one human actually needs, what it costs by region, and how that compares to income.</p></div><div class="rt"><span class="status status--dev">In development</span></div></a>
-  <a class="prow" href="/projects/cost-of-living-tracker/"><span class="pid">PRJ-002</span><div><h4>Cost-of-Living Tracker</h4><p>Familiar prices over time — rent, food, energy, wages — with visible sources and dates.</p></div><div class="rt"><span class="status status--dev">In development</span></div></a>
-  <div class="prow"><span class="pid">PRJ-003</span><div><h4>Basic Needs Cost Model</h4><p>The math and receipts: how automation, renewables, and shared infrastructure could reduce costs.</p></div><div class="rt"><span class="status status--dev">In development</span></div></div>
+{% for p in catalog.projects.slice(0, 3) %}
+  <a class="prow" href="/projects/{{ p.slug }}/"><span class="pid">{{ p.id }}</span><div><h4>{{ p.display }}</h4><p>{{ projectContent[p.id].publicSummary }}</p></div><div class="rt"><span class="status status--dev">Draft</span></div></a>
+{% endfor %}
 </div>
 
 <div class="grouphd"><h3>Next</h3><span>Planning tools &amp; shared-access kits</span></div>
 <!-- SECTION: projects.Next -->
 <div class="plist" data-screen-label="Next">
-  <div class="prow"><span class="pid">PRJ-004</span><div><h4>Community Resource Simulator</h4><p>Compares alternative scenarios for an existing community across food, housing, energy, and transport.</p></div><div class="rt"><span class="status status--planned">Planned</span></div></div>
-  <div class="prow"><span class="pid">PRJ-005</span><div><h4>Library of Things Kit</h4><p>Open software-and-operations model for shared tools, appliances, and repair — communities run it.</p></div><div class="rt"><span class="status status--planned">Planned</span></div></div>
-  <div class="prow"><span class="pid">PRJ-006</span><div><h4>Automation Dividend Study</h4><p>A nonpartisan study of where the gains from AI and robotics go — and how they could lower living costs.</p></div><div class="rt"><span class="status status--planned">Planned</span></div></div>
-  <div class="prow"><span class="pid">PRJ-007</span><div><h4>Basic Needs Planner</h4><p>Sizes the baseline infrastructure a proposed site or program would need to support the basics locally.</p></div><div class="rt"><span class="status status--planned">Planned</span></div></div>
+{% for p in catalog.projects.slice(3) %}
+  <a class="prow" href="/projects/{{ p.slug }}/"><span class="pid">{{ p.id }}</span><div><h4>{{ p.display }}</h4><p>{{ projectContent[p.id].publicSummary }}</p></div><div class="rt"><span class="status status--planned">Draft</span></div></a>
+{% endfor %}
 </div>
 
 <!-- SECTION: projects.Later -->

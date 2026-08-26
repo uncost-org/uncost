@@ -4,12 +4,12 @@
     {
       "label": "The Movement",
       "url": "/movement/",
-      "desc": "Join in — pledge, take part, spread it",
+      "desc": "Join in — learn, take part, spread it",
       "robot": "robots/07_pointing_transparent.png",
       "links": [
         {
-          "label": "Sign the Pledge",
-          "url": "/pledge/"
+          "label": "Learn about the movement",
+          "url": "/movement/"
         },
         {
           "label": "Take Part",

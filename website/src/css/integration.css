@@ -151,12 +151,191 @@ body[data-page="index"] .focus3 + .u-btn {
   margin-top: clamp(28px, 3.4vw, 52px);
 }
 
-/* 15 — Receipts hero: the approved copy adds a one-line statement of the
- *     publishing rule directly under the H1 (UNP-82 v1 §6). The export's
- *     .titleband styles only its h1, so the band gains .u-block--ink for the
- *     cream-on-ink inheritance it already defines, and the lead needs centring
- *     inside the band's 60ch measure. Colour is inherited, not set.
- *     CANVAS-SYNC item 15. */
-body[data-page="receipts"] .titleband .lead {
-  margin: 12px auto 0;
+
+/* 28 — BUG FIX, /sectors/ grid overflow. The export's .sgrid uses `1fr`
+ *      columns, which resolve to `minmax(auto, 1fr)` — and `auto` floors at the
+ *      item's min-content width. Each .scard's floor is its illustration's
+ *      intrinsic width (~259px), so the columns could not shrink: at any width
+ *      where columns x 259 + gaps exceeded the viewport, the right-hand column
+ *      was pushed off the page. Broken bands were 1041-1304 (5 cols),
+ *      681-784 (3 cols) and 461-523 (2 cols) — every one of them BETWEEN the
+ *      gate's 1440/1290/390 sample points, which is why it shipped.
+ *      min-width:0 lets the tracks shrink; max-width:100% lets the artwork
+ *      scale inside its 147px slot (object-fit:contain already prevents
+ *      distortion). Reported by the founder as "card 05 renders but isn't
+ *      visible". CANVAS-SYNC item 28. */
+body[data-page="sectors"] .sgrid > .scard {
+  min-width: 0;
+}
+body[data-page="sectors"] .sgrid .scard img {
+  max-width: 100%;
+}
+
+/* 29 — BUG FIX, policy page layout. The export defines the entire policy
+ *      layout — .pol-wrap's 240px TOC + body grid, the sticky TOC, .pol-body
+ *      typography, .callout, .vhist — scoped to `body[data-page="privacy"]`,
+ *      its single privacy page. Our eleven policy routes emit
+ *      `data-page="policies-<slug>"`, so NOT ONE of those rules ever applied:
+ *      every policy page has been rendering as unstyled stacked blocks. That is
+ *      also why `div.pol-wrap` sat near the gate's content ceiling on every
+ *      policy page — it was diffing an unstyled page against a styled one.
+ *      Below is the export's own block re-scoped to the policy routes. Every
+ *      declaration is copied byte-for-byte and generated mechanically from
+ *      sections.css; only the page-id selector differs. Retire this the moment
+ *      the canvas scopes the block to both. CANVAS-SYNC item 29. */
+:where(body[data-page^="policies-"]) .pol-hd{background:var(--ink);color:var(--cream);padding:clamp(36px,6vw,64px) clamp(24px,6vw,80px)}
+:where(body[data-page^="policies-"]) .pol-hd .meta{display:flex;flex-wrap:wrap;gap:10px 14px;margin-bottom:20px}
+:where(body[data-page^="policies-"]) .pol-hd .ref{font-family:var(--font-display);font-weight:900;font-size:14px;letter-spacing:.04em;background:var(--coral);color:var(--ink);padding:5px 12px}
+:where(body[data-page^="policies-"]) .pol-hd .m{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#C9C5BA;border:2px solid #3a3a36;padding:4px 11px}
+:where(body[data-page^="policies-"]) .pol-hd h1{font-family:var(--font-display);font-weight:700;font-size:clamp(34px,5vw,60px);letter-spacing:-.02em;line-height:1;margin:0;max-width:20ch;color:var(--cream)}
+:where(body[data-page^="policies-"]) .pol-wrap{display:grid;grid-template-columns:240px 1fr;gap:0;align-items:start}
+:where(body[data-page^="policies-"]) .pol-toc{position:sticky;top:96px;padding:36px 24px 36px clamp(24px,6vw,80px);border-right:2px solid var(--ink)}
+:where(body[data-page^="policies-"]) .pol-toc h2{font-family:var(--font-body);font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3);margin:0 0 14px}
+:where(body[data-page^="policies-"]) .pol-toc a{display:block;font-size:14px;line-height:1.4;color:var(--fg-2);text-decoration:none;padding:6px 0;border-bottom:1px solid var(--rule-hair)}
+:where(body[data-page^="policies-"]) .pol-toc a:hover{color:var(--coral)}
+:where(body[data-page^="policies-"]) .pol-body{padding:36px clamp(24px,5vw,64px) 20px;max-width:76ch}
+:where(body[data-page^="policies-"]) .callout{border:2px solid var(--ink);background:var(--wheat);padding:24px 26px;margin-bottom:36px}
+:where(body[data-page^="policies-"]) .callout h3{font-family:var(--font-display);font-weight:700;font-size:20px;margin:0 0 8px}
+:where(body[data-page^="policies-"]) .callout p{font-size:16px;line-height:1.6;margin:0;color:var(--ink)}
+:where(body[data-page^="policies-"]) .pol-body section{padding:8px 0 4px;border-top:2px solid var(--rule-hair);margin-top:28px}
+:where(body[data-page^="policies-"]) .pol-body section:first-of-type{border-top:0;margin-top:0}
+:where(body[data-page^="policies-"]) .pol-body h3.s{font-family:var(--font-display);font-weight:700;font-size:24px;margin:0 0 12px;display:flex;gap:12px;align-items:baseline}
+:where(body[data-page^="policies-"]) .pol-body h3.s .num{color:var(--coral);font-weight:900;font-size:18px}
+:where(body[data-page^="policies-"]) .pol-body p{font-size:16px;line-height:1.7;color:var(--fg-2);margin:0 0 14px}
+:where(body[data-page^="policies-"]) .pol-body ul{margin:0 0 14px;padding-left:22px}
+:where(body[data-page^="policies-"]) .pol-body li{font-size:16px;line-height:1.65;color:var(--fg-2);margin-bottom:8px}
+:where(body[data-page^="policies-"]) .vhist{width:100%;border-collapse:collapse;border:2px solid var(--ink);margin-top:6px}
+:where(body[data-page^="policies-"]) .vhist th{background:var(--ink);color:var(--cream);font-size:12px;letter-spacing:.05em;text-transform:uppercase;text-align:left;padding:10px 14px;font-family:var(--font-display);font-weight:700}
+:where(body[data-page^="policies-"]) .vhist td{border-top:2px solid var(--ink);padding:11px 14px;font-size:14px;vertical-align:top}
+@media (max-width:820px){
+  :where(body[data-page^="policies-"]) .pol-wrap{grid-template-columns:1fr}
+  :where(body[data-page^="policies-"]) .pol-toc{position:static;border-right:0;border-bottom:2px solid var(--ink)}
+}
+
+
+/* 30 — Policy body, two gaps in the re-scoped block above.
+ *      (a) The export styles `.pol-body ul` but never `ol`, so ordered lists
+ *          fall back to the browser's 40px indent. Policy markdown produces
+ *          both (POL-010 §2 is an <ol>). Values below are the export's own
+ *          `ul`/`li` declarations applied to `ol`, unchanged.
+ *      (b) Long slash-joined tokens in policy prose — POL-010 carries
+ *          "storage/transport/insurance/maintenance/disposal;", 48 characters
+ *          with no break opportunity — set a min-content floor that no `1fr`
+ *          track can shrink below, pushing the whole .pol-wrap to 476px and
+ *          overflowing every viewport under 476px. min-width:0 lets the track
+ *          shrink and break-word lets the token wrap. CANVAS-SYNC item 30. */
+body[data-page^="policies-"] .pol-wrap,
+body[data-page^="policies-"] .pol-body {
+  min-width: 0;
+}
+body[data-page^="policies-"] .pol-body {
+  overflow-wrap: break-word;
+}
+body[data-page^="policies-"] .pol-body ol {
+  margin: 0 0 14px;
+  padding-left: 22px;
+}
+body[data-page^="policies-"] .pol-body ol li {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--fg-2);
+  margin-bottom: 8px;
+}
+
+/* 31 — Missing divider at every cream -> wheat boundary. `.blk` draws a 4px
+ *      coral rule between sections and `.blk--coral` upgrades it to ink, but
+ *      the export's wheat block sets `border-top:0 !important`, so the gold
+ *      section butts straight into the cream above it with no line at all.
+ *      This restores the ink rule the coral blocks already get.
+ *      `!important` is required only to beat the export's own `!important`.
+ *      The class is repo-owned and applied in the templates rather than keying
+ *      off the extraction class, because `.u-N` numbers are reassigned on every
+ *      export — the wheat block is `.u-87` in v4.3 and need not be next time.
+ *      The class also carries the background, from the --wheat token, which is
+ *      the same value the export's `.u-87` hardcodes. That lets the templates
+ *      drop `.u-87` altogether: the wheat sections no longer depend on an
+ *      extraction-class number at all. Carried by /movement/ "What we stand
+ *      for", /receipts/ "The rule", and /case/ "What living costs".
+ *      CANVAS-SYNC item 31. */
+.blk--wheat {
+  background: var(--wheat);
+  color: var(--ink);
+  border-top: 4px solid var(--ink);
+}
+
+
+/* 32 — /case/ reuses the receipts register card for its four figures. The
+ *      component is right (figure, claim, source, date, receipt link) but the
+ *      export scopes every rule to `body[data-page="receipts"]`, so it renders
+ *      unstyled anywhere else — the same scoping trap as the policy layout.
+ *      Rules below are the export's own, generated mechanically from
+ *      sections.css with only the page-id changed. Two deliberate additions:
+ *      two columns instead of three, because /case/ shows four figures and a
+ *      3-track grid orphans the fourth; and min-width:0, so the big
+ *      clamp(40px..62px) numeral cannot set a min-content floor the tracks
+ *      can't shrink below — the bug that broke the sectors grid.
+ *      CANVAS-SYNC item 32. */
+:where(body[data-page="case"]) .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--ink);border:2px solid var(--ink)}
+:where(body[data-page="case"]) .card{background:#FFF;padding:24px 22px 22px;display:flex;flex-direction:column}
+:where(body[data-page="case"]) .card .id{font-family:var(--font-display);font-weight:700;font-size:11.5px;letter-spacing:.08em;color:var(--fg-3);margin-bottom:10px}
+:where(body[data-page="case"]) .card .fig{font-family:var(--font-display);font-weight:900;font-size:clamp(40px,4.4vw,62px);line-height:.86;letter-spacing:-.035em;color:var(--coral);font-variant-numeric:tabular-nums}
+:where(body[data-page="case"]) .card .unit{font-family:var(--font-body);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-2);margin-top:8px}
+:where(body[data-page="case"]) .card .claim{font-size:14.5px;line-height:1.5;color:var(--fg-2);margin:14px 0 auto;text-wrap:pretty}
+:where(body[data-page="case"]) .card .claim b{color:var(--ink);font-weight:600}
+:where(body[data-page="case"]) .card .foot{border-top:2px solid var(--ink);margin-top:20px;padding-top:12px}
+:where(body[data-page="case"]) .card .foot .pub{font-size:13px;line-height:1.4;font-weight:600;color:var(--ink)}
+:where(body[data-page="case"]) .card .foot .ttl{font-size:12.5px;line-height:1.4;color:var(--fg-3);margin-top:2px}
+:where(body[data-page="case"]) .card .foot .row{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;align-items:flex-start}
+:where(body[data-page="case"]) .card .foot .row span.m{border:1.5px solid var(--fg-3);padding:3px 8px;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-2);white-space:nowrap;flex:0 0 auto;background:var(--cream-2)}
+@media (max-width:1040px){
+  :where(body[data-page="case"]) .cards{grid-template-columns:repeat(2,1fr)}
+}
+@media (max-width:680px){
+  :where(body[data-page="case"]) .cards{grid-template-columns:1fr}
+}
+body[data-page="case"] .cards { grid-template-columns: repeat(2, 1fr); }
+body[data-page="case"] .cards > .card { min-width: 0; }
+body[data-page="case"] .card .foot .row a.m { text-decoration: none; }
+
+
+/* 33 — /receipts/ worked example reuses `.fact`, the design's full-dress
+ *      statistic (ink card, 104px coral numeral, claim, then source /
+ *      publication year / period / region on its face). It is the right
+ *      component for a showcase of ONE figure and reads as clearly distinct
+ *      from the cream register grid below it — which is the point of the
+ *      section. The export scopes `.fact` to the homepage, so as with the
+ *      policy layout and the /case/ cards it renders unstyled anywhere else.
+ *      Rules below are the export's own, generated mechanically with only the
+ *      page-id changed. The width cap is the one addition: on the homepage
+ *      `.fact` is one of three grid cells, and full-bleed it would read as a
+ *      band rather than a card. CANVAS-SYNC item 33. */
+:where(body[data-page="receipts"]) .fact{background:var(--ink);padding:26px 24px 22px;display:flex;flex-direction:column}
+:where(body[data-page="receipts"]) .fact .n{font-family:var(--font-display);font-weight:900;font-size:clamp(52px,6.6vw,104px);line-height:.85;letter-spacing:-.04em;color:var(--coral);font-variant-numeric:tabular-nums}
+:where(body[data-page="receipts"]) .fact .n.cmp{display:flex;align-items:baseline;gap:10px 20px;flex-wrap:wrap}
+:where(body[data-page="receipts"]) .fact .n.cmp .pair{display:inline-flex;align-items:baseline;gap:10px;white-space:nowrap}
+:where(body[data-page="receipts"]) .fact .n.cmp .vs{font-family:var(--font-body);font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:#A9A59C}
+:where(body[data-page="receipts"]) .fact .n.cmp .b{color:var(--cream)}
+:where(body[data-page="receipts"]) .fact .l{font-family:var(--font-display);font-weight:700;font-size:clamp(17px,1.55vw,21px);letter-spacing:-.01em;line-height:1.22;margin:16px 0 auto;text-wrap:pretty;color:var(--cream)}
+:where(body[data-page="receipts"]) .fact .src{border-top:2px solid #3A3A36;margin-top:18px;padding-top:12px;font-size:12.5px;line-height:1.45;color:#C9C5BA;display:block;text-wrap:pretty}
+:where(body[data-page="receipts"]) .fact .src b{display:block;font-family:var(--font-body);font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:4px}
+:where(body[data-page="receipts"]) .fact .src em{font-style:italic;white-space:normal}
+:where(body[data-page="receipts"]) .fact .src .dt{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:flex-start}
+:where(body[data-page="receipts"]) .fact .src .dt span{border:1.5px solid #4A4A44;padding:3px 8px;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#C9C5BA;flex:0 0 auto;white-space:nowrap;max-width:100%;overflow:visible}
+body[data-page="receipts"] .fact { max-width: 640px; }
+
+/* 34 — /case/ Methodology drawer headings promoted h4 -> h3. Removing the
+ *      dashboard-preview sections (item 36) removed the <h3>s that sat between
+ *      the page's <h2>s and the drawer's <h4>s, so the drawer became an h2 -> h4
+ *      jump and html-validate's heading-level rule failed. The export styles
+ *      `.mdrawer-body h4`; this carries the identical declarations to h3 so the
+ *      promotion is invisible. Same fix as post_patch_pages.py already applies
+ *      to about/roadmap/policies. CANVAS-SYNC item 34. */
+body[data-page="case"] .mdrawer-body h3 {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  margin: 0 0 10px;
 }

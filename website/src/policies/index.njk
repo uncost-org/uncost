@@ -24,15 +24,18 @@ mainClass: "u-104"
 <div class="u-106">
 <!-- SECTION: policies.Policy set -->
 <div class="pollist" data-screen-label="Policy set">
-  <a class="polrow" href="/privacy/"><span class="pid">POL-001</span><div><h3>Privacy &amp; Data Protection</h3><p>What we collect, why, and your rights. We don&rsquo;t sell data or use it for partisan targeting.</p></div><div class="rt"><span class="status status--dev">Draft — readable</span></div></a>
-  <div class="polrow"><span class="pid">POL-002</span><div><h3>Code of Conduct</h3><p>How the community treats each other — constructive, evidence-led, no harassment.</p></div><div class="rt"><span class="status status--planned">Drafting</span></div></div>
-  <div class="polrow"><span class="pid">POL-003</span><div><h3>Political-Activity Policy</h3><p>Strictly nonpartisan: open data and public-interest analysis, never campaign work.</p></div><div class="rt"><span class="status status--planned">Drafting</span></div></div>
-  <div class="polrow"><span class="pid">POL-004</span><div><h3>Financial Controls &amp; Donations</h3><p>How funds are received, approved, and reported — with an internal receipt trail for every expense.</p></div><div class="rt"><span class="status status--planned">Drafting</span></div></div>
-  <div class="polrow"><span class="pid">POL-005</span><div><h3>Conflict-of-Interest Policy</h3><p>Disclosure rules for partners, sponsors, and advisers. No pay-to-play conclusions.</p></div><div class="rt"><span class="status status--planned">Drafting</span></div></div>
-  <div class="polrow"><span class="pid">POL-006</span><div><h3>Assembly Governance &amp; Voting</h3><p>Eligibility, one-person-one-vote, quorum, appeals, and what votes can and can&rsquo;t decide.</p></div><div class="rt"><span class="status status--planned">Drafting</span></div></div>
-  <div class="polrow"><span class="pid">POL-007</span><div><h3>Responsible-AI Policy</h3><p>How we use AI honestly and safely, with human oversight and clear limits.</p></div><div class="rt"><span class="status status--planned">Drafting</span></div></div>
-  <div class="polrow"><span class="pid">POL-008</span><div><h3>In-Kind Gift Acceptance</h3><p>How donated compute, equipment, data, and services are valued and handled.</p></div><div class="rt"><span class="status status--planned">Drafting</span></div></div>
-  <div class="polrow"><span class="pid">POL-009</span><div><h3>Safeguarding Standards</h3><p>Required before any work involving vulnerable people or physical pilots. Held to the highest bar.</p></div><div class="rt"><span class="status status--planned">Drafting</span></div></div>
+{#- The export hardcoded nine rows, linked none of them to a policy page (POL-001
+    pointed at the legacy /privacy/ route), and — worse — numbered them wrongly:
+    its POL-002 "Code of Conduct" is this repository's POL-003, and everything
+    from POL-002 down was off by one. Policy reference numbers are contractual
+    (UNP-39 §5.19, enforced in _data/catalog.js), so the list now loops the
+    catalog: right number, right slug, all eleven, every one linked. Each row's
+    description is the policy's own "Applies (upon adoption) to:" scope line
+    from its preamble — repository-authored, not the export's blurbs, which
+    could not be carried over while bound to the wrong numbers. -#}
+{% for pol in catalog.policies %}
+  <a class="polrow" href="/policies/{{ pol.slug }}/"><span class="pid">{{ pol.id }}</span><div><h3>{{ pol.display }}</h3><p>{% if pol.appliesTo %}Applies to {{ pol.appliesTo }}{% else %}Reference number reserved; the policy is not yet drafted.{% endif %}</p></div><div class="rt">{% if pol.reserved %}<span class="status status--planned">Not yet drafted</span>{% else %}<span class="status status--dev">Draft &mdash; not in force</span>{% endif %}</div></a>
+{% endfor %}
 </div>
 </div>
 

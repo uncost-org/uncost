@@ -114,14 +114,6 @@ if p.exists():
 # ---------------------------------------------------------------------------
 print("UNP-82 — receipts:")
 patch("website/src/receipts.njk",
-      r'<div class="titleband" data-screen-label="Receipts — title"><h1>The <span class="u-1">Receipts</span></h1></div>',
-      '<div class="titleband u-block--ink" data-screen-label="Receipts — title">\n'
-      '  <h1>The <span class="u-1">Receipts</span></h1>\n'
-      '  <p class="lead">Source, date, region &mdash; or it doesn&rsquo;t publish.</p>\n'
-      '</div>',
-      "hero rule line")
-
-patch("website/src/receipts.njk",
       r'(<div class="u-126"><span class="rcpt-illus">Illustrative only</span>.*?</div>)',
       r'\1\n  <p class="u-131">These four labels describe how much confidence a <b>figure</b> carries.'
       ' They are a deliberately separate system from the status badges on sectors and projects,'

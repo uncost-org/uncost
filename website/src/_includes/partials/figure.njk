@@ -13,7 +13,7 @@
 {% macro stat(row) -%}
 <figure class="rcpt" data-source="{{ row.source_id }}">
   <p class="cap">{{ row.display_caption }}</p>
-  <figcaption class="rcpt-src">{{ row.source_line }} · <a href="/receipts#{{ row.source_id }}">Receipt&nbsp;&rarr;</a></figcaption>
+  <figcaption class="rcpt-src">{{ row.source_line }} · <a href="/receipts/#{{ row.source_id }}">Receipt&nbsp;&rarr;</a></figcaption>
 </figure>
 {%- endmacro %}
 
@@ -43,5 +43,30 @@
   <div class="l">{{ row.display_caption }}</div>
   <div class="src"><b>Source</b>{{ row.publisher }}, <em>{{ row.publication_work }}</em>.
     <span class="dt"><span>Published {{ row.publication_year }}</span><span>{{ row.data_period }}{% if row.data_period | length == 4 %} data{% endif %}</span><span>{{ row.region }}</span></span></div>
+</div>
+{%- endmacro %}
+
+{#-
+  card(row) — the receipts register card, reused outside /receipts/. Same markup
+  the register grid renders, so it inherits that component's styling rather than
+  inventing a second statistic treatment; the only addition is the receipt link,
+  which the register itself does not need (there, the card IS the receipt).
+  Wrap a run of these in <div class="cards"> exactly as /receipts/ does.
+-#}
+{% macro card(row) -%}
+<div class="card" data-source="{{ row.source_id }}">
+  <div class="id">{{ row.source_id }}</div>
+  <div class="fig">{{ row.display_value }}</div>
+  <div class="unit">{{ row.data_period }}</div>
+  <div class="claim">{{ row.display_caption }}</div>
+  <div class="foot">
+    <div class="pub">{{ row.publisher }}</div>
+    <div class="ttl">{% if row.url %}<a href="{{ row.url }}" target="_blank" rel="noopener">{{ row.publication_work }}</a>{% else %}{{ row.publication_work }}{% endif %}</div>
+    <div class="row">
+      <span class="m">{{ row.region }}</span>
+      <span class="rcpt-conf rcpt-conf--{{ "confirmed" if row.confidence.startsWith("confirmed") else "estimate" }}">{{ "Confirmed" if row.confidence.startsWith("confirmed") else "Estimate" }}</span>
+      <a class="m" href="/receipts/#{{ row.source_id }}">Receipt &rarr;</a>
+    </div>
+  </div>
 </div>
 {%- endmacro %}

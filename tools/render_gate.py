@@ -61,9 +61,6 @@ SECTION_EXEMPTIONS = [
      "Approved change: the ink headline the export omits below the eyebrow is "
      "added. CANVAS-SYNC item 9."),
     # UNP-82 content pass — founder-approved copy the canvas has not seen.
-    ("receipts", "Receipts — title",
-     "Approved copy: the hero gains the one-line publishing rule under the H1, in "
-     "the band's own ink treatment. CANVAS-SYNC item 15."),
     ("receipts", "Worked example",
      "Approved change: the export's $X placeholder and its illustrative markers are "
      "replaced by a real register row (SRC-023), rendered from the register so the "
@@ -117,6 +114,29 @@ SECTION_EXEMPTIONS = [
      "dashboard preview. Restored from origin/main @ 94d2481 with four figures "
      "(SRC-004, SRC-021, SRC-023, SRC-005). No export counterpart on this page. "
      "CANVAS-SYNC item 26."),
+    # The export ships nine policy pages under `data-page="policies-<slug>"`,
+    # but sections.css contains ZERO rules for that scope — the whole policy
+    # layout is scoped to `data-page="privacy"` instead. So the export's own
+    # policy pages render unstyled, and the reference these three sections are
+    # measured against is itself broken. Our pages are styled (integration.css
+    # re-scopes the export's block verbatim), so the diff is large and expected.
+    # Retire all three the moment the canvas scopes the block to the policy
+    # pages it already ships. CANVAS-SYNC item 29.
+    ("policies/", "Policy header",
+     "The export's own policy pages are unstyled: it ships them under "
+     "`data-page=\"policies-<slug>\"` and defines no rules for that scope. Ours "
+     "render the export's intended ink header. CANVAS-SYNC item 29."),
+    ("policies/", "Policy body",
+     "Same cause: the export's reference page has no policy layout at all, so "
+     "the two-column TOC grid and body typography diverge wholesale. "
+     "CANVAS-SYNC item 29."),
+    ("policies/", "div.pol-wrap",
+     "Same cause. This is the unlabelled wrapper around the TOC and body, which "
+     "the gate names by selector rather than data-screen-label; exempting its "
+     "two children does not cover it. CANVAS-SYNC item 29."),
+    ("policies/", "TOC",
+     "Same cause: the sticky contents rail does not exist on the export's own "
+     "policy pages. CANVAS-SYNC item 29."),
     ("about", "Your say",
      "Approved copy: the slot vacated by the accessibility statement carries the "
      "member-voice section on the Assembly and the privacy commitment. There is no "

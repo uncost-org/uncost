@@ -178,7 +178,16 @@ function loadPolicies() {
         body: (nl < 0 ? "" : part.slice(nl + 1)).trim(),
       });
     });
-    return { id, slug, display, frontmatter, body, preamble, sections, reserved, drafted: !reserved };
+    // Each drafted policy's preamble carries its own "**Applies to:** ..."
+    // scope line. That is the only per-policy one-liner the repository owns, so
+    // the policy index uses it rather than the export's nine hardcoded blurbs —
+    // which covered 9 of 11 policies and were bound to the WRONG reference
+    // numbers (the export's POL-002 "Code of Conduct" is this repository's
+    // POL-003, and so on from POL-002 down).
+    // Two wordings are in use: "Applies to:" and "Applies upon adoption to:".
+    const appliesMatch = (preamble || "").match(/\*\*Applies(?: upon adoption)? to:\*\*\s*(.+?)(?:\n|$)/);
+    const appliesTo = appliesMatch ? appliesMatch[1].trim().replace(/\*\*/g, "") : "";
+    return { id, slug, display, frontmatter, body, preamble, sections, reserved, drafted: !reserved, appliesTo };
   });
 }
 
