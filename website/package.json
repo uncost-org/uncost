@@ -19,8 +19,8 @@
   },
   "devDependencies": {
     "@lhci/cli": "^0.15.1",
-    "html-validate": "^11.6.0",
-    "pa11y": "^9.1.1"
+    "html-validate": "^11.10.0",
+    "pa11y": "^10.0.0"
   },
   "overrides": {
     "sharp": "^0.35.0",
