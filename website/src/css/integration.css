@@ -474,3 +474,36 @@ body[data-page="case"] .mdrawer[open] summary::after { transform: rotate(-135deg
  *      measure. CANVAS-SYNC item 44. */
 body[data-page="movement"] .blk > p,
 body[data-page="movement"] .blk > .path { max-width: 64ch; }
+
+/* 47 — Sector hero alignment. The grid is `align-items:start` and the export
+ *      pushes the illustration slot down with a margin-top, so the artwork sat
+ *      106px below the text block's centre at 1440 (82px at 1290, 49px at
+ *      1024) — visibly detached from the H1. Centring the row against the
+ *      H1-through-metadata block fixes it; the artwork already fits that
+ *      block's height at every width, so no width reduction is needed.
+ *      CANVAS-SYNC item 47. */
+body[data-page^="sectors-"] .sector-head-grid { align-items: center; }
+body[data-page^="sectors-"] .sector-illus-slot { margin-top: 0; }
+
+/* 48 — Sector "02 · Evidence status" moved off ink onto cream2. It sat on the
+ *      same ink as "01 · Scope" directly above it, so the two read as one
+ *      undifferentiated slab. `--white` does not exist as a token, so cream2 is
+ *      the choice. The four confidence chips carry their own backgrounds
+ *      (sage / wheat / ink-blue / coral) and set their own text colour, so
+ *      their contrast pairs are untouched; only the dashed empty-state card was
+ *      ink-specific — its border was --cream and its body text #C9C5BA, both
+ *      invisible on a light band. A1 rules on both sides follow automatically:
+ *      ink -> cream2 and cream2 -> cream, neither side coral, so both coral.
+ *      CANVAS-SYNC item 48. */
+body[data-page^="sectors-"] #evidence {
+  background: var(--cream-2);
+  color: var(--ink);
+  --fg: var(--ink);
+  --fg-2: #2A2A26;
+  --fg-3: #5A574F;
+}
+body[data-page^="sectors-"] #evidence .evd-empty { border-color: var(--ink); }
+body[data-page^="sectors-"] #evidence .evd-empty p { color: var(--fg-2); }
+/* .u-1 is --coral (3.70:1 on cream2) — fine for the large h2, but the deep
+ * variant is used for consistency with the rest of the light bands. */
+body[data-page^="sectors-"] #evidence .u-1 { color: var(--coral-deep) !important; }
