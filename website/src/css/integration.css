@@ -507,3 +507,13 @@ body[data-page^="sectors-"] #evidence .evd-empty p { color: var(--fg-2); }
 /* .u-1 is --coral (3.70:1 on cream2) — fine for the large h2, but the deep
  * variant is used for consistency with the rest of the light bands. */
 body[data-page^="sectors-"] #evidence .u-1 { color: var(--coral-deep) !important; }
+
+/* 49 — /assembly/ participation-loop boxes. The export paints the box interiors
+ *      `--cream` and the band they sit on is also `--cream`, so the four boxes
+ *      were the same colour as their background and read as flat text. cream2
+ *      separates them (same token choice as item 48). Ink borders and the
+ *      2px grid gaps are unchanged, as are the coral numerals: `--coral` on
+ *      cream2 is 3.70:1, and at 36px/900 that is large text against a 3:1
+ *      floor — it was 4.04:1 on cream before, also large-text-only, so this is
+ *      not a regression. CANVAS-SYNC item 50. */
+body[data-page="assembly"] .can > div { background: var(--cream-2); }
