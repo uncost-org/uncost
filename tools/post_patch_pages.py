@@ -188,4 +188,36 @@ patch("website/src/news/index.njk",
       '<a href="/news/feed.xml">Subscribe by RSS</a> &mdash; every update, no algorithm in between.</p>',
       "RSS line (the feed exists; the export predates it)", flags=0)
 
+
+# ---------------------------------------------------------------------------
+# 2026-09-12 visual sweep. These touch files gen_static_pages.py rewrites from
+# the export, so they are restated here. NOTE: the UNP-82 body copy these sit
+# inside is itself NOT yet protected — a re-derivation would remove the whole
+# rewritten /movement/ body and the /case/ mechanism section, and these patches
+# would then fail loudly (matched 0, expected 1) rather than silently no-op.
+# That larger gap is recorded in CANVAS-SYNC item 45.
+# ---------------------------------------------------------------------------
+print("2026-09-12 sweep — accent spans and link text:")
+patch("website/src/case/index.njk",
+      r'is instead making ownership more valuable\.</h2>',
+      'is <span class="hl">instead making ownership more valuable</span>.</h2>',
+      "B1 /case/ headline accent", flags=0)
+
+patch("website/src/movement.njk",
+      r'cheaper, not billionaires richer\.</h2>',
+      'cheaper, <span class="hl">not billionaires richer</span>.</h2>',
+      "C1 /movement/ headline accent", flags=0)
+
+patch("website/src/movement.njk",
+      r'in something, not a feed to follow\.</h2>',
+      'in something, <span class="hl">not a feed to follow</span>.</h2>',
+      "C3 /movement/ accent", flags=0)
+
+patch("website/src/movement.njk", r'<a href="/pledge/">/pledge</a>',
+      '<a href="/pledge/">Sign the Pledge</a>', "C4 pledge link text", flags=0)
+patch("website/src/movement.njk", r'<a href="/news/">/news</a>',
+      '<a href="/news/">News</a>', "C4 news link text", flags=0)
+patch("website/src/movement.njk", r'<a href="/join/">/join</a>',
+      '<a href="/join/">Join now</a>', "C4 join link text", flags=0)
+
 print("done")

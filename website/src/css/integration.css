@@ -466,3 +466,11 @@ body[data-page="case"] .mdrawer summary::after {
   transition: transform 120ms linear;
 }
 body[data-page="case"] .mdrawer[open] summary::after { transform: rotate(-135deg); }
+
+/* 44 — /movement/ one content measure. The page's first two sections constrain
+ *      their text to 64ch (`.u-89`), but the two below run the full padded
+ *      width — 728px vs 1280px at 1440, which reads as the ink "Three ways in"
+ *      band breaking out of the page container. Everything now shares the same
+ *      measure. CANVAS-SYNC item 44. */
+body[data-page="movement"] .blk > p,
+body[data-page="movement"] .blk > .path { max-width: 64ch; }
