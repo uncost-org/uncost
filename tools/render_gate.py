@@ -137,6 +137,23 @@ SECTION_EXEMPTIONS = [
     ("policies/", "TOC",
      "Same cause: the sticky contents rail does not exist on the export's own "
      "policy pages. CANVAS-SYNC item 29."),
+    # 2026-09-12 visual sweep — approved divergences from the export.
+    ("sectors/", "Evidence status",
+     "Approved change: \"02 · Evidence status\" moved off ink onto cream2, because "
+     "it sat on the same ink as \"01 · Scope\" above it and the two read as one "
+     "slab. Inverting a full band's background is a near-total pixel change by "
+     "definition, hence ~98%; structure and copy are untouched. The dashed "
+     "empty-state card's border and body colour moved with it (both were "
+     "ink-band-only). CANVAS-SYNC item 48."),
+    ("assembly", "What supporters can do",
+     "Approved change: the four participation-loop box interiors are cream2. The "
+     "export paints them --cream on a --cream band, so they were the same colour "
+     "as their background. Ink borders, grid gaps and coral numerals unchanged. "
+     "CANVAS-SYNC item 50."),
+    ("sectors.html", "Legend",
+     "Approved change: the A1 divider rule moves the boundary from the legend's "
+     "bottom edge to the band below it, so the legend loses its own 2px rule and "
+     "gains a coral top rule. CANVAS-SYNC item 40."),
     ("about", "Your say",
      "Approved copy: the slot vacated by the accessibility statement carries the "
      "member-voice section on the Assembly and the privacy commitment. There is no "
