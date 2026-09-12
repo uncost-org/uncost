@@ -251,6 +251,9 @@ body[data-page^="policies-"] .pol-body ol li {
  *      The class is repo-owned and applied in the templates rather than keying
  *      off the extraction class, because `.u-N` numbers are reassigned on every
  *      export — the wheat block is `.u-87` in v4.3 and need not be next time.
+ *      SUPERSEDED 2026-09-12 by the A1 divider rule (item 40): the ink rule this
+ *      once added is removed. An ink rule under an ink band is invisible, which
+ *      is what the founder saw as "no divider" at ink->wheat on /.
  *      The class also carries the background, from the --wheat token, which is
  *      the same value the export's `.u-87` hardcodes. That lets the templates
  *      drop `.u-87` altogether: the wheat sections no longer depend on an
@@ -260,7 +263,6 @@ body[data-page^="policies-"] .pol-body ol li {
 .blk--wheat {
   background: var(--wheat);
   color: var(--ink);
-  border-top: 4px solid var(--ink);
 }
 
 
@@ -339,3 +341,88 @@ body[data-page="case"] .mdrawer-body h3 {
   color: var(--fg-3);
   margin: 0 0 10px;
 }
+
+/* 40 — DIVIDER RULE (founder-directed 2026-09-12; supersedes item 31).
+ *      Every boundary between content bands carries exactly ONE rule. The rule
+ *      is CORAL, unless a coral band sits on either side of it, in which case
+ *      it is INK — a coral rule on a coral band is invisible, and so is an ink
+ *      rule on an ink band.
+ *
+ *      The export already implements most of this: `.blk` defaults to a coral
+ *      top rule, `.blk--coral` switches both its own edges to ink, and
+ *      `.blk--coral + .blk` gives the following band ink. Three gaps remain,
+ *      fixed below. The boundary is always drawn by the LOWER band's top edge,
+ *      so nothing draws a bottom rule and nothing can double up.
+ *      CANVAS-SYNC item 40. */
+
+/* (a) The intro band drew the boundary from its own BOTTOM edge while the
+ *     block below drew it again from its top — two coral lines at every
+ *     introband -> blk boundary (6 routes). The bottom is dropped; the lower
+ *     band already owns it. */
+.introband { border-bottom: 0; }
+
+/* (b) titleband -> introband drew nothing at all (14 routes): the titleband has
+ *     no bottom rule and the introband had no top rule. */
+.titleband + *,
+.pol-hd + * { border-top: 4px solid var(--coral); }
+.titleband + .blk--coral,
+.pol-hd + .blk--coral { border-top-color: var(--ink); }
+
+/* (c) A `.blk--first` immediately after a titleband is NOT the first band on the
+ *     page — there is a real boundary above it (/movement/). */
+.titleband + .blk--first,
+.introband + .blk--first { border-top: 4px solid var(--coral); }
+
+/* (d) The export tints one coral band's top rule wheat (`.u-93`, the /movement/
+ *     closing CTA). A coral band's boundary must be ink. */
+.u-93 { border-top-color: var(--ink) !important; }
+
+/* (e) Three more suppressors. `.u-15` and `.u-154` zero the top rule with
+ *     !important on bands that do have a boundary above them (/assembly/,
+ *     /treasury/), and `.legend` draws from its bottom edge like the introband
+ *     did. Same principle: the lower band owns the boundary. */
+.legend { border-bottom: 0; }
+.introband + .blk,
+.introband + .legend { border-top: 4px solid var(--coral) !important; }
+.introband + .blk--coral { border-top-color: var(--ink) !important; }
+.legend + * { border-top: 4px solid var(--coral); }
+.legend + .blk--coral,
+.sgrid + .blk--coral { border-top-color: var(--ink); }
+
+/* (f) `.statusband` (/assembly/, /treasury/) behaves like the introband did —
+ *     no top rule, a bottom one instead. And `.sgrid`'s 2px frame bottom meets
+ *     the coral band's 4px ink top on /sectors/, giving two lines; the frame is
+ *     structural, so it keeps the boundary and the coral band drops its top. */
+.statusband { border-bottom: 0; }
+.introband + .statusband { border-top: 4px solid var(--coral); }
+/* !important only to beat `.u-15`/`.u-154`, which zero the rule the same way. */
+.statusband + * { border-top: 4px solid var(--coral) !important; }
+.statusband + .blk--coral { border-top-color: var(--ink) !important; }
+
+/* (g) Remaining boundaries the export draws in ink where neither side is a
+ *     coral band. Listed individually rather than blanket-recoloured, because
+ *     several neighbouring selectors use ink borders structurally (component
+ *     frames) and must keep them. */
+.blk + .mdrawer,                       /* /case/  wheat -> cream  */
+.tiers + .privacyline,                 /* /join/  cream -> wheat  */
+.u-46 + .u-8,                          /* /policies/ cream -> cream2 */
+.u-98 + .next { border-top-color: var(--coral) !important; }
+
+/* These two zero the width with !important, so the colour alone cannot fix
+ * them — the whole shorthand has to be restated. */
+.u-8 + .u-106,                         /* /policies/ cream2 -> wheat */
+.u-153 + .u-154 { border-top: 4px solid var(--coral) !important; }  /* /treasury/ */
+
+/* (h) Two boundaries with no rule at all, and two drawn twice (the upper band
+ *     keeps a bottom rule the lower one also draws). */
+.u-46 + .u-45,                         /* /faq/      cream -> cream2 */
+.u-46 + .u-104 { border-top: 4px solid var(--coral) !important; }  /* /projects/ */
+.ways,                                 /* /contribute/ */
+.next { border-bottom: 0; }            /* /pledge/thanks/ */
+
+/* (i) …and those same two upper bands keep a bottom rule, so restating the top
+ *     produced two lines. Scoped with :has() to that exact pairing only, since
+ *     both classes are used elsewhere where the bottom rule is correct. */
+.u-8:has(+ .u-106) { border-bottom: 0; }
+/* .u-153 sets its bottom rule with !important, so match it. */
+.u-153:has(+ .u-154) { border-bottom: 0 !important; }
