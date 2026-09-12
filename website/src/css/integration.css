@@ -426,3 +426,43 @@ body[data-page="case"] .mdrawer-body h3 {
 .u-8:has(+ .u-106) { border-bottom: 0; }
 /* .u-153 sets its bottom rule with !important, so match it. */
 .u-153:has(+ .u-154) { border-bottom: 0 !important; }
+
+/* 41 — `.hl`: the AA-safe accent span for light bands. The export's `.u-1`
+ *      uses `--coral`, which is 4.04:1 on cream and 3.70:1 on cream2 — both
+ *      below the 4.5:1 AA floor for text. `--coral-deep` is 5.59:1 and 5.12:1
+ *      respectively, and is already what post_patch_css.py enforces for links
+ *      for exactly this reason. Light bands only; on ink use `--coral-on-ink`.
+ *      CANVAS-SYNC item 41. */
+.hl { color: var(--coral-deep); }
+
+/* 42 — /case/ figure captions at 2x, bold. Scoped to /case/ only: the receipts
+ *      register grid keeps 14.5px, where 26 cards have to stay scannable.
+ *      Here there are four, and the claim is the argument. CANVAS-SYNC item 42. */
+body[data-page="case"] .card .claim {
+  font-size: 29px;
+  line-height: 1.25;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+/* 43 — Methodology drawer toggle: the FAQ chevron instead of a "+" glyph, with
+ *      the same 45deg / -135deg open-close rotation. Done in CSS rather than
+ *      markup so it survives re-derivation of case/index.njk. The export's
+ *      glyph is `--coral` on wheat = 2.34:1, below the 3:1 floor for non-text;
+ *      `--coral-deep` is 3.25:1. CANVAS-SYNC item 43. */
+body[data-page="case"] .mdrawer summary .plus { display: none; }
+body[data-page="case"] .mdrawer summary { position: relative; }
+body[data-page="case"] .mdrawer summary::after {
+  content: "";
+  position: absolute;
+  right: clamp(24px, 6vw, 80px);
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin-top: -9px;
+  border-right: 2.5px solid var(--coral-deep);
+  border-bottom: 2.5px solid var(--coral-deep);
+  transform: rotate(45deg);
+  transition: transform 120ms linear;
+}
+body[data-page="case"] .mdrawer[open] summary::after { transform: rotate(-135deg); }
