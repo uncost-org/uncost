@@ -220,4 +220,9 @@ patch("website/src/movement.njk", r'<a href="/news/">/news</a>',
 patch("website/src/movement.njk", r'<a href="/join/">/join</a>',
       '<a href="/join/">Join now</a>', "C4 join link text", flags=0)
 
+patch("website/src/contribute.njk",
+      r'<a href="/join/" class="u-btn u-btn--ink btn">Tell us how you can help</a>',
+      '<a href="/contact/" class="u-btn u-btn--ink btn">Tell us how you can help</a>',
+      "D1 /contribute/ CTA -> /contact/", flags=0)
+
 print("done")
