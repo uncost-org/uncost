@@ -677,3 +677,82 @@ body[data-page="case"] .cards .card:nth-child(4n+3) { background: var(--cream-2)
   max-width: none;
 }
 .srcs .src:nth-of-type(even) { background: var(--cream-2); }
+
+/* 59 — P3 /case/ Methodology drawer: body +25% (14px → 17.5px) and the three
+ *      column headings at 2x and bold (12px → 24px, 700). The headings are h3
+ *      here, promoted from the export's h4 by item 34. CANVAS-SYNC item 59. */
+body[data-page="case"] .mdrawer-body p,
+body[data-page="case"] .mdrawer-body li { font-size: 17.5px; }
+body[data-page="case"] .mdrawer-body h3 {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: .06em;
+}
+
+/* 60 — P5 sector "02 · Evidence status": the separator above the REGISTER line
+ *      becomes ink. The export drew it `--cream` for an ink band; item 48 moved
+ *      the band to cream2, leaving it invisible. The same move left `.u-143`
+ *      at #C9C5BA — about 1.3:1 on cream2, i.e. unreadable — so the REGISTER
+ *      label and its text move to the light-band foreground.
+ *      CANVAS-SYNC item 60. */
+body[data-page^="sectors-"] #evidence .u-142 { border-top-color: var(--ink) !important; }
+body[data-page^="sectors-"] #evidence .u-143 { color: var(--fg-2) !important; }
+
+/* 61 — P4 sector heroes.
+ *      H1: the export's clamp(72px,12vw,180px) renders 173px at 1440, but
+ *      "Transportation." needs 970px of a 724px column at that size — the long
+ *      names were already overflowing into the illustration column. A literal
+ *      +25% is therefore impossible for them, so the size is per-sector:
+ *      +25% where it fits, and the largest size that fits where it does not.
+ *      Six names are capped (transportation, communication, environment,
+ *      healthcare, education, materials, clothing); the other eight take the
+ *      full +25%.
+ *      Subtitle: +50%.
+ *      Illustration: the BASELINE spec replaces item 47's centring. Each
+ *      artwork's drawn ground line sits level with the hero rule above
+ *      "SECTOR NN / 15". The ground line is measured per file — it sits
+ *      16.33%-18.56% above the image's bottom edge across the 15, a 2.24-point
+ *      spread — so each page carries its own --gp and the artwork is pushed
+ *      down by exactly that fraction of its own height.
+ *      CANVAS-SYNC item 61. */
+body[data-page^="sectors-"] .sector-sub { font-size: clamp(36px, 4.5vw, 54px); }
+body[data-page^="sectors-"] .sector-head-grid { align-items: end; }
+body[data-page^="sectors-"] .sector-illus {
+  width: 100%;
+  height: auto;
+  /* --gp lands the ground line on the row's bottom edge; the hero rule sits
+   * 36px above that (the .sector-num padding-top plus its content), and
+   * that offset is constant across all three widths. */
+  transform: translateY(calc(var(--gp) * 100% - 36px));
+}
+
+body[data-page="sectors-food"] .sector-title { font-size: clamp(95px, 15.00vw, 216px); }
+body[data-page="sectors-food"] { --gp: 0.1633; }
+body[data-page="sectors-water"] .sector-title { font-size: clamp(95px, 15.00vw, 216px); }
+body[data-page="sectors-water"] { --gp: 0.1652; }
+body[data-page="sectors-shelter"] .sector-title { font-size: clamp(95px, 15.00vw, 216px); }
+body[data-page="sectors-shelter"] { --gp: 0.1672; }
+body[data-page="sectors-energy"] .sector-title { font-size: clamp(95px, 15.00vw, 216px); }
+body[data-page="sectors-energy"] { --gp: 0.1633; }
+body[data-page="sectors-healthcare"] .sector-title { font-size: clamp(73px, 11.52vw, 172px); }
+body[data-page="sectors-healthcare"] { --gp: 0.1701; }
+body[data-page="sectors-care"] .sector-title { font-size: clamp(95px, 15.00vw, 216px); }
+body[data-page="sectors-care"] { --gp: 0.1720; }
+body[data-page="sectors-education"] .sector-title { font-size: clamp(80px, 12.60vw, 188px); }
+body[data-page="sectors-education"] { --gp: 0.1817; }
+body[data-page="sectors-transportation"] .sector-title { font-size: clamp(55px, 8.59vw, 128px); }
+body[data-page="sectors-transportation"] { --gp: 0.1710; }
+body[data-page="sectors-clothing"] .sector-title { font-size: clamp(93px, 14.65vw, 216px); }
+body[data-page="sectors-clothing"] { --gp: 0.1769; }
+body[data-page="sectors-goods"] .sector-title { font-size: clamp(95px, 15.00vw, 216px); }
+body[data-page="sectors-goods"] { --gp: 0.1740; }
+body[data-page="sectors-materials"] .sector-title { font-size: clamp(84px, 13.18vw, 197px); }
+body[data-page="sectors-materials"] { --gp: 0.1856; }
+body[data-page="sectors-communication"] .sector-title { font-size: clamp(51px, 8.01vw, 120px); }
+body[data-page="sectors-communication"] { --gp: 0.1759; }
+body[data-page="sectors-safety"] .sector-title { font-size: clamp(95px, 15.00vw, 216px); }
+body[data-page="sectors-safety"] { --gp: 0.1681; }
+body[data-page="sectors-environment"] .sector-title { font-size: clamp(64px, 10.06vw, 150px); }
+body[data-page="sectors-environment"] { --gp: 0.1740; }
+body[data-page="sectors-leisure"] .sector-title { font-size: clamp(95px, 15.00vw, 216px); }
+body[data-page="sectors-leisure"] { --gp: 0.1701; }

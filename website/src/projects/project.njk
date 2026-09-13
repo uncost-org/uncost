@@ -37,7 +37,15 @@ eleventyComputed:
 </header>
 <!-- SECTION: projects/human-essentials-dashboard.At a glance -->
 <section class="u-124 blk" data-screen-label="At a glance">
+{#- P6-copy: PRJ-001 and PRJ-002 carry a founder-approved opener. The other
+    five keep the export's plain "At a glance" eyebrow. -#}
+{% if pc.opener %}
+  <div class="eyebrow">{{ pc.opener.eyebrow }}</div>
+  <h2 class="sec">{{ pc.opener.h2 }}</h2>
+  <p class="u-11 lead">{{ pc.opener.intro }}</p>
+{% else %}
   <div class="eyebrow">At a glance</div>
+{% endif %}
   <div class="grid3">
     <div><h2><i></i>What it targets</h2><p>{{ pc.atAGlance.targets | safe }}</p></div>
     <div><h2><i></i>The mechanism</h2><p>{{ pc.atAGlance.mechanism | safe }}</p></div>

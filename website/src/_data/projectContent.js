@@ -18,6 +18,12 @@
 
 const CONTENT = {
   "PRJ-001": {
+    // P6-copy: founder-approved opener for the "At a glance" section.
+    opener: {
+      eyebrow: "What you\u2019ll see",
+      h2: "The picture, region by region.",
+      intro: "The Dashboard is the presentation layer: what one adult needs, what it costs where you live, and whether that cost is moving \u2014 every figure with its receipt.",
+    },
     publicSummary: "The public, regional picture of what one human needs and what those needs cost — the flagship of The Case.",
     atAGlance: {
       targets: "The essentials basket for one adult, region by region, honestly mapped to the fifteen sectors — with three of them (Environment, Safety, Materials) treated as cost <em>drivers</em> layered across the basket, not basket line-items themselves.",
@@ -30,6 +36,12 @@ const CONTENT = {
     cta: "Help build the first regional view.",
   },
   "PRJ-002": {
+    // P6-copy: founder-approved opener for the "At a glance" section.
+    opener: {
+      eyebrow: "What feeds it",
+      h2: "The data underneath.",
+      intro: "The Tracker is the data layer: sourced, dated, licensed prices, refreshed on a published schedule. The Dashboard reads from it.",
+    },
     publicSummary: "The sourced, dated price data that everything else in The Case stands on.",
     atAGlance: {
       targets: "A disciplined register of prices and their sources. It has no public page of its own — its product is trustworthy data, not a dashboard.",
