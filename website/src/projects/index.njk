@@ -1,36 +1,62 @@
 ---
 layout: layouts/base.njk
+permalink: "/projects/"
+pageId: "projects"
 title: "The Projects"
-description: "Uncost's project briefs — public review drafts. No budget, build, pilot, or launch is approved."
+description: "A transparent registry of open tools, data models, and studies that turn evidence into real cost reduction communities can run."
+mainClass: "u-104"
 ---
-<section class="blk blk--first">
-  <p class="eyebrow">The Projects</p>
-  <h1 class="sec">From evidence to real cost reduction.</h1>
-  <p class="lead">Public review drafts. No budget, build, pilot, or launch is approved; every brief is a reviewed dossier, not a shipped product.</p>
-  <p>The Projects are how Uncost moves from evidence to action: open-source tools, data models, and playbooks that communities and qualified partners can run themselves. We don’t own the farm — we publish the model, the sources, and the playbook, and local operators decide and act.</p>
+{#- Markup taken verbatim from design-source/pages/projects.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: projects.Projects — title -->
+<div class="titleband" data-screen-label="Projects — title"><h1>The <span class="u-1">Projects</span></h1></div>
+<div class="u-46 introband">
+  <h2>From evidence to real cost reduction.</h2>
+  <p>The Projects are how Uncost moves from evidence to action: open-source tools, data models, and automation playbooks that communities, co-ops, nonprofits, public agencies, and builders can run themselves. We don&rsquo;t own the farm — we publish the model, the sources, and the playbook so others can adopt and improve them.</p>
+</div>
+
+{#- The export hardcoded these seven rows and linked only two of them, so five
+    project pages were unreachable from their own index. The list now loops
+    catalog.projects, so every project links to its page by construction and the
+    summary is the same founder-approved line the detail page shows. "Now" is
+    the three core projects (one system, three parts); "Next" is the rest. -#}
+<div class="u-104 grouphd"><h3>Now</h3><span>One system, three parts</span></div>
+<!-- SECTION: projects.Now -->
+<div class="plist" data-screen-label="Now">
+{% for p in catalog.projects.slice(0, 3) %}
+  <a class="prow" href="/projects/{{ p.slug }}/"><span class="pid">{{ p.id }}</span><div><h4>{{ p.display }}</h4><p>{{ projectContent[p.id].publicSummary }}</p></div><div class="rt"><span class="status status--dev">Draft</span></div></a>
+{% endfor %}
+</div>
+
+<div class="grouphd"><h3>Next</h3><span>Planning tools &amp; shared-access kits</span></div>
+<!-- SECTION: projects.Next -->
+<div class="plist" data-screen-label="Next">
+{% for p in catalog.projects.slice(3) %}
+  <a class="prow" href="/projects/{{ p.slug }}/"><span class="pid">{{ p.id }}</span><div><h4>{{ p.display }}</h4><p>{{ projectContent[p.id].publicSummary }}</p></div><div class="rt"><span class="status status--planned">Draft</span></div></a>
+{% endfor %}
+</div>
+
+<!-- SECTION: projects.Later -->
+<section class="blk blk--ink u-block--ink" data-screen-label="Later">
+  <div class="u-111 eyebrow">Later — studies &amp; demonstrations</div>
+  <h2 class="u-112 sec">Gated on funding and safety.</h2>
+  <p class="u-113 lead">Longer-term studies and partner-led physical demonstrations — greenhouses, filtration, solar, storage, circular materials — are treated as research and design tracks until there is funding, a local operator, safety review, legal capacity, insurance, and site permissions. None involves Uncost directly providing healthcare, care, child-facing education, or safety services.</p>
 </section>
 
-<section class="blk blk--cream2">
-  <p class="eyebrow">The briefs</p>
-  <h2 class="sec">{{ catalog.projects.length }} briefs, all in review.</h2>
-  <div class="doc-list">
-{%- for project in catalog.projects %}
-    <a class="doc-row" href="/projects/{{ project.slug }}/"><span class="doc-id">{{ project.id }}</span><span class="doc-title">{{ project.display }}</span><span class="status status--planned">Draft</span></a>
-{%- endfor %}
-  </div>
+<!-- SECTION: projects.How they help -->
+<section class="blk blk--cream" data-screen-label="How they help">
+  <div class="eyebrow">The honest chain</div>
+  <h2 class="u-114 sec">Every project has to earn its cost claim.</h2>
+  <p class="u-108 lead">A project only counts as a cost-reduction path where energy, capital, maintenance, and local conditions make a net reduction plausible. Where the model shows it doesn&rsquo;t beat the status quo, we publish that negative result too. Where a cost driver is policy rather than technology, our role is open data and nonpartisan analysis — never partisan lobbying.</p>
 </section>
 
-<section class="blk">
-  <p class="eyebrow">How they help</p>
-  <h2 class="sec">Every project has to earn its cost claim.</h2>
-  <p>A project only counts as a cost-reduction path where energy, capital, maintenance, and local conditions make a net reduction plausible. Where the model shows it doesn’t beat the status quo, we publish that negative result too. Where a cost driver is policy rather than technology, our role is open data and nonpartisan analysis — never partisan lobbying.</p>
-</section>
-
-<section class="blk blk--cream2">
-  <p class="eyebrow">Longer horizon</p>
-  <h2 class="sec">Later — gated on funding and safety.</h2>
-  <p>Longer-term studies and partner-led physical demonstrations stay research-and-design tracks until there is funding, a local operator, safety review, legal capacity, insurance, and site permissions. None of it involves Uncost directly providing healthcare, care, child-facing education, or safety services.</p>
-  <div class="prose prose--flush">
-  {{ catalog.longerHorizon | mdSection | safe }}
+<!-- SECTION: projects.Projects CTA -->
+<section class="blk blk--coral" data-screen-label="Projects CTA">
+  <h2 class="u-38 sec">Want to build one of these?</h2>
+  <p class="u-44 lead">The tools don&rsquo;t build themselves. Engineering, data, and sector expertise move them from planned to live.</p>
+  <div class="u-40">
+    <a href="/join/" class="u-btn u-btn--ink">Take Part</a>
+    <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--ghost">Build on GitHub</a>
   </div>
 </section>

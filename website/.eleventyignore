@@ -1,0 +1,11 @@
+# Reference-only, never published.
+#
+# website/design-source/ is the finished design export: 61 standalone HTML
+# pages, the four stylesheets, and DRAFT copy. It is the visual authority a
+# rebuild is diffed against — it is not site input, and none of it is served.
+#
+# The export itself is NOT committed to this public repository (docs/DESIGN_IMPORT_RUNBOOK.md
+# Step 1: the raw export is unpacked and kept outside any public working tree,
+# in private staging). This entry is the standing guard for a local working
+# copy, so that dropping the export in here can never build or publish it.
+design-source/

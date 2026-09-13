@@ -7,54 +7,82 @@ pagination:
   addAllPagesToCollections: true
 permalink: "/projects/{{ project.slug }}/"
 eleventyComputed:
-  title: "{{ project.display | safe }} · The Projects"
-  description: "{{ project.id }} — {{ project.display }}. A reviewed project dossier; draft, not approved for build."
+  pageId: "projects-{{ project.slug }}"
+  title: "{{ project.display | safe }} ({{ project.id }})"
+  description: "{{ project.id }} — {{ project.display }}. Project brief; a draft pending independent review, not approved for build."
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
-<header class="p-head">
+{#- Re-derived from the export's project page. Public-facing copy comes from
+    _data/projectContent.js (UNP-82 v1 §5, founder-approved, one entry per
+    project); structural fields still come from the repository's own dossier via
+    _data/catalog.js. No field falls back to the export's unreviewed draft prose.
+    Unlike the sector and policy templates, nothing regenerates this file from the
+    export — rederive_collections.py covers the sectors index, sector.njk and
+    policy.njk only. Edit it here; the copy itself lives in projectContent.js.
+    Stage labels: every dossier is `status: draft`, so the chips read "Draft" +
+    "Not approved for build". The export's "In development" is not carried
+    forward — the dossiers contradict it. Per docs/CONTROL.md the badge rule is
+    on rendered text, not class names, so .status--dev stays the treatment. -#}
+{% set pc = projectContent[project.id] %}
+{#- Related-sectors swatches. The export's project pages cycle a positional
+    palette (slot 0/1/2), the same square the sector pages carry; it was lost
+    when this template was re-derived and the buttons rendered a colourless
+    .sq. Taken from the export's own project pages. -#}
+{% set relSq = ["u-117 sq", "u-118 sq", "u-119 sq"] %}
+<!-- SECTION: projects/human-essentials-dashboard.Project head -->
+<header class="p-head" data-screen-label="Project head">
   <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <a href="/projects/">Projects</a> &nbsp;/&nbsp; <span>{{ project.display }}</span></div>
-  <div class="p-meta"><span class="pid">{{ project.id }}</span><span class="status status--planned">Draft — not approved for build</span></div>
-  <h1 class="p-h1">{{ project.display }}</h1>
-  {% if project.publicSummary %}<p class="p-tagline">{{ project.publicSummary }}</p>{% else %}<p class="p-tagline">{{ gapInline("project-public-summary") }}</p>{% endif %}
+  <div class="p-meta"><span class="pid">{{ project.id }}</span><span class="status status--dev">Draft</span><span class="status status--planned">Not approved for build</span></div>
+  <h1>{{ project.display }}</h1>
+  <p class="tagline">{{ pc.publicSummary }}</p>
 </header>
-
-<section class="blk blk--first">
-  <p class="eyebrow">At a glance</p>
-  {{ gap("project-at-a-glance", "the export's three at-a-glance cards (what it targets / the mechanism / how it lowers costs) are design-authored condensations, not verbatim dossier fields; approve from the capture or author from the dossier") }}
+<!-- SECTION: projects/human-essentials-dashboard.At a glance -->
+<section class="u-124 blk" data-screen-label="At a glance">
+{#- P6-copy: PRJ-001 and PRJ-002 carry a founder-approved opener. The other
+    five keep the export's plain "At a glance" eyebrow. -#}
+{% if pc.opener %}
+  <div class="eyebrow">{{ pc.opener.eyebrow }}</div>
+  <h2 class="sec">{{ pc.opener.h2 }}</h2>
+  <p class="u-11 lead">{{ pc.opener.intro }}</p>
+{% else %}
+  <div class="eyebrow">At a glance</div>
+{% endif %}
+  <div class="grid3">
+    <div><h2><i></i>What it targets</h2><p>{{ pc.atAGlance.targets | safe }}</p></div>
+    <div><h2><i></i>The mechanism</h2><p>{{ pc.atAGlance.mechanism | safe }}</p></div>
+    <div><h2><i></i>How it lowers costs</h2><p>{{ pc.atAGlance.costPath | safe }}</p></div>
+  </div>
 </section>
-
-<section class="blk blk--cream2">
-  <p class="eyebrow">Overview</p>
-  <h2 class="sec">What it is.</h2>
-  {{ gap("project-overview", "the export's multi-paragraph overview is a design-authored rewrite; the reviewed one-line public summary is in the hero above. Author the fuller overview from the dossier and July source before it ships") }}
+<!-- SECTION: projects/human-essentials-dashboard.Overview -->
+<section class="blk blk--cream2" data-screen-label="Overview">
+  <div class="eyebrow">Overview</div>
+  <h2>What this brief covers.</h2>
+  <p class="lead">{{ pc.overview }}</p>
 </section>
-
-<section class="blk">
-  <p class="eyebrow">Funding &amp; status</p>
-  <h2 class="sec">Honest about where this stands.</h2>
+<!-- SECTION: projects/human-essentials-dashboard.Funding & status -->
+<section class="blk" data-screen-label="Funding & status">
+  <div class="eyebrow">Funding &amp; status</div>
+  <h2>Honest about where this stands.</h2>
   <div class="fund">
-    <div class="fh"><span>{{ project.id }} — {{ project.display }}</span><span class="status status--planned">Draft</span></div>
+    <div class="fh"><span>{{ project.id }} &mdash; {{ project.display }}</span><span class="u-115 status status--dev">Draft</span></div>
     <div class="fb">
-      {% if project.resourcePosture %}<p>{{ project.resourcePosture }}</p>{% else %}{{ gap("project-resource-posture") }}{% endif %}
-      <p class="fund-meta">No cost or savings figures are published here yet. When they are, each will carry a source, a date, and a confidence label — see <a href="/receipts">The Receipts</a>. Once funds move, spending is reported in <a href="/treasury">The Treasury</a>.</p>
+      <p><b>Resourcing:</b> {{ project.resourcePosture }}</p>
+      <p><b>Most useful support now:</b> {{ pc.support }}</p>
+      <p><b>Reporting:</b> once funds move, spending on this project will be reported in <a href="/treasury/">The Treasury</a>, with an internal receipt and approval trail.</p>
     </div>
   </div>
 </section>
-
-<section class="blk blk--cream2">
-  <p class="eyebrow">Related sectors</p>
-  <h2 class="sec">Where it applies.</h2>
-  {{ gap("project-related-sectors", "the dossier's Sectors section names the primary/secondary sectors; wire the links from it rather than carrying the export's curated picks unreviewed") }}
-  <div class="related">
-    <a href="/sectors/"><span class="sq"></span> All 15 sectors →</a>
-  </div>
+<!-- SECTION: projects/human-essentials-dashboard.Related sectors -->
+<section class="blk blk--cream2" data-screen-label="Related sectors">
+  <div class="eyebrow">Related sectors</div>
+  <h2>Where it applies first.</h2>
+  <p class="lead">{{ pc.relatedSectors }}</p>
+  <div class="rel">{% for s in project.sectors %}<a href="/sectors/{{ s.slug }}/"><span class="{{ relSq[loop.index0 % relSq.length] }}"></span> {{ s.name }}</a>{% endfor %}<a class="{{ relatedSectors._allLink.linkClass }}" href="/sectors/"><span class="{{ relatedSectors._allLink.squareClass }}"></span> All 15 sectors &rarr;</a></div>
 </section>
-
-<section class="blk blk--ink">
-  <h2 class="cta-h">Help build this project.</h2>
-  {{ gap("project-cta", "the project-specific volunteer pitch is design-authored; author from the contribution model once roles are defined") }}
-  <div class="cta-actions">
-    <a href="/join" class="u-btn u-btn--primary">Take part</a>
-    <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--outline-cream">The public records</a>
+<!-- SECTION: projects/human-essentials-dashboard.Project CTA -->
+<section class="u-122 blk blk--coral" data-screen-label="Project CTA">
+  <h2 class="u-38">{{ pc.cta }}</h2>
+  <div class="u-123">
+    <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--ink">Build on GitHub</a>
+    <a href="/join/" class="u-btn u-btn--ghost">Take Part</a>
   </div>
 </section>

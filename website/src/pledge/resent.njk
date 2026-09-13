@@ -1,19 +1,23 @@
 ---
 layout: layouts/base.njk
-title: "Verification email resent"
-description: "The recovery step in the Uncost Pledge sign-up flow for re-requesting a confirmation link."
-noindex: true
+permalink: "/pledge/resent/"
+pageId: "pledge-resend"
+title: "Resend confirmation"
+description: "Resend your Uncost Pledge confirmation link."
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
-<section class="blk blk--first">
-  <p class="eyebrow">The Pledge</p>
-  <h1>Resend your confirmation link.</h1>
-  {{ gap("pledge-resend-intro", "the resend-screen intro copy is design-authored and states an uncited 24-hour link validity; author the confirmation-window wording from the confirmed verification-flow spec (UNP-57) before it ships") }}
-
-  <div class="form-off">
-    <p class="form-off-msg">Email capture is not wired yet — the resend form and its confirmation flow ship with the UNP-57 page contract.</p>
-    {{ gap("pledge-resend-form", "the resend form's field label, placeholder, submit-button label, and client-side validation message are design-authored; author them with the governed verification-flow copy before the form is wired") }}
+{#- Markup taken verbatim from design-source/pages/pledge-resend.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<div class="sys">
+  <!-- SECTION: pledge-resend.Resend -->
+  <div class="card" data-screen-label="Resend">
+    <div class="cap"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-3-6.7"></path><path d="M21 4v5h-5"></path></svg></div>
+    <div class="bd">
+      <div class="eq">No confirmation yet?</div>
+      <h1>Resend your link.</h1>
+      <p>Enter the email you signed with and we&rsquo;ll send a fresh confirmation link, valid for another 24 hours.</p>
+      {% include "partials/forms/pledge.njk" %}
+      <div class="back"><a href="/pledge/">← Back to the Pledge</a></div>
+    </div>
   </div>
-
-  <p><a href="/pledge" class="u-btn u-btn--ghost">Back to the Pledge</a></p>
-</section>
+</div>

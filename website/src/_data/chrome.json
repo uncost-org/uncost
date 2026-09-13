@@ -1,0 +1,272 @@
+{
+  "_note": "STRUCTURE from the design export (design-source/data/site.json): nav, footer and social ordering, labels and section order. Routes are reconciled to the repository's contractual URLs; feature flags live in _data/features.js; org identity lives in _data/site.js. footerBar keeps only links not already present in the columns above, and RSS is removed because no feed page exists. Approved change — docs/CANVAS-SYNC.md.",
+  "nav": [
+    {
+      "label": "The Movement",
+      "url": "/movement/",
+      "desc": "Join in — learn, take part, spread it",
+      "robot": "robots/07_pointing_transparent.png",
+      "links": [
+        {
+          "label": "Learn about the movement",
+          "url": "/movement/"
+        },
+        {
+          "label": "Take Part",
+          "url": "/join/"
+        },
+        {
+          "label": "News",
+          "url": "/news/"
+        }
+      ]
+    },
+    {
+      "label": "The Case",
+      "url": "/case/",
+      "desc": "The evidence — what living really costs",
+      "robot": "robots/19_presenting_transparent.png",
+      "links": [
+        {
+          "label": "The Case for Uncost",
+          "url": "/case/"
+        },
+        {
+          "label": "Cost of Living Sectors",
+          "url": "/sectors/"
+        },
+        {
+          "label": "The Receipts",
+          "url": "/receipts/"
+        }
+      ]
+    },
+    {
+      "label": "The Projects",
+      "url": "/projects/",
+      "desc": "Open tools that cut real costs",
+      "robot": "robots/10_building_transparent.png",
+      "links": [
+        {
+          "label": "All projects",
+          "url": "/projects/"
+        },
+        {
+          "label": "Human Essentials Dashboard",
+          "url": "/projects/human-essentials-dashboard/"
+        },
+        {
+          "label": "Cost of Living Tracker",
+          "url": "/projects/cost-of-living-tracker/"
+        }
+      ]
+    },
+    {
+      "label": "The Assembly",
+      "url": "/assembly/",
+      "desc": "Your voice — transparent and advisory",
+      "robot": "robots/21_holding_globe_transparent.png",
+      "links": [
+        {
+          "label": "How the Assembly works",
+          "url": "/assembly/"
+        },
+        {
+          "label": "The Treasury",
+          "url": "/treasury/"
+        },
+        {
+          "label": "Policies",
+          "url": "/policies/"
+        }
+      ]
+    }
+  ],
+  "navSecondary": [
+    {
+      "label": "FAQ",
+      "url": "/faq/"
+    },
+    {
+      "label": "About",
+      "url": "/about/"
+    },
+    {
+      "label": "Contact",
+      "url": "/contact/"
+    }
+  ],
+  "footer": [
+    {
+      "heading": "The Movement",
+      "links": [
+        {
+          "label": "The Movement",
+          "url": "/movement/"
+        },
+        {
+          "label": "Sign the Pledge",
+          "url": "/pledge/"
+        },
+        {
+          "label": "Take Part",
+          "url": "/join/"
+        },
+        {
+          "label": "Contribute",
+          "url": "/contribute/"
+        }
+      ]
+    },
+    {
+      "heading": "The Case",
+      "links": [
+        {
+          "label": "The Case",
+          "url": "/case/"
+        },
+        {
+          "label": "Sectors",
+          "url": "/sectors/"
+        },
+        {
+          "label": "The Receipts",
+          "url": "/receipts/"
+        },
+        {
+          "label": "Corrections & changelog",
+          "url": "/receipts/#corrections"
+        }
+      ]
+    },
+    {
+      "heading": "Projects & Assembly",
+      "links": [
+        {
+          "label": "The Projects",
+          "url": "/projects/"
+        },
+        {
+          "label": "The Roadmap",
+          "url": "/roadmap/"
+        },
+        {
+          "label": "The Assembly",
+          "url": "/assembly/"
+        },
+        {
+          "label": "The Treasury",
+          "url": "/treasury/"
+        }
+      ]
+    },
+    {
+      "heading": "About & records",
+      "links": [
+        {
+          "label": "About",
+          "url": "/about/"
+        },
+        {
+          "label": "News",
+          "url": "/news/"
+        },
+        {
+          "label": "FAQ",
+          "url": "/faq/"
+        },
+        {
+          "label": "Policies",
+          "url": "/policies/"
+        },
+        {
+          "label": "Privacy",
+          "url": "/privacy/"
+        },
+        {
+          "label": "Contact",
+          "url": "/contact/"
+        },
+        {
+          "label": "GitHub public records",
+          "url": "https://github.com/uncost-org/uncost",
+          "external": true
+        }
+      ]
+    }
+  ],
+  "footerBar": [
+    {
+      "label": "Accessibility",
+      "url": "/accessibility/"
+    }
+  ],
+  "social": [
+    {
+      "label": "Email",
+      "url": "mailto:contact@uncost.org"
+    },
+    {
+      "label": "Instagram",
+      "url": "https://instagram.com/uncost_org"
+    },
+    {
+      "label": "Threads",
+      "url": "https://threads.net/@uncost_org"
+    },
+    {
+      "label": "X",
+      "url": "https://x.com/uncost_org"
+    },
+    {
+      "label": "Bluesky",
+      "url": "https://bsky.app/profile/uncost-org.bsky.social"
+    },
+    {
+      "label": "YouTube",
+      "url": "https://youtube.com/@uncost_org"
+    },
+    {
+      "label": "Reddit",
+      "url": "https://reddit.com/u/uncost_org"
+    },
+    {
+      "label": "TikTok",
+      "url": "https://tiktok.com/@uncost.org"
+    }
+  ],
+  "searchShortcuts": [
+    {
+      "label": "All fifteen sectors",
+      "url": "/sectors/"
+    },
+    {
+      "label": "The Case",
+      "url": "/case/"
+    },
+    {
+      "label": "The Projects",
+      "url": "/projects/"
+    },
+    {
+      "label": "The Pledge",
+      "url": "/pledge/"
+    },
+    {
+      "label": "Policies",
+      "url": "/policies/"
+    },
+    {
+      "label": "FAQ",
+      "url": "/faq/"
+    },
+    {
+      "label": "News",
+      "url": "/news/"
+    },
+    {
+      "label": "Contact",
+      "url": "/contact/"
+    }
+  ]
+}

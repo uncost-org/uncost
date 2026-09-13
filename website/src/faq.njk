@@ -1,34 +1,60 @@
 ---
 layout: layouts/base.njk
+permalink: "/faq/"
+pageId: "faq"
 title: "FAQ"
-description: "Straight, grouped answers to the questions a sceptic asks about Uncost — what it is, how it is funded, how evidence is handled, where AI and robotics fit, and what exists today."
+description: "Straight answers about what Uncost is, how it's funded, how the Assembly works, and where AI and robotics fit."
+mainClass: "u-45"
 ---
-{% import "partials/mailto.njk" as mail %}
-{% set emailHtml = mail.email() %}
+{#- Markup taken verbatim from design-source/pages/faq.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: faq.FAQ — title -->
+<div class="titleband" data-screen-label="FAQ — title"><h1><span class="u-1">FAQ</span></h1></div>
+<div class="u-46 introband">
+  <h2>Straight answers.</h2>
+  <p>No spin, no hedging where we can help it. If a question isn&rsquo;t here, <a class="u-1" href="/contact/">ask us</a> — we&rsquo;ll add it.</p>
+</div>
 
-<section class="blk blk--first">
-  <p class="eyebrow">FAQ</p>
-  <h1>Straight answers.</h1>
-  <p class="lead">{{ faq.standfirst }}</p>
-</section>
+<!-- SECTION: faq.The basics -->
+<div class="u-45 faqsec" data-screen-label="The basics">
+  <h3>The basics</h3>
+  <details class="qa" open><summary>What is Uncost, in one sentence?</summary><div class="a">A nonprofit, nonpartisan movement to reduce the cost of living by directing AI, robotics, and open-source tools toward the essentials — starting with evidence, not promises.</div></details>
+  <details class="qa"><summary>Is this a political party or campaign?</summary><div class="a">No. Uncost is strictly nonpartisan. We publish open data and public-interest analysis and welcome people across the political spectrum. We don&rsquo;t back candidates, run campaigns, or do partisan lobbying.</div></details>
+  <details class="qa"><summary>Is this crypto, a token, or a DAO?</summary><div class="a">No — deliberately. There are no tokens, no on-chain voting, and no crypto mechanics. The Assembly&rsquo;s value is trust and participation, not financial speculation.</div></details>
+  <details class="qa"><summary>Are you against work?</summary><div class="a">No. Uncost is against <em>forced</em> work for survival. People should be free to work for creativity, contribution, family, learning, or purpose — but the basic needs of life shouldn&rsquo;t stay locked behind a paycheck forever.</div></details>
+</div>
 
-{% for section in faq.sections %}
-<section class="blk{% if loop.index0 is even %} blk--cream2{% endif %}">
-  <p class="eyebrow">{{ section.heading }}</p>
-  <h2 class="sec">{{ section.heading }}.</h2>
-  {% for item in section.items %}
-  <h3>{{ item.q }}</h3>
-  <p>{{ item.a | replace("[[EMAIL]]", emailHtml) | safe }}</p>
-  {% endfor %}
-</section>
-{% endfor %}
+<!-- SECTION: faq.Money -->
+<div class="u-45 faqsec" data-screen-label="Money">
+  <h3>Money &amp; funding</h3>
+  <details class="qa"><summary>Can I donate right now?</summary><div class="a">Not yet. We&rsquo;re seeking fiscal sponsorship before accepting public tax-deductible donations. You can <a href="/contribute/">register an intention to give</a> and we&rsquo;ll email you the moment it opens — no money changes hands today.</div></details>
+  <details class="qa"><summary>How will you handle money transparently?</summary><div class="a">Through <a href="/treasury/">The Treasury</a> — a public financial record of funds received, spending categories, reserves, and fees, with redactions only where privacy or law requires. Every expense has an internal receipt and approval trail.</div></details>
+  <details class="qa"><summary>Do donations buy influence or votes?</summary><div class="a">Never. There&rsquo;s no payment to vote and no extra influence for donors — that&rsquo;s a core principle, since the whole movement opposes wealth determining outcomes.</div></details>
+</div>
 
-<section class="blk blk--ink">
-  <p class="eyebrow">Still curious?</p>
-  <h2 class="sec">Ask us anything.</h2>
-  <p>If your question isn’t here, write to us and a human will reply — {{ mail.email() }}. If a question comes up often, it joins this page.</p>
-  <p>
-    <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
-    <a href="/contact" class="u-btn u-btn--outline-cream">Contact</a>
-  </p>
+<!-- SECTION: faq.Evidence -->
+<div class="u-45 faqsec" data-screen-label="Evidence">
+  <h3>The evidence</h3>
+  <details class="qa"><summary>How do I know your numbers are real?</summary><div class="a">Every figure carries a source, a date, and a confidence label. Anything hypothetical is marked &ldquo;illustrative only.&rdquo; The full method is in <a href="/receipts/">The Receipts</a>, and corrections are logged publicly.</div></details>
+  <details class="qa"><summary>Won&rsquo;t you just overpromise what AI can do?</summary><div class="a">We use careful, task-specific language and publish uncertainty ranges. Where a model shows automation <em>doesn&rsquo;t</em> beat the status quo once energy, capital, and maintenance are counted, we publish that negative result too.</div></details>
+  <details class="qa"><summary>Why fifteen sectors?</summary><div class="a">Because living isn&rsquo;t one bill. We map all fifteen essentials of a decent life and go deep on three first — Shelter, Food, and Energy — to prove the model before expanding. See <a href="/sectors/">the Sectors</a>.</div></details>
+</div>
+
+<!-- SECTION: faq.Governance -->
+<div class="u-45 faqsec" data-screen-label="Governance">
+  <h3>Voice &amp; governance</h3>
+  <details class="qa"><summary>What is the Assembly, and is my vote binding?</summary><div class="a">The Assembly is how supporters propose, prioritise, and review the work, with transparent records. It is <b>currently advisory</b>. As the legal structure matures, votes may carry more weight where the law allows — but decisions with legal, fiduciary, or safeguarding duty always rest with responsible leadership and the fiscal sponsor. The exact binding-versus-advisory wording is being finalised and will be published in the governance policy.</div></details>
+  <details class="qa"><summary>Who runs Uncost?</summary><div class="a">It&rsquo;s currently founder-led and recruiting an advisory and operating group. The public identity is the movement itself, but it isn&rsquo;t anonymous to those who need to know: founder identity and background are disclosed confidentially for legitimate due diligence.</div></details>
+  <details class="qa"><summary>How is my data handled?</summary><div class="a">Minimally. We use your details only for what you asked for, never sell data, and never use your pledge for partisan targeting. Full detail in the <a href="/privacy/">Privacy Policy (POL-001)</a>.</div></details>
+</div>
+
+<!-- SECTION: faq.FAQ CTA -->
+<section class="u-47 blk blk--coral" data-screen-label="FAQ CTA">
+  <h2 class="u-38 sec">Still have a question?</h2>
+  <p class="u-48 lead">Ask directly — a human replies from contact@uncost.org.</p>
+  <div class="u-40">
+    <a href="/contact/" class="u-btn u-btn--ink">Contact us</a>
+    <a href="/pledge/" class="u-btn u-btn--ghost">Sign the Pledge</a>
+  </div>
 </section>

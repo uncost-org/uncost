@@ -11,22 +11,23 @@
   "base": {
     "repository": "uncost-org/uncost",
     "branch": "main",
-    "base_commit": "4d22924095aad24707b6b08913ad63c78b58dcfc",
+    "base_commit": "94d2481098cc4815085917746152e4ffba5872a5",
     "base_tree": "b9645bc047c135ec497e7a268fd910b2b56f962f",
     "asset_manifest_path": "website/assets/brand/ASSET_MANIFEST.json",
     "asset_manifest_sha256": "1a553c66418a84cab12cbe17975a56d4746a53b552d2979dde0038afff3414ed"
   },
   "changed_file_coverage": {
     "mode": "git-diff-output-inventory",
-    "base_commit": "4d22924095aad24707b6b08913ad63c78b58dcfc",
-    "review_branch": "paperclip/unp-46-design-handoff"
+    "base_commit": "94d2481098cc4815085917746152e4ffba5872a5",
+    "review_branch": "feat/design-v2-integration"
   },
   "archive": {
-    "filename": "Uncost Design System-handoff.zip",
-    "sha256": "8962b207d54d6536bef89ff8a96d5fc8ecb96007c01071dbdafbf03933730441",
-    "bytes": 397289097,
-    "member_count": 514,
-    "root_prefix": "uncost-design-system/"
+    "filename": "Uncost Design System v4.3",
+    "sha256": "12bdbebb98e8e106f8b9274b060b61abff14d6f7cc0428691d9b558f7ac2fb1f",
+    "bytes": 0,
+    "member_count": 127,
+    "root_prefix": "design-source/",
+    "note": "v4.3 delivered unpacked; CHECKLIST.md hash pins the tree revision."
   },
   "governance_inputs": {
     "accepted_roadmap_issue": "UNP-39",
@@ -36,24 +37,38 @@
   },
   "source_transformations": [
     {
-      "logical_source_path": "project/colors_and_type.css",
-      "source_sha256": "bc335c5e3c5e5430a9bd869689247344339d6d07d94ec411f529606a3ca351a5",
+      "logical_source_path": "design-source/css/tokens.css",
+      "source_sha256": "f51d6ddf4170589f45b23309f747d6b09551b33b34bc62be301bad74a526488f",
       "output_path": "website/design-system/tokens.css",
-      "output_sha256": "3a151bdfdd4886a6e6d662d2795d99665d4711eaaa3a50fd51d17df2dbf49bf9",
+      "output_sha256": "baa28aa90f10bd9103b9fc62775bc0a192f8a0c10f7f778999f12c947c33938d",
       "mode": "transform"
     },
     {
-      "logical_source_path": "project/ui_kits/components.css",
-      "source_sha256": "6ae252e2f87b169d261af0dc1707fbe999faa81c4458be1f8c7c497a1d8bcf24",
+      "logical_source_path": "design-source/css/components.css",
+      "source_sha256": "9e8424670ea812bcef6b4824461a0f9e4ccfdbb1273a364f94e1ece6cfa85bf0",
       "output_path": "website/design-system/components.css",
-      "output_sha256": "d2a296f1ef4933ce18e2ef84da5d4084b094ca71b5d9c9c26ac83c488389ba6d",
+      "output_sha256": "757cf19f93fdef9e0fd0a35edcb5c5800a82bc0d302fd33019fe4636ca62a302",
       "mode": "transform"
     },
     {
-      "logical_source_path": "project/assets/icons/icons.svg",
-      "source_sha256": "30b694a2d8fd28c22d8e391adfee14e4678199efba39bd5f9f0271b6703ed505",
+      "logical_source_path": "design-source/css/site.css",
+      "source_sha256": "5bfeef94d074e549385c057103439215f63cc31fc02331a0145e8ce51e2d5cd1",
+      "output_path": "website/design-system/site.css",
+      "output_sha256": "ba3a8f11567135a822298a6be8504567a76ff61d717daaaf9a27f313e627821c",
+      "mode": "transform"
+    },
+    {
+      "logical_source_path": "design-source/css/sections.css",
+      "source_sha256": "4a194a912215a739ad2a257ed80597e1f67922c6b73983cbef31a703e064f7f0",
+      "output_path": "website/design-system/sections.css",
+      "output_sha256": "e2b0d72e16350dc0598f805ad6d1824b16c1e3f62e95235686e4cd4839a428f6",
+      "mode": "adopt"
+    },
+    {
+      "logical_source_path": "design-source/assets/icons/social.svg",
+      "source_sha256": "76868e89df7acc874f5fe3dec65610f2468139858ee48bf2222602003d608064",
       "output_path": "website/design-system/icons/icons.svg",
-      "output_sha256": "a4f9e8558761a98a3d66cb029e15254be4e4bce98b5e4860e14c143b1dc1070b",
+      "output_sha256": "2a3d72c16db961742854386a601029d83ff54b27d054dbed4c7d0b24553778e2",
       "mode": "curate"
     }
   ],
@@ -123,12 +138,12 @@
     },
     {
       "path": "scripts/audit_design_handoff.py",
-      "sha256": "b960304e44be56d170773765d611479a496643b43dc803e8ceb66f15cfad16e9",
+      "sha256": "adb1eacfa36bf158a46ebdf661f73f081208832a8904774e115a39b2e39f2752",
       "role": "reproducible-checks"
     },
     {
       "path": "scripts/audit_repository.py",
-      "sha256": "5ed927a9fefa337ecdf1dc5b4b68b6672fc966eafb803b4fd2a535f7fa6991b0",
+      "sha256": "ecf9fcf48b9175439f5c5a399abf7edb5b9fbe116afd01fde43f30b9d8124561",
       "role": "repository-audit-entrypoint"
     },
     {
@@ -138,7 +153,7 @@
     },
     {
       "path": "website/design-system/AUTHORITY.md",
-      "sha256": "5391196377584cb536d510655a0f58873c231ebc3fa0cfcf66b6949b8ee2a519",
+      "sha256": "658bdd38b2588f625e762f7404f4a88ca24a1b9cc33132c00d7b4b70b060cd85",
       "role": "precedence-and-boundary"
     },
     {
@@ -148,17 +163,25 @@
     },
     {
       "path": "website/design-system/tokens.css",
-      "sha256": "3a151bdfdd4886a6e6d662d2795d99665d4711eaaa3a50fd51d17df2dbf49bf9",
+      "sha256": "baa28aa90f10bd9103b9fc62775bc0a192f8a0c10f7f778999f12c947c33938d",
       "role": "semantic-tokens"
     },
     {
       "path": "website/design-system/components.css",
-      "sha256": "d2a296f1ef4933ce18e2ef84da5d4084b094ca71b5d9c9c26ac83c488389ba6d",
+      "sha256": "757cf19f93fdef9e0fd0a35edcb5c5800a82bc0d302fd33019fe4636ca62a302",
       "role": "component-primitives"
     },
     {
+      "path": "website/design-system/sections.css",
+      "sha256": "e2b0d72e16350dc0598f805ad6d1824b16c1e3f62e95235686e4cd4839a428f6"
+    },
+    {
+      "path": "website/design-system/site.css",
+      "sha256": "ba3a8f11567135a822298a6be8504567a76ff61d717daaaf9a27f313e627821c"
+    },
+    {
       "path": "website/design-system/icons/icons.svg",
-      "sha256": "a4f9e8558761a98a3d66cb029e15254be4e4bce98b5e4860e14c143b1dc1070b",
+      "sha256": "2a3d72c16db961742854386a601029d83ff54b27d054dbed4c7d0b24553778e2",
       "role": "iconography-subset"
     },
     {
