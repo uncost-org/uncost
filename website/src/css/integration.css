@@ -609,3 +609,37 @@ body[data-page="case"] .cards .card:nth-child(4n+3) { background: var(--cream-2)
 
 /* P2 — accent on an ink band uses the on-ink coral, not --coral-deep. */
 .hl-on-ink { color: var(--coral-on-ink); }
+
+/* 57 — R4 PROSE-BAND RULE (new). A text-only band — eyebrow + headline + body,
+ *      no grid or table — uses one style everywhere: the headline at the size
+ *      /projects/ "Gated on funding and safety." already uses,
+ *      clamp(34px, 4.2vw, 56px)/700, wrapping at its natural width; the body on
+ *      the 728px (64ch) measure. Colour and background stay per page.
+ *      Before this, prose headlines ranged 40–88px and bodies 376–840px.
+ *      Multi-column bands are excluded via :has() — "Three ways in" and every
+ *      card/table grid are untouched, as directed. CANVAS-SYNC item 57. */
+.blk:not(:has(.cards, .sgrid, .plist, .pollist, .grid3, .path, .isnot, .can,
+              .tiers, .parts4, .rule3, .focus3, .runs, .asks, .happens, .prin,
+              .ways, .next, .fund, .rel, .basket, .conftable, .vhist, .mdrawer,
+              .scope, .loop, .evd-empty, table)) h2,
+.block:not(:has(.cards, .sgrid, .plist, .pollist, .grid3, .path, .isnot, .can,
+                .tiers, .parts4, .rule3, .focus3, .runs, .asks, .happens, .prin,
+                .ways, .next, .fund, .rel, .basket, .conftable, .vhist, .mdrawer,
+                .scope, .loop, .evd-empty, table)) h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(34px, 4.2vw, 56px) !important;  /* beats .u-NN sizes */
+  line-height: 1.02;
+  letter-spacing: -.02em;
+  max-width: none !important;   /* beats .sec / .u-NN wrap widths */
+}
+.blk:not(:has(.cards, .sgrid, .plist, .pollist, .grid3, .path, .isnot, .can,
+              .tiers, .parts4, .rule3, .focus3, .runs, .asks, .happens, .prin,
+              .ways, .next, .fund, .rel, .basket, .conftable, .vhist, .mdrawer,
+              .scope, .loop, .evd-empty, table)) p,
+.block:not(:has(.cards, .sgrid, .plist, .pollist, .grid3, .path, .isnot, .can,
+                .tiers, .parts4, .rule3, .focus3, .runs, .asks, .happens, .prin,
+                .ways, .next, .fund, .rel, .basket, .conftable, .vhist, .mdrawer,
+                .scope, .loop, .evd-empty, table)) p {
+  max-width: 64ch !important;
+}
