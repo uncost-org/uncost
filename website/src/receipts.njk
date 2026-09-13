@@ -5,6 +5,7 @@ pageId: "receipts"
 title: "The Receipts"
 description: "Our open methodology and source layer. Every number has a source, every source has a date, every model states its assumptions."
 ---
+{% import "partials/figure.njk" as fig %}
 {#- Markup taken verbatim from design-source/pages/receipts.html. CONTENT.md marks this
     page's copy "inline (draft)", so the export supplies both; only asset
     references and routes are rewritten. Do not re-author.
@@ -47,41 +48,14 @@ description: "Our open methodology and source layer. Every number has a source, 
 </section>
 
 
-<!-- SECTION: receipts.Worked example -->
-{#- The export ships this section with a $X placeholder and illustrative
-    markers; UNP-82 v1 §4c dresses it with a real figure instead. Every value
-    below comes from the register row, so the example cannot drift from the
-    source it demonstrates. Supersedes CANVAS-SYNC item 12's removal. -#}
-{% import "partials/figure.njk" as fig %}
-{% set wex = register.byId["SRC-023"] %}
-<section class="blk blk--cream" data-screen-label="Worked example">
-  <div class="eyebrow">A worked example</div>
-  <h2 class="u-125 sec">A figure, fully dressed.</h2>
-  {{ fig.fact(wex) }}
-</section>
-
 <!-- SECTION: receipts.The register -->
-<section class="blk blk--cream2" id="register" data-screen-label="The register">
+<section class="blk blk--wheat" id="register" data-screen-label="The register">
   <div class="eyebrow">The register</div>
   <h2 class="u-129 sec">Every figure we publish, with its receipt.</h2>
   <p class="u-130 lead">{{ register.stats | length }} sourced figures, each with the publisher, the exact title, the date we last checked it and the region it covers. Nothing here is illustrative — every number is traceable to a named public source.</p>
   <div class="cards">
 {% for row in register.stats %}
-    <div class="card" id="{{ row.source_id }}" data-source="{{ row.source_id }}">
-      <div class="id">{{ row.source_id }}</div>
-      <div class="fig">{{ row.display_value }}</div>
-      <div class="unit">{{ row.data_period }}</div>
-      <div class="claim">{{ row.display_caption }}</div>
-      <div class="foot">
-        <div class="pub">{{ row.publisher }}</div>
-        <div class="ttl">{% if row.url %}<a href="{{ row.url }}" target="_blank" rel="noopener">{{ row.publication_work }}</a>{% else %}{{ row.publication_work }}{% endif %}</div>
-        <div class="row">
-          <span class="m">Checked {{ row.last_checked }}</span>
-          <span class="m">{{ row.region }}</span>
-          <span class="rcpt-conf rcpt-conf--{{ "confirmed" if row.confidence.startsWith("confirmed") else "estimate" }}">{{ "Confirmed" if row.confidence.startsWith("confirmed") else "Estimate" }}</span>
-        </div>
-      </div>
-    </div>
+    {{ fig.card(row) }}
 {% endfor %}
   </div>
   <p class="u-131">Figures are re-checked on a published cadence. A figure past its review date is relabelled <b>Needs refresh</b> rather than quietly left standing, and every change is recorded in the <a class="u-132" href="#corrections">corrections log</a>.</p>
@@ -90,7 +64,7 @@ description: "Our open methodology and source layer. Every number has a source, 
 <!-- SECTION: receipts.Keeping current -->
 <section class="blk blk--ink u-block--ink" data-screen-label="Keeping current">
   <div class="u-111 eyebrow">Because data goes stale</div>
-  <h2 class="u-133 sec">Built to stay current.</h2>
+  <h2 class="u-133 sec">Built to stay <span class="hl-on-ink">current</span>.</h2>
   <p class="u-134 lead">The dashboards pull from public sources where possible, show visible &ldquo;last updated&rdquo; dates, and follow a regular review cadence. Automating those data pipelines is a funding priority — precisely so the evidence stays fresh instead of decaying quietly.</p>
 </section>
 

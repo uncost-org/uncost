@@ -58,6 +58,18 @@ eleventyComputed:
   <div class="evd-empty">
     {% if sector.evidence %}<h3>{{ sector.evidence }}</h3>{% else %}{{ gap("sector-evidence") }}{% endif %}
     <p>Reviewed source records come before figures. When the first {{ sector.name }} figures publish, each line will carry: value, unit, region, date observed, a source ID from the public register, a confidence label, and the collection method.</p>
+{#- R3 figure slot. Renders the shared figure card for any registered figures
+    this sector carries. `figures` is not yet set on any sector, so this is
+    template only today — when the first sector figures land, they render in the
+    same card as /receipts/, /case/ and the homepage, with no further work. -#}
+{% set secFigs = sectorContent[sector.slug].figures if sectorContent[sector.slug] else none %}
+{% if secFigs %}
+    <div class="cards">
+{% for sid in secFigs %}
+      {{ fig.card(register.byId[sid]) }}
+{% endfor %}
+    </div>
+{% endif %}
     <div class="u-141">
       <span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span>
       <span class="rcpt-conf rcpt-conf--estimate">Estimate</span>

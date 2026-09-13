@@ -73,6 +73,27 @@ module.exports = function () {
 
   // Cost statistics only (excludes the governance-control pin SRC-001).
   const stats = all.filter((r) => r.type === "cost-statistic");
+  // R3 figure card: the caption echoes its own display value in the numeral's
+  // colour. register.js already guarantees the value appears verbatim in the
+  // caption, so this only has to find it. The caption is escaped FIRST and the
+  // span injected after, so the result is safe to render unescaped and can
+  // never carry markup from the register.
+  const esc = (t) => String(t)
+    .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  for (const row of stats) {
+    let html = esc(row.display_caption);
+    if (row.display_value) {
+      for (const part of row.display_value.split(" versus ")) {
+        const e = esc(part);
+        const at = html.indexOf(e);           // first verbatim occurrence only
+        if (at > -1) {
+          html = html.slice(0, at) + '<span class="echo">' + e + "</span>" +
+                 html.slice(at + e.length);
+        }
+      }
+    }
+    row.captionHtml = html;
+  }
 
   // display_value is the headline numeral a page renders large (the design's
   // 104px figure). It is a PRESENTATION EXTRACT of the row, never an

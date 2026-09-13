@@ -300,30 +300,8 @@ body[data-page="case"] .cards > .card { min-width: 0; }
 body[data-page="case"] .card .foot .row a.m { text-decoration: none; }
 
 
-/* 33 — /receipts/ worked example reuses `.fact`, the design's full-dress
- *      statistic (ink card, 104px coral numeral, claim, then source /
- *      publication year / period / region on its face). It is the right
- *      component for a showcase of ONE figure and reads as clearly distinct
- *      from the cream register grid below it — which is the point of the
- *      section. The export scopes `.fact` to the homepage, so as with the
- *      policy layout and the /case/ cards it renders unstyled anywhere else.
- *      Rules below are the export's own, generated mechanically with only the
- *      page-id changed. The width cap is the one addition: on the homepage
- *      `.fact` is one of three grid cells, and full-bleed it would read as a
- *      band rather than a card. CANVAS-SYNC item 33. */
-:where(body[data-page="receipts"]) .fact{background:var(--ink);padding:26px 24px 22px;display:flex;flex-direction:column}
-:where(body[data-page="receipts"]) .fact .n{font-family:var(--font-display);font-weight:900;font-size:clamp(52px,6.6vw,104px);line-height:.85;letter-spacing:-.04em;color:var(--coral);font-variant-numeric:tabular-nums}
-:where(body[data-page="receipts"]) .fact .n.cmp{display:flex;align-items:baseline;gap:10px 20px;flex-wrap:wrap}
-:where(body[data-page="receipts"]) .fact .n.cmp .pair{display:inline-flex;align-items:baseline;gap:10px;white-space:nowrap}
-:where(body[data-page="receipts"]) .fact .n.cmp .vs{font-family:var(--font-body);font-weight:600;font-size:15px;letter-spacing:.08em;text-transform:uppercase;color:#A9A59C}
-:where(body[data-page="receipts"]) .fact .n.cmp .b{color:var(--cream)}
-:where(body[data-page="receipts"]) .fact .l{font-family:var(--font-display);font-weight:700;font-size:clamp(17px,1.55vw,21px);letter-spacing:-.01em;line-height:1.22;margin:16px 0 auto;text-wrap:pretty;color:var(--cream)}
-:where(body[data-page="receipts"]) .fact .src{border-top:2px solid #3A3A36;margin-top:18px;padding-top:12px;font-size:12.5px;line-height:1.45;color:#C9C5BA;display:block;text-wrap:pretty}
-:where(body[data-page="receipts"]) .fact .src b{display:block;font-family:var(--font-body);font-weight:600;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--coral);margin-bottom:4px}
-:where(body[data-page="receipts"]) .fact .src em{font-style:italic;white-space:normal}
-:where(body[data-page="receipts"]) .fact .src .dt{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;align-items:flex-start}
-:where(body[data-page="receipts"]) .fact .src .dt span{border:1.5px solid #4A4A44;padding:3px 8px;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#C9C5BA;flex:0 0 auto;white-space:nowrap;max-width:100%;overflow:visible}
-body[data-page="receipts"] .fact { max-width: 640px; }
+/* 33 — RETIRED 2026-09-13 by R3: `.fact` is gone; every sourced statistic
+ *      now renders as the shared figure card (item 55). */
 
 /* 34 — /case/ Methodology drawer headings promoted h4 -> h3. Removing the
  *      dashboard-preview sections (item 36) removed the <h3>s that sat between
@@ -436,12 +414,7 @@ body[data-page="case"] .mdrawer-body h3 {
 /* 42 — /case/ figure captions at 2x, bold. Scoped to /case/ only: the receipts
  *      register grid keeps 14.5px, where 26 cards have to stay scannable.
  *      Here there are four, and the claim is the argument. CANVAS-SYNC item 42. */
-body[data-page="case"] .card .claim {
-  font-size: 29px;
-  line-height: 1.25;
-  font-weight: 700;
-  color: var(--ink);
-}
+/* (item 42's /case/-only caption size is superseded by R3, item 55.) */
 
 /* 43 — Methodology drawer toggle: the FAQ chevron instead of a "+" glyph, with
  *      the same 45deg / -135deg open-close rotation. Done in CSS rather than
@@ -572,3 +545,67 @@ body[data-page="pledge-thanks"] .u-100 { border-top: 0; }
 /* /sectors/ card grid — R1 gave it a 4px coral top; its 2px ink frame is the
  * boundary. */
 body[data-page="sectors"] .sgrid { border-top: 2px solid var(--ink) !important; }
+
+/* 55 — R3 ONE FIGURE CARD. Every sourced statistic on the site renders as the
+ *      receipts register card: /receipts/ register, /case/ 2x2 and mechanism
+ *      2-up, the homepage stats, and the sector-dossier figure slot. `.fact`
+ *      is retired (item 33). The card rules below are the export's own,
+ *      generated mechanically from sections.css with the `data-page="receipts"`
+ *      scope stripped so one treatment serves every location.
+ *
+ *      NOTE: the homepage's three stats were NOT in R3's "Apply to" list, but
+ *      they used `.fact`, so retiring it required converting them too.
+ *      CANVAS-SYNC item 55. */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--ink);border:2px solid var(--ink)}
+.cards .card{background:#FFF;padding:24px 22px 22px;display:flex;flex-direction:column}
+.cards .card .id{font-family:var(--font-display);font-weight:700;font-size:11.5px;letter-spacing:.08em;color:var(--fg-3);margin-bottom:10px}
+.cards .card .fig{font-family:var(--font-display);font-weight:900;font-size:clamp(40px,4.4vw,62px);line-height:.86;letter-spacing:-.035em;color:var(--coral);font-variant-numeric:tabular-nums}
+.cards .card .unit{font-family:var(--font-body);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--fg-2);margin-top:8px}
+.cards .card .claim{font-size:14.5px;line-height:1.5;color:var(--fg-2);margin:14px 0 auto;text-wrap:pretty}
+.cards .card .claim b{color:var(--ink);font-weight:600}
+.cards .card .foot{border-top:2px solid var(--ink);margin-top:20px;padding-top:12px}
+.cards .card .foot .pub{font-size:13px;line-height:1.4;font-weight:600;color:var(--ink)}
+.cards .card .foot .ttl{font-size:12.5px;line-height:1.4;color:var(--fg-3);margin-top:2px}
+.cards .card .foot .row{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;align-items:flex-start}
+.cards .card .foot .row span.m{border:1.5px solid var(--fg-3);padding:3px 8px;font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--fg-2);white-space:nowrap;flex:0 0 auto;background:var(--cream-2)}
+/* R3 additions to the export's card. */
+/* Caption: bold, 36px (R3-a ships 36px), echoing its display value in the
+ * numeral's coral. --coral-deep on the light cells for AA; the numeral itself
+ * is large-text and keeps --coral as the export drew it. */
+.cards .card .claim {
+  font-size: 36px;
+  line-height: 1.18;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -.015em;
+}
+.cards .card .claim .echo { color: var(--coral-deep); }
+/* SOURCE eyebrow above the publisher. */
+.cards .card .src-eyebrow {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  margin-bottom: 6px;
+}
+/* Chip row: the period is the scope and lives under the numeral, never here. */
+.cards .card .foot .row a.m { text-decoration: none; }
+
+/* Checkerboard. A 3-track grid alternates correctly on odd/even; a 2-track grid
+ * needs the 4n pattern or it stripes vertically instead. */
+.cards .card:nth-child(odd)  { background: var(--cream); }
+.cards .card:nth-child(even) { background: var(--cream-2); }
+.cards--2up,
+body[data-page="case"] .cards { grid-template-columns: repeat(2, 1fr); }
+.cards--2up .card:nth-child(4n+1), .cards--2up .card:nth-child(4n+4),
+body[data-page="case"] .cards .card:nth-child(4n+1),
+body[data-page="case"] .cards .card:nth-child(4n+4) { background: var(--cream); }
+.cards--2up .card:nth-child(4n+2), .cards--2up .card:nth-child(4n+3),
+body[data-page="case"] .cards .card:nth-child(4n+2),
+body[data-page="case"] .cards .card:nth-child(4n+3) { background: var(--cream-2); }
+.cards > .card { min-width: 0; }
+
+/* P2 — accent on an ink band uses the on-ink coral, not --coral-deep. */
+.hl-on-ink { color: var(--coral-on-ink); }

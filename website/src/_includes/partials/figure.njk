@@ -10,62 +10,46 @@
     {{ fig.line(register.byId["SRC-021"]) }}   (compact, one-line variant)
 -#}
 
-{% macro stat(row) -%}
-<figure class="rcpt" data-source="{{ row.source_id }}">
-  <p class="cap">{{ row.display_caption }}</p>
-  <figcaption class="rcpt-src">{{ row.source_line }} · <a href="/receipts/#{{ row.source_id }}">Receipt&nbsp;&rarr;</a></figcaption>
-</figure>
-{%- endmacro %}
 
 {% macro line(row) -%}
 <span class="rcpt-src" data-source="{{ row.source_id }}">{{ row.display_caption }} <span class="rcpt-src">({{ row.source_line }})</span></span>
 {%- endmacro %}
 
-{#-
-  fact(row) — the design's full-dress statistic: a display numeral over its
-  plain-language claim, with source, publication year, data period and region
-  on the face of it. Every part comes from the register row; nothing here is
-  authored in the template. `.n` shows row.display_value, which _data/register.js
-  refuses to load unless it appears verbatim inside row.display_caption, so the
-  big number can never drift from the sourced claim.
-
-  A display_value of the form "A versus B" renders the design's comparison
-  variant (.n.cmp).
--#}
-{% macro fact(row) -%}
-{% set parts = row.display_value.split(" versus ") %}
-<div class="fact" data-source="{{ row.source_id }}">
-  {% if parts.length == 2 %}
-  <div class="n cmp"><span>{{ parts[0] }}</span><span class="vs">versus</span><span class="b">{{ parts[1] }}</span></div>
-  {% else %}
-  <div class="n">{{ row.display_value }}</div>
-  {% endif %}
-  <div class="l">{{ row.display_caption }}</div>
-  <div class="src"><b>Source</b>{{ row.publisher }}, <em>{{ row.publication_work }}</em>.
-    <span class="dt"><span>Published {{ row.publication_year }}</span><span>{{ row.data_period }}{% if row.data_period | length == 4 %} data{% endif %}</span><span>{{ row.region }}</span></span></div>
-</div>
-{%- endmacro %}
 
 {#-
-  card(row) — the receipts register card, reused outside /receipts/. Same markup
-  the register grid renders, so it inherits that component's styling rather than
-  inventing a second statistic treatment; the only addition is the receipt link,
-  which the register itself does not need (there, the card IS the receipt).
-  Wrap a run of these in <div class="cards"> exactly as /receipts/ does.
+  card(row) — THE figure card (R3). One treatment for every sourced statistic on
+  the site: /receipts/ register, /case/ 2x2 and mechanism 2-up, the homepage
+  stats, and the sector-dossier figure slot. Replaces the retired `.fact`.
+
+  Structure, in order:
+    .id     SRC id
+    .fig    the display value, in coral
+    .unit   the data period — this IS the figure's scope, so it is never
+            repeated as a chip in the row below
+    .claim  the caption, bold, echoing its own display value in the numeral's
+            colour (register.js builds captionHtml and escapes it first)
+    .foot   SOURCE eyebrow, publisher, linked title, then the chip row:
+            CHECKED · PUBLISHED (only when the register has a year) · region ·
+            confidence
+
+  Wrap a run of these in <div class="cards"> — the grid supplies the ink frame
+  and 2px dividers (R2) and the cream/cream2 checkerboard.
 -#}
 {% macro card(row) -%}
-<div class="card" data-source="{{ row.source_id }}">
+<div class="card" id="{{ row.source_id }}" data-source="{{ row.source_id }}">
   <div class="id">{{ row.source_id }}</div>
   <div class="fig">{{ row.display_value }}</div>
   <div class="unit">{{ row.data_period }}</div>
-  <div class="claim">{{ row.display_caption }}</div>
+  <div class="claim">{{ row.captionHtml | safe }}</div>
   <div class="foot">
+    <div class="src-eyebrow">Source</div>
     <div class="pub">{{ row.publisher }}</div>
     <div class="ttl">{% if row.url %}<a href="{{ row.url }}" target="_blank" rel="noopener">{{ row.publication_work }}</a>{% else %}{{ row.publication_work }}{% endif %}</div>
     <div class="row">
+      <span class="m">Checked {{ row.last_checked }}</span>
+      {% if row.publication_year %}<span class="m">Published {{ row.publication_year }}</span>{% endif %}
       <span class="m">{{ row.region }}</span>
       <span class="rcpt-conf rcpt-conf--{{ "confirmed" if row.confidence.startsWith("confirmed") else "estimate" }}">{{ "Confirmed" if row.confidence.startsWith("confirmed") else "Estimate" }}</span>
-      <a class="m" href="/receipts/#{{ row.source_id }}">Receipt &rarr;</a>
     </div>
   </div>
 </div>
