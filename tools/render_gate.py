@@ -154,6 +154,25 @@ SECTION_EXEMPTIONS = [
      "Approved change: the A1 divider rule moves the boundary from the legend's "
      "bottom edge to the band below it, so the legend loses its own 2px rule and "
      "gains a coral top rule. CANVAS-SYNC item 40."),
+    # 2026-09-13 sweep 2 — approved divergences, each citing its CANVAS-SYNC row.
+    ("sectors/", "Sources",
+     "R5: sector \"05 · Sources\" adopts the reference table format — 2px ink "
+     "frame, ink header row, ink row dividers — where the export ships a "
+     "hairline list with no frame and no header. CANVAS-SYNC item 58."),
+    ("index.html", "S2 The problem",
+     "R3: the homepage's three statistics move from the retired `.fact` ink "
+     "cards to the shared figure card. Not in the brief's \"Apply to\" list, but "
+     "they used `.fact`, so retiring it required converting them. "
+     "CANVAS-SYNC item 55."),
+    ("receipts", "Keeping current",
+     "P2 + R4: \"current\" is accented with --coral-on-ink, and the headline "
+     "takes the shared prose scale. As with the CTA, a headline resize on a flat "
+     "ink band moves nearly every pixel. CANVAS-SYNC items 56 and 57."),
+    ("receipts", "Receipts CTA",
+     "R4: this is a prose band, so its headline takes the shared "
+     "clamp(34px, 4.2vw, 56px) and its body the 728px measure. On a flat coral "
+     "band a headline resize moves nearly every pixel, hence the magnitude; "
+     "structure, copy and colour are unchanged. CANVAS-SYNC item 57."),
     ("about", "Your say",
      "Approved copy: the slot vacated by the accessibility statement carries the "
      "member-voice section on the Assembly and the privacy commitment. There is no "
