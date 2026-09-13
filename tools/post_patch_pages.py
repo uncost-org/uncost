@@ -122,21 +122,8 @@ patch("website/src/receipts.njk",
       ' rest on an estimate.</p>',
       "confidence-vs-status note", guard="These four labels describe")
 
-# The export's worked example is a $X placeholder with illustrative markers;
-# UNP-82 v1 §4c dresses it with a real register row instead.
-patch("website/src/receipts.njk",
-      r'  <div class="rcpt rcpt-figure--illus demo">.*?<p class="u-128">.*?</p>\n',
-      '{% set wex = register.byId["SRC-023"] %}\n'
-      '  <div class="rcpt" data-source="{{ wex.source_id }}">\n'
-      '    <div class="fig">{{ wex.display_value }}</div>\n'
-      '    <div class="cap">{{ wex.display_caption }}</div>\n'
-      '    <div class="rcpt-row rcpt-row--hair">\n'
-      '      <span class="rcpt-src">SOURCE &mdash; <b>{{ wex.publisher }}, {{ wex.publication_work }}</b> &middot; {{ wex.license | replace("-", " ") }}</span>\n'
-      '      <span class="rcpt-updated">Last checked: {{ wex.last_checked }}</span>\n'
-      '      <span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span>\n'
-      '    </div>\n'
-      '  </div>\n',
-      "worked example dressed from the register")
+# (The worked-example patch is retired: P2 removed that section from /receipts/
+#  entirely on 2026-09-13, and R3 retired the .fact treatment it used.)
 
 patch("website/src/receipts.njk",
       r'<p class="u-130 lead">Eleven sourced figures,',
@@ -224,5 +211,11 @@ patch("website/src/contribute.njk",
       r'<a href="/join/" class="u-btn u-btn--ink btn">Tell us how you can help</a>',
       '<a href="/contact/" class="u-btn u-btn--ink btn">Tell us how you can help</a>',
       "D1 /contribute/ CTA -> /contact/", flags=0)
+
+print("R5 — sector 05 Sources adopts the reference table format:")
+patch("website/src/sectors/sector.njk",
+      r'(  <div class="src"><div class="src-num">SRC-001.*?\n)(</section>)',
+      r'  <div class="srcs">\n    <div class="srcs-head"><span>ID</span><span>Source</span></div>\n\1  </div>\n\2',
+      "R5 sector sources table", guard='<div class="srcs">')
 
 print("done")

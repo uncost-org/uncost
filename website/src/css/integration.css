@@ -643,3 +643,37 @@ body[data-page="case"] .cards .card:nth-child(4n+3) { background: var(--cream-2)
                 .scope, .loop, .evd-empty, table)) p {
   max-width: 64ch !important;
 }
+
+/* 58 — R5 TABLE RULE (new). The sector "04 · Related projects" Ledger (`.lg`)
+ *      is the reference tabular format: 2px ink frame, ink header row, 2px ink
+ *      row dividers, cream2 alternating rows. Sector "05 · Sources" was a
+ *      hairline list with no frame and no header; it now adopts the reference
+ *      with its own columns (ID · Source). The confidence value is not split
+ *      into a status chip because it is embedded mid-sentence in the meta copy,
+ *      and separating it would mean rewriting that copy. CANVAS-SYNC item 58. */
+.srcs {
+  border: 2px solid var(--ink);
+  background: var(--cream);
+  max-width: 900px;
+  margin-top: 18px;
+}
+.srcs-head {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 12px;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 11.5px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 12px 14px;
+}
+.srcs .src {
+  border-top: 2px solid var(--ink);
+  padding: 14px;
+  margin: 0;
+  max-width: none;
+}
+.srcs .src:nth-of-type(even) { background: var(--cream-2); }
