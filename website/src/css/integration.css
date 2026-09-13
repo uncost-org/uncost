@@ -405,7 +405,7 @@ body[data-page="case"] .mdrawer-body h3 {
  *     frames) and must keep them. */
 .blk + .mdrawer,                       /* /case/  wheat -> cream  */
 .tiers + .privacyline,                 /* /join/  cream -> wheat  */
-.u-98 + .next { border-top-color: var(--coral) !important; }
+/* (.u-98 + .next removed — .next is a framed component under R2, item 54) */
 
 /* These two zero the width with !important, so the colour alone cannot fix
  * them — the whole shorthand has to be restated. */
@@ -542,3 +542,33 @@ body[data-page="assembly"] .can > div { background: var(--cream-2); }
  *     coral top edge both drew, giving two lines where the rule must be ink
  *     (coral is on one side). The coral band's own edge keeps it. */
 body[data-page="pledge-thanks"] .u-100 { border-top: 0; }
+
+/* 54 — R2 COMPONENT-FRAME RULE. Any grid or panel that draws ink divider lines
+ *      between its cells carries a COMPLETE frame: top and bottom at the same
+ *      weight and colour as those internal dividers. Five components drew
+ *      dividers but left the frame open, so the outermost cells bled into the
+ *      band. Where a frame edge is flush against a band boundary the frame edge
+ *      IS the boundary, so R1's rule is suppressed there (.ways, .sgrid).
+ *      CANVAS-SYNC item 54. */
+
+/* /join/ tier grid — dividers via .tier's border-right, no frame at all. */
+.tiers { border: 2px solid var(--ink); }
+.tiers > .tier:last-child { border-right: 0; }
+
+/* /about/ "01–04" grid — bottom edge only. */
+.parts4 { border: 2px solid var(--ink); }
+.parts4 > .part4:last-child { border-right: 0; }
+
+/* /contact/ email panel — divider via .cside's border-right, no frame. */
+.cwrap { border: 2px solid var(--ink); }
+
+/* /contribute/ ways grid — open bottom, and R1 had given it a 4px coral top.
+ * Its own 2px ink frame is the boundary here. */
+.ways { border: 2px solid var(--ink) !important; }
+
+/* /pledge/thanks/ .next — open bottom. */
+.next { border: 2px solid var(--ink); }
+
+/* /sectors/ card grid — R1 gave it a 4px coral top; its 2px ink frame is the
+ * boundary. */
+body[data-page="sectors"] .sgrid { border-top: 2px solid var(--ink) !important; }
