@@ -405,7 +405,6 @@ body[data-page="case"] .mdrawer-body h3 {
  *     frames) and must keep them. */
 .blk + .mdrawer,                       /* /case/  wheat -> cream  */
 .tiers + .privacyline,                 /* /join/  cream -> wheat  */
-.u-46 + .u-8,                          /* /policies/ cream -> cream2 */
 .u-98 + .next { border-top-color: var(--coral) !important; }
 
 /* These two zero the width with !important, so the colour alone cannot fix
@@ -423,7 +422,6 @@ body[data-page="case"] .mdrawer-body h3 {
 /* (i) …and those same two upper bands keep a bottom rule, so restating the top
  *     produced two lines. Scoped with :has() to that exact pairing only, since
  *     both classes are used elsewhere where the bottom rule is correct. */
-.u-8:has(+ .u-106) { border-bottom: 0; }
 /* .u-153 sets its bottom rule with !important, so match it. */
 .u-153:has(+ .u-154) { border-bottom: 0 !important; }
 
@@ -517,3 +515,30 @@ body[data-page^="sectors-"] #evidence .u-1 { color: var(--coral-deep) !important
  *      floor — it was 4.04:1 on cream before, also large-text-only, so this is
  *      not a regression. CANVAS-SYNC item 50. */
 body[data-page="assembly"] .can > div { background: var(--cream-2); }
+
+/* 51 — R1 extends the divider rule (supersedes the colour half of item 40).
+ *      At every boundary the rule is the first of [coral, ink, wheat] that
+ *      differs from BOTH adjacent bands. cream↔wheat is coral; anything↔coral
+ *      is ink; ink↔coral is WHEAT, because neither coral nor ink is visible
+ *      against both. /movement/ "Three ways in" → "The simplest first step"
+ *      was an ink rule on an ink band — invisible. CANVAS-SYNC item 51. */
+.blk--ink + .blk--coral,
+.block--ink + .blk--coral,
+.u-block--ink + .blk--coral { border-top-color: var(--wheat) !important; }
+.blk--coral + .blk--ink,
+.blk--coral + .block--ink,
+.blk--coral + .u-block--ink { border-top-color: var(--wheat); }
+.blk--coral:has(+ .blk--ink),
+.blk--coral:has(+ .u-block--ink) { border-bottom-color: var(--wheat); }
+
+/* 52 — R1 named exception: /news/ intro → the article/Cost Watch columns is a
+ *      same-background boundary that nonetheless carried a full-width coral
+ *      rule until e08bcc9, when item 40 removed the introband's bottom edge and
+ *      `.newswrap` had no top edge to take it over. Restored explicitly.
+ *      CANVAS-SYNC item 52. */
+.introband + .newswrap { border-top: 4px solid var(--coral); }
+
+/* (j) /pledge/thanks/ — the coral hero's ink bottom edge and the next band's
+ *     coral top edge both drew, giving two lines where the rule must be ink
+ *     (coral is on one side). The coral band's own edge keeps it. */
+body[data-page="pledge-thanks"] .u-100 { border-top: 0; }
