@@ -756,3 +756,42 @@ body[data-page="sectors-environment"] .sector-title { font-size: clamp(64px, 10.
 body[data-page="sectors-environment"] { --gp: 0.1740; }
 body[data-page="sectors-leisure"] .sector-title { font-size: clamp(95px, 15.00vw, 216px); }
 body[data-page="sectors-leisure"] { --gp: 0.1701; }
+
+/* 64 — P6 receipts keyword filter. The bar ships `hidden` and only
+ *      /js/receipts-filter.js reveals it, so with JS off the full register
+ *      renders and no dead control is shown. CANVAS-SYNC item 64. */
+.rfilter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 0 0 18px;
+}
+.rfilter label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.rfilter input[type="search"] {
+  flex: 1 1 260px;
+  min-width: 0;
+  border: 2px solid var(--ink);
+  background: var(--cream);
+  padding: 10px 14px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--ink);
+}
+.rfilter input[type="search"]:focus-visible { outline: 3px solid var(--coral-deep); outline-offset: 2px; }
+.rfilter-count {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.so-receipts { margin: 14px 0 0; }

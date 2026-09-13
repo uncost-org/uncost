@@ -17,5 +17,6 @@
   <input id="site-search" type="search" placeholder="Try &ldquo;shelter&rdquo; or &ldquo;pledge&rdquo;&hellip;" autocomplete="off">
   {% endif %}
   <div class="so-note">Site search is planned &mdash; it arrives with the dashboard build. Until then, these get you everywhere:</div>
+  <p class="so-receipts"><a class="u-btn u-btn--ink" href="/receipts/">Search the Receipts</a></p>
   <div class="so-links">{% for link in chrome.searchShortcuts %}<a href="{{ link.url }}">{{ link.label }}</a>{% endfor %}</div>
 </div>
