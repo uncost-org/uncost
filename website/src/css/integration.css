@@ -795,3 +795,17 @@ body[data-page="sectors-leisure"] { --gp: 0.1701; }
   color: var(--fg-2);
 }
 .so-receipts { margin: 14px 0 0; }
+
+/* (k) R3 regression fix: globalising `.cards` also overrode the export's
+ *     responsive collapse, which is page-scoped and therefore same-specificity
+ *     but earlier in the cascade. The grid stayed 3-up down to 390px and the
+ *     nowrap chips in the card foot pushed /receipts/ past the viewport.
+ *     The export's own breakpoints, restated globally. */
+@media (max-width: 1040px) {
+  .cards { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 680px) {
+  .cards,
+  .cards--2up,
+  body[data-page="case"] .cards { grid-template-columns: 1fr; }
+}
