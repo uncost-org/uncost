@@ -22,6 +22,14 @@ description: "What the movement is doing, dated and honest, including the update
 <div class="newswrap newswrap--solo">
   <!-- SECTION: news-uncost.Updates -->
   <div class="updates" data-screen-label="Updates">
+{#- N5 keyword filter, one per column, same progressive-enhancement pattern as
+    /receipts/: the bar ships hidden and only /js/keyword-filter.js reveals it,
+    so with JS off every item renders and no dead control is shown. -#}
+    <div class="rfilter" data-keyword-filter data-filter-for="news-uncost" data-filter-noun="updates" hidden>
+      <label for="ufilter-q">Filter these updates</label>
+      <input id="ufilter-q" type="search" autocomplete="off" placeholder="Try &ldquo;policy&rdquo; or &ldquo;repository&rdquo;&hellip;">
+      <span class="rfilter-count" data-filter-count></span>
+    </div>
     <div id="news-uncost">
 {% for item in news %}
       {{ nc.update(item, 3, false) }}
@@ -31,3 +39,4 @@ description: "What the movement is doing, dated and honest, including the update
     <p class="u-96" id="rss">More updates arrive as the movement launches. Prefer a feed? <a href="/news/feed.xml">Subscribe by RSS</a> &mdash; every update, no algorithm in between.</p>
   </div>
 </div>
+<script src="/js/keyword-filter.js" defer></script>

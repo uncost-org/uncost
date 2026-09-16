@@ -758,7 +758,7 @@ body[data-page="sectors-leisure"] .sector-title { font-size: clamp(95px, 15.00vw
 body[data-page="sectors-leisure"] { --gp: 0.1701; }
 
 /* 64 — P6 receipts keyword filter. The bar ships `hidden` and only
- *      /js/receipts-filter.js reveals it, so with JS off the full register
+ *      /js/keyword-filter.js reveals it, so with JS off the full register
  *      renders and no dead control is shown. CANVAS-SYNC item 64. */
 .rfilter {
   display: flex;

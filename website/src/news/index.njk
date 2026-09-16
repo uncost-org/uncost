@@ -33,6 +33,14 @@ description: "What the movement is doing, and the prices in the news — each wi
   <div class="updates" data-screen-label="Updates">
     <h3 class="colhead">Uncost news</h3>
     <p class="cwsub">What the movement is doing, dated and honest, including the updates that aren&rsquo;t good news.</p>
+{#- N5 keyword filter, one per column, same progressive-enhancement pattern as
+    /receipts/: the bar ships hidden and only /js/keyword-filter.js reveals it,
+    so with JS off every item renders and no dead control is shown. -#}
+    <div class="rfilter" data-keyword-filter data-filter-for="news-uncost" data-filter-noun="updates" hidden>
+      <label for="ufilter-q">Filter these updates</label>
+      <input id="ufilter-q" type="search" autocomplete="off" placeholder="Try &ldquo;policy&rdquo; or &ldquo;repository&rdquo;&hellip;">
+      <span class="rfilter-count" data-filter-count></span>
+    </div>
     <div id="news-uncost">
 {% for item in news | take(3) %}
       {{ nc.update(item, 4, true) }}
@@ -47,6 +55,11 @@ description: "What the movement is doing, and the prices in the news — each wi
     <h3 class="colhead">Cost Watch</h3>
     <p class="cwsub">Prices in the news, with the publisher and the date attached. Not receipts &mdash; verified figures live in <a href="/receipts/">The Receipts</a>.</p>
     <p class="cwdef"><b>Reported</b> &mdash; a price or cost figure as published by the linked source, with its date. Cost Watch is a watch list, not a receipt; verified figures live in <a href="/receipts/">The Receipts</a>.</p>
+    <div class="rfilter" data-keyword-filter data-filter-for="news-costwatch" data-filter-noun="items" hidden>
+      <label for="cfilter-q">Filter these items</label>
+      <input id="cfilter-q" type="search" autocomplete="off" placeholder="Try &ldquo;gasoline&rdquo; or &ldquo;BLS&rdquo;&hellip;">
+      <span class="rfilter-count" data-filter-count></span>
+    </div>
     <div id="news-costwatch">
 {% for row in register.newsFeed | take(5) %}
       {{ nc.costwatch(row, 4) }}
@@ -56,3 +69,4 @@ description: "What the movement is doing, and the prices in the news — each wi
     <p class="u-97">Checked {{ register.lastChecked }}. Every figure here has a <a href="/receipts/#register">receipt</a>.</p>
   </aside>
 </div>
+<script src="/js/keyword-filter.js" defer></script>

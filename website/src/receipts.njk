@@ -53,11 +53,11 @@ description: "Our open methodology and source layer. Every number has a source, 
   <div class="eyebrow">The register</div>
   <h2 class="u-129 sec">Every figure we publish, with its receipt.</h2>
   <p class="u-130 lead">{{ register.stats | length }} sourced figures, each with the publisher, the exact title, the date we last checked it and the region it covers. Nothing here is illustrative — every number is traceable to a named public source.</p>
-{#- P6 keyword filter. Ships hidden and is revealed by /js/receipts-filter.js,
+{#- P6 keyword filter. Ships hidden and is revealed by /js/keyword-filter.js,
     so with JS off a reader never sees a control that does nothing and the full
     register renders exactly as before. Not inside a <form>: nothing submits and
     nothing is fetched. -#}
-  <div class="rfilter" data-receipts-filter hidden>
+  <div class="rfilter" data-keyword-filter data-filter-for="register-cards" data-filter-noun="figures" hidden>
     <label for="rfilter-q">Filter these figures</label>
     <input id="rfilter-q" type="search" autocomplete="off" placeholder="Try &ldquo;rent&rdquo;, &ldquo;BLS&rdquo; or &ldquo;2026&rdquo;&hellip;">
     <span class="rfilter-count" data-filter-count></span>
@@ -98,4 +98,4 @@ description: "Our open methodology and source layer. Every number has a source, 
     <a href="/case/" class="u-btn u-btn--ghost">Back to The Case</a>
   </div>
 </section>
-<script src="/js/receipts-filter.js" defer></script>
+<script src="/js/keyword-filter.js" defer></script>
