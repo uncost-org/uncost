@@ -987,3 +987,57 @@ body[data-page="index"] .intent + h2 {
 
 /* Confidence keeps its solid fill — the only solid chip on the card. */
 .cards .card .foot .row .rcpt-conf { border-width: 1.5px; }
+
+/* 72. N4 — the Cost Watch item card.
+ *
+ *     Deliberately NOT the R3 figure card. A figure card says "this number is
+ *     ours, checked on this date, at this confidence". A Cost Watch card says
+ *     only "this publisher printed this, then". Same family, different claim,
+ *     so it keeps the export's compact `.cw` block and adds one footer row:
+ *     the outbound link on the left, a single label on the right.
+ *
+ *     Reported is the only label under /news/ and the only place the neutral
+ *     chip appears. It is the same SHAPE as a confidence chip — same padding,
+ *     border weight, cap height and letter-spacing — and a different colour on
+ *     purpose: colour means confidence everywhere else on the site, so the one
+ *     label that carries no confidence is the one with no colour. The
+ *     vocabularies are kept apart at build time by the news-label guard.
+ *     CANVAS-SYNC item 72. */
+.cw .cw-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.cw .cw-foot .ext { margin-top: 0; }
+.lbl {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border: 1.5px solid var(--ink);
+  white-space: nowrap;
+}
+.lbl--reported { color: var(--ink); background: var(--cream-2); }
+/* The card sits on --cream and lifts to --wheat on hover; the chip keeps a
+ * fixed neutral fill so the label never reads as a confidence colour. */
+.cw:hover .lbl--reported { background: var(--cream); }
+
+/* The Reported definition, printed at the top of the Cost Watch column
+ * wherever that column appears. Not a confidence-label table row: it is
+ * deliberately outside the four-label block on /case/ and /receipts/. */
+.cwdef {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--fg-2);
+  background: var(--cream);
+  border-left: 3px solid var(--ink);
+  padding: 10px 12px;
+  margin: 0 0 22px;
+}
+.cwdef b { color: var(--ink); }

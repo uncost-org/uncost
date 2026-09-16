@@ -1,3 +1,4 @@
+const fs = require("node:fs");
 const path = require("node:path");
 const markdownIt = require("markdown-it");
 const Image = require("@11ty/eleventy-img");
@@ -120,6 +121,75 @@ module.exports = function (eleventyConfig) {
   // Open Graph card image: a build-time 1200-wide PNG derivative of the
   // approved brand mark, written to dist/img/og/. Brand artwork only — never
   // a fabricated statistic. Not committed; regenerated every build.
+  // ── N4 news-label guard ────────────────────────────────────────────────
+  // Two vocabularies, deliberately kept apart:
+  //
+  //   Confirmed / Estimate / Scenario / Needs refresh  — the confidence labels.
+  //     They describe how much confidence a verified FIGURE carries. They live
+  //     on /receipts/, /case/ and the sector pages, and they are never applied
+  //     to anything under /news/.
+  //
+  //   Reported — the only label used anywhere under /news/. It says a price
+  //     was published by the linked source on a date. Cost Watch is a watch
+  //     list, not a receipt, so "Reported" must never appear on /receipts/,
+  //     /case/, a sector page, or in sources/register.csv.
+  //
+  // Either leak is a build failure, not a lint warning: a Cost Watch item
+  // wearing a confidence label would claim verification the register never
+  // did, and a receipt wearing "Reported" would understate one that it did.
+  // The check is on the class markers, not on prose — the plain English words
+  // "reported" and "confirmed" are free to appear in body copy.
+  eleventyConfig.on("eleventy.after", async ({ dir }) => {
+    const out = path.resolve(__dirname, dir.output);
+    const REPORTED = /class="[^"]*\blbl--reported\b/;
+    const CONFIDENCE = /class="[^"]*\brcpt-conf\b/;
+    const leaks = [];
+
+    const walk = (d) => {
+      for (const entry of fs.readdirSync(d, { withFileTypes: true })) {
+        const full = path.join(d, entry.name);
+        if (entry.isDirectory()) { walk(full); continue; }
+        if (!entry.name.endsWith(".html")) continue;
+        const rel = "/" + path.relative(out, full).split(path.sep).join("/");
+        const html = fs.readFileSync(full, "utf8");
+        const underNews = rel === "/news/index.html" || rel.startsWith("/news/");
+        if (underNews && CONFIDENCE.test(html)) {
+          leaks.push(`${rel} carries a confidence label (.rcpt-conf); only "Reported" is allowed under /news/.`);
+        }
+        if (!underNews && REPORTED.test(html)) {
+          leaks.push(`${rel} carries the Reported label (.lbl--reported); it is allowed only under /news/.`);
+        }
+      }
+    };
+    if (fs.existsSync(out)) walk(out);
+
+    // The register is the other direction of the same rule: "reported" is not
+    // a confidence value, so it must never appear in that column.
+    const csv = path.resolve(__dirname, "..", "sources", "register.csv");
+    if (fs.existsSync(csv)) {
+      const [head, ...rows] = fs.readFileSync(csv, "utf8").trim().split(/\r?\n/);
+      const col = head.split(",").indexOf("confidence");
+      if (col !== -1) {
+        rows.forEach((line, i) => {
+          // Confidence is a bare enum value, so a naive split is enough to spot
+          // it without pulling in a CSV parser; quoted prose fields cannot
+          // produce the exact token "reported" in this position by accident.
+          const cells = line.split(",");
+          if ((cells[col] || "").trim().toLowerCase() === "reported") {
+            leaks.push(`sources/register.csv row ${i + 2}: confidence="reported" — Reported is a /news/ label, not a confidence value.`);
+          }
+        });
+      }
+    }
+
+    if (leaks.length) {
+      throw new Error(
+        "News label guard failed — the /news/ and /receipts/ label vocabularies leaked:\n  - " +
+          leaks.join("\n  - ")
+      );
+    }
+  });
+
   eleventyConfig.on("eleventy.before", async () => {
     await Image(path.join(BRAND_ROOT, "logos", "mark-only-final-light.png"), {
       widths: [1200],
