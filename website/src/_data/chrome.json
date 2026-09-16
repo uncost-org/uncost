@@ -38,6 +38,10 @@
         {
           "label": "The Receipts",
           "url": "/receipts/"
+        },
+        {
+          "label": "Cost Watch",
+          "url": "/news/cost-watch/"
         }
       ]
     },
