@@ -809,3 +809,29 @@ body[data-page="sectors-leisure"] { --gp: 0.1701; }
   .cards--2up,
   body[data-page="case"] .cards { grid-template-columns: 1fr; }
 }
+
+/* 66 — BUG-1. `.cards .card` sets display:flex at (0,2,0), which beats the
+ *      reset's `[hidden]{display:none}` at (0,1,0), so the filter's hidden
+ *      cards kept rendering — the counter was right and the hiding silently
+ *      failed. Same cascade trap as the .cards responsive regression in R3.
+ *      Scoped to the card rather than a blanket [hidden] rule so it cannot mask
+ *      the next instance of the same mistake elsewhere.
+ *      CANVAS-SYNC item 66. */
+.cards .card[hidden] { display: none !important; }
+
+/* 67 — BUG-2, generic. R2 says that where a framed component's edge is flush
+ *      against a band boundary, the frame edge IS the boundary. The band AUDIT
+ *      was taught that in item 54, but the stylesheet never was: the component
+ *      drew its ink frame edge and the next band still drew its own rule on
+ *      top, giving two lines (/join/ tier grid → the band below).
+ *
+ *      The selector list below is the single source of truth for framed band
+ *      components — the same list that receives the frame in item 54 — so the
+ *      two cannot drift apart. Anything added here gets both its frame and its
+ *      boundary suppression. CANVAS-SYNC item 67. */
+.tiers + *,
+.ways + *,
+.next + *,
+.parts4 + *,
+.cwrap + *,
+.sgrid + * { border-top: 0 !important; }
