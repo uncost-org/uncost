@@ -1,0 +1,42 @@
+---
+layout: layouts/base.njk
+permalink: "/news/uncost/"
+pageId: "news"
+title: "Uncost news"
+description: "What the movement is doing, dated and honest, including the updates that aren't good news."
+---
+{% import "partials/news-cards.njk" as nc %}
+{#- N2. The full Uncost updates list. Same header pattern as /news/ — titleband
+    then introband — and the same pageId, so the export's page-scoped news
+    rules apply here unchanged. The introband h2 names the column and its
+    paragraph is the column's founder-approved intro, so this route introduces
+    no new copy; the items are the same cards, at full length instead of
+    trimmed to fit a two-column landing. -#}
+<!-- SECTION: news-uncost.Uncost news — title -->
+<div class="titleband" data-screen-label="Uncost news — title"><h1><span class="u-1">Uncost</span> news</h1></div>
+<div class="introband">
+  <h2>Uncost news</h2>
+  <p>What the movement is doing, dated and honest, including the updates that aren&rsquo;t good news.</p>
+</div>
+
+<div class="newswrap newswrap--solo">
+  <!-- SECTION: news-uncost.Updates -->
+  <div class="updates" data-screen-label="Updates">
+{#- N5 keyword filter, one per column, same progressive-enhancement pattern as
+    /receipts/: the bar ships hidden and only /js/keyword-filter.js reveals it,
+    so with JS off every item renders and no dead control is shown. -#}
+    <div class="rfilter" data-keyword-filter data-filter-for="news-uncost" data-filter-noun="updates" hidden>
+      <label for="ufilter-q">Filter these updates</label>
+      <input id="ufilter-q" type="search" autocomplete="off" placeholder="Try &ldquo;policy&rdquo; or &ldquo;repository&rdquo;&hellip;">
+      <span class="rfilter-count" data-filter-count></span>
+    </div>
+    <div id="news-uncost">
+{% for item in news %}
+      {{ nc.update(item, 3, false) }}
+{% endfor %}
+    </div>
+    <p class="morelink"><a href="/news/cost-watch/">All Cost Watch &rarr;</a></p>
+    <p class="u-96" id="rss">More updates arrive as the movement launches. Prefer a feed? <a href="/news/feed.xml">Subscribe by RSS</a> &mdash; every update, no algorithm in between.</p>
+  </div>
+</div>
+<script src="/js/keyword-filter.js" defer></script>

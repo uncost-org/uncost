@@ -1,3 +1,4 @@
+const fs = require("node:fs");
 const path = require("node:path");
 const markdownIt = require("markdown-it");
 const Image = require("@11ty/eleventy-img");
@@ -5,6 +6,10 @@ const Image = require("@11ty/eleventy-img");
 const BRAND_ROOT = path.resolve(__dirname, "assets", "brand");
 
 module.exports = function (eleventyConfig) {
+  // Belt-and-braces with website/.eleventyignore: the design export is
+  // reference-only. It is never site input and never reaches dist/.
+  eleventyConfig.ignores.add("design-source/**");
+  eleventyConfig.watchIgnores.add("design-source/**");
   // Strip whitespace around block tags so `{% if %}`/`{% for %}` on their own
   // lines do not emit indented blank lines (html-validate no-trailing-whitespace).
   // Affects only block-tag whitespace — never rendered content.
@@ -13,6 +18,10 @@ module.exports = function (eleventyConfig) {
   // html: false — content sources are plain markdown; raw HTML stays inert.
   const md = markdownIt({ html: false });
   eleventyConfig.addFilter("md", (content) => md.render(content || ""));
+
+  // First n of a list — the split landing shows the latest 3 updates and the
+  // latest 5 Cost Watch items, while the dedicated routes show everything.
+  eleventyConfig.addFilter("take", (arr, n) => (Array.isArray(arr) ? arr.slice(0, n) : arr));
 
   // A URL is sitemap-eligible only if it renders an HTML page (ends in "/"
   // or ".html"); .xml/.txt/.json outputs are excluded.
@@ -35,11 +44,35 @@ module.exports = function (eleventyConfig) {
 
   // Design-system primitives only. The reference specimen, receipts, and
   // authority documents are repository governance, not site output.
-  eleventyConfig.addPassthroughCopy({ "design-system/tokens.css": "design-system/tokens.css" });
-  eleventyConfig.addPassthroughCopy({ "design-system/components.css": "design-system/components.css" });
-  eleventyConfig.addPassthroughCopy({ "design-system/fonts": "design-system/fonts" });
-  eleventyConfig.addPassthroughCopy({ "design-system/icons": "design-system/icons" });
-  eleventyConfig.addPassthroughCopy({ "src/css/site.css": "css/site.css" });
+  //
+  // The four stylesheets are the design export's own, adopted byte-identically
+  // into the governed packet (website/design-system/) and served at the paths
+  // the export's markup already uses: /css/{tokens,components,site,sections}.css,
+  // loaded in that order. Authoring happens in the design canvas and arrives by
+  // re-export — never by patching these files here.
+  eleventyConfig.addPassthroughCopy({ "design-system/tokens.css": "css/tokens.css" });
+  eleventyConfig.addPassthroughCopy({ "design-system/components.css": "css/components.css" });
+  eleventyConfig.addPassthroughCopy({ "design-system/site.css": "css/site.css" });
+  eleventyConfig.addPassthroughCopy({ "design-system/sections.css": "css/sections.css" });
+  // Repo-owned build shim, loaded last. Carries no design values.
+  eleventyConfig.addPassthroughCopy({ "src/css/integration.css": "css/integration.css" });
+  eleventyConfig.addPassthroughCopy({ "src/css/integration-v43-gap.css": "css/integration-v43-gap.css" });
+  // Curated icon sprite, served where the export's markup references it. The
+  // `vote` and `dollar` symbols the export ships are withheld per EXCLUSIONS.md.
+  eleventyConfig.addPassthroughCopy({ "design-system/icons/icons.svg": "assets/icons.svg" });
+  // Self-hosted variable fonts (OFL, already in the repo under the packet's
+  // names; these are byte-identical copies carrying the export's filenames so
+  // the adopted @font-face rules resolve without editing the export's CSS).
+  eleventyConfig.addPassthroughCopy({ "assets/fonts": "assets/fonts" });
+  // Behaviour only — menu, drawer, search overlay, accordion. No markup, no
+  // dependencies, no third-party requests.
+  eleventyConfig.addPassthroughCopy({ "src/js": "js" });
+  // First-party publication: "The Case for Uncost" (August 2026, 14 pages).
+  // Hash-pinned in docs/CONTROL.md; served from our own origin so the page has
+  // no third-party download host. Binary is committed — it IS the deliverable.
+  eleventyConfig.addPassthroughCopy({
+    "assets/downloads/the-case-for-uncost.pdf": "downloads/the-case-for-uncost.pdf",
+  });
   eleventyConfig.addPassthroughCopy({ "src/_headers": "_headers" });
 
   // Brand image pipeline. Source PNGs under assets/brand/ remain the sole
@@ -50,26 +83,41 @@ module.exports = function (eleventyConfig) {
   // alt argument; empty alt only for decorative marks).
   //
   // Usage in a template:
-  //   {% image "logos/logo-tight-light.png", "Uncost.org", "(max-width: 40rem) 8rem, 10rem", [160, 320], "eager" %}
-  async function image(src, alt, sizes = "100vw", widths = [320, 640, 960], loading = "lazy") {
+  //   {% image "logos/logo-tight-light.png", "Uncost.org", "(max-width: 40rem) 8rem, 10rem", [160, 320], "eager", "robot" %}
+  async function image(src, alt, sizes = "100vw", widths = [320, 640, 960], loading = "lazy", className = "") {
     if (alt === undefined) {
       throw new Error(`image shortcode: missing alt text for ${src}`);
     }
     const input = path.join(BRAND_ROOT, src);
+    // ONE format, so eleventy-img emits a bare <img srcset> and never a
+    // <picture> wrapper. The design's CSS is written against a bare <img> as
+    // the direct child of its container — .hero-grid is a two-column grid whose
+    // second child IS the robot — and a wrapper changes which element is the
+    // grid/flex item. `picture { display: contents }` did not save it: that
+    // promotes the <source> elements to grid items too, so .hero-grid got four
+    // children and the robot dropped to a second row. Responsive widths are
+    // kept via srcset; the format matches the manifest's PNG so the markup is
+    // shaped exactly like the export's.
     const metadata = await Image(input, {
       widths: [...widths, null], // null keeps an original-width fallback
-      formats: ["avif", "webp", "png"],
+      formats: ["png"],
       outputDir: path.join(__dirname, "dist", "img"),
       urlPath: "/img/",
       // Deterministic, content-addressed names: reproducible builds, so the
       // built-output audit and any golden checks stay stable.
       filenameFormat: (id, s, width, format) => `${path.parse(s).name}-${width}.${format}`,
     });
+    // className lands on the <img>, not the <picture>: the design's rules are
+    // written against a bare <img> (.robot caps the hero at 440px,
+    // .sector-illus fixes the dossier illustration's height), and the wrapper
+    // is display:contents so it is invisible to layout. Dropping the class here
+    // is what made the hero robot render at full size.
     return Image.generateHTML(metadata, {
       alt,
       sizes,
       loading,
       decoding: "async",
+      ...(className ? { class: className } : {}),
     });
   }
   eleventyConfig.addNunjucksAsyncShortcode("image", image);
@@ -77,6 +125,75 @@ module.exports = function (eleventyConfig) {
   // Open Graph card image: a build-time 1200-wide PNG derivative of the
   // approved brand mark, written to dist/img/og/. Brand artwork only — never
   // a fabricated statistic. Not committed; regenerated every build.
+  // ── N4 news-label guard ────────────────────────────────────────────────
+  // Two vocabularies, deliberately kept apart:
+  //
+  //   Confirmed / Estimate / Scenario / Needs refresh  — the confidence labels.
+  //     They describe how much confidence a verified FIGURE carries. They live
+  //     on /receipts/, /case/ and the sector pages, and they are never applied
+  //     to anything under /news/.
+  //
+  //   Reported — the only label used anywhere under /news/. It says a price
+  //     was published by the linked source on a date. Cost Watch is a watch
+  //     list, not a receipt, so "Reported" must never appear on /receipts/,
+  //     /case/, a sector page, or in sources/register.csv.
+  //
+  // Either leak is a build failure, not a lint warning: a Cost Watch item
+  // wearing a confidence label would claim verification the register never
+  // did, and a receipt wearing "Reported" would understate one that it did.
+  // The check is on the class markers, not on prose — the plain English words
+  // "reported" and "confirmed" are free to appear in body copy.
+  eleventyConfig.on("eleventy.after", async ({ dir }) => {
+    const out = path.resolve(__dirname, dir.output);
+    const REPORTED = /class="[^"]*\blbl--reported\b/;
+    const CONFIDENCE = /class="[^"]*\brcpt-conf\b/;
+    const leaks = [];
+
+    const walk = (d) => {
+      for (const entry of fs.readdirSync(d, { withFileTypes: true })) {
+        const full = path.join(d, entry.name);
+        if (entry.isDirectory()) { walk(full); continue; }
+        if (!entry.name.endsWith(".html")) continue;
+        const rel = "/" + path.relative(out, full).split(path.sep).join("/");
+        const html = fs.readFileSync(full, "utf8");
+        const underNews = rel === "/news/index.html" || rel.startsWith("/news/");
+        if (underNews && CONFIDENCE.test(html)) {
+          leaks.push(`${rel} carries a confidence label (.rcpt-conf); only "Reported" is allowed under /news/.`);
+        }
+        if (!underNews && REPORTED.test(html)) {
+          leaks.push(`${rel} carries the Reported label (.lbl--reported); it is allowed only under /news/.`);
+        }
+      }
+    };
+    if (fs.existsSync(out)) walk(out);
+
+    // The register is the other direction of the same rule: "reported" is not
+    // a confidence value, so it must never appear in that column.
+    const csv = path.resolve(__dirname, "..", "sources", "register.csv");
+    if (fs.existsSync(csv)) {
+      const [head, ...rows] = fs.readFileSync(csv, "utf8").trim().split(/\r?\n/);
+      const col = head.split(",").indexOf("confidence");
+      if (col !== -1) {
+        rows.forEach((line, i) => {
+          // Confidence is a bare enum value, so a naive split is enough to spot
+          // it without pulling in a CSV parser; quoted prose fields cannot
+          // produce the exact token "reported" in this position by accident.
+          const cells = line.split(",");
+          if ((cells[col] || "").trim().toLowerCase() === "reported") {
+            leaks.push(`sources/register.csv row ${i + 2}: confidence="reported" — Reported is a /news/ label, not a confidence value.`);
+          }
+        });
+      }
+    }
+
+    if (leaks.length) {
+      throw new Error(
+        "News label guard failed — the /news/ and /receipts/ label vocabularies leaked:\n  - " +
+          leaks.join("\n  - ")
+      );
+    }
+  });
+
   eleventyConfig.on("eleventy.before", async () => {
     await Image(path.join(BRAND_ROOT, "logos", "mark-only-final-light.png"), {
       widths: [1200],

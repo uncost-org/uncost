@@ -1,0 +1,37 @@
+{#-
+  Global site footer. DESIGN: structure and classes from the export
+  (design-source/partials/footer.html). CONTENT: columns, legal line and socials
+  from _data/chrome.json; the updates block is partials/forms/updates.njk and
+  renders the disabled state while features.formsOpen is false.
+-#}
+{% import "partials/social-icons.njk" as socialIcon %}
+{% import "partials/mailto.njk" as mail %}
+<footer class="ft">
+  <div class="ft-updates" id="updates">
+    <div><h2>Get updates</h2><div class="up-sub">Occasional email updates on the evidence, the tools, and the movement. Nothing else.</div></div>
+    {% include "partials/forms/updates.njk" %}
+  </div>
+  <div class="ft-grid">
+    <div>
+      {% image "logos/logo-tight-dark.png", "uncost.org", "10rem", [160, 320] %}
+      <div class="ft-tag">{{ site.tagline }}</div>
+      {{ mail.email("", "ft-mail") }}
+      <div class="soc">
+        {% for s in chrome.social %}
+        {% if s.label == "Email" %}
+        <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#117;&#110;&#99;&#111;&#115;&#116;&#46;&#111;&#114;&#103;" aria-label="Email">{{ socialIcon.glyph(s.label) }}</a>
+        {% else %}
+        <a href="{{ s.url }}" aria-label="{{ s.label }}" target="_blank" rel="noopener">{{ socialIcon.glyph(s.label) }}</a>
+        {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+    {% for col in chrome.footer %}
+    <div class="ft-col"><h3>{{ col.heading }}</h3>{% for link in col.links %}<a href="{{ link.url }}"{% if link.external %} target="_blank" rel="noopener"{% endif %}>{{ link.label }}</a>{% endfor %}</div>
+    {% endfor %}
+  </div>
+  <div class="ft-bar">
+    <div>&copy; 2026 Uncost.org &nbsp;&middot;&nbsp; Nonprofit and nonpartisan.</div>
+    <div class="fb-links">{% for link in chrome.footerBar %}<a href="{{ link.url }}">{{ link.label }}</a>{% endfor %}</div>
+  </div>
+</footer>

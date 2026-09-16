@@ -15,6 +15,25 @@ module.exports = {
   // movement grows" rather than rendering a number.
   signatureCounter: process.env.UNCOST_SIGNATURE_COUNTER === "on",
 
+  // ---- Design-export flags (design-source/data/site.json → flags) ----------
+  //
+  // formsOpen is the single switch for every form on the site. While it is
+  // false, NO input, checkbox or submit button is rendered anywhere — only
+  // "Sign-ups open soon." That is deliberate and is an accessibility
+  // requirement, not a cosmetic one: a visually dimmed form is still
+  // keyboard-focusable and submittable. The markup that ships when it opens is
+  // vendor-agnostic and carries only the data-form hooks — no endpoint, no
+  // vendor script, no third-party request.
+  formsOpen: process.env.UNCOST_FORMS_OPEN === "on",
+
+  // No donate ask may appear anywhere while this is false. The gate is
+  // lawfulness (POL-004 financial controls), not design.
+  donationsOpen: process.env.UNCOST_DONATIONS_OPEN === "on",
+
+  // Site search is not built. The overlay ships with honest copy and shortcut
+  // links rather than a dead input.
+  searchEnabled: process.env.UNCOST_SEARCH_ENABLED === "on",
+
   // Founding-signer recognition — the first signers, shown at the same
   // 100-signature milestone as the counter, listed factually with no editorial
   // ranking (no "notable" hierarchy).

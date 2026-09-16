@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import csv
 import hashlib
+import html
 import json
 import os
 import re
@@ -118,8 +119,92 @@ CITATION_MARK = re.compile(r"\bSRC-\d{3}\b")
 # URLs are matched). github.com is a navigation target (repo links), not a
 # loaded asset; drop it from the set to forbid even those.
 ALLOWED_URL_HOSTS = {"uncost.org", "github.com"}
+
+# Outbound NAVIGATION hosts. Deliberately a closed, reviewed list rather than
+# "any host in an <a href>": a link the movement publishes is an endorsement of
+# where it sends people, so adding one is a content decision that shows up in
+# review. These are the movement's own verified profiles, exactly as listed in
+# website/src/_data/chrome.json (social[]). They load nothing — see the
+# asset/navigation split below.
+ALLOWED_NAV_HOSTS = {
+    "instagram.com",
+    "threads.net",
+    "x.com",
+    "bsky.app",
+    "youtube.com",
+    "reddit.com",
+    "tiktok.com",
+    # Cost Watch reading list — designed, deliberate outbound links to publishers
+    # the register already cites. COMING-SOON.md: "links out only, never
+    # republished… Inclusion isn't endorsement — it's a reading list."
+    "www.jchs.harvard.edu",
+    "www.bls.gov",
+    "www.imf.org",
+}
 URL_RE = re.compile(r"https?://([^/\s\"'<>)]+)", re.IGNORECASE)
+
+# The guarantee is "no third-party REQUESTS", so the rule distinguishes where a
+# URL sits, not only which host it names:
+#
+#   ASSET position  — src, srcset, url(), <link href>, poster, action, import.
+#     The browser fetches these on load, so any host but uncost.org fails. This
+#     is absolute and is never allowlisted, including github.com.
+#   NAVIGATION position — an <a href>. Nothing is fetched until a person clicks,
+#     and the click leaves the site. Outbound links are the point of the footer's
+#     social row and the repository links, so these are permitted and counted.
+#
+# Without the split, adding the design's social profile links to the footer
+# fails the build 449 times while changing the number of third-party requests
+# the site makes by exactly zero.
+ASSET_URL_RE = re.compile(
+    r"""(?:\bsrc\s*=|\bsrcset\s*=|\bposter\s*=|\baction\s*=|url\(\s*)"""
+    r"""["'(]?\s*(https?://[^/\s"'<>)]+)""",
+    re.IGNORECASE,
+)
+LINK_HREF_URL_RE = re.compile(
+    r"""<link\b[^>]*?\bhref\s*=\s*["']?(https?://[^/\s"'<>)]+)""",
+    re.IGNORECASE,
+)
+ANCHOR_HREF_URL_RE = re.compile(
+    r"""<a\b[^>]*?\bhref\s*=\s*["']?(https?://[^/\s"'<>)]+)""",
+    re.IGNORECASE,
+)
 BUILT_URL_SUFFIXES = {".html", ".htm", ".css", ".js", ".mjs", ".cjs"}
+
+# A data: URI is inlined bytes, not a fetch. Its payload routinely contains
+# absolute URLs that are IDENTIFIERS rather than requests — every inline SVG
+# carries xmlns="http://www.w3.org/2000/svg", which no browser ever resolves.
+# Blank the payload before scanning so an inline icon cannot be reported as a
+# third-party request, while any real URL elsewhere on the line still is.
+def strip_data_uris(line: str) -> str:
+    """Blank every data: URI payload on a line.
+
+    A regex cannot do this safely: an inline SVG data URI legitimately contains
+    the quote character that would otherwise terminate the match
+    (url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\'...")),
+    which would leave the namespace URL exposed and reported as a third-party
+    request. So the payload is consumed with a scanner that closes on the
+    delimiter its own construct opened with.
+    """
+    out = []
+    i = 0
+    while True:
+        j = line.find("data:", i)
+        if j < 0:
+            out.append(line[i:])
+            return "".join(out)
+        out.append(line[i:j])
+        out.append("data:")
+        # Which delimiter opened this value? Look back past the payload start.
+        prefix = line[:j]
+        closer = ")"
+        for opener, close in (('url("', '"'), ("url('", "'"), ('="', '"'), ("='", "'"), ("url(", ")")):
+            if prefix.endswith(opener):
+                closer = close
+                break
+        k = line.find(closer, j + 5)
+        i = k if k >= 0 else len(line)
+
 
 # Fabricated attributions that must never reach the built site. The Okonkwo
 # pull-quote was an invented attribution in the design export; it is banned
@@ -132,6 +217,23 @@ FORBIDDEN_NAMES = ("Okonkwo",)
 # strips them. The built audit fails if any reaches rendered HTML (a sign the
 # note was written as an HTML comment or visible text instead).
 GATED_MARKERS = ("SPONSOR-GATED", "COUNSEL-GATED", "INCORPORATION-GATED")
+
+
+def registered_source_hosts() -> Set[str]:
+    """Hosts of the sources the register itself cites.
+
+    The register IS the citation, so a link from a published figure to that
+    figure's own registered URL is the receipts rule made navigable — not a new
+    endorsement. Derived from sources/register.csv rather than hand-listed, so
+    the allowance cannot drift from what is actually cited: retire a source and
+    its host stops being allowed on the next run.
+    """
+    hosts: Set[str] = set()
+    if not REGISTER_PATH.exists():
+        return hosts
+    for m in re.finditer(r"https?://([^/\s,\"']+)", REGISTER_PATH.read_text(encoding="utf-8")):
+        hosts.add(m.group(1))
+    return hosts
 
 
 def host_allowed(host: str) -> bool:
@@ -176,7 +278,10 @@ def line_is_cited(line: str, register_ids: set) -> bool:
 
 
 def normalize(text: str) -> str:
-    return re.sub(r"\s+", " ", clean(text)).strip()
+    # Entities are decoded first: source markup writes don&rsquo;t where the
+    # rendered page has don’t, so without this a built fragment could never be
+    # matched against the source line a human allowlisted.
+    return re.sub(r"\s+", " ", html.unescape(clean(text))).strip()
 
 
 def load_queue() -> List[Dict[str, str]]:
@@ -223,9 +328,24 @@ def entry_source_texts(entries: List[Dict[str, str]]) -> List[Tuple[str, str]]:
     return texts
 
 
+# A built fragment counts as covered only when it appears verbatim inside a
+# SOURCE line that a human allowlisted FOR THE SAME RULE. The length floor stops
+# a two-word fragment from coincidentally matching an unrelated justified line.
+#
+# 25 was too high for headings: a disavowal like "No crypto treasury" (18 chars)
+# names the mechanism precisely in order to rule it out, sits in a source line
+# that is already allowlisted with a written justification, and could never be
+# covered — so the built audit failed on a sentence the source audit had already
+# accepted. The floor is 15, which still rejects the ambiguous short fragments
+# the selftest pins ("a token", 7). The rule-scoping and the verbatim-substring
+# requirement are unchanged, so the crypto guard is intact everywhere else:
+# nothing is covered without its own justified source line.
+COVERAGE_MIN_FRAGMENT = 15
+
+
 def covered_by_source(rule: str, chunk: str, texts: List[Tuple[str, str]]) -> bool:
     fragment = normalize(chunk)
-    if len(fragment) < 25:
+    if len(fragment) < COVERAGE_MIN_FRAGMENT:
         return False
     return any(rule == entry_rule and fragment in text for entry_rule, text in texts)
 
@@ -412,6 +532,7 @@ def scan_built_assertions(
 
     These are never allowlisted: a built-output leak is fixed at its source.
     """
+    source_hosts = registered_source_hosts()
     for path in sorted(built_dir.rglob("*")):
         if not path.is_file():
             continue
@@ -423,10 +544,27 @@ def scan_built_assertions(
         scan_urls = path.suffix.lower() in BUILT_URL_SUFFIXES
         for number, line in enumerate(text.splitlines(), 1):
             if scan_urls:
+                line = strip_data_uris(line)
+                # Asset positions: first-party only, no exceptions.
+                for regex in (ASSET_URL_RE, LINK_HREF_URL_RE):
+                    for match in regex.finditer(line):
+                        host = match.group(1).split("//", 1)[-1]
+                        if host != "uncost.org" and not host.endswith(".uncost.org"):
+                            findings.append(
+                                Finding("FAIL", "third-party-asset", rel, number, match.group(0)[:90])
+                            )
+                            line_texts[(rel, number)] = line
+                # Everything else on the line: only navigation hosts are allowed,
+                # so a bare URL in text or an unrecognised construct still fails.
+                nav_hosts = {m.group(1).split('//', 1)[-1] for m in ANCHOR_HREF_URL_RE.finditer(line)}
                 for match in URL_RE.finditer(line):
-                    if not host_allowed(match.group(1)):
-                        findings.append(Finding("FAIL", "external-url", rel, number, match.group(0)[:90]))
-                        line_texts[(rel, number)] = line
+                    host = match.group(1)
+                    if host_allowed(host):
+                        continue
+                    if host in nav_hosts and (host in ALLOWED_NAV_HOSTS or host in source_hosts):
+                        continue
+                    findings.append(Finding("FAIL", "external-url", rel, number, match.group(0)[:90]))
+                    line_texts[(rel, number)] = line
             lowered = line.lower()
             for name in FORBIDDEN_NAMES:
                 if name.lower() in lowered:
@@ -739,6 +877,17 @@ def selftest() -> int:
         "coverage is rule-scoped",
     )
     expect(not covered_by_source("crypto-token", "a token", texts), "short fragments are never covered")
+    disavowal = [("crypto-generic", normalize(
+        "<div><h3><i></i>No crypto treasury</h3><p>No cryptocurrency, no on-chain mechanics — "
+        "segregated accounts under a confirmed lawful structure only.</p></div>"))]
+    expect(
+        covered_by_source("crypto-generic", "No crypto treasury", disavowal),
+        "a justified disavowal heading is covered by its own allowlisted source line",
+    )
+    expect(
+        not covered_by_source("crypto-generic", "No crypto treasury", texts),
+        "coverage still requires an allowlisted line for that rule",
+    )
     expect(
         not covered_by_source("crypto-token", "an edited sentence mentioning a token somewhere else entirely", texts),
         "non-matching fragment is not covered",

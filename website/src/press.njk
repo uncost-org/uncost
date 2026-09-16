@@ -1,14 +1,26 @@
 ---
 layout: layouts/base.njk
-noindex: true
-eleventyComputed:
-  title: "Press"
-  description: "A full Uncost press kit is planned for launch and not yet built."
+permalink: "/press/"
+pageId: "later-press"
+title: "Press"
+description: "Planned — press kit and media resources"
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
-<section class="blk blk--first">
-  <p class="eyebrow">Press</p>
-  <h1>Press</h1>
-  <p class="lead">This page is planned and not yet built for launch.</p>
-  {{ gap("press-later", "planned; not built for launch") }}
-</section>
+{#- Markup taken verbatim from design-source/pages/later/press.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: later/press.Press — title -->
+<div class="titleband" data-screen-label="Press — title"><h1>Press</h1></div>
+<div class="sys">
+  <!-- SECTION: later/press.Press -->
+  <div class="card" data-screen-label="Press">
+    <div class="cap"><span class="status status--planned">Planned</span></div>
+    <div class="bd">
+      <div class="eq">Planned page</div>
+      <h2>A press kit is on the way.</h2>
+      <p>Logos, brand assets, a fact sheet, and background will live here for journalists and media.</p>
+      <p>In the meantime, media enquiries are welcome by email and we&rsquo;ll respond personally.</p>
+      <div class="whenrow"><b>When</b><span>At launch — press kit published</span></div>
+      <div class="actions"><a href="mailto:contact@uncost.org" class="u-btn u-btn--ink">Email the team</a><a href="/about/" class="u-btn u-btn--ghost">About Uncost</a></div>
+    </div>
+  </div>
+</div>

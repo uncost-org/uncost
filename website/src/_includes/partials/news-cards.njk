@@ -1,0 +1,39 @@
+{#- News card macros (N4).
+
+    Two card types, both deliberately NOT the R3 figure card:
+
+      update(item, level, trim)  — an Uncost movement update; `trim` shortens
+                                 the body for the split landing, where the
+                                 column is one of two.
+      costwatch(row, level)  — a Cost Watch item: publisher, date, a one-line
+                               claim, "Read at <domain> →", and exactly one
+                               label, Reported.
+
+    `level` is the heading level for the item title, so the same macro nests
+    correctly under a column head on /news/ (h4) and directly under the
+    introband h2 on the dedicated routes (h3).
+
+    Reported is the ONLY label used anywhere under /news/. The receipts
+    vocabulary (Confirmed / Estimate / Scenario / Needs refresh) never appears
+    here, and Reported never appears on /receipts/, /case/, sector pages or in
+    sources/register.csv. Both directions are enforced at build time by the
+    news-label guard in eleventy.config.js. -#}
+
+{% macro update(item, level, trim) -%}
+<article class="up-item" data-news-item id="{{ item.slug }}">
+  <div class="date">{{ item.date }}</div>
+  <h{{ level }}>{{ item.title }}</h{{ level }}>
+  <p>{% if trim %}{{ item.body | truncate(260) }}{% else %}{{ item.body }}{% endif %}</p>
+</article>
+{%- endmacro %}
+
+{% macro costwatch(row, level) -%}
+<a class="cw" href="{{ row.url }}" target="_blank" rel="noopener" data-source="{{ row.source_id }}" data-news-item>
+  <div class="src"><span>{{ row.publisher }}</span><span>{{ row.data_period }}</span></div>
+  <h{{ level }}>{{ row.display_caption }}</h{{ level }}>
+  <div class="cw-foot">
+    <span class="ext">Read at {{ row.url.split("/")[2] | replace("www.", "") }} &rarr;</span>
+    <span class="lbl lbl--reported">Reported</span>
+  </div>
+</a>
+{%- endmacro %}

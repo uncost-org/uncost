@@ -9,7 +9,7 @@ for f in expected:
 policy=list((root/'policies').glob('POL-[0-9][0-9][0-9]-*.md'))
 project=list((root/'projects').glob('PRJ-[0-9][0-9][0-9]-*.md'))
 sector=list((root/'sectors').glob('SEC-[0-9][0-9][0-9]-*.md'))
-if len(policy)!=10: errors.append(f'POLICY_COUNT:{len(policy)}')
+if len(policy)!=11: errors.append(f'POLICY_COUNT:{len(policy)}')
 if len(project)!=7: errors.append(f'PROJECT_COUNT:{len(project)}')
 if len(sector)!=15: errors.append(f'SECTOR_COUNT:{len(sector)}')
 for p in project:
@@ -20,6 +20,20 @@ for p in project:
     if '- **Roadmap:**' not in s: errors.append(f'ROADMAP_FIELD_MISSING:{p.relative_to(root)}')
     if re.search(r'Plan Section [A-Z]|the plan\'s Section [A-Z]|v3\.2|founder operates from Vietnam|already designed into|faceless',s,re.I): errors.append(f'PRIVATE_OR_STALE_REMNANT:{p.relative_to(root)}')
 policy_banner='> **Draft — not in force; pending required review/adoption.**'
+reserved_banner='> **Reserved — not yet drafted.**'
+# A policy file is one of two kinds, and they are audited differently:
+#   DERIVED DRAFT   POL-001..010. Written against the 2026-07-15 edition, so it
+#                   must carry that derivation stamp and its body must appear
+#                   verbatim in the v1.3 pack.
+#   RESERVED        A permanent reference number held for a policy nobody has
+#                   written yet. It CANNOT carry the derivation stamp — it was
+#                   not derived from that source — and it is not in the pack.
+#                   Claiming otherwise would be false provenance, so the reserved
+#                   markers are required and the derivation stamp is FORBIDDEN.
+# The reserved kind is also held empty: no numbered rules and no rules section,
+# so a placeholder cannot quietly accumulate undrafted policy content while still
+# presenting itself as merely reserved.
+def is_reserved(text): return 'canonical_status: reference-reserved-not-drafted' in text
 # Two-pin source model (records/changes/CHG-001): CONTROL.md and the register pin
 # the July-2026 final plan; v1.3 policy drafts stay stamped with the 2026-07-15
 # edition they were derived from until re-reviewed against the new edition.
@@ -27,6 +41,17 @@ current_source_hash='a2b640217626a76e9a26f73a5744f8c59051c83351a72bc041150824ac5
 policy_derived_source_hash='5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670'
 for p in policy:
     s=p.read_text(encoding='utf-8')
+    if is_reserved(s):
+        required=['status: reserved','canonical_status: reference-reserved-not-drafted','visibility: public','adoption_status: not-adopted','review_status: not-started','drafted: false',reserved_banner]
+        for marker in required:
+            if marker not in s: errors.append(f'RESERVED_POLICY_METADATA_MISSING:{p.relative_to(root)}:{marker}')
+        # A reserved reference must not claim a derivation it does not have.
+        for forbidden in [policy_derived_source_hash,'status: draft','canonical_status: public-review-draft-not-in-force']:
+            if forbidden in s: errors.append(f'RESERVED_POLICY_FALSE_PROVENANCE:{p.relative_to(root)}:{forbidden}')
+        # ...and must stay empty of policy content while it is reserved.
+        if re.search(r'(?m)^## Rules\b',s) or re.search(r'(?m)^\d+\. \*\*',s):
+            errors.append(f'RESERVED_POLICY_HAS_CONTENT:{p.relative_to(root)}')
+        continue
     required=['status: draft','canonical_status: public-review-draft-not-in-force','visibility: public','adoption_status: not-adopted','review_status: pending-required-review-and-adoption','independent_claude_review: pending-post-publication',f'source_sha256: {policy_derived_source_hash}',f'source_superseded_by_sha256: {current_source_hash}',policy_banner]
     for marker in required:
         if marker not in s: errors.append(f'POLICY_METADATA_MISSING:{p.relative_to(root)}:{marker}')
@@ -51,6 +76,11 @@ for p in policy:
     text=p.read_text(encoding='utf-8')
     heading=re.search(r'(?m)^# (POL-\d{3} .+)$',text)
     if not heading: errors.append(f'SPLIT_POLICY_HEADING_MISSING:{p.name}'); continue
+    if is_reserved(text):
+        # Not derived from the pack, so it must not appear in it.
+        if p.name.split('-')[1] and heading.group(1) in master:
+            errors.append(f'RESERVED_POLICY_IN_MASTER_PACK:{p.name}')
+        continue
     body=text[text.index('# '+heading.group(1)):].strip()
     if master.count(body)!=1: errors.append(f'MASTER_POLICY_BODY_MISMATCH:{p.name}:{master.count(body)}')
 index=(root/'policies/README.md').read_text(encoding='utf-8')

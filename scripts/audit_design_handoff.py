@@ -22,35 +22,71 @@ RECEIPT = PACKET / "SOURCE_RECEIPT.json"
 REFERENCE = PACKET / "reference" / "index.html"
 TOKENS = PACKET / "tokens.css"
 COMPONENTS = PACKET / "components.css"
+# The finished export ships four stylesheets, not two. site.css carries the
+# chrome and the :focus-visible / prefers-reduced-motion primitives; sections.css
+# carries the per-page surfaces. Both are part of the audited packet: colour that
+# lives only in them would otherwise never reach the contrast matrix.
+SITE = PACKET / "site.css"
+SECTIONS = PACKET / "sections.css"
+
+
+def packet_css() -> str:
+    """Every stylesheet in the packet, concatenated in cascade order.
+
+    Read through the module globals rather than captured at import time so the
+    contrast selftest can substitute a mutated components.css.
+    """
+    return "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (TOKENS, COMPONENTS, SITE, SECTIONS)
+        if path.exists()
+    )
 ICON_SPRITE = PACKET / "icons" / "icons.svg"
 MANIFEST = ROOT / "website" / "assets" / "brand" / "ASSET_MANIFEST.json"
 ARCHIVE_ENV = "UNCOST_DESIGN_HANDOFF_ARCHIVE"
 EXTRACTED_ENV = "UNCOST_DESIGN_HANDOFF_EXTRACTED"
-FROZEN_ARCHIVE_ROOT_PREFIX = "uncost-design-system/"
+FROZEN_ARCHIVE_ROOT_PREFIX = "design-source/"
 
-# Re-pinned to the finished Claude Design export (SHA-256 8962b207...), adopted
-# 2026-07-22. The token source evolved from the 2026-07-16 UNP-46 handoff
-# (colors_and_type.css cffee798 -> bc335c5e); the component and icon sources are
-# unchanged, but they are now adopted in the export's native vocabulary (.u-block,
-# .rcpt-*, .status--*) rather than the earlier transformed .block--* rename.
-# components.css additionally merges the export's site.css chrome + accessibility
-# primitives (source b8b52691...); see SOURCE_RECEIPT.json governance_inputs.
+# Pinned to the finished design export, re-synced to v3 (archive SHA-256
+# e68ca4c7..., 124 members under design-source/) on the design-v2 integration
+# branch. The v3 regeneration changed only the chrome MARKUP (header +
+# nav-drawer partials and their inlined copies in the 61 pages); all four
+# stylesheets and the icon sprite are byte-identical to v2, so every
+# source_sha256 below is unchanged and carries over as-is. This export ships FOUR stylesheets rather than a
+# tokens/components pair, and they are adopted byte-identically except for the
+# documented WCAG 2.2 AA corrections recorded in AUTHORITY.md — hence mode
+# "transform" on tokens.css, components.css and site.css, and "adopt" on
+# sections.css, which is carried across unchanged. The icon sprite stays "curate":
+# the export's sprite adds `box`, `monitor` and `gear`, while its `vote` and
+# `dollar` symbols remain withheld under EXCLUSIONS.md.
 FROZEN_SOURCE_PAIRS = (
     {
-        "logical_source_path": "project/colors_and_type.css",
-        "source_sha256": "bc335c5e3c5e5430a9bd869689247344339d6d07d94ec411f529606a3ca351a5",
+        "logical_source_path": "design-source/css/tokens.css",
+        "source_sha256": "f51d6ddf4170589f45b23309f747d6b09551b33b34bc62be301bad74a526488f",
         "output_path": "website/design-system/tokens.css",
         "mode": "transform",
     },
     {
-        "logical_source_path": "project/ui_kits/components.css",
-        "source_sha256": "6ae252e2f87b169d261af0dc1707fbe999faa81c4458be1f8c7c497a1d8bcf24",
+        "logical_source_path": "design-source/css/components.css",
+        "source_sha256": "9e8424670ea812bcef6b4824461a0f9e4ccfdbb1273a364f94e1ece6cfa85bf0",
         "output_path": "website/design-system/components.css",
         "mode": "transform",
     },
     {
-        "logical_source_path": "project/assets/icons/icons.svg",
-        "source_sha256": "30b694a2d8fd28c22d8e391adfee14e4678199efba39bd5f9f0271b6703ed505",
+        "logical_source_path": "design-source/css/site.css",
+        "source_sha256": "5bfeef94d074e549385c057103439215f63cc31fc02331a0145e8ce51e2d5cd1",
+        "output_path": "website/design-system/site.css",
+        "mode": "transform",
+    },
+    {
+        "logical_source_path": "design-source/css/sections.css",
+        "source_sha256": "4a194a912215a739ad2a257ed80597e1f67922c6b73983cbef31a703e064f7f0",
+        "output_path": "website/design-system/sections.css",
+        "mode": "adopt",
+    },
+    {
+        "logical_source_path": "design-source/assets/icons/social.svg",
+        "source_sha256": "76868e89df7acc874f5fe3dec65610f2468139858ee48bf2222602003d608064",
         "output_path": "website/design-system/icons/icons.svg",
         "mode": "curate",
     },
@@ -91,7 +127,16 @@ def resolve_tokens(css_text: str) -> Dict[str, str]:
     Only :root/global custom-property definitions are considered (declarations
     of the form `--name: value;`). Non-color values (rgba, gradients, keywords)
     resolve to None and are simply absent from the returned map.
+
+    Comments are stripped BEFORE parsing. A documentation comment that names a
+    token ("--coral-deep : coral text < 24px on cream/wheat surfaces") otherwise
+    matches the declaration regex, and because the map is built with setdefault
+    the prose wins over the real declaration further down the file. The token
+    then resolves to None and every contrast pair depending on it is silently
+    SKIPPED rather than checked — a gate that fails open. The strip is
+    load-bearing, not cosmetic.
     """
+    css_text = re.sub(r"/\*.*?\*/", "", css_text, flags=re.S)
     raw: Dict[str, str] = {}
     for name, value in re.findall(r"--([a-z0-9-]+)\s*:\s*([^;{}]+);", css_text):
         raw.setdefault(name.strip(), value.strip())
@@ -218,7 +263,21 @@ def validate_contrast_matrix(errors: List[str]) -> int:
     discovered surface. There is no hardcoded surface list to omit a surface
     from."""
     tokens_text = TOKENS.read_text(encoding="utf-8")
-    components_text = COMPONENTS.read_text(encoding="utf-8")
+    # components.css + site.css: the shared component vocabulary and the global
+    # chrome (header, mega panels, drawer, search, footer) that render on every
+    # page. sections.css is deliberately NOT pair-matched here. Its per-page
+    # rules lean on a design idiom the selector-only ancestor model cannot see:
+    # card grids set `background: var(--ink)` on the CONTAINER purely so a 2px
+    # grid gap draws the divider, while each child repaints its own cream
+    # surface. Matching a child's colour against that container background
+    # reports failures for text that never renders on ink. Colour in sections.css
+    # is instead constrained by validate_no_raw_hex(): every value must come from
+    # a token, and the token-level pairs are checked here.
+    components_text = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in (COMPONENTS, SITE)
+        if path.exists()
+    )
     tokens = resolve_tokens(tokens_text)
     ink = tokens.get("ink", "#0e0e0c")
     cream = tokens.get("cream", "#faf7f0")
@@ -303,14 +362,22 @@ def validate_contrast_matrix(errors: List[str]) -> int:
             check(c, cream, False, f"--{role} on cream")
 
     # Two-tone focus ring: visible on every discovered surface (plus cream/ink).
-    focus_body = next((b for s, b in rules if "focus-visible" in s), "")
+    # The ring is multi-tone: a base colour plus per-surface overrides (the
+    # export switches to --coral-on-ink on ink blocks; adoption added --ink on
+    # coral/wheat/sage fills and --cream on the deep fills). Collect the colour
+    # from EVERY :focus-visible rule, and from outline-color as well as the
+    # outline shorthand, or the later tones are invisible to this check and a
+    # surface is reported as ringless when it is in fact covered.
     ring_colors: List[str] = []
-    for prop in ("outline", "box-shadow"):
-        m = re.search(rf"{prop}\s*:[^;]*?(var\(--[a-z0-9-]+\)|#[0-9a-fA-F]{{6}})", focus_body)
-        if m:
-            hx = color_to_hex(m.group(1), tokens)
-            if hx:
-                ring_colors.append(hx)
+    for selector, body in rules:
+        if "focus-visible" not in selector:
+            continue
+        for prop in ("outline-color", "outline", "box-shadow"):
+            m = re.search(rf"(?:^|;|\s){prop}\s*:[^;]*?(var\(--[a-z0-9-]+\)|#[0-9a-fA-F]{{6}})", body)
+            if m:
+                hx = color_to_hex(m.group(1), tokens)
+                if hx and hx not in ring_colors:
+                    ring_colors.append(hx)
     if not ring_colors:
         add_error(errors, "ACCESSIBILITY_FOCUS_RING_MISSING", "no resolvable focus-visible outline colour")
     else:
@@ -561,15 +628,19 @@ def validate_changed_file_coverage(
             add_error(errors, "CHANGED_FILE_GIT_UNTRACKED", untracked.stderr.strip())
         else:
             changed_paths.update(line for line in untracked.stdout.splitlines() if line)
-    else:
-        # Outside the frozen handoff review branch this receipt inventories only
-        # the design-system packet, so coverage can only be enforced for packet
-        # paths; repository-wide changes are governed by audit_repository.py.
-        changed_paths = {
-            path
-            for path in changed_paths
-            if path.startswith("website/design-system/")
-        }
+
+    # This receipt inventories the DESIGN-SYSTEM PACKET and the governance files
+    # that guard it — not the site. Coverage is therefore enforced over packet
+    # paths plus anything the receipt already inventories: change a packet file
+    # without re-hashing it here and this fails, on any branch. Templates and
+    # content under website/src/ are governed by audit_website.py and
+    # audit_repository.py instead, so an integration branch that ports the site
+    # onto the packet does not have to list every template in a design receipt.
+    changed_paths = {
+        path
+        for path in changed_paths
+        if path.startswith("website/design-system/") or path in output_paths
+    }
 
     for path in sorted(changed_paths - output_paths):
         add_error(errors, "CHANGED_FILE_NOT_IN_RECEIPT", path)
@@ -633,6 +704,8 @@ def main() -> int:
     required_path(REFERENCE, "reference index", errors)
     required_path(TOKENS, "tokens.css", errors)
     required_path(COMPONENTS, "components.css", errors)
+    required_path(SITE, "site.css", errors)
+    required_path(SECTIONS, "sections.css", errors)
     required_path(ICON_SPRITE, "icon sprite", errors)
     required_path(MANIFEST, "asset manifest", errors)
 
@@ -653,6 +726,8 @@ def main() -> int:
         "icons/icons.svg",
         "tokens.css",
         "components.css",
+        "site.css",
+        "sections.css",
         "reference/index.html",
     ]
 
@@ -862,7 +937,7 @@ def main() -> int:
             if banned in symbol_id:
                 add_error(errors, "ICONSET_BANNED_SYMBOL", symbol_id)
 
-    css_text = (PACKET / "components.css").read_text(encoding="utf-8")
+    css_text = packet_css()
     if "--focus-visible" not in css_text.lower() and ":focus-visible" not in css_text:
         add_error(errors, "ACCESSIBILITY_MISSING_FOCUS", ":focus-visible")
     if "prefers-reduced-motion" not in css_text:
@@ -873,6 +948,8 @@ def main() -> int:
     for rel, expected in {
         "website/design-system/tokens.css": sha256(TOKENS),
         "website/design-system/components.css": sha256(COMPONENTS),
+        "website/design-system/site.css": sha256(SITE),
+        "website/design-system/sections.css": sha256(SECTIONS),
         "website/design-system/icons/icons.svg": sha256(ICON_SPRITE),
         "website/design-system/reference/index.html": sha256(REFERENCE),
     }.items():
@@ -887,12 +964,23 @@ def main() -> int:
             add_error(errors, "RECEIPT_OUTPUT_MISSING", rel)
 
     # Parse CSS url() references and ensure local files exist.
-    for text_path in (TOKENS, COMPONENTS):
+    #
+    # A leading "/" is a SITE-root path, not a filesystem-root path: the packet
+    # stylesheets are served from the site root, so /assets/fonts/x.woff2
+    # resolves under website/. Joining it to the stylesheet's directory would
+    # produce an absolute filesystem path and report a spurious escape, so
+    # root-relative URLs are resolved against website/ and still have to exist.
+    for text_path in (TOKENS, COMPONENTS, SITE, SECTIONS):
+        if not text_path.exists():
+            continue
         for url in re.findall(r"url\(([^)]+)\)", text_path.read_text(encoding="utf-8")):
             candidate = url.strip().strip("'\"")
             if candidate.startswith("data:") or candidate.startswith("http://") or candidate.startswith("https://"):
                 continue
-            target = (text_path.parent / candidate).resolve()
+            if candidate.startswith("/"):
+                target = (ROOT / "website" / candidate.lstrip("/")).resolve()
+            else:
+                target = (text_path.parent / candidate).resolve()
             try:
                 target.relative_to(ROOT)
             except ValueError:
@@ -910,6 +998,8 @@ def main() -> int:
         "website/design-system/EXCLUSIONS.md",
         "website/design-system/tokens.css",
         "website/design-system/components.css",
+        "website/design-system/site.css",
+        "website/design-system/sections.css",
         "website/design-system/icons/icons.svg",
         "website/design-system/reference/index.html",
         "website/design-system/fonts/README.md",
@@ -975,28 +1065,30 @@ def contrast_selftest() -> int:
     """
     import tempfile
 
-    global TOKENS, COMPONENTS
-    saved_t, saved_c = TOKENS, COMPONENTS
+    global TOKENS, COMPONENTS, SITE
+    saved_t, saved_c, saved_s = TOKENS, COMPONENTS, SITE
     base_tok = saved_t.read_text(encoding="utf-8")
     base_comp = saved_c.read_text(encoding="utf-8")
+    base_site = saved_s.read_text(encoding="utf-8")
     failures: List[str] = []
 
-    def run(comp: str, tok: str) -> List[str]:
-        global TOKENS, COMPONENTS
+    def run(comp: str, tok: str, site: str = None) -> List[str]:
+        global TOKENS, COMPONENTS, SITE
         d = Path(tempfile.mkdtemp())
         (d / "t.css").write_text(tok, encoding="utf-8")
         (d / "c.css").write_text(comp, encoding="utf-8")
-        TOKENS, COMPONENTS = d / "t.css", d / "c.css"
+        (d / "s.css").write_text(base_site if site is None else site, encoding="utf-8")
+        TOKENS, COMPONENTS, SITE = d / "t.css", d / "c.css", d / "s.css"
         errs: List[str] = []
         validate_contrast_matrix(errs)
         return errs
 
-    def expect_caught(label: str, comp: str, marker: str, tok: str = base_tok) -> None:
-        if not any(marker in e for e in run(comp, tok)):
+    def expect_caught(label: str, comp: str, marker: str, tok: str = base_tok, site: str = None) -> None:
+        if not any(marker in e for e in run(comp, tok, site)):
             failures.append(f"MISSED: {label} (marker {marker!r} not flagged)")
 
-    def expect_clean(label: str, comp: str, marker: str, tok: str = base_tok) -> None:
-        if any(marker in e for e in run(comp, tok)):
+    def expect_clean(label: str, comp: str, marker: str, tok: str = base_tok, site: str = None) -> None:
+        if any(marker in e for e in run(comp, tok, site)):
             failures.append(f"FALSE POSITIVE: {label} (marker {marker!r} wrongly flagged)")
 
     # 0. clean baseline must have zero contrast errors
@@ -1005,7 +1097,7 @@ def contrast_selftest() -> int:
 
     # 1-2. text on a dark block (background inherited from ancestor)
     expect_caught("on-ink descendant text", base_comp + "\n.u-block--ink .st_zz{color:#222222}\n", "st_zz")
-    expect_caught("on-ink (.blk--ink) descendant", base_comp + "\n.blk--ink .st_yy{color:#333333}\n", "st_yy")
+    expect_caught("on-ink (.u-block--ink) nested descendant", base_comp + "\n.u-block--ink .wrap .st_yy{color:#333333}\n", "st_yy")
     # 3. text on the dark footer
     expect_caught("footer descendant text", base_comp + "\n.ft .st_qq{color:#1a1a1a}\n", "st_qq")
     # 4. button / CTA with its own background
@@ -1017,19 +1109,22 @@ def contrast_selftest() -> int:
     # 7. focus ring that fails on colored surfaces must be caught. Anchor on the
     # actual rule (starts with `a:focus-visible`), not the `:focus-visible`
     # mentioned in a comment.
-    bad_focus, n_focus = re.subn(
-        r"(a:focus-visible[^{}]*\{)[^{}]*(\})",
-        r"\1outline:2px solid var(--coral);box-shadow:0 0 0 3px var(--coral-deep)\2",
-        base_comp, count=1,
+    bad_site = re.sub(
+        r"(:focus-visible[^{}]*\{)[^{}]*(\})",
+        r"\1outline:2px solid var(--coral)\2",
+        base_site,
     )
-    if n_focus != 1:
-        failures.append("SELFTEST BUG: could not locate the focus-visible rule to mutate")
+    if "focus-visible" not in bad_site:
+        failures.append("SELFTEST BUG: could not locate a focus-visible rule to mutate")
     else:
-        expect_caught("focus ring fails on colored surface", bad_focus, "focus ring")
+        # Every tone collapsed to --coral, which is invisible on a coral fill.
+        if not any("focus ring" in e for e in run(base_comp, base_tok, bad_site)):
+            failures.append("MISSED: single-tone coral focus ring on coloured surfaces")
+
     # 8. genuinely-large coral display must PASS (no false positive)
     expect_clean("large coral display passes", base_comp + "\n.st_bignum{background:var(--cream);color:var(--coral);font-size:80px}\n", "st_bignum")
 
-    TOKENS, COMPONENTS = saved_t, saved_c
+    TOKENS, COMPONENTS, SITE = saved_t, saved_c, saved_s
     print(json.dumps({"ok": not failures, "selftest_cases": 9, "failures": failures}, indent=2))
     return 0 if not failures else 1
 

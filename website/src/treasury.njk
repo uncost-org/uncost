@@ -1,54 +1,66 @@
 ---
 layout: layouts/base.njk
+permalink: "/treasury/"
+pageId: "treasury"
 title: "The Treasury"
-description: "Uncost's public financial record. Not yet active — Uncost is seeking fiscal sponsorship before public donations open, so there are no funds to report yet."
-noindex: true
+description: "The Treasury is Uncost's public financial record. Donations are not yet open; this page shows the structure that will be reported once they lawfully begin."
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
-<section class="blk blk--first">
-  <p class="eyebrow">{{ site.tagline }}</p>
-  <h1>The Treasury</h1>
-  {{ gap("treasury-intro", "the hero tagline and intro describing the Treasury as Uncost's public financial record (funds received, spending categories, project reserves, sponsor & platform fees) is design-authored; author from the movement plan before it ships") }}
+{#- Markup taken verbatim from design-source/pages/treasury.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: treasury.Treasury — title -->
+<div class="titleband" data-screen-label="Treasury — title"><h1>The <span class="u-1">Treasury</span></h1></div>
+<div class="introband">
+  <h2>Every dollar, <span class="u-1">on the record.</span></h2>
+  <p>The Treasury is Uncost&rsquo;s public financial record. Once funding lawfully begins, it will show funds received, spending categories, project reserves, and sponsor and platform fees — summarized, dated, and redacted only where privacy or security requires.</p>
+</div>
+<!-- SECTION: treasury.Status -->
+<div class="statusband" data-screen-label="Status">
+  <span class="status status--planned">Not yet active</span>
+  <span>Uncost is seeking fiscal sponsorship before accepting public donations. No donations are open, and there are no funds to report yet.</span>
+</div>
+
+<!-- SECTION: treasury.Structure -->
+<section data-screen-label="Structure">
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-label">Funds received</div><div class="pending">——</div><div class="when">Reported when donations open</div></div>
+    <div class="kpi"><div class="kpi-label">Spending categories</div><div class="pending">——</div><div class="when">Reported when donations open</div></div>
+    <div class="kpi"><div class="kpi-label">Project reserves</div><div class="pending">——</div><div class="when">Reported when donations open</div></div>
+    <div class="kpi"><div class="kpi-label">Sponsor &amp; platform fees</div><div class="pending">——</div><div class="when">Reported when donations open</div></div>
+  </div>
 </section>
 
-<section class="blk blk--cream2">
-  <p class="eyebrow">Status</p>
-  <h2 class="sec">Not yet active.</h2>
-  <p><span class="status status--planned">Not yet active</span></p>
-  <p class="lead">Uncost is seeking fiscal sponsorship before accepting public donations. No donations are open, and there are no funds to report yet.</p>
+<div class="u-151 panel-h"><h3>The categories that will be reported</h3>
+<p class="u-152">Planned public spending categories, drawn from the movement plan. The bars stay empty until there is real money to show.</p></div>
+<!-- SECTION: treasury.Categories -->
+<div class="u-153" data-screen-label="Categories">
+  <div class="sp-row"><span class="sp-name">Evidence &amp; source review</span><span class="sp-bar"></span><span class="sp-val">Reported when donations open</span></div>
+  <div class="sp-row"><span class="sp-name">Open tools &amp; dashboards</span><span class="sp-bar"></span><span class="sp-val">Reported when donations open</span></div>
+  <div class="sp-row"><span class="sp-name">Content &amp; community</span><span class="sp-bar"></span><span class="sp-val">Reported when donations open</span></div>
+  <div class="sp-row"><span class="sp-name">Operations &amp; hosting</span><span class="sp-bar"></span><span class="sp-val">Reported when donations open</span></div>
+  <div class="sp-row"><span class="sp-name">Sponsor &amp; platform fees</span><span class="sp-bar"></span><span class="sp-val">Reported when donations open</span></div>
+</div>
+
+<!-- SECTION: treasury.Principles -->
+<section class="u-154 blk blk--cream" data-screen-label="Principles">
+  <div class="eyebrow">The standing rules</div>
+  <div class="prin">
+    <div><h4><i></i>Receipts behind summaries</h4><p>Every expense retains an internal receipt and approval trail, even where public reporting is aggregated.</p></div>
+    <div><h4><i></i>Money never buys influence</h4><p>Donations and in-kind support never buy conclusions, coverage, governance influence, votes, or preferential treatment.</p></div>
+    <div><h4><i></i>No crypto treasury</h4><p>No cryptocurrency, no on-chain mechanics — segregated accounts under a confirmed lawful structure only.</p></div>
+  </div>
+  <p class="u-155">
+    <span class="u-156"></span>
+    <span>When reporting begins, figures will be summarized, with individual donor identities and security-sensitive line items redacted where appropriate — e.g. <span class="redact">██████████</span> — and totals preserved. Draft controls: <a class="u-1" href="/policies/financial-controls-donation/">POL-004</a>, <a class="u-1" href="/policies/conflict-of-interest/">POL-005</a>, <a class="u-1" href="/policies/in-kind-gift-acceptance/">POL-010</a> — public review drafts, not adopted.</span>
+  </p>
 </section>
 
-<section class="blk">
-  <p class="eyebrow">Structure</p>
-  <h2 class="sec">What the record will show.</h2>
-  {{ gap("treasury-structure", "the four-row structure (funds received / spending categories / project reserves / sponsor & platform fees, each 'reported when donations open') is design-authored; author once the reporting structure is defined") }}
-</section>
-
-<section class="blk blk--cream2">
-  <p class="eyebrow">Spending categories</p>
-  <h2 class="sec">The categories that will be reported.</h2>
-  {{ gap("treasury-categories", "the five spending categories are attributed to the movement plan, but the July source enumerates no spending-category breakdown (diverges from source, uncited); do not publish until categories are sourced") }}
-</section>
-
-<section class="blk">
-  <p class="eyebrow">Principles</p>
-  <h2 class="sec">The standing rules.</h2>
-  <h3>Receipts behind summaries</h3>
-  {{ gap("treasury-principle-receipts", "the 'every expense retains an internal receipt and approval trail' principle is design-authored; author from adopted controls before it ships") }}
-  <h3>Money never buys influence</h3>
-  {{ gap("treasury-principle-influence", "the 'donations and in-kind support never buy conclusions, coverage, governance influence, votes, or preferential treatment' principle is design-authored; author from the contribution model before it ships") }}
-  <h3>No speculative treasury</h3>
-  <p>No cryptocurrency, no on-chain mechanics — segregated accounts under a confirmed lawful structure only.</p>
-</section>
-
-<section class="blk">
-  <p class="eyebrow">Reporting &amp; redaction</p>
-  <h2 class="sec">How figures will be reported.</h2>
-  {{ gap("treasury-redaction", "the summarize-and-redact reporting note references draft controls POL-004, POL-005 and POL-010 (public review drafts, not adopted); design-authored, author once the reporting policy is adopted") }}
-</section>
-
-<section class="blk blk--ink">
-  <h2 class="sec">Want to help before donations open?</h2>
-  {{ gap("treasury-cta", "the 'register an intention to give, volunteer, or offer in-kind support' pitch is design-authored; author from the contribution model") }}
-  <p><a href="/pledge" class="u-btn u-btn--primary">Contribute</a> <a href="/join" class="u-btn u-btn--outline-cream">Take part</a></p>
+<!-- SECTION: treasury.Treasury CTA -->
+<section class="blk blk--ink u-block--ink" data-screen-label="Treasury CTA">
+  <h2 class="u-38 sec">Want to help before donations open?</h2>
+  <p class="u-157 lead">You can register an intention to give, volunteer time and skills, or offer in-kind support — all without money changing hands today.</p>
+  <div class="u-40">
+    <a href="/contribute/" class="u-btn u-btn--primary">Contribute</a>
+    <a href="/join/" class="u-btn u-btn--outline-cream">Take Part</a>
+  </div>
 </section>

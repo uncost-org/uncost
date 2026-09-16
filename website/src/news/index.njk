@@ -1,32 +1,72 @@
 ---
 layout: layouts/base.njk
+permalink: "/news/"
+pageId: "news"
 title: "News"
-description: "Pre-launch updates from the Uncost movement — what we have published and why, dated and honest about what is and isn't done."
+description: "What the movement is doing, and the prices in the news — each with its publisher and its date."
 ---
-<section class="blk blk--first">
-  <p class="eyebrow">News</p>
-  <h1 class="sec">News.</h1>
-  <p class="lead">Pre-launch updates from the movement — what we’ve published and why. Dated, and honest about what is and isn’t done.</p>
-</section>
+{% import "partials/news-cards.njk" as nc %}
+{#- Markup taken from design-source/pages/news.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author.
 
-<section class="blk">
-  <p class="eyebrow">Updates</p>
-  <h2 class="sec">Movement updates.</h2>
-  {% for item in news %}
-  <article class="news-item">
-    <h3>{{ item.title }}</h3>
-    <p class="news-date"><time datetime="{{ item.dateISO }}">{{ item.date }}</time></p>
-    <p>{{ item.body }}</p>
-  </article>
-  {% endfor %}
-</section>
+    Exception, founder-approved under UNP-82 v1 §4b: Cost Watch is no longer a
+    hand-curated reading list of third-party articles. It renders the register's
+    own `placement=news-feed` rows, so every entry is a sourced, dated figure
+    under the same rule as the rest of the site. The export's three hardcoded
+    links and its "inclusion isn't endorsement" note went with that model.
 
-<section class="blk blk--ink">
-  <p class="eyebrow">Get updates</p>
-  <h2 class="sec">Stay in the loop.</h2>
-  <p>Email updates open when there’s a real route for them. For now, signing the pledge is how to be counted — and this page and its <a href="/news/feed.xml">RSS feed</a> are where new updates land.</p>
-  <div class="cta-actions">
-    <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
-    <a href="/join" class="u-btn u-btn--outline-cream">Take part</a>
+    Exception, founder-approved under N1: this is now a split landing. Both
+    columns are first-class — each carries its own head, its own one-line
+    intro, its own filter and its own link to the full list — and the single
+    combined intro sentence in the introband is gone, because an intro that
+    describes two things describes neither. Column intros, and the Reported
+    definition, are founder-approved copy. -#}
+<!-- SECTION: news.News — title -->
+<div class="titleband" data-screen-label="News — title"><h1><span class="u-1">News</span></h1></div>
+<div class="introband">
+  <h2>What&rsquo;s moving — ours and the world&rsquo;s.</h2>
+</div>
+
+<div class="newswrap">
+  <!-- SECTION: news.Updates -->
+  <div class="updates" data-screen-label="Updates">
+    <h3 class="colhead">Uncost news</h3>
+    <p class="cwsub">What the movement is doing, dated and honest, including the updates that aren&rsquo;t good news.</p>
+{#- N5 keyword filter, one per column, same progressive-enhancement pattern as
+    /receipts/: the bar ships hidden and only /js/keyword-filter.js reveals it,
+    so with JS off every item renders and no dead control is shown. -#}
+    <div class="rfilter" data-keyword-filter data-filter-for="news-uncost" data-filter-noun="updates" hidden>
+      <label for="ufilter-q">Filter these updates</label>
+      <input id="ufilter-q" type="search" autocomplete="off" placeholder="Try &ldquo;policy&rdquo; or &ldquo;repository&rdquo;&hellip;">
+      <span class="rfilter-count" data-filter-count></span>
+    </div>
+    <div id="news-uncost">
+{% for item in news | take(3) %}
+      {{ nc.update(item, 4, true) }}
+{% endfor %}
+    </div>
+    <p class="morelink"><a href="/news/uncost/">All Uncost news &rarr;</a></p>
+    <p class="u-96" id="rss">More updates arrive as the movement launches. Prefer a feed? <a href="/news/feed.xml">Subscribe by RSS</a> &mdash; every update, no algorithm in between.</p>
   </div>
-</section>
+
+  <!-- SECTION: news.Cost Watch -->
+  <aside class="costwatch" data-screen-label="Cost Watch">
+    <h3 class="colhead">Cost Watch</h3>
+    <p class="cwsub">Prices in the news, with the publisher and the date attached. Not receipts &mdash; verified figures live in <a href="/receipts/">The Receipts</a>.</p>
+    <p class="cwdef"><b>Reported</b> &mdash; a price or cost figure as published by the linked source, with its date. Cost Watch is a watch list, not a receipt; verified figures live in <a href="/receipts/">The Receipts</a>.</p>
+    <div class="rfilter" data-keyword-filter data-filter-for="news-costwatch" data-filter-noun="items" hidden>
+      <label for="cfilter-q">Filter these items</label>
+      <input id="cfilter-q" type="search" autocomplete="off" placeholder="Try &ldquo;gasoline&rdquo; or &ldquo;BLS&rdquo;&hellip;">
+      <span class="rfilter-count" data-filter-count></span>
+    </div>
+    <div id="news-costwatch">
+{% for row in register.newsFeed | take(5) %}
+      {{ nc.costwatch(row, 4) }}
+{% endfor %}
+    </div>
+    <p class="morelink"><a href="/news/cost-watch/">All Cost Watch &rarr;</a></p>
+    <p class="u-97">Checked {{ register.lastChecked }}. Every figure here has a <a href="/receipts/#register">receipt</a>.</p>
+  </aside>
+</div>
+<script src="/js/keyword-filter.js" defer></script>

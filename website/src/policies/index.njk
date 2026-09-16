@@ -1,19 +1,48 @@
 ---
 layout: layouts/base.njk
+permalink: "/policies/"
+pageId: "policies"
 title: "Policies"
-description: "Uncost's governance policies — public review drafts. Not adopted or in force; publication is not adoption."
+description: "Every Uncost policy, each with a permanent reference number, published in full and version-controlled in the public record."
+mainClass: "u-104"
 ---
-{% from "partials/content-needed.njk" import block as gap %}
-<section class="blk blk--first">
-  <p class="eyebrow">Policies</p>
-  <h1 class="sec">Governance, in the open.</h1>
-  <p class="lead">Public review drafts. Not adopted or in force — publication is not adoption. Each is published so it can be reviewed before it is ever activated.</p>
-</section>
-<section class="blk blk--cream2">
-  <div class="doc-list">
-{%- for policy in catalog.policies %}
-    <a class="doc-row" href="/policies/{{ policy.slug }}/"><span class="doc-id">{{ policy.id }}</span><span class="doc-title">{{ policy.display }}</span><span class="status status--planned">Draft</span></a>
-{%- endfor %}
-  </div>
-  <p class="doc-note">The consolidated policy pack is maintained in the public repository: <a href="https://github.com/uncost-org/uncost/blob/main/policies/POLICY-PACK-v1.3.md" target="_blank" rel="noopener">Policy Pack v1.3</a>.</p>
+{#- Markup taken verbatim from design-source/pages/policies.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: policies.Policies — title -->
+<div class="titleband" data-screen-label="Policies — title"><h1><span class="u-1">Policies</span></h1></div>
+<div class="u-46 introband">
+  <h2>The rules we hold ourselves to.</h2>
+  <p>Because Uncost handles donations, collects email and community input, builds public data tools, and explores sensitive sectors, it commits to a clear set of policies from the start. Each one carries a permanent reference number so it can be cited, tracked, and version-controlled — published in full here and in the public record on GitHub.</p>
+</div>
+<!-- SECTION: policies.Draft note -->
+<div class="u-8 high" data-screen-label="Draft note">
+  <span class="u-105 status status--planned">Public review drafts</span>
+  <span>These are drafts open for comment ahead of launch. Supporters can propose changes through the advisory Assembly — but requirements carrying legal, fiduciary, or safeguarding duty can&rsquo;t be weakened by popular vote.</span>
+</div>
+
+<div class="u-106">
+<!-- SECTION: policies.Policy set -->
+<div class="pollist" data-screen-label="Policy set">
+{#- The export hardcoded nine rows, linked none of them to a policy page (POL-001
+    pointed at the legacy /privacy/ route), and — worse — numbered them wrongly:
+    its POL-002 "Code of Conduct" is this repository's POL-003, and everything
+    from POL-002 down was off by one. Policy reference numbers are contractual
+    (UNP-39 §5.19, enforced in _data/catalog.js), so the list now loops the
+    catalog: right number, right slug, all eleven, every one linked. Each row's
+    description is the policy's own "Applies (upon adoption) to:" scope line
+    from its preamble — repository-authored, not the export's blurbs, which
+    could not be carried over while bound to the wrong numbers. -#}
+{% for pol in catalog.policies %}
+  <a class="polrow" href="/policies/{{ pol.slug }}/"><span class="pid">{{ pol.id }}</span><div><h3>{{ pol.display }}</h3><p>{% if pol.appliesTo %}Applies to {{ pol.appliesTo }}{% else %}Reference number reserved; the policy is not yet drafted.{% endif %}</p></div><div class="rt">{% if pol.reserved %}<span class="status status--planned">Not yet drafted</span>{% else %}<span class="status status--dev">Draft &mdash; not in force</span>{% endif %}</div></a>
+{% endfor %}
+</div>
+</div>
+
+<!-- SECTION: policies.How policies change -->
+<section class="blk blk--cream" data-screen-label="How policies change">
+  <div class="eyebrow">How a policy changes</div>
+  <h2 class="u-107 sec">Version-controlled, <span class="hl">in the open</span>.</h2>
+  <p class="u-108 lead">Every policy lives in the public record with its full history. Change one, and the reference number stays while the version increments — so you can always see what it said before, when it changed, and why. Sensitive sectors — healthcare, care, and child-facing education — are held to the highest bar and stay studies until consent, privacy, safeguarding, legal review, and human oversight are firmly in place.</p>
+  <p class="u-41"><a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--ink">See policy history on GitHub</a></p>
 </section>

@@ -1,69 +1,68 @@
 ---
 layout: layouts/base.njk
+permalink: "/movement/"
+pageId: "movement"
 title: "The Movement"
-description: "The Movement is how Uncost reaches people with sourced, shareable material, welcomes them through one front door, and offers a clear path from agreement to action — support, contribute, partner."
+description: "A nonprofit, nonpartisan movement that treats the cost of living as a problem to be measured and solved — not endured."
 ---
-<section class="blk blk--first">
-  <p class="eyebrow">The Movement</p>
-  <h1 class="sec">The Movement.</h1>
-  <p class="lead">From agreement to action — one front door.</p>
-  <p>Most people already know living costs too much. The Movement turns that into something organised: reach people with something true and worth sharing, welcome them in, and give them a clear way to act. Everything we publish leads back to the evidence — and to a way to take part.</p>
+{#- Markup from design-source/pages/movement.html; the BODY COPY is the UNP-82 v2
+    (a) rewrite, founder-approved, wired verbatim.
+    Structure mapping (v2 gave copy, not markup): v2's four blocks land on the
+    page's four content sections. Block 1 is a `.blk--first` — the export's own
+    "first block after a hero" modifier (border-top:0) — replacing the introband,
+    because v2 writes block 1 as eyebrow + lead + body, which is `.eyebrow` +
+    `.lead` + `<p>`, not the introband's h2 + p. The h1 stays in the titleband, so
+    v2's "h1: The Movement." is satisfied without a second h1.
+    Block 4's specified buttons ([Sign the Pledge] [Get updates]) are the coral
+    CTA directly below, which already renders exactly those two — so the ink
+    block's own button row is dropped rather than duplicating them. -#}
+<!-- SECTION: movement.Movement — title -->
+<div class="titleband" data-screen-label="Movement — title"><h1>The <span class="u-1">Movement</span></h1></div>
+<!-- SECTION: movement.What this is -->
+<section class="blk blk--first" data-screen-label="What this is">
+  {#- v2's block-1 eyebrow is the words "The Movement", which the titleband's h1
+      already carries directly above. Rendering both put "The Movement" on the
+      page twice in a row, so the eyebrow is dropped rather than duplicated. -#}
+  <h2 class="u-88 sec">Technology should make living cheaper, <span class="hl">not billionaires richer</span>.</h2>
+  <p class="u-89 lead">A nonprofit, nonpartisan movement that treats the cost of living as a problem to be measured and solved &mdash; not endured.</p>
+  <p class="u-11">Uncost exists because life keeps getting more expensive while the technology to make it cheaper keeps getting better. We&rsquo;re the people who think that gap is worth closing on purpose &mdash; with evidence, with AI and robotics pointed at real costs instead of just used to describe them, and with everything we produce given away, free, for anyone to check or copy. The Movement is what it looks like when enough people agree that&rsquo;s worth doing, and say so.</p>
 </section>
 
-<section class="blk blk--cream2">
-  <p class="eyebrow">How it reaches people</p>
-  <h2 class="sec">Short, visual, source-led — never outrage alone.</h2>
-  <p>Explainers and data pieces, in the movement’s own illustrated style, shared where attention already is — and carried further by people who share them with their own audiences. The rule doesn’t bend: every public piece leads back to a source and a way to help, never outrage on its own.</p>
+<!-- SECTION: movement.What we stand for -->
+<section class="blk blk--wheat" data-screen-label="What we stand for">
+  <div class="eyebrow">What we stand for</div>
+  <h2 class="u-88 sec">Living should not have a <span class="u-1">price tag</span>.</h2>
+  <p class="u-89 lead">That&rsquo;s the whole argument in one line. Everything else on this site is the evidence and the tools behind it.</p>
+  <p class="u-11">We start from what a person actually needs &mdash; measured, region by region, across fifteen sectors from Food and Shelter to Communication and Leisure &mdash; not from ideology. Where a cost could plausibly come down because of automation or shared infrastructure, we say so, in public, with the method shown. Where it can&rsquo;t, we say that too: an organisation that only publishes its wins isn&rsquo;t doing research, it&rsquo;s marketing.</p>
+  <p class="u-11">We&rsquo;re nonpartisan by design, not by accident &mdash; cost-of-living arguments drift toward party politics easily, and we hold the line because a movement that picks a side stops being useful to everyone else. We&rsquo;re not a service provider either: we don&rsquo;t build housing, deliver care, or generate power ourselves. We make the case, do the math, publish the receipts, and stay alongside the people who build with them.</p>
 </section>
 
-<section class="blk">
-  <p class="eyebrow">Ways in</p>
-  <h2 class="sec">Three ways in.</h2>
-  <div class="scope">
-    <div>
-      <h3>The Pledge</h3>
-      <p>A short public statement of what the movement stands for. Signing is free and opens at launch; sharing it onward is how the count grows. <a href="/pledge">Read the pledge →</a></p>
-    </div>
-    <div>
-      <h3>The cost-of-living quiz <span class="status status--planned">Planned</span></h3>
-      <p>Guess what living actually costs — a short test that teaches something surprising, with the full breakdown when you join.</p>
-    </div>
-    <div>
-      <h3>Share-a-stat <span class="status status--planned">Planned</span></h3>
-      <p>Ready-made, sourced cost-of-living facts as graphics and short clips, for supporters to repost to their own networks. Only published, source-backed figures ever become share assets.</p>
-    </div>
+<!-- SECTION: movement.What taking part means -->
+<section class="blk blk--cream2" data-screen-label="What taking part means">
+  <div class="eyebrow">What taking part means</div>
+  <h2 class="u-6 sec">You get a real part in something, <span class="hl">not a feed to follow</span>.</h2>
+  <p class="u-11">Joining Uncost isn&rsquo;t signing up to receive messages. Every pledge signed adds to a public count that gives the movement standing institutions can&rsquo;t wave away. Every hour someone spends verifying a figure, reviewing a source licence, or researching a sector strengthens evidence that anyone can use &mdash; including people who never join at all, because everything we publish is open, free, and reusable.</p>
+  <p class="u-11">There&rsquo;s a structured voice waiting inside it, too. <strong>The Assembly</strong> is where supporters propose ideas, prioritise sectors and regions, and raise objections &mdash; one person, one vote, no extra weight for money. It&rsquo;s advisory today, honestly, because the governance rules that would make it binding haven&rsquo;t cleared review yet &mdash; we&rsquo;d rather say that plainly than pretend otherwise. <a href="/assembly/">Read how it works &rarr;</a></p>
+</section>
+
+<!-- SECTION: movement.How to take part -->
+<section class="blk blk--ink u-block--ink" data-screen-label="How to take part">
+  <div class="u-5 eyebrow">How to take part</div>
+  <h2 class="u-91 sec">Three ways <span class="u-1">in</span>.</h2>
+  <div class="path">
+    <div class="p"><h3>Sign the pledge</h3><p>Free, and it takes a moment. Its only function is to show how many people want this &mdash; which is the argument that opens doors institutions would otherwise keep shut. <a href="/pledge/">Sign the Pledge</a></p></div>
+    <div class="p"><h3>Follow the news</h3><p>Updates land on <a href="/news/">News</a> and its <a href="/news/feed.xml">RSS feed</a>, dated and honest about what is and isn&rsquo;t done &mdash; including the updates that aren&rsquo;t good news.</p></div>
+    <div class="p"><h3>Volunteer your skills</h3><p>The most valuable work available right now is data collection and verification: checking figures against primary sources, reviewing licences, researching a sector, translating. <a href="/join/">Join now</a></p></div>
   </div>
+  <p class="u-10">Donations open once a fiscal sponsor is confirmed; until then there is nothing to give &mdash; time and skills are worth more anyway.</p>
 </section>
 
-<section class="blk blk--ink">
-  <p class="eyebrow">The path</p>
-  <h2 class="sec">The path from agreement to action.</h2>
-  <div class="scope">
-    <div>
-      <h3>Support</h3>
-      <p>Free, for anyone who thinks living costs too much: join, share sourced material, sign the pledge. This is the public demand that makes the rest possible.</p>
-    </div>
-    <div>
-      <h3>Contribute</h3>
-      {#- SPONSOR-GATED: the donate half of this tier opens only when a fiscal sponsor is confirmed; volunteering is open now. See records/SPONSOR_TRANSITION.md. -#}
-      <p>Back the work directly — volunteer research, data, engineering, writing, design, or translation. Donations open once a fiscal sponsor is confirmed; until then there is nothing to give, and time is worth more anyway.</p>
-    </div>
-    <div>
-      <h3>Partner</h3>
-      <p>Experts, builders, and institutions: build the tools, advise, coordinate a sector or region, or offer reviewed in-kind support.</p>
-    </div>
-  </div>
-  <div class="cta-actions">
-    <a href="/join" class="u-btn u-btn--primary">Take part</a>
-    <a href="/news" class="u-btn u-btn--outline-cream">Follow the news</a>
-  </div>
-</section>
-
-<section class="blk blk--ink">
-  <h2 class="sec">The simplest first step is to join.</h2>
-  <p>It’s free, and it shows the world how many of us want this.</p>
-  <div class="cta-actions">
-    <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
-    <a href="/join" class="u-btn u-btn--outline-cream">Get updates</a>
+<!-- SECTION: movement.Movement CTA -->
+<section class="u-93 blk blk--coral" data-screen-label="Movement CTA">
+  <h2 class="u-77 sec">The simplest first step is to join.</h2>
+  <p class="u-94 lead">It&rsquo;s free, and it shows the world how many of us want this.</p>
+  <div class="u-95">
+    <a href="/pledge/" class="u-btn u-btn--ink">Sign the Pledge</a>
+    <a href="#updates" class="u-btn u-btn--ghost">Get updates</a>
   </div>
 </section>

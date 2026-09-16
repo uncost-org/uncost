@@ -1,0 +1,46 @@
+---
+layout: layouts/base.njk
+permalink: "/news/cost-watch/"
+pageId: "news"
+title: "Cost Watch"
+description: "Prices in the news, with the publisher and the date attached. Not receipts — verified figures live in The Receipts."
+---
+{% import "partials/news-cards.njk" as nc %}
+{#- N2. The full Cost Watch list. Same header pattern and pageId as /news/.
+    On its own page the Cost Watch block is not a sidebar, so `.newswrap--solo`
+    drops the rail chrome and lets the cards run two-up.
+
+    The Reported definition prints here as it does on /news/ — the two places
+    the Cost Watch column appears — and deliberately nowhere else. It is NOT
+    added to the four-label confidence block on /case/ or /receipts/, because
+    Reported is not a confidence value: it says a source published a figure,
+    not that we verified one. -#}
+<!-- SECTION: news-cost-watch.Cost Watch — title -->
+<div class="titleband" data-screen-label="Cost Watch — title"><h1>Cost <span class="u-1">Watch</span></h1></div>
+<div class="introband">
+  <h2>Cost Watch</h2>
+  <p>Prices in the news, with the publisher and the date attached. Not receipts &mdash; verified figures live in <a href="/receipts/">The Receipts</a>.</p>
+</div>
+
+<div class="newswrap newswrap--solo">
+  <!-- SECTION: news-cost-watch.Cost Watch -->
+  <div class="costwatch" data-screen-label="Cost Watch">
+    <p class="cwdef"><b>Reported</b> &mdash; a price or cost figure as published by the linked source, with its date. Cost Watch is a watch list, not a receipt; verified figures live in <a href="/receipts/">The Receipts</a>.</p>
+{#- N5 keyword filter, one per column, same progressive-enhancement pattern as
+    /receipts/: the bar ships hidden and only /js/keyword-filter.js reveals it,
+    so with JS off every item renders and no dead control is shown. -#}
+    <div class="rfilter" data-keyword-filter data-filter-for="news-costwatch" data-filter-noun="items" hidden>
+      <label for="cfilter-q">Filter these items</label>
+      <input id="cfilter-q" type="search" autocomplete="off" placeholder="Try &ldquo;gasoline&rdquo; or &ldquo;BLS&rdquo;&hellip;">
+      <span class="rfilter-count" data-filter-count></span>
+    </div>
+    <div id="news-costwatch" class="cwlist">
+{% for row in register.newsFeed %}
+      {{ nc.costwatch(row, 3) }}
+{% endfor %}
+    </div>
+    <p class="morelink"><a href="/news/uncost/">All Uncost news &rarr;</a></p>
+    <p class="u-97">Checked {{ register.lastChecked }}. Every figure here has a <a href="/receipts/#register">receipt</a>. Prefer a feed? <a href="/news/cost-watch/feed.xml">Subscribe by RSS</a>.</p>
+  </div>
+</div>
+<script src="/js/keyword-filter.js" defer></script>
