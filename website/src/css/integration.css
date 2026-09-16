@@ -929,3 +929,61 @@ b, .b { color: var(--coral-deep) !important; }
 .sector-head :is(b,.nb), .sector-num b { color: var(--ink) !important; }
 [class*="coral"] :is(.eq,.pid), .hero :is(.eq,.pid) { color: var(--ink) !important; }
 .p-head .pid, .p-meta .pid { color: var(--ink) !important; }
+
+/* 70 — C2 SECTION LAYOUT STANDARD. Text-only bands are stacked: eyebrow →
+ *      headline → body → optional button. The homepage "Point the tools at the
+ *      things that keep people alive." band was the only outlier site-wide —
+ *      `.intent` is a 1.15fr/1fr grid putting the headline left and the body
+ *      and button right. Now stacked, with the R4 headline scale and 728px
+ *      body measure.
+ *
+ *      The ten `/policies/` `.pol-wrap` layouts also read as two-column, but
+ *      they are a contents sidebar beside a document body, not an
+ *      eyebrow-headline-body band, so C2 does not apply to them.
+ *      CANVAS-SYNC item 70. */
+body[data-page="index"] .intent { display: block; }
+body[data-page="index"] .intent > * + * { margin-top: 18px; }
+body[data-page="index"] .intent p { max-width: 64ch; }
+body[data-page="index"] .intent h2,
+body[data-page="index"] .intent + h2 {
+  font-size: clamp(34px, 4.2vw, 56px);
+  line-height: 1.02;
+  max-width: none;
+}
+
+/* 71 — C3 FIGURE CARD REFINEMENTS (shipped as variant 1).
+ *      a. Caption 36px → 31px.
+ *      b. The data period moved out of the slot under the numeral and into the
+ *         chip row as SCOPE, so it appears exactly once on the card. The row
+ *         now reads CHECKED · PUBLISHED · SCOPE · REGION · CONFIDENCE.
+ *      c. Chip label text to --ink; the export's --fg-2 read light at 10.5px.
+ *      d. METADATA chips get coloured borders over a neutral fill. CONFIDENCE
+ *         chips keep their solid fills and are the only solid-colour chip, so
+ *         colour continues to mean confidence.
+ *
+ *      Border palette: the confidence chips own sage, wheat, ink-blue and
+ *      coral, so metadata borders must avoid all four. The only values in the
+ *      token set provably distinct from them are the neutral ramp
+ *      (--ink / --fg-2 / --fg-3), which is what ships here; C4 explores hues.
+ *      Date chips colour by RECENCY computed at build time (current / prior /
+ *      older), never by literal year, so no new colour is needed each January.
+ *      CANVAS-SYNC item 71. */
+.cards .card .claim { font-size: 31px; }
+
+.cards .card .foot .row span.m {
+  color: var(--ink);
+  background: var(--cream);
+  border-width: 1.5px;
+  font-size: 11px;
+}
+.cards .card:nth-child(odd) .foot .row span.m { background: var(--cream-2); }
+
+/* Metadata borders — neutral ramp, by meaning. */
+.cards .card .foot .row .m--date[data-era="current"] { border-color: var(--ink); }
+.cards .card .foot .row .m--date[data-era="prior"]   { border-color: var(--fg-2); }
+.cards .card .foot .row .m--date[data-era="older"]   { border-color: var(--fg-3); }
+.cards .card .foot .row .m--scope                    { border-color: var(--fg-2); }
+.cards .card .foot .row .m--region[data-region="us"] { border-color: var(--ink); }
+
+/* Confidence keeps its solid fill — the only solid chip on the card. */
+.cards .card .foot .row .rcpt-conf { border-width: 1.5px; }

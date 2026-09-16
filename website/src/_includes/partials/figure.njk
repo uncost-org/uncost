@@ -24,8 +24,8 @@
   Structure, in order:
     .id     SRC id
     .fig    the display value, in coral
-    .unit   the data period — this IS the figure's scope, so it is never
-            repeated as a chip in the row below
+    (the data period is NOT here: C3b moves it into the chip row as SCOPE,
+     so it appears exactly once on the card)
     .claim  the caption, bold, echoing its own display value in the numeral's
             colour (register.js builds captionHtml and escapes it first)
     .foot   SOURCE eyebrow, publisher, linked title, then the chip row:
@@ -39,16 +39,16 @@
 <div class="card" id="{{ row.source_id }}" data-source="{{ row.source_id }}">
   <div class="id">{{ row.source_id }}</div>
   <div class="fig">{{ row.display_value }}</div>
-  <div class="unit">{{ row.data_period }}</div>
   <div class="claim">{{ row.captionHtml | safe }}</div>
   <div class="foot">
     <div class="src-eyebrow">Source</div>
     <div class="pub">{{ row.publisher }}</div>
     <div class="ttl">{% if row.url %}<a href="{{ row.url }}" target="_blank" rel="noopener">{{ row.publication_work }}</a>{% else %}{{ row.publication_work }}{% endif %}</div>
     <div class="row">
-      <span class="m">Checked {{ row.last_checked }}</span>
-      {% if row.publication_year %}<span class="m">Published {{ row.publication_year }}</span>{% endif %}
-      <span class="m">{{ row.region }}</span>
+      <span class="m m--date" data-era="{{ row.checkedEra }}">Checked {{ row.last_checked }}</span>
+      {% if row.publication_year %}<span class="m m--date" data-era="{{ row.publishedEra }}">Published {{ row.publication_year }}</span>{% endif %}
+      <span class="m m--scope">{{ row.data_period }}</span>
+      <span class="m m--region" data-region="{{ row.regionCode }}">{{ row.region }}</span>
       <span class="rcpt-conf rcpt-conf--{{ "confirmed" if row.confidence.startsWith("confirmed") else "estimate" }}">{{ "Confirmed" if row.confidence.startsWith("confirmed") else "Estimate" }}</span>
     </div>
   </div>

@@ -93,6 +93,23 @@ module.exports = function () {
       }
     }
     row.captionHtml = html;
+
+    // C3d/C4: date chips colour by RECENCY, computed at build time, not by
+    // literal year — so the palette never needs a new colour in January.
+    const thisYear = new Date().getUTCFullYear();
+    const era = (y) => {
+      const n = Number(y);
+      if (!n) return "unknown";
+      if (n >= thisYear) return "current";
+      if (n === thisYear - 1) return "prior";
+      return "older";
+    };
+    row.checkedEra = era((row.last_checked || "").slice(0, 4));
+    row.publishedEra = era(row.publication_year);
+    // Region chips colour by region CODE. Every row is United States today, so
+    // this renders one colour; the mapping is here so it does not have to be
+    // invented when the first non-US row lands.
+    row.regionCode = /united states/i.test(row.region || "") ? "us" : "other";
   }
 
   // display_value is the headline numeral a page renders large (the design's
