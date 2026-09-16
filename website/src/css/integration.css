@@ -835,3 +835,97 @@ body[data-page="sectors-leisure"] { --gp: 0.1701; }
 .parts4 + *,
 .cwrap + *,
 .sgrid + * { border-top: 0 !important; }
+
+/* 68 — C1 ONE CORAL, BY BACKGROUND.
+ *      Driven by the BACKGROUND, not by chasing class names — `.u-1`, `.num`,
+ *      `.n` and `b` each appear at both display and small sizes, so a
+ *      class-by-class rule cannot be made correct.
+ *
+ *      Default per band, safe at BOTH the 3:1 large bar and the 4.5:1 small
+ *      bar, so it is correct whatever size the element turns out to be:
+ *        cream / cream2 / white -> --coral-deep   (5.59 / 5.12 / 5.99)
+ *        ink                    -> --coral-on-ink (6.42)
+ *        wheat                  -> --ink          (see item 69)
+ *        coral                  -> --ink          (coral on coral is invisible)
+ *
+ *      Display accents then take the lighter --coral, re-asserted only through
+ *      HEADINGS, which are always large: 4.04 on cream, 3.70 on cream2, 4.47 on
+ *      ink, all against the 3:1 bar. Wheat is the named exception and keeps
+ *      --coral-deep at 3.25. CANVAS-SYNC item 68. */
+
+/* 1. Per-band default for every coral-family token. */
+.u-1, .num, .n, .cn, .pn, .eq, .go, .tag, .pd, .free, .when, .date, .mail,
+.src-num, .idx, .pid, .eyebrow, .plus, .u-56, .u-19, .u-132, .u-70, .u-3,
+.u-102, .u-73, .u-120, .u-50, .echo,
+.blk b, .block b, .pol-body .num { color: var(--coral-deep) !important; }
+
+.blk--ink :is(.u-1,.num,.n,.cn,.pn,.eq,.go,.tag,.eyebrow,.when,.idx,b),
+.u-block--ink :is(.u-1,.num,.n,.cn,.pn,.eq,.go,.tag,.eyebrow,.when,.idx,b),
+.block--ink :is(.u-1,.num,.n,.cn,.pn,.eq,.go,.tag,.eyebrow,.when,.idx,b),
+.blk--ink .u-56, .u-block--ink .u-56 { color: var(--coral-on-ink) !important; }
+
+.blk--coral :is(.u-1,.num,.n,.cn,.pn,.eq,.go,.tag,.eyebrow,.when,.idx,b),
+.hero.blk--coral :is(.n,.eq,b) { color: var(--ink) !important; }
+
+/* 2. Display accents — headings only, so they are always WCAG large text. */
+h1 .u-1, h2 .u-1, h3 .u-1, .sec .u-1, .hl,
+h1 .hl, h2 .hl, h3 .hl { color: var(--coral) !important; }
+.blk--ink :is(h1,h2,h3) .u-1, .u-block--ink :is(h1,h2,h3) .u-1,
+.block--ink :is(h1,h2,h3) .u-1 { color: var(--coral) !important; }
+
+/* 3. Wheat is the named exception: --coral is 2.34 there, below even the
+ *    large bar, so display accents keep --coral-deep. */
+.blk--wheat :is(h1,h2,h3) .u-1, .u-87 :is(h1,h2,h3) .u-1,
+.blk--wheat .hl, .u-87 .hl,
+.blk--wheat .plus, .u-87 .plus { color: var(--coral-deep) !important; }
+
+/* 69 — C1 CONFLICT, resolved and flagged. The rule says all small text stays
+ *      --coral-deep on every background, but on WHEAT that is 3.25:1, below the
+ *      4.5:1 small bar — and no coral clears it (--coral 2.34, --coral-on-ink
+ *      worse). Small text on wheat therefore resolves to --ink (10.48:1). This
+ *      is the only place C1 could not be applied as written.
+ *      CANVAS-SYNC item 69. */
+.blk--wheat :is(.eyebrow,.go,.src-num,.u-132,.u-70,.tag,.eq,.date,.idx,.pid),
+.u-87 :is(.eyebrow,.go,.src-num,.u-132,.u-70,.tag,.eq,.date,.idx,.pid),
+.blk--wheat a:not(.u-btn), .u-87 a:not(.u-btn) { color: var(--ink) !important; }
+
+/* 69 — C1 CONFLICT, resolved and flagged. The rule says all small text stays
+ *      --coral-deep on every background, but on WHEAT that measures 3.25:1 —
+ *      below the 4.5:1 small-text bar. No coral value clears it: --coral is
+ *      2.34 and --coral-on-ink is worse. Small text on wheat therefore resolves
+ *      to --ink (10.48:1). This is the only place C1 could not be applied as
+ *      written. CANVAS-SYNC item 69. */
+.blk--wheat .eyebrow, .u-87 .eyebrow,
+.blk--wheat a:not(.u-btn), .u-87 a:not(.u-btn),
+.blk--wheat .u-132, .blk--wheat .u-70,
+.blk--wheat .go, .blk--wheat .src-num { color: var(--ink) !important; }
+
+/* (l) C1 stragglers — bands my class-based selectors did not reach, plus two
+ *     rules the item-68 rewrite dropped. Coral-family text on a CORAL band is
+ *     1.38:1 (invisible), so it resolves to ink like any other coral-adjacent
+ *     case; wheat small text follows item 69 to ink; and the R3 card's linked
+ *     title and the sector Evidence eyebrow are ink-band tokens that now sit on
+ *     light bands (2.81 / 2.57). */
+[class*="blk--coral"] :is(.n,.eq,.num,.pid,.idx,.tag,.go,.eyebrow,.when,b),
+[class*="block--coral"] :is(.n,.eq,.num,.pid,.idx,.tag,.go,.eyebrow,.when,b),
+.asks :is(.n,.eq,.num,b), .happens :is(.n,.eq,.num,b) { color: var(--ink) !important; }
+
+[class*="blk--wheat"] :is(.eyebrow,b,.go,.tag,.eq,.idx,.pid),
+.u-87 :is(.eyebrow,b,.go,.tag,.eq,.idx,.pid) { color: var(--ink) !important; }
+
+.cards .card .ttl a,
+.cards .card .foot a { color: var(--coral-deep) !important; }
+body[data-page^="sectors-"] #evidence .eyebrow { color: var(--coral-deep) !important; }
+.blk b, .block b, .blk .b, .block .b { color: var(--coral-deep) !important; }
+
+/* (m) Final C1 stragglers, found by walking the ancestor chain of each failing
+ *     element rather than guessing at band classes: the sector six-step cells
+ *     (.step6) paint coral, and .u-124 ("At a glance") is a wheat band. Neither
+ *     carries a blk--* class, so the band selectors above could not reach them. */
+.steps6 :is(.n,.eq,b), .step6 :is(.n,.eq,b) { color: var(--ink) !important; }
+.u-124 :is(.eyebrow,.go,.tag,b) { color: var(--ink) !important; }
+b, .b { color: var(--coral-deep) !important; }
+.blk--ink b, .u-block--ink b, .block--ink b { color: var(--coral-on-ink) !important; }
+.sector-head :is(b,.nb), .sector-num b { color: var(--ink) !important; }
+[class*="coral"] :is(.eq,.pid), .hero :is(.eq,.pid) { color: var(--ink) !important; }
+.p-head .pid, .p-meta .pid { color: var(--ink) !important; }
