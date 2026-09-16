@@ -19,6 +19,10 @@ module.exports = function (eleventyConfig) {
   const md = markdownIt({ html: false });
   eleventyConfig.addFilter("md", (content) => md.render(content || ""));
 
+  // First n of a list — the split landing shows the latest 3 updates and the
+  // latest 5 Cost Watch items, while the dedicated routes show everything.
+  eleventyConfig.addFilter("take", (arr, n) => (Array.isArray(arr) ? arr.slice(0, n) : arr));
+
   // A URL is sitemap-eligible only if it renders an HTML page (ends in "/"
   // or ".html"); .xml/.txt/.json outputs are excluded.
   eleventyConfig.addFilter("isIndexable", (url) => {

@@ -161,7 +161,16 @@ module.exports = function () {
   // Cost Watch (/news/) renders exactly the rows the register itself tags as
   // fast-moving. `placement` is the register's own column, so adding or
   // retiring a Cost Watch entry is a register edit, never a template edit.
-  const newsFeed = stats.filter((r) => r.placement === "news-feed");
+  // Newest first, so "latest 5" on /news/ and the Cost Watch RSS agree without
+  // either template having to know the register's file order. publication_date
+  // is the date the source printed the figure; source_id breaks ties so the
+  // build stays deterministic.
+  const newsFeed = stats
+    .filter((r) => r.placement === "news-feed")
+    .sort((a, b) => {
+      const d = String(b.publication_date || "").localeCompare(String(a.publication_date || ""));
+      return d !== 0 ? d : String(a.source_id).localeCompare(String(b.source_id));
+    });
 
   return { all, byId, stats, newsFeed, lastChecked };
 };

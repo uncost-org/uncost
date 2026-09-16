@@ -3,55 +3,56 @@ layout: layouts/base.njk
 permalink: "/news/"
 pageId: "news"
 title: "News"
-description: "Movement updates, and a Cost Watch of fast-moving prices — sourced and dated the same way as everything else on this site."
+description: "What the movement is doing, and the prices in the news — each with its publisher and its date."
 ---
-{#- Markup taken verbatim from design-source/pages/news.html. CONTENT.md marks this
+{% import "partials/news-cards.njk" as nc %}
+{#- Markup taken from design-source/pages/news.html. CONTENT.md marks this
     page's copy "inline (draft)", so the export supplies both; only asset
     references and routes are rewritten. Do not re-author.
+
     Exception, founder-approved under UNP-82 v1 §4b: Cost Watch is no longer a
     hand-curated reading list of third-party articles. It renders the register's
     own `placement=news-feed` rows, so every entry is a sourced, dated figure
     under the same rule as the rest of the site. The export's three hardcoded
-    links and its "inclusion isn't endorsement" note went with that model. -#}
+    links and its "inclusion isn't endorsement" note went with that model.
+
+    Exception, founder-approved under N1: this is now a split landing. Both
+    columns are first-class — each carries its own head, its own one-line
+    intro, its own filter and its own link to the full list — and the single
+    combined intro sentence in the introband is gone, because an intro that
+    describes two things describes neither. Column intros, and the Reported
+    definition, are founder-approved copy. -#}
 <!-- SECTION: news.News — title -->
 <div class="titleband" data-screen-label="News — title"><h1><span class="u-1">News</span></h1></div>
 <div class="introband">
   <h2>What&rsquo;s moving — ours and the world&rsquo;s.</h2>
-  <p>Movement updates on the left. On the right, <b>Cost Watch</b> &mdash; fast-moving prices, sourced and dated the same way as everything else on this site.</p>
 </div>
 
 <div class="newswrap">
   <!-- SECTION: news.Updates -->
   <div class="updates" data-screen-label="Updates">
-    <div class="up-item">
-      <div class="date">Pre-launch · 2026</div>
-      <h3>The plan is public. The build begins.</h3>
-      <p>The movement plan, brand system, website, and project architecture are complete. Next: fiscal sponsorship, public launch, the first contributors, and the first Human Essentials Dashboard prototype. Sign the Pledge to be here when it opens.</p>
+    <h3 class="colhead">Uncost news</h3>
+    <p class="cwsub">What the movement is doing, dated and honest, including the updates that aren&rsquo;t good news.</p>
+    <div id="news-uncost">
+{% for item in news | take(3) %}
+      {{ nc.update(item, 4, true) }}
+{% endfor %}
     </div>
-    <div class="up-item">
-      <div class="date">Pre-launch · 2026</div>
-      <h3>Why we&rsquo;re starting with Shelter, Food, and Energy.</h3>
-      <p>All fifteen sectors stay visible, but the first evidence work goes deep on three high-pressure essentials — to prove the model honestly before expanding. Here&rsquo;s the reasoning and the guardrails.</p>
-    </div>
-    <div class="up-item">
-      <div class="date">Pre-launch · 2026</div>
-      <h3>Receipts first: how we&rsquo;ll publish numbers.</h3>
-      <p>Every figure will carry a source, a date, and a confidence label — and anything hypothetical will be marked illustrative. A short tour of the methodology that keeps us honest.</p>
-    </div>
+    <p class="morelink"><a href="/news/uncost/">All Uncost news &rarr;</a></p>
     <p class="u-96" id="rss">More updates arrive as the movement launches. Prefer a feed? <a href="/news/feed.xml">Subscribe by RSS</a> &mdash; every update, no algorithm in between.</p>
   </div>
 
   <!-- SECTION: news.Cost Watch -->
   <aside class="costwatch" data-screen-label="Cost Watch">
-    <h3>Cost Watch</h3>
-    <p class="cwsub">Fast-moving prices, sourced and dated the same way as everything else on this site &mdash; refreshed on each source&rsquo;s own cadence, not curated commentary.</p>
-{% for row in register.newsFeed %}
-    <a class="cw" href="{{ row.url }}" target="_blank" rel="noopener" data-source="{{ row.source_id }}">
-      <div class="src"><span>{{ row.publisher }}</span><span>{{ row.data_period }}</span></div>
-      <h4>{{ row.display_caption }}</h4>
-      <span class="ext">Read at {{ row.url.split("/")[2] | replace("www.", "") }} &rarr;</span>
-    </a>
+    <h3 class="colhead">Cost Watch</h3>
+    <p class="cwsub">Prices in the news, with the publisher and the date attached. Not receipts &mdash; verified figures live in <a href="/receipts/">The Receipts</a>.</p>
+    <p class="cwdef"><b>Reported</b> &mdash; a price or cost figure as published by the linked source, with its date. Cost Watch is a watch list, not a receipt; verified figures live in <a href="/receipts/">The Receipts</a>.</p>
+    <div id="news-costwatch">
+{% for row in register.newsFeed | take(5) %}
+      {{ nc.costwatch(row, 4) }}
 {% endfor %}
+    </div>
+    <p class="morelink"><a href="/news/cost-watch/">All Cost Watch &rarr;</a></p>
     <p class="u-97">Checked {{ register.lastChecked }}. Every figure here has a <a href="/receipts/#register">receipt</a>.</p>
   </aside>
 </div>

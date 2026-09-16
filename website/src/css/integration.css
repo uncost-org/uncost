@@ -1041,3 +1041,79 @@ body[data-page="index"] .intent + h2 {
   margin: 0 0 22px;
 }
 .cwdef b { color: var(--ink); }
+
+/* 73. N1/N2 — the news split landing and its two dedicated routes.
+ *
+ *     The export shipped /news/ as one wide updates column plus a narrow Cost
+ *     Watch rail. N1 makes both sides first-class: each column gets its own
+ *     head, its own one-line intro and its own "all of these" link, and the
+ *     single combined intro sentence in the introband goes away.
+ *
+ *     N2 adds /news/uncost/ and /news/cost-watch/, which reuse the same
+ *     markup under `.newswrap--solo`: one column, full width, and the Cost
+ *     Watch rail loses its sidebar chrome because on its own page it is not a
+ *     sidebar. Both routes keep pageId "news" so the export's page-scoped
+ *     rules apply to them unchanged — the same reason the policy routes share
+ *     a page id.
+ *
+ *     Heading levels differ by route (column head h3 + item h4 on the split
+ *     landing; introband h2 + item h3 on a dedicated route), so the item rules
+ *     are restated for both levels. Equal specificity to the export's
+ *     `:where()`-scoped rules and later in the cascade, which is the whole
+ *     trick — see item 65. CANVAS-SYNC item 73. */
+.colhead { font-family: var(--font-display); font-weight: 900; font-size: 22px; margin: 0 0 6px; }
+.updates .cwsub { font-size: 13px; color: var(--fg-3); line-height: 1.5; margin: 0 0 22px; }
+.up-item :is(h3, h4) {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 26px;
+  letter-spacing: -.01em;
+  margin: 0 0 10px;
+  max-width: 26ch;
+}
+.cw :is(h3, h4) {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.3;
+  margin: 8px 0 0;
+}
+
+/* "All Uncost news →" / "All Cost Watch →" — each column ends in the full list. */
+.morelink {
+  display: block;
+  border-top: 2px solid var(--ink);
+  margin: 22px 0 0;
+  padding: 14px 0 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.morelink a { color: var(--coral-deep); text-decoration: none; }
+.morelink a:hover { text-decoration: underline; }
+
+/* Dedicated routes: one column, full width, no sidebar chrome. */
+.newswrap--solo { grid-template-columns: 1fr; }
+.newswrap--solo .costwatch {
+  background: transparent;
+  border-left: 0;
+  padding: 36px clamp(24px, 5vw, 64px);
+}
+.newswrap--solo .cwlist {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+.newswrap--solo .cwlist .cw { margin-bottom: 0; }
+@media (max-width: 860px) {
+  .newswrap--solo .cwlist { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* N5 filter, both directions. `.card[hidden]` needed item 66 because
+ * `.cards .card{display:flex}` outranked it; `.cw` has the same problem
+ * (`display:block`) and `.up-item` does not, but both are stated so the
+ * filter can never half-work again. */
+.cw[hidden], .up-item[hidden] { display: none !important; }
