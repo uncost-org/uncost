@@ -1079,9 +1079,13 @@ body[data-page="index"] .intent + h2 {
   margin: 8px 0 0;
 }
 
-/* "All Uncost news →" / "All Cost Watch →" — each column ends in the full list. */
+/* "All Uncost news →" / "All Cost Watch →" — each column ends in the full list.
+ * max-width:none because the export caps paragraph measure in `ch`, which at
+ * this 13px size resolved to 407px and left the closing rule a stub against
+ * the full-width item dividers above it. */
 .morelink {
   display: block;
+  max-width: none;
   border-top: 2px solid var(--ink);
   margin: 22px 0 0;
   padding: 14px 0 0;

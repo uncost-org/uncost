@@ -34,6 +34,17 @@ CONTENT_CEILING_PCT = float(os.environ.get("RENDER_CONTENT_CEILING", "35.0"))
 # is still measured, and every exemption actually exercised is listed in the run
 # output, so none of this can rot unnoticed.
 SECTION_EXEMPTIONS = [
+    # ── Batch N ───────────────────────────────────────────────────────────
+    ("news.html", "div.newswrap",
+     "N1: /news/ is now a split landing. Both columns are first-class — each "
+     "has its own head, its own founder-approved one-line intro, its own "
+     "keyword filter and its own link to the full list — the combined intro "
+     "sentence is gone, and the updates column renders the real dated items "
+     "from _data/news.js instead of the export's three undated placeholders. "
+     "Every Cost Watch card also gains the Reported label. That is most of the "
+     "section's pixels by design, hence ~41%; the section's x and width still "
+     "have to match the export and do, so the gate's geometry check is "
+     "unaffected. CANVAS-SYNC items 72 and 73."),
     ("projects/", "At a glance",
      "The dossier's reviewed prose is the content authority and runs far longer "
      "than the export's designed one-liner placeholder; structure is identical."),
