@@ -161,12 +161,25 @@ module.exports = function () {
   // Cost Watch (/news/) renders exactly the rows the register itself tags as
   // fast-moving. `placement` is the register's own column, so adding or
   // retiring a Cost Watch entry is a register edit, never a template edit.
+  // RFC-822 stamp for the Cost Watch feed, derived from the date the source
+  // printed the figure. 09:00 +0700 matches the movement updates in
+  // _data/news.js, so the two feeds sort together in a reader.
+  const RFC822_DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const RFC822_MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const rfc822 = (iso) => {
+    const d = new Date(`${iso}T02:00:00Z`); // 09:00 +0700
+    if (Number.isNaN(d.getTime())) return "";
+    return `${RFC822_DAYS[d.getUTCDay()]}, ${String(d.getUTCDate()).padStart(2, "0")} ` +
+      `${RFC822_MONTHS[d.getUTCMonth()]} ${d.getUTCFullYear()} 09:00:00 +0700`;
+  };
+
   // Newest first, so "latest 5" on /news/ and the Cost Watch RSS agree without
   // either template having to know the register's file order. publication_date
   // is the date the source printed the figure; source_id breaks ties so the
   // build stays deterministic.
   const newsFeed = stats
     .filter((r) => r.placement === "news-feed")
+    .map((r) => ({ ...r, pubDate: rfc822(r.publication_date) }))
     .sort((a, b) => {
       const d = String(b.publication_date || "").localeCompare(String(a.publication_date || ""));
       return d !== 0 ? d : String(a.source_id).localeCompare(String(b.source_id));

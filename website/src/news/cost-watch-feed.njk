@@ -1,0 +1,31 @@
+---
+permalink: "/news/cost-watch/feed.xml"
+eleventyExcludeFromCollections: true
+---
+{#- N2. Cost Watch has its own feed, alongside /news/feed.xml. They carry
+    different things on different cadences — movement updates versus published
+    prices — so a reader who wants one is not made to take the other.
+    Items come from the register's own `placement=news-feed` rows, newest
+    first, so the feed cannot drift from the page. -#}
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Uncost — Cost Watch</title>
+    <link>{{ site.origin }}/news/cost-watch/</link>
+    <atom:link href="{{ site.origin }}/news/cost-watch/feed.xml" rel="self" type="application/rss+xml" />
+    <description>Prices in the news, with the publisher and the date attached. Not receipts — verified figures live in The Receipts.</description>
+    <language>en</language>
+    {%- if register.newsFeed and register.newsFeed.length %}
+    <lastBuildDate>{{ register.newsFeed[0].pubDate }}</lastBuildDate>
+    {%- for row in register.newsFeed %}
+    <item>
+      <title>{{ row.display_caption }}</title>
+      <link>{{ row.url }}</link>
+      <guid isPermaLink="false">uncost-cost-watch-{{ row.source_id }}</guid>
+      <pubDate>{{ row.pubDate }}</pubDate>
+      <description><![CDATA[{{ row.display_caption }}]]></description>
+    </item>
+    {%- endfor %}
+    {%- endif %}
+  </channel>
+</rss>
