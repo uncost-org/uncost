@@ -1,87 +1,88 @@
 {
-  "_note": "DRAFT homepage copy, lifted verbatim from the export's data-content slots. Re-extracted on every re-derivation because the export renumbers its .u-N classes. The S2 statistics and S6 counts are NOT here — they render from sources/register.csv and the repository's registers. S5's closing note was removed and the 'All fifteen sectors' button moved into its place — an approved content change; see docs/CANVAS-SYNC.md.",
-  "s1": {
-    "cta1": "Sign the Pledge",
-    "cta2": "See the evidence",
-    "eyebrow": "A nonprofit, nonpartisan movement",
-    "headline": "<span class=\"u-49\">Living should not have a price tag.</span><span class=\"u-50\"><span class=\"u-51\">Uncost</span> the cost of living.</span>",
-    "subhead": "Uncost is a nonprofit movement to significantly reduce the cost of living by putting AI and robotics to work for humanity.<br><br><b class=\"u-53\">Technology should make living cheaper, not billionaires richer.</b>"
+ "_note": "DRAFT homepage copy, lifted verbatim from the export's data-content slots. Re-extracted on every re-derivation because the export renumbers its .u-N classes. The S2 statistics and S6 counts are NOT here — they render from sources/register.csv and the repository's registers. S5's closing note was removed and the 'All fifteen sectors' button moved into its place — an approved content change; see docs/CANVAS-SYNC.md.",
+ "s1": {
+  "cta1": "Sign the Pledge",
+  "cta2": "See the evidence",
+  "headline": "<span class=\"u-49\">Technology should make living cheaper, <span class=\"hl\">not billionaires richer</span>.</span><span class=\"u-50\"><span class=\"u-51\">Uncost</span> the cost of living.</span>",
+  "subhead": "Uncost is a nonprofit, nonpartisan movement that believes <u>living should not have a price tag</u>. We aim to significantly reduce the cost of living by putting AI and robotics to work for humanity."
+ },
+ "s2": {
+  "eyebrow": "The problem, with receipts",
+  "headline": "Working harder, still <span class=\"u-1\">falling behind</span>.",
+  "stat1": {
+   "caption": "The median American renter spent 31% of their income on rent and utilities in 2024 &mdash; up from 27% in 2001."
   },
-  "s2": {
-    "eyebrow": "The problem, with receipts",
-    "headline": "Working harder, still <span class=\"u-1\">falling behind</span>.",
-    "stat1": {
-      "caption": "The median American renter spent 31% of their income on rent and utilities in 2024 &mdash; up from 27% in 2001."
-    },
-    "stat2": {
-      "caption": "From 2001 to 2024, median rent rose 30% after inflation. The median renter&rsquo;s income rose just 9%."
-    },
-    "stat3": {
-      "caption": "Family health coverage through an employer cost $26,993 in 2025 &mdash; workers paid $6,850 of it."
-    }
+  "stat2": {
+   "caption": "From 2001 to 2024, median rent rose 30% after inflation. The median renter&rsquo;s income rose just 9%."
   },
-  "s3": {
-    "body": "Automation, robotics and open-source tools get cheaper and better every year. We work out where they could genuinely lower the cost of essentials &mdash; housing, food, energy and more &mdash; publish exactly what it would cost and whether it actually worked, and share the results free, so communities can act on them. No jargon, no hype.",
-    "cta": "How we work →",
-    "eyebrow": "What we intend to do",
-    "headline": "Point the tools at the things that <span class=\"u-1\">keep people alive</span>."
+  "stat3": {
+   "caption": "Family health coverage through an employer cost $26,993 in 2025 &mdash; workers paid $6,850 of it."
   },
-  "s4": {
-    "a": {
-      "body": "Models, briefs and playbooks any community can copy, adapt and run. We build the plans and the software; communities build the thing itself.",
-      "cta": "See the projects →",
-      "title": "Open projects"
-    },
-    "b": {
-      "body": "A clear, sourced picture of what living actually costs, region by region, and how it&rsquo;s changing over time.",
-      "cta": "See the case →",
-      "title": "The Human Essentials Dashboard"
-    },
-    "eyebrow": "What we run",
-    "headline": "Open projects, and a dashboard for the <span class=\"u-1\">true cost of living</span>."
+  "body": "Every figure here is a receipt &mdash; a public source, a date, and a region. This is what living actually costs, and how fast it is moving."
+ },
+ "s3": {
+  "body": "Automation, robotics and open-source tools get cheaper and better every year. We work out where they could genuinely lower the cost of essentials &mdash; housing, food, energy and more &mdash; publish exactly what it would cost and whether it actually worked, and share the results free, so communities can act on them. No jargon, no hype.",
+  "cta": "How we work →",
+  "eyebrow": "What we intend to do",
+  "headline": "Point the tools at the things that <span class=\"u-1\">keep people alive</span>."
+ },
+ "s4": {
+  "a": {
+   "body": "Models, briefs and playbooks any community can copy, adapt and run. We build the plans and the software; communities build the thing itself.",
+   "cta": "See the projects →",
+   "title": "Open projects"
   },
-  "s5": {
-    "body": "Fifteen sectors cover everything a person needs. Year one concentrates on the three where the pressure is heaviest &mdash; Shelter, Food and Energy &mdash; with Water next.",
-    "cta": "All fifteen sectors →",
-    "energy": "Electricity, heat, storage and microgrids.",
-    "eyebrow": "Where we start",
-    "food": "Nutrition, farming, storage, cooking and distribution.",
-    "headline": "We start where the money <span class=\"u-1\">actually goes</span>.",
-    "shelter": "Housing, land use, construction, heating and cooling."
+  "b": {
+   "body": "A clear, sourced picture of what living actually costs, region by region, and how it&rsquo;s changing over time.",
+   "cta": "See the case →",
+   "title": "The Human Essentials Dashboard"
   },
-  "s6": {
-    "body": "Every figure here carries its source, its date and its region. Negative results are published as prominently as wins. Everything we produce is open for anyone to use, free &mdash; and a person, not an algorithm, is accountable for every claim.",
-    "eyebrow": "Why you can trust the numbers",
-    "headline": "If we can&rsquo;t show where a number came from, <span class=\"u-1\">we don&rsquo;t print it</span>."
+  "eyebrow": "What we run",
+  "headline": "Open projects, and a dashboard for the <span class=\"u-1\">true cost of living</span>.",
+  "body": "Open project packages anyone can run, and a dashboard that tracks whether the costs they target actually fall."
+ },
+ "s5": {
+  "body": "Fifteen sectors cover everything a person needs. Year one concentrates on the three where the pressure is heaviest &mdash; Shelter, Food and Energy &mdash; with Water next.",
+  "cta": "All fifteen sectors →",
+  "energy": "Electricity, heat, storage and microgrids.",
+  "eyebrow": "Where we start",
+  "food": "Nutrition, farming, storage, cooking and distribution.",
+  "headline": "We start with the sectors where the money <span class=\"u-1\">actually goes</span>.",
+  "shelter": "Housing, land use, construction, heating and cooling."
+ },
+ "s6": {
+  "body": "Every figure here carries its source, its date and its region. Negative results are published as prominently as wins. Everything we produce is open for anyone to use, free &mdash; and a person, not an algorithm, is accountable for every claim.",
+  "eyebrow": "Why you can trust the numbers",
+  "headline": "If we can&rsquo;t show where a number came from, <span class=\"u-1\">we don&rsquo;t print it</span>."
+ },
+ "s7": {
+  "a": {
+   "body": "Free, and the single most useful small act &mdash; because scale is the argument.",
+   "cta": "Sign the Pledge",
+   "title": "Sign the pledge"
   },
-  "s7": {
-    "a": {
-      "body": "Free, and the single most useful small act &mdash; because scale is the argument.",
-      "cta": "Sign the Pledge",
-      "title": "Sign the pledge"
-    },
-    "b": {
-      "body": "Occasional, sourced, no spam.",
-      "title": "Get updates"
-    },
-    "c": {
-      "body": "We need people to verify figures, review sources, research sectors and translate. Write to <a class=\"u-73\" href=\"mailto:contact@uncost.org\">contact@uncost.org</a>.",
-      "cta": "Contribute",
-      "title": "Volunteer"
-    },
-    "eyebrow": "Take part",
-    "headline": "The most useful thing you can do takes <span class=\"u-72\">ten seconds</span>."
+  "b": {
+   "body": "Occasional, sourced, no spam.",
+   "title": "Get updates"
   },
-  "s8": {
-    "body": "Dates are targets. Evidence sets the pace.",
-    "cta": "See the roadmap →",
-    "eyebrow": "The road ahead",
-    "headline": "One <span class=\"u-1\">milestone</span> at a time."
+  "c": {
+   "body": "We need people to verify figures, review sources, research sectors and translate. Write to <a class=\"u-73\" href=\"mailto:contact@uncost.org\">contact@uncost.org</a>.",
+   "cta": "Contribute",
+   "title": "Volunteer"
   },
-  "s9": {
-    "body": "Living should not have a price tag. If you think that&rsquo;s worth testing, join us to help Uncost the cost of living.",
-    "cta1": "Sign the Pledge",
-    "cta2": "Get updates",
-    "headline": "Add your name."
-  }
+  "eyebrow": "Take part",
+  "headline": "The most useful thing you can do takes <span class=\"u-72\">ten seconds</span>."
+ },
+ "s8": {
+  "body": "Dates are targets. Evidence sets the pace.",
+  "cta": "See the roadmap →",
+  "eyebrow": "The road ahead",
+  "headline": "One <span class=\"u-1\">milestone</span> at a time."
+ },
+ "s9": {
+  "body": "Living should not have a price tag. If you think that&rsquo;s worth testing, join us to help Uncost the cost of living.",
+  "cta1": "Sign the Pledge",
+  "cta2": "Get updates",
+  "headline": "Add your name."
+ }
 }

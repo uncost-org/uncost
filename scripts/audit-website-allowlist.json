@@ -338,6 +338,13 @@
   {
     "rule": "crypto-generic",
     "path": "website/src/treasury.njk",
+    "line_sha256": "2c271286f0fb0cb6bdefd14ef6cad859de317a63078ecdcce211d2677cf2d284",
+    "justification": "Same line, generic-crypto rule. Disavowal vocabulary per DESIGN_IMPORT_RUNBOOK.md: naming the banned mechanism is how the ban is stated.",
+    "added": "2026-09-19"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "website/src/treasury.njk",
     "line_sha256": "69d903262d49b8edc8be1747983d6875711ec2ee008aeeab5d32ba0a62d45fd4",
     "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
     "added": "2026-07-23"
@@ -362,6 +369,13 @@
     "line_sha256": "ccd9cd67369deed31dd6b8e01480b10e2f0dd1c5bacbdf076a6bdda15f487e90",
     "justification": "Disavowal heading from the design export ('No crypto treasury') \u2014 names the mechanism in order to rule it out. Same treatment as the policy prohibition sentences (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
     "added": "2026-08-11"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "website/src/treasury.njk",
+    "line_sha256": "2c271286f0fb0cb6bdefd14ef6cad859de317a63078ecdcce211d2677cf2d284",
+    "justification": "Disavowal heading and sentence from the design export ('No crypto treasury' / 'No cryptocurrency, no on-chain mechanics'): the prohibition names the mechanism in order to rule it out. Re-recorded 2026-09-19 because H6 demoted this heading h4->h3 for a valid outline under the new band heading, which changed the line and correctly withdrew the prior hash-keyed entry.",
+    "added": "2026-09-19"
   },
   {
     "rule": "crypto-on-chain",

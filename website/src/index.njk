@@ -18,7 +18,6 @@ description: "The essentials keep getting more expensive while the automation th
 <section class="blk blk--cream blk--first" data-screen-label="S1 Hero">
   <div class="hero-grid">
     <div>
-      <div class="eyebrow">{{ home.s1.eyebrow | safe }}</div>
       <h1>{{ home.s1.headline | safe }}</h1>
       <p class="u-52 lead">{{ home.s1.subhead | safe }}</p>
       <div class="u-54">
@@ -34,6 +33,7 @@ description: "The essentials keep getting more expensive while the automation th
 <section class="blk blk--ink u-block--ink" data-screen-label="S2 The problem">
   <div class="u-56 eyebrow">{{ home.s2.eyebrow | safe }}</div>
   <h2 class="u-57 sec">{{ home.s2.headline | safe }}</h2>
+  <p class="lead">{{ home.s2.body | safe }}</p>
   <div class="cards">
     {{ fig.card(register.byId["SRC-021"]) }}
     {{ fig.card(register.byId["SRC-022"]) }}
@@ -61,6 +61,7 @@ description: "The essentials keep getting more expensive while the automation th
 <section class="blk blk--cream" data-screen-label="S4 What we run">
   <div class="eyebrow">{{ home.s4.eyebrow | safe }}</div>
   <h2 class="u-61 sec">{{ home.s4.headline | safe }}</h2>
+  <p class="lead">{{ home.s4.body | safe }}</p>
   <div class="runs">
     <div class="run">
       <div class="rh"><h3>{{ home.s4.a.title | safe }}</h3><span class="status status--dev">In build</span></div>
