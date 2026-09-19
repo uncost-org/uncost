@@ -1,22 +1,36 @@
 {#-
   Full-screen search overlay, from design-source/partials/search.html.
 
-  Site search is not built (features.searchEnabled is false), so no input is
-  rendered — only the honest copy and the shortcut links the export's own
-  README §8.9 describes. The export ships the input unconditionally, which
-  leaves a focusable control that does nothing on all 63 pages; that is the
-  same failure the disabled forms avoid (CHECKLIST H). js/ui.js is null-guarded
-  so the overlay still takes focus with the input absent.
+  Site search is BUILT (features.searchEnabled). The index is compiled at build
+  time by src/search-index.11ty.js into /search-index.json and queried in the
+  browser by js/site-search.js — no backend, no form, no third-party service,
+  and no network work beyond one same-origin fetch of that static file.
+
+  Progressive enhancement, the same discipline as the register keyword filter
+  on /receipts/: the search box ships `hidden` and only js/site-search.js
+  reveals it. With JS off a reader never sees an input that does nothing — they
+  see the shortcut link blocks, which is the whole of the overlay's previous
+  behaviour. The "Site search is planned" note is gone with the thing it
+  described; the honest fallback is the links themselves.
+
+  The Receipts destination is now one of the same .so-links blocks rather than a
+  standalone u-btn, so the overlay presents one consistent row of destinations.
+
+  js/ui.js still owns open/close and is untouched; site-search.js takes focus
+  from the `open` class ui.js sets, after ui.js's own focus() for that tick.
 
   DESIGN: structure fixed. CONTENT: shortcuts from _data/chrome.json.
 -#}
 <div class="search-ov" role="dialog" aria-modal="true" aria-label="Search">
   <div class="so-top">{% image "logos/logo-tight-light.png", "", "8rem", [160, 320], "lazy", "logo-44" %}<button class="drawer-x" type="button" aria-label="Close search" data-search-close>&#10005;</button></div>
   {% if features.searchEnabled %}
-  <label for="site-search">Search uncost.org</label>
-  <input id="site-search" type="search" placeholder="Try &ldquo;shelter&rdquo; or &ldquo;pledge&rdquo;&hellip;" autocomplete="off">
+  <div class="so-search" data-search-box hidden>
+    <label for="site-search">Search uncost.org</label>
+    <input id="site-search" type="search" placeholder="Try &ldquo;shelter&rdquo; or &ldquo;pledge&rdquo;&hellip;" autocomplete="off" aria-describedby="site-search-status">
+    <p class="so-status" id="site-search-status" role="status" data-search-status></p>
+    <ul class="so-results" data-search-results></ul>
+  </div>
   {% endif %}
-  <div class="so-note">Site search is planned &mdash; it arrives with the dashboard build. Until then, these get you everywhere:</div>
-  <p class="so-receipts"><a class="u-btn u-btn--ink" href="/receipts/">Search the Receipts</a></p>
-  <div class="so-links">{% for link in chrome.searchShortcuts %}<a href="{{ link.url }}">{{ link.label }}</a>{% endfor %}</div>
+  <div class="so-links"><a href="/receipts/">Search the Receipts</a>{% for link in chrome.searchShortcuts %}<a href="{{ link.url }}">{{ link.label }}</a>{% endfor %}</div>
 </div>
+<script src="/js/site-search.js" defer></script>
