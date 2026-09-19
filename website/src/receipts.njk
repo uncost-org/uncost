@@ -11,13 +11,54 @@ description: "Our open methodology and source layer. Every number has a source, 
     references and routes are rewritten. Do not re-author.
     Exceptions, all founder-approved under UNP-82 v1 (§4c, §6): the worked example (rendered FROM the register, never hardcoded), the
     confidence-vs-status note, the corrections launch-state, and the corrections
-    CTA lead. The register count is rendered, not typed. -#}
+    CTA lead. The register count is rendered, not typed.
+
+    P6/R ORDER: the register now follows the intro directly, and the two
+    explainer sections ("The rule, three ways" and "Confidence labels") sit
+    below it. Copy, classes and data-screen-label attributes are unchanged —
+    only the position of the two <section> blocks moved. The #register and
+    #corrections anchors are unaffected. -#}
 <!-- SECTION: receipts.Receipts — title -->
 <div class="titleband" data-screen-label="Receipts — title"><h1>The <span class="u-1">Receipts</span></h1></div>
 <div class="introband">
   <h2>Every number, out in the open.</h2>
   <p>The Receipts is the methodology and source layer under everything we publish. The rule is simple: every number has a source, every source has a date, and every model states its assumptions. If a claim can&rsquo;t be sourced, we label it — plainly — as an estimate, a scenario, or a hypothesis, not a fact.</p>
 </div>
+
+<!-- SECTION: receipts.The register -->
+<section class="blk blk--wheat" id="register" data-screen-label="The register">
+  <div class="eyebrow">The register</div>
+  <h2 class="u-129 sec">Every figure we publish, with its receipt.</h2>
+  <p class="u-130 lead">{{ register.stats | length }} sourced figures, each with the publisher, the exact title, the date we last checked it and the region it covers. Nothing here is illustrative — every number is traceable to a named public source.</p>
+{#- P6 keyword filter. Ships hidden and is revealed by /js/keyword-filter.js,
+    so with JS off a reader never sees a control that does nothing and the full
+    register renders exactly as before. Not inside a <form>: nothing submits and
+    nothing is fetched.
+
+    The filter indexes ALL register cards, not just the ones currently paged in
+    by /js/show-more.js below, so a query always searches the whole register. -#}
+  <div class="rfilter" data-keyword-filter data-filter-for="register-cards" data-filter-noun="figures" hidden>
+    <label for="rfilter-q">Filter these figures</label>
+    <input id="rfilter-q" type="search" autocomplete="off" placeholder="Try &ldquo;rent&rdquo;, &ldquo;BLS&rdquo; or &ldquo;2026&rdquo;&hellip;">
+    <span class="rfilter-count" data-filter-count></span>
+  </div>
+  <div class="cards" id="register-cards">
+{% for row in register.stats %}
+    {{ fig.card(row) }}
+{% endfor %}
+  </div>
+{#- P6/R show-more. Every card is rendered server-side; /js/show-more.js pages
+    the grid down to the first 12 and reveals this control, exactly the same
+    contract as the filter bar above — with JS off all of them render and this
+    control is never shown. The wrapper carries `hidden` (and no class that
+    sets `display`, so the UA's [hidden] rule is not outranked); the button
+    inside is a .u-btn, which does set display, and must never carry `hidden`
+    itself. See css-R.css for the belt-and-braces stylesheet rule. -#}
+  <p class="u-75" data-show-more data-show-more-for="register-cards" data-show-more-step="12" hidden>
+    <button type="button" class="u-btn u-btn--ghost" aria-controls="register-cards">Show more receipts</button>
+  </p>
+  <p class="u-131">Figures are re-checked on a published cadence. A figure past its review date is relabelled <b>Needs refresh</b> rather than quietly left standing, and every change is recorded in the <a class="u-132" href="#corrections">corrections log</a>.</p>
+</section>
 
 <!-- SECTION: receipts.The rule -->
 <section class="blk blk--wheat" data-screen-label="The rule">
@@ -45,29 +86,6 @@ description: "Our open methodology and source layer. Every number has a source, 
   </table>
   <div class="u-126"><span class="rcpt-illus">Illustrative only</span> <span class="u-127">— any hypothetical figure on the site carries this hatched marker, so a placeholder is never mistaken for real data.</span></div>
   <p class="u-131">These four labels describe how much confidence a <b>figure</b> carries. They are a deliberately separate system from the status badges on sectors and projects, which describe what stage a <b>piece of work</b> is at. The two never mix: a confirmed figure can sit on a project that hasn&rsquo;t started, and a project already building can rest on an estimate.</p>
-</section>
-
-
-<!-- SECTION: receipts.The register -->
-<section class="blk blk--wheat" id="register" data-screen-label="The register">
-  <div class="eyebrow">The register</div>
-  <h2 class="u-129 sec">Every figure we publish, with its receipt.</h2>
-  <p class="u-130 lead">{{ register.stats | length }} sourced figures, each with the publisher, the exact title, the date we last checked it and the region it covers. Nothing here is illustrative — every number is traceable to a named public source.</p>
-{#- P6 keyword filter. Ships hidden and is revealed by /js/keyword-filter.js,
-    so with JS off a reader never sees a control that does nothing and the full
-    register renders exactly as before. Not inside a <form>: nothing submits and
-    nothing is fetched. -#}
-  <div class="rfilter" data-keyword-filter data-filter-for="register-cards" data-filter-noun="figures" hidden>
-    <label for="rfilter-q">Filter these figures</label>
-    <input id="rfilter-q" type="search" autocomplete="off" placeholder="Try &ldquo;rent&rdquo;, &ldquo;BLS&rdquo; or &ldquo;2026&rdquo;&hellip;">
-    <span class="rfilter-count" data-filter-count></span>
-  </div>
-  <div class="cards" id="register-cards">
-{% for row in register.stats %}
-    {{ fig.card(row) }}
-{% endfor %}
-  </div>
-  <p class="u-131">Figures are re-checked on a published cadence. A figure past its review date is relabelled <b>Needs refresh</b> rather than quietly left standing, and every change is recorded in the <a class="u-132" href="#corrections">corrections log</a>.</p>
 </section>
 
 <!-- SECTION: receipts.Keeping current -->
@@ -98,4 +116,10 @@ description: "Our open methodology and source layer. Every number has a source, 
     <a href="/case/" class="u-btn u-btn--ghost">Back to The Case</a>
   </div>
 </section>
+{#- show-more.js MUST load before keyword-filter.js. Both are deferred, so they
+    run in document order: show-more registers its listener and pages the grid
+    down first, then the filter's own start-up pass runs and re-announces, and
+    show-more re-pages off that event. Reversed, the filter's start-up pass
+    would un-hide every card with nothing listening to put the paging back. -#}
+<script src="/js/show-more.js" defer></script>
 <script src="/js/keyword-filter.js" defer></script>

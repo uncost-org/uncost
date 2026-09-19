@@ -16,6 +16,14 @@
  * only work done is toggling the `hidden` attribute on items already in the
  * DOM. CSP is script-src 'self', so this is an external file, never inline.
  *
+ * After every pass this file dispatches a `keyword-filter:apply` CustomEvent on
+ * the target grid ({query, shown, total}). It is purely additive: a list with
+ * no listener behaves exactly as before. /js/show-more.js listens on the
+ * receipts register so filtering and paging cannot fight over the same
+ * `hidden` attribute — while a query is active, paging stands down and every
+ * match is shown. The index above is built from ALL items, so a query always
+ * searches the whole list regardless of how much of it is currently paged in.
+ *
  * `hidden` only hides if nothing outranks it — `.cards .card{display:flex}`
  * beat it once and the filter counted correctly while hiding nothing. The
  * stylesheet now states `[hidden]{display:none!important}` for every item type
@@ -58,6 +66,15 @@
           : String(shown) + " of " + String(items.length) + " " + noun;
       }
       grid.setAttribute("data-filtered", q === "" ? "false" : "true");
+
+      // Announce the pass on the grid so another enhancement can react to it
+      // without this file knowing anything about that enhancement. Nothing
+      // listens by default, so lists that only want filtering are unaffected.
+      // /js/show-more.js uses this to restore its paging once a query is
+      // cleared, and to stand its control down while one is active.
+      grid.dispatchEvent(new CustomEvent("keyword-filter:apply", {
+        detail: { query: q, shown: shown, total: items.length }
+      }));
     }
 
     input.addEventListener("input", apply);
