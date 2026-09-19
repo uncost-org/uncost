@@ -147,66 +147,122 @@ patch("website/src/receipts.njk",
       ' edited.</p>',
       "corrections CTA lead")
 
-print("UNP-82 — news Cost Watch (register-driven, not a curated reading list):")
-patch("website/src/news/index.njk",
-      r'<p>Movement updates on the left\. On the right, a curated <b>Cost Watch</b>.*?</p>',
-      '<p>Movement updates on the left. On the right, <b>Cost Watch</b> &mdash; fast-moving'
-      ' prices, sourced and dated the same way as everything else on this site.</p>',
-      "intro band")
-
-patch("website/src/news/index.njk",
-      r'    <p class="cwsub">External reporting.*?<p class="u-97">.*?</p>\n',
-      '    <p class="cwsub">Fast-moving prices, sourced and dated the same way as everything else'
-      ' on this site &mdash; refreshed on each source&rsquo;s own cadence, not curated'
-      ' commentary.</p>\n'
-      '{% for row in register.newsFeed %}\n'
-      '    <a class="cw" href="{{ row.url }}" target="_blank" rel="noopener" data-source="{{ row.source_id }}">\n'
-      '      <div class="src"><span>{{ row.publisher }}</span><span>{{ row.data_period }}</span></div>\n'
-      '      <h4>{{ row.display_caption }}</h4>\n'
-      '      <span class="ext">Read at {{ row.url.split("/")[2] | replace("www.", "") }} &rarr;</span>\n'
-      '    </a>\n'
-      '{% endfor %}\n'
-      '    <p class="u-97">Checked {{ register.lastChecked }}. Every figure here has a <a href="/receipts#register">receipt</a>.</p>\n',
-      "Cost Watch rows")
-
-patch("website/src/news/index.njk",
-      r'<p class="u-96" id="rss">More updates arrive as the movement launches\. An RSS feed will be published here at launch\.</p>',
-      '<p class="u-96" id="rss">More updates arrive as the movement launches. Prefer a feed? '
-      '<a href="/news/feed.xml">Subscribe by RSS</a> &mdash; every update, no algorithm in between.</p>',
-      "RSS line (the feed exists; the export predates it)", flags=0)
-
+# UNP-82 — news: RETIRED 2026-09-19.
+#
+# Three patches used to restore the Cost Watch intro band, the register-driven
+# Cost Watch rows, and the RSS line to website/src/news/index.njk. All three
+# now match 0 and exit 1: /news/ has been rewritten twice since they were
+# written — first into a two-column split landing, then back into a single
+# full Uncost news page — and none of the text they anchor on exists any more.
+#
+# They are retired rather than re-pointed at the current markup, because
+# re-pointing would just rebuild the same trap: a patch that carries a copy of
+# the words drifts out of date every time the words move. News copy follows
+# /movement/ and /case/ into the content layer instead, where a re-derivation
+# cannot reach it.
+#
+# This failure was not caused by the content-layer migration. It was already
+# failing on the previous commit, which is the fail-loud design doing exactly
+# its job — loudly, and unmissably, at the next run rather than silently at
+# the next deploy.
 
 # ---------------------------------------------------------------------------
-# 2026-09-12 visual sweep. These touch files gen_static_pages.py rewrites from
-# the export, so they are restated here. NOTE: the UNP-82 body copy these sit
-# inside is itself NOT yet protected — a re-derivation would remove the whole
-# rewritten /movement/ body and the /case/ mechanism section, and these patches
-# would then fail loudly (matched 0, expected 1) rather than silently no-op.
-# That larger gap is recorded in CANVAS-SYNC item 45.
+# Content layer (closes CANVAS-SYNC item 45).
+#
+# The six patches that used to live here restored approved WORDS to /movement/
+# and /case/ after a re-derivation: two headline accent spans, a third accent,
+# and three link texts. They are retired, because the words no longer live in
+# a file a re-derivation can overwrite — they live in
+# website/src/_data/pageContent.js, which gen_static_pages.py never touches.
+#
+# What a re-derivation can still destroy is the WIRING: the generator writes
+# the export's <main> verbatim, so the template stops reading the data file and
+# starts carrying the export's pre-content wording again. So these two patches
+# restore the wiring, not the copy. That is a much better failure mode. A patch
+# that restores words can silently drift from the words it is supposed to
+# restore; a patch that restores wiring either connects the template to the
+# content layer or fails loudly, and the copy is safe either way.
 # ---------------------------------------------------------------------------
-print("2026-09-12 sweep — accent spans and link text:")
+print("Content layer — re-point the re-derived templates at _data/pageContent.js:")
+
+MOVEMENT_BODY = '''<!-- SECTION: movement.What this is -->
+{%- set mc = pageContent.movement %}
+<section class="blk blk--first" data-screen-label="What this is">
+  <h2 class="u-88 sec">{{ mc.whatThisIs.h2 | safe }}</h2>
+  <p class="u-89 lead">{{ mc.whatThisIs.lead | safe }}</p>
+{% for para in mc.whatThisIs.body %}
+  <p class="u-11">{{ para | safe }}</p>
+{% endfor %}
+</section>
+
+<!-- SECTION: movement.What we stand for -->
+<section class="blk blk--wheat" data-screen-label="What we stand for">
+  <div class="eyebrow">{{ mc.whatWeStandFor.eyebrow }}</div>
+  <h2 class="u-88 sec">{{ mc.whatWeStandFor.h2 | safe }}</h2>
+  <p class="u-89 lead">{{ mc.whatWeStandFor.lead | safe }}</p>
+{% for para in mc.whatWeStandFor.body %}
+  <p class="u-11">{{ para | safe }}</p>
+{% endfor %}
+</section>
+
+<!-- SECTION: movement.What taking part means -->
+<section class="blk blk--cream2" data-screen-label="What taking part means">
+  <div class="eyebrow">{{ mc.whatTakingPartMeans.eyebrow }}</div>
+  <h2 class="u-6 sec">{{ mc.whatTakingPartMeans.h2 | safe }}</h2>
+{% for para in mc.whatTakingPartMeans.body %}
+  <p class="u-11">{{ para | safe }}</p>
+{% endfor %}
+</section>
+
+<!-- SECTION: movement.How to take part -->
+<section class="blk blk--ink u-block--ink" data-screen-label="How to take part">
+  <div class="u-5 eyebrow">{{ mc.howToTakePart.eyebrow }}</div>
+  <h2 class="u-91 sec">{{ mc.howToTakePart.h2 | safe }}</h2>
+  <div class="path">
+{% for path in mc.howToTakePart.paths %}
+    <div class="p"><h3>{{ path.h3 }}</h3><p>{{ path.body | safe }}</p></div>
+{% endfor %}
+  </div>
+  <p class="u-10">{{ mc.howToTakePart.note | safe }}</p>
+</section>
+
+<!-- SECTION: movement.Movement CTA -->
+<section class="u-93 blk blk--coral" data-screen-label="Movement CTA">
+  <h2 class="u-77 sec">{{ mc.cta.h2 | safe }}</h2>
+  <p class="u-94 lead">{{ mc.cta.lead | safe }}</p>
+  <div class="u-95">
+    <a href="/pledge/" class="u-btn u-btn--ink">Sign the Pledge</a>
+    <a href="#updates" class="u-btn u-btn--ghost">Get updates</a>
+  </div>
+</section>
+'''
+
+patch("website/src/movement.njk",
+      r'<!-- SECTION: movement\.What this is -->.*\Z',
+      MOVEMENT_BODY,
+      "/movement/ body reads pageContent.movement", guard="pageContent.movement")
+
+CASE_MECHANISM = '''<!-- SECTION: case.The mechanism -->
+{%- set cm = pageContent.case.mechanism %}
+<section class="blk blk--first blk--cream2" data-screen-label="The mechanism">
+  <div class="eyebrow">{{ cm.eyebrow }}</div>
+  <h2 class="sec">{{ cm.h2 | safe }}</h2>
+  <p class="u-11 lead">{{ cm.lead | safe }}</p>
+  <div class="cards cards--2up">
+    {{ fig.card(register.byId["SRC-020"]) }}
+    {{ fig.card(register.byId["SRC-024"]) }}
+  </div>
+  <p class="u-11">{{ cm.close | safe }}</p>
+</section>
+
+'''
+
 patch("website/src/case/index.njk",
-      r'is instead making ownership more valuable\.</h2>',
-      'is <span class="hl">instead making ownership more valuable</span>.</h2>',
-      "B1 /case/ headline accent", flags=0)
+      r'<!-- SECTION: case\.The mechanism -->.*?(?=<!-- SECTION: case\.What living costs -->)',
+      CASE_MECHANISM,
+      "/case/ mechanism reads pageContent.case", guard="pageContent.case")
 
-patch("website/src/movement.njk",
-      r'cheaper, not billionaires richer\.</h2>',
-      'cheaper, <span class="hl">not billionaires richer</span>.</h2>',
-      "C1 /movement/ headline accent", flags=0)
-
-patch("website/src/movement.njk",
-      r'in something, not a feed to follow\.</h2>',
-      'in something, <span class="hl">not a feed to follow</span>.</h2>',
-      "C3 /movement/ accent", flags=0)
-
-patch("website/src/movement.njk", r'<a href="/pledge/">/pledge</a>',
-      '<a href="/pledge/">Sign the Pledge</a>', "C4 pledge link text", flags=0)
-patch("website/src/movement.njk", r'<a href="/news/">/news</a>',
-      '<a href="/news/">News</a>', "C4 news link text", flags=0)
-patch("website/src/movement.njk", r'<a href="/join/">/join</a>',
-      '<a href="/join/">Join now</a>', "C4 join link text", flags=0)
-
+print("2026-09-12 sweep — remaining page fixes:")
 patch("website/src/contribute.njk",
       r'<a href="/join/" class="u-btn u-btn--ink btn">Tell us how you can help</a>',
       '<a href="/contact/" class="u-btn u-btn--ink btn">Tell us how you can help</a>',

@@ -26,15 +26,16 @@ description: "The Case is Uncost's evidence layer: what humans need, what those 
 </div>
 
 <!-- SECTION: case.The mechanism -->
+{%- set cm = pageContent.case.mechanism %}
 <section class="blk blk--first blk--cream2" data-screen-label="The mechanism">
-  <div class="eyebrow">The mechanism</div>
-  <h2 class="sec">The technology that could make living cheaper is <span class="hl">instead making ownership more valuable</span>.</h2>
-  <p class="u-11 lead">Automation is extraordinarily effective at cutting the cost of producing things &mdash; that&rsquo;s not in dispute. The question is who receives the benefit when it does. When a company automates, its costs fall and its value rises, and that value accrues to whoever owns the company. Ownership itself is concentrated: the bottom half of American households collectively hold about 1% of the stocks and funds owned outside retirement accounts. The wealthiest 1% hold about half. On the broader measure &mdash; total household net worth &mdash; the top 1% still hold roughly thirty per cent.</p>
+  <div class="eyebrow">{{ cm.eyebrow }}</div>
+  <h2 class="sec">{{ cm.h2 | safe }}</h2>
+  <p class="u-11 lead">{{ cm.lead | safe }}</p>
   <div class="cards cards--2up">
     {{ fig.card(register.byId["SRC-020"]) }}
     {{ fig.card(register.byId["SRC-024"]) }}
   </div>
-  <p class="u-11">Nobody is doing the deliberate work of routing automation&rsquo;s gains back toward the price of rent, groceries, and electricity instead of the value of assets. That&rsquo;s not an accusation that anyone is doing something wrong &mdash; a system optimising for one outcome doesn&rsquo;t accidentally produce a different one. It&rsquo;s why Uncost exists: to measure where a specific technology could plausibly lower a specific cost, publish the method, and hand it to the people who can act on it.</p>
+  <p class="u-11">{{ cm.close | safe }}</p>
 </section>
 
 <!-- SECTION: case.What living costs -->
@@ -74,19 +75,6 @@ description: "The Case is Uncost's evidence layer: what humans need, what those 
       </div>
       <p>Derived figures — calculated from two or more sources — display every contributing source, never a single badge.</p>
       <p>Full methodology, the source register, and the corrections log: <a class="u-1" href="/receipts/">The Receipts</a></p>
-    </div>
-    <div>
-      <h3>How a cost gets uncosted</h3>
-      <p>Six steps, applied the same way every time, in every sector:</p>
-      <ol>
-        <li><b>Measure.</b> Establish what a household in a defined region actually spends on the thing in question, using public data, with the date and the region attached.</li>
-        <li><b>Publish.</b> Put the sources and assumptions up before the conclusions, so anyone can check the starting point rather than being asked to accept it.</li>
-        <li><b>Break down.</b> Separate the price into its real components &mdash; land, energy, labour, materials, finance, regulation, maintenance. A cost that can&rsquo;t be decomposed is a cost that can&rsquo;t be reduced.</li>
-        <li><b>Match.</b> Identify which components a specific, named mechanism could plausibly move &mdash; and count what it adds as well as what it saves.</li>
-        <li><b>Package.</b> Publish the model, the sources, the brief, and the playbook so a community group, co-operative, nonprofit, or public body can run it.</li>
-        <li><b>Track.</b> Follow whether the total cost actually falls where the approach is applied, and publish the answer either way.</li>
-      </ol>
-      <p>The sixth step is what makes the other five worth doing. Proposing that some technology would reduce a cost is easy. Going back afterwards to check honestly whether it did is rare &mdash; and it&rsquo;s usually the step that gets skipped.</p>
     </div>
   </div>
 </details>
