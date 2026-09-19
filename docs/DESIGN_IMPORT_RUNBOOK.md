@@ -182,6 +182,41 @@ figure, reword it as a target rather than a measurement, or record a queue
 entry with a written note. No `[PLACEHOLDER]` marker may remain on a page that
 is meant to ship as final content.
 
+### Audits are validated against rendered pixels, never against their own model
+
+**Standing rule, adopted 2026-09-19.** An audit that reports a clean result has
+made a claim about what a reader will see. That claim is only worth the
+verification behind it, so:
+
+1. **An audit fails on "I don't know."** Anything it cannot classify is a
+   failure, not a line of output that gets skipped. A check that prints an
+   unclassified case and keeps counting is reporting a subset while appearing
+   to report the whole.
+2. **Every rendering audit is validated against rendered pixels.** The audit's
+   model of the page — computed styles, border widths, an assumption about
+   which element "owns" an edge — is a hypothesis. Screenshot the result, read
+   the pixels, and diff the pixels against the assertion. Where they disagree,
+   the pixels are right.
+3. **Validation runs on the cases the audit calls CLEAN**, not only on the ones
+   it already flags. A defect an audit flags is already visible; a defect it
+   passes over is the one that ships.
+
+This rule exists because four audits in this repository have passed over a real
+defect:
+
+| Audit | What it modelled | What shipped |
+|---|---|---|
+| R1 band audit | collapsed two rules to one wherever a framed component touched the boundary, without checking | `/join/`, `/policies/` render an ink frame edge stacked on a coral band rule; `/treasury/` renders one coral rule at 8px against 4px declared |
+| C1 coral contrast | classified text by the **named** token behind it; printed anything else as unclassified | two export bands paint a hardcoded hex near a token but not equal to one — `/about/` 3.06:1, `/faq/` 3.19:1 |
+| C1 coral contrast | measured resting states only | the Cost Watch card repaints wheat on hover — 3.25:1 and 3.91:1 |
+| P6 filter test | asserted on the counter's text | the counter read "1 of 26" while three cards stayed on screen |
+
+The pixel validator for the band audit is the reference implementation of this
+rule: it run-length-encodes the colour of each pixel row across a boundary and
+compares the rendered rule stack against the declared one. A boundary that
+renders more than one rule run, or a rule thicker than its declaration, is a
+defect whatever the DOM says.
+
 ## Step 4 — move the clean tree to public in one audited commit
 
 Do not merge staging history into public. Move the **result**, not the history:
