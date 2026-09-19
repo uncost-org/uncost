@@ -2,16 +2,20 @@
 
     Two card types, both deliberately NOT the R3 figure card:
 
-      update(item, level, trim)  — an Uncost movement update; `trim` shortens
-                                 the body for the split landing, where the
-                                 column is one of two.
-      costwatch(row, level)  — a Cost Watch item: publisher, date, a one-line
-                               claim, "Read at <domain> →", and exactly one
-                               label, Reported.
+      update(item, level)  — an Uncost movement update: date, title, body.
+      costwatch(row)       — a Cost Watch item, built on the SAME card
+                             structure: publisher and date on the eyebrow row,
+                             the claim as the card body, "Read at <domain> →",
+                             and exactly one label, Reported.
 
-    `level` is the heading level for the item title, so the same macro nests
-    correctly under a column head on /news/ (h4) and directly under the
-    introband h2 on the dedicated routes (h3).
+    N6 folds the two into one shape. A Cost Watch row carries no headline of
+    its own — the claim IS the summary — so the card has no title slot to fill
+    and none is invented. That is the only structural difference between the
+    two cards, and it is a property of the data, not of the layout.
+
+    `level` is the heading level for an update's title. Both news routes put
+    their items directly under the introband h2, so both pass 3; the parameter
+    stays because the level belongs to the page, not to the macro.
 
     Reported is the ONLY label used anywhere under /news/. The receipts
     vocabulary (Confirmed / Estimate / Scenario / Needs refresh) never appears
@@ -19,18 +23,18 @@
     sources/register.csv. Both directions are enforced at build time by the
     news-label guard in eleventy.config.js. -#}
 
-{% macro update(item, level, trim) -%}
+{% macro update(item, level) -%}
 <article class="up-item" data-news-item id="{{ item.slug }}">
   <div class="date">{{ item.date }}</div>
   <h{{ level }}>{{ item.title }}</h{{ level }}>
-  <p>{% if trim %}{{ item.body | truncate(260) }}{% else %}{{ item.body }}{% endif %}</p>
+  <p>{{ item.body }}</p>
 </article>
 {%- endmacro %}
 
-{% macro costwatch(row, level) -%}
+{% macro costwatch(row) -%}
 <a class="cw" href="{{ row.url }}" target="_blank" rel="noopener" data-source="{{ row.source_id }}" data-news-item>
   <div class="src"><span>{{ row.publisher }}</span><span>{{ row.data_period }}</span></div>
-  <h{{ level }}>{{ row.display_caption }}</h{{ level }}>
+  <p>{{ row.display_caption }}</p>
   <div class="cw-foot">
     <span class="ext">Read at {{ row.url.split("/")[2] | replace("www.", "") }} &rarr;</span>
     <span class="lbl lbl--reported">Reported</span>

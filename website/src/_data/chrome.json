@@ -16,7 +16,7 @@
           "url": "/join/"
         },
         {
-          "label": "News",
+          "label": "Uncost.org News",
           "url": "/news/"
         }
       ]
@@ -40,7 +40,7 @@
           "url": "/receipts/"
         },
         {
-          "label": "Cost Watch",
+          "label": "Cost Watch News",
           "url": "/news/cost-watch/"
         }
       ]
