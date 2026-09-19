@@ -382,12 +382,12 @@ body[data-page="case"] .mdrawer-body h3 {
  *     several neighbouring selectors use ink borders structurally (component
  *     frames) and must keep them. */
 .blk + .mdrawer,                       /* /case/  wheat -> cream  */
-.tiers + .privacyline,                 /* /join/  cream -> wheat  */
 /* (.u-98 + .next removed — .next is a framed component under R2, item 54) */
-
-/* These two zero the width with !important, so the colour alone cannot fix
- * them — the whole shorthand has to be restated. */
-.u-8 + .u-106,                         /* /policies/ cream2 -> wheat */
+/* (.tiers + .privacyline removed under G6 — see item 76. It sat in this list
+    at (0,2,0) and outranked item 67's generic (0,1,0) suppression, so BUG-2's
+    "generic" fix never reached /join/, the page BUG-2 was reported on.) */
+/* (.u-8 + .u-106 removed under G6 — the coral rule was landing BELOW the
+    PUBLIC REVIEW DRAFTS callout instead of at the cream->wheat boundary.) */
 .u-153 + .u-154 { border-top: 4px solid var(--coral) !important; }  /* /treasury/ */
 
 /* (h) Two boundaries with no rule at all, and two drawn twice (the upper band
@@ -595,16 +595,8 @@ body[data-page="sectors"] .sgrid { border-top: 2px solid var(--ink) !important; 
 
 /* Checkerboard. A 3-track grid alternates correctly on odd/even; a 2-track grid
  * needs the 4n pattern or it stripes vertically instead. */
-.cards .card:nth-child(odd)  { background: var(--cream); }
-.cards .card:nth-child(even) { background: var(--cream-2); }
 .cards--2up,
 body[data-page="case"] .cards { grid-template-columns: repeat(2, 1fr); }
-.cards--2up .card:nth-child(4n+1), .cards--2up .card:nth-child(4n+4),
-body[data-page="case"] .cards .card:nth-child(4n+1),
-body[data-page="case"] .cards .card:nth-child(4n+4) { background: var(--cream); }
-.cards--2up .card:nth-child(4n+2), .cards--2up .card:nth-child(4n+3),
-body[data-page="case"] .cards .card:nth-child(4n+2),
-body[data-page="case"] .cards .card:nth-child(4n+3) { background: var(--cream-2); }
 .cards > .card { min-width: 0; }
 
 /* P2 — accent on an ink band uses the on-ink coral, not --coral-deep. */
@@ -794,7 +786,6 @@ body[data-page="sectors-leisure"] { --gp: 0.1701; }
   text-transform: uppercase;
   color: var(--fg-2);
 }
-.so-receipts { margin: 14px 0 0; }
 
 /* (k) R3 regression fix: globalising `.cards` also overrode the export's
  *     responsive collapse, which is page-scoped and therefore same-specificity
@@ -976,14 +967,10 @@ body[data-page="index"] .intent + h2 {
   border-width: 1.5px;
   font-size: 11px;
 }
-.cards .card:nth-child(odd) .foot .row span.m { background: var(--cream-2); }
 
-/* Metadata borders — neutral ramp, by meaning. */
-.cards .card .foot .row .m--date[data-era="current"] { border-color: var(--ink); }
-.cards .card .foot .row .m--date[data-era="prior"]   { border-color: var(--fg-2); }
-.cards .card .foot .row .m--date[data-era="older"]   { border-color: var(--fg-3); }
-.cards .card .foot .row .m--scope                    { border-color: var(--fg-2); }
-.cards .card .foot .row .m--region[data-region="us"] { border-color: var(--ink); }
+/* Metadata borders — superseded by G5 variant 01 (item 86). The neutral ramp
+   that used to sit here could only say "older/newer"; it could not say which
+   FIELD a chip was. */
 
 /* Confidence keeps its solid fill — the only solid chip on the card. */
 .cards .card .foot .row .rcpt-conf { border-width: 1.5px; }
@@ -1028,19 +1015,6 @@ body[data-page="index"] .intent + h2 {
  * fixed neutral fill so the label never reads as a confidence colour. */
 .cw:hover .lbl--reported { background: var(--cream); }
 
-/* The Reported definition, printed at the top of the Cost Watch column
- * wherever that column appears. Not a confidence-label table row: it is
- * deliberately outside the four-label block on /case/ and /receipts/. */
-.cwdef {
-  font-size: 13px;
-  line-height: 1.55;
-  color: var(--fg-2);
-  background: var(--cream);
-  border-left: 3px solid var(--ink);
-  padding: 10px 12px;
-  margin: 0 0 22px;
-}
-.cwdef b { color: var(--ink); }
 
 /* 73. N1/N2 — the news split landing and its two dedicated routes.
  *
@@ -1061,8 +1035,6 @@ body[data-page="index"] .intent + h2 {
  *     are restated for both levels. Equal specificity to the export's
  *     `:where()`-scoped rules and later in the cascade, which is the whole
  *     trick — see item 65. CANVAS-SYNC item 73. */
-.colhead { font-family: var(--font-display); font-weight: 900; font-size: 22px; margin: 0 0 6px; }
-.updates .cwsub { font-size: 13px; color: var(--fg-3); line-height: 1.5; margin: 0 0 22px; }
 .up-item :is(h3, h4) {
   font-family: var(--font-display);
   font-weight: 700;
@@ -1071,32 +1043,7 @@ body[data-page="index"] .intent + h2 {
   margin: 0 0 10px;
   max-width: 26ch;
 }
-.cw :is(h3, h4) {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 16px;
-  line-height: 1.3;
-  margin: 8px 0 0;
-}
 
-/* "All Uncost news →" / "All Cost Watch →" — each column ends in the full list.
- * max-width:none because the export caps paragraph measure in `ch`, which at
- * this 13px size resolved to 407px and left the closing rule a stub against
- * the full-width item dividers above it. */
-.morelink {
-  display: block;
-  max-width: none;
-  border-top: 2px solid var(--ink);
-  margin: 22px 0 0;
-  padding: 14px 0 0;
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
-.morelink a { color: var(--coral-deep); text-decoration: none; }
-.morelink a:hover { text-decoration: underline; }
 
 /* Dedicated routes: one column, full width, no sidebar chrome. */
 .newswrap--solo { grid-template-columns: 1fr; }
@@ -1150,7 +1097,12 @@ body[data-page="index"] .intent + h2 {
 .u-7 a:not(.u-btn) { color: var(--ink) !important; }
 .u-7 :is(h1, h2, h3) .u-1, .u-7 .hl, .u-7 .plus { color: var(--coral-deep) !important; }
 
-details.qa .a a { color: var(--coral-deep) !important; }
+/* H7 moved this background out from under the rule: the FAQ answers were on a
+ * near-cream hex when item 74 set them to --coral-deep (5.06:1); they are on
+ * wheat now, where --coral-deep is 3.25:1 and fails the 4.5:1 small-text bar.
+ * No coral clears it on wheat, so this follows item 69 to --ink (9.60:1). */
+details.qa .a a { color: var(--ink) !important; }
+body[data-page="faq"] .faqsec--wheat :is(b, .b, strong) { color: var(--ink) !important; }
 
 /* 75. C1 on a HOVER state — the Cost Watch card.
  *
@@ -1169,3 +1121,667 @@ details.qa .a a { color: var(--coral-deep) !important; }
  *     Hover states are not covered by the standing coral audit; the news
  *     routes are now checked in both states. CANVAS-SYNC item 75. */
 .cw:hover .src, .cw:hover .ext { color: var(--ink); }
+
+/* ===========================================================================
+ * SWEEP 3 — 2026-09-19
+ * =========================================================================== */
+
+/* 76. G6 — DOUBLE LINES, found by pixels rather than by the model.
+ *
+ *     The R1 band audit reported 257 boundaries and zero doubles. A pixel
+ *     validator run over the 258 boundaries it called CLEAN found three that
+ *     render two rules. All three were invisible to the audit for a different
+ *     reason, and all three are named below with the reason:
+ *
+ *     a. /join/  tiers -> privacyline      rendered ink 2px + coral 4px
+ *        The audit collapses two rules to one wherever a framed component
+ *        touches the boundary, and never checks whether both still render.
+ *        The stylesheet had the same hole from the other side: item 67's
+ *        generic `.tiers + *` suppression is (0,1,0), and the older
+ *        `.tiers + .privacyline` entry in the boundary-colour list is (0,2,0)
+ *        with !important, so it won. BUG-2's "generic" fix never reached
+ *        /join/ — the page BUG-2 was reported on. The entry is deleted above,
+ *        and item 67 now governs: the frame edge IS the boundary.
+ *
+ *     b. /policies/  around the PUBLIC REVIEW DRAFTS callout
+ *        rendered ink 2px + coral 4px. `.u-8.high` is inset by its own left
+ *        and right margins, so the audit's full-width test filtered it out as
+ *        a component and it never saw the callout at all. The callout carries
+ *        `background: var(--wheat)`, which means the real cream->wheat change
+ *        happens at the TOP of the callout, while the coral rule was drawn
+ *        BELOW it on `.u-106` — flush against the callout's own ink frame.
+ *        The rule moves to where the background actually changes. */
+body[data-page="policies"] .u-46 { border-bottom: 4px solid var(--coral); }
+body[data-page="policies"] .u-8 + .u-106 { border-top: 0; }
+
+/*     c. /treasury/  statusband -> kpis    rendered ONE coral rule at 8px
+ *        against 4px declared, which the audit cannot see at all: it counts
+ *        rules, and two stacked rules of the SAME colour read as one thick
+ *        one. `.statusband + *` (item f) gives `.kpis` a 4px coral top, and
+ *        the export gives every `.kpi` its own 4px coral top as well. The
+ *        four cards sit in a gapless grid, so their own top edges already
+ *        draw one continuous full-width rule — which is the boundary. The
+ *        band-level rule is the duplicate, so it is the one that goes.
+ *        Selected via :has(), because the element carrying the duplicate is a
+ *        class-less <section> wrapping the grid, not the grid itself — a
+ *        selector written against `.kpis` matches nothing, which is how the
+ *        first attempt at this fix silently did nothing. */
+body[data-page="treasury"] .statusband + :has(.kpis) { border-top: 0 !important; }
+
+/* 77. G1 — ONE SECTION-HEADLINE SCALE, GRID OR NO GRID.
+ *
+ *     R4 (item 57) set a single prose-band headline scale but excluded any
+ *     band containing a grid or table. That exclusion is the defect: `h2.sec`
+ *     rendered at three different sizes site-wide — 48px, 56px and 72px — and
+ *     the difference is visible within a single page. /receipts/ carried all
+ *     three; /case/ and /projects/ carried two each:
+ *
+ *       72px  .sec              /case/ "The technology that could make…"
+ *       56px  .u-38 sec         /case/ "Evidence first. Tools next."
+ *       72px  .sec              /receipts/ "If we can't show where a number…"
+ *       56px  .u-133 sec        /receipts/ "Built to stay current."
+ *       48px  .u-125 sec        /receipts/ "Four honest labels."
+ *       72px  .sec              /projects/<project> "The picture, region by region."
+ *       56px  .u-112 sec        /projects/ "Gated on funding and safety."
+ *
+ *     One scale now, set at the middle of that spread: 48..72 -> 60px. The
+ *     lower bound and the viewport step are R4's, so narrow widths are
+ *     unchanged in behaviour. !important is required because the .u-* layer
+ *     declares its sizes that way. */
+h2.sec, .blk h2.sec, h2.u-146, h2.u-38 {
+  font-size: clamp(34px, 4.2vw, 60px) !important;
+  line-height: 1.03;
+}
+
+/* 78. G2 — ONE BODY MEASURE.
+ *
+ *     R4 put prose bands on a 728px (64ch) measure but, like the headline
+ *     rule, only where the band had no grid. The homepage showed the result:
+ *     a band running the full 1440 sat directly above one wrapping at 728.
+ *     One measure everywhere now. Elements that are deliberately NOT prose —
+ *     grids, tables, card bodies, chip rows — are untouched, because the
+ *     measure applies to running text, not to layout. */
+.blk > p, .blk > .lead, section > p.lead, section > p.u-11,
+.introband p, .faqsec .a {
+  max-width: 728px;
+}
+
+/* 79. G3 — ONE CORAL PER BACKGROUND: ink.
+ *
+ *     Two coral values rendered on ink: --coral (#D64A1E, 4.47:1) on headline
+ *     accents, and --coral-on-ink (#E8734A, 6.42:1) on eyebrows, numerals and
+ *     links. Founder preference is the DEEPER value, used wherever it clears
+ *     AA for the size carrying it.
+ *
+ *     Measured against ink, --coral-deep (#B23A14) is 3.23:1. That clears the
+ *     3:1 bar for large text and misses the 4.5:1 bar for small text, and it
+ *     is not close. So the deeper value ships on every large run, and small
+ *     runs keep --coral-on-ink, which passes at 6.42:1.
+ *
+ *     This does NOT reduce ink to one coral, and it cannot: the instruction
+ *     "one coral per background" and the instruction "use the deeper value
+ *     wherever it passes AA" point in opposite directions on ink, and the
+ *     second one wins because shipping a known contrast failure is not an
+ *     option. Ink therefore carries two values by size, not by whim — deep on
+ *     display text, --coral-on-ink on anything under 24px. */
+.blk--ink :is(h1, h2, h3) :is(.u-1, .hl, .hl-on-ink),
+.u-block--ink :is(h1, h2, h3) :is(.u-1, .hl, .hl-on-ink),
+.block--ink :is(h1, h2, h3) :is(.u-1, .hl, .hl-on-ink),
+.blk--ink .cn, .u-block--ink .cn, .blk--ink .em, .u-block--ink .em,
+/* The page title band is ink on almost every route, and its accent was the
+   last large coral run still at --coral. Leaving it there would have kept two
+   display corals on ink for a new reason — hero versus section — which is the
+   thing G3 exists to stop. On the few non-ink title bands --coral-deep is
+   5.60:1, so the same rule is safe there. */
+.titleband h1 :is(.u-1, .hl, em),
+/* Column headings inside an ink band: 40px/900 on /movement/. */
+.blk--ink .path .p h3, .u-block--ink .path .p h3 {
+  color: var(--coral-deep) !important;
+}
+
+/* 80. H4 — the donations sentence on /movement/ takes the size of the three
+ *     column bodies directly above it. It was set smaller, which read as a
+ *     footnote; it is not a footnote, it is the answer to the question the
+ *     three columns raise. */
+body[data-page="movement"] .u-10 { font-size: 16px; line-height: 1.65; }
+
+/* 81. H7 — /faq/ question sections move to wheat.
+ *
+ *     The template drops `.u-45` (whose entire body was
+ *     `background-color:#FBF7F0 !important` — one of the two unnamed hexes
+ *     CANVAS-SYNC item 74 had to work around) in favour of the repo class, so
+ *     the background is named and the !important fight disappears.
+ *
+ *     On wheat, small text cannot reach 4.5:1 in any coral, so the summary
+ *     chevron and the answer body follow item 69 to ink (9.60:1). */
+.faqsec--wheat { background: var(--wheat); }
+/* R1 governs the edges. The question sections are now a single wheat run, so
+ * the boundary that needs the coral rule is where cream becomes wheat at the
+ * top of the first one — not between the sections, which are the same colour
+ * and therefore not boundaries at all. */
+body[data-page="faq"] .u-46 + .faqsec--wheat { border-top: 4px solid var(--coral); }
+body[data-page="faq"] .faqsec--wheat :is(summary, .a, .a a, h3) { color: var(--ink); }
+body[data-page="faq"] .faqsec--wheat summary::after,
+body[data-page="faq"] .faqsec--wheat summary::marker { color: var(--ink); }
+
+/* 82. H8 — nav dropdown panels share one height, so the illustration lands on
+ *     the same Y in all four.
+ *
+ *     `.mg-pic` is `align-items:flex-end`: the illustration sits on the
+ *     panel's floor. The Case panel has a fourth link, so its panel is taller
+ *     and its floor — and its illustration — sat 53.4px lower than the other
+ *     three. Equal heights fix the alignment at the cause, and stop the
+ *     dropdown resizing as the reader moves between tabs. */
+.hd-mega .mg { min-height: 268px; }
+
+/* 83. R-1 (stream R) — LIVE BUG, present before this batch.
+ *
+ *     `.rfilter` ships with the `hidden` attribute and is revealed by
+ *     /js/keyword-filter.js. With JS off it still rendered: there is no author
+ *     `[hidden]` reset anywhere in the stylesheets, and a UA rule loses to ANY
+ *     author declaration, so `.rfilter{display:flex}` (item 64) beat it. The
+ *     identical trap item 66 fixed for `.cards .card`. A reader with JS off was
+ *     shown a search box that does nothing, on /receipts/ and on all three news
+ *     routes.
+ *
+ *     This is also a correction to the previous sweep's report, which claimed
+ *     the bar was hidden with JS off. The test asserted `bar.hidden` — the DOM
+ *     property, which was true — instead of whether the bar rendered. That is
+ *     exactly the failure the 2026-09-19 standing rule now forbids.
+ *
+ *     Scoped rather than blanket, for item 66's reason: a blanket `[hidden]`
+ *     rule would mask the next instance instead of surfacing it. */
+.rfilter[hidden] { display: none !important; }
+
+/* 84. R-2 (stream R) — the /receipts/ show-more control, same class of bug
+ *     pre-empted. The control is correct today only because nothing sets
+ *     `display` on its wrapper; this removes the silent dependency. `hidden`
+ *     sits on the wrapper, never the button — `.u-btn{display:inline-block}`
+ *     would outrank the UA rule and a hidden button would keep rendering. */
+[data-show-more][hidden] { display: none !important; }
+
+
+/* ---------------------------------------------------------------------------
+ * The rules below arrive from stream N with the /news/ reverse-split. Item 73
+ * lost `.colhead`, `.updates .cwsub`, `.cwdef`, `.morelink` and `.cw :is(h3,h4)`
+ * in the same change: the split landing's column heads, column intros, twice-
+ * printed Reported definition and "all of these" links no longer exist, and a
+ * Cost Watch card no longer has a heading at all — its claim IS the card body.
+ * --------------------------------------------------------------------------- */
+
+/* 76. N6 — one card, two news routes.
+ *
+ *     The split landing is reversed: /news/ is the whole Uncost news page and
+ *     Cost Watch is the whole of /news/cost-watch/. Neither is a rail any
+ *     more, so both render the SAME full-width card, and the card changes
+ *     ground: it used to be --cream sitting inside a --cream-2 sidebar, and it
+ *     is now --cream-2 sitting on the --cream page band. That inversion is the
+ *     whole visual difference between a sidebar and a page — the band recedes,
+ *     the items come forward.
+ *
+ *     `.up-item` was never a card, it was a divider list (border-top, no
+ *     ground). It becomes the card the Cost Watch item already was, so the two
+ *     lists are one component with one difference: an update has a title and a
+ *     Cost Watch row does not, because its claim IS its summary.
+ *
+ *     Contrast, measured on --cream-2 #F2EDE1 (the C1 rules, re-run because
+ *     every text run on these cards changed ground):
+ *       --ink        16.54:1   card title, Reported chip
+ *       --fg-2       12.33:1   card body / the claim
+ *       --coral-deep  5.12:1   .date, .src, "Read at … →"   (needs 4.5)
+ *       --coral       3.70:1   FAILS at 12px — which is why "Read at … →"
+ *                              renders in --coral-deep, the accessible coral
+ *                              the rest of the site's small text already uses
+ *                              (.morelink a, .up-item .date). Same family,
+ *                              same read, one step darker.  CANVAS-SYNC 76. */
+
+/* The band: --cream, so the --cream-2 cards have something to sit on.
+ * Overrides the export's --cream-2 sidebar fill and its rail border, and
+ * integration item 73's `background: transparent`.
+ *
+ * MEASURE, and why the band is capped. The export sized these items for a
+ * 1fr column beside a 380px rail and capped their body copy at the house
+ * measure, 64ch. 1ch of the body face at 16px measures 10.09px here, so 64ch
+ * is 646px — which was invisible in a column with no ground and absurd once
+ * item 76 gave every item a card outline: a 1312px card holding a 646px line
+ * and 600px of nothing. Capping the band instead of widening the line keeps
+ * the house measure and makes the card fit the words. 840px of band, less the
+ * 64px side padding, is a 712px card holding a 664px line — 66ch, one line
+ * wider than the export and a card that is full of what it says it holds.
+ * "Full width" then means what it should: the card spans its column, both
+ * news routes have the same column, and neither has a rail. */
+body[data-page="news"] .newswrap--solo .updates,
+body[data-page="news"] .newswrap--solo .costwatch {
+  background: var(--cream);
+  border-left: 0;
+  padding: 36px clamp(24px, 5vw, 64px);
+  max-width: 840px;
+}
+
+/* The Uncost update, now a card rather than a divider row. */
+body[data-page="news"] .up-item {
+  border: 2px solid var(--ink);
+  background: var(--cream-2);
+  padding: 22px 24px;
+  margin: 0 0 14px;
+}
+/* The export zeroed the first row's top border because it was a divider list;
+ * a card has four sides. Restated at (0,2,1) to clear the export's
+ * `:where(...) .up-item:first-of-type` at (0,2,0). */
+body[data-page="news"] .up-item:first-of-type {
+  border-top: 2px solid var(--ink);
+  padding-top: 22px;
+}
+body[data-page="news"] .up-item:last-of-type { margin-bottom: 0; }
+body[data-page="news"] .up-item .date { font-size: 12px; }
+/* The card's own padding is the measure now — see the band cap above. Leaving
+ * the export's 64ch/26ch caps inside a 712px card would just reintroduce the
+ * dead strip at a smaller size. */
+body[data-page="news"] .up-item p,
+body[data-page="news"] .up-item :is(h3, h4) { max-width: none; }
+
+/* The Cost Watch item: same ground, same padding, same measure as the update
+ * card above it. One column, full width — item 73 ran these two-up in a grid
+ * because the page still had a rail's proportions. */
+body[data-page="news"] .cw {
+  background: var(--cream-2);
+  padding: 22px 24px;
+}
+/* The export's hover affordance, restated at (0,3,1). The resting rule above
+ * is (0,2,1) and outranks `:where(body[data-page="news"]) .cw:hover` at
+ * (0,2,0), so without this line the card stops lighting up on hover — caught
+ * by reading the computed background under a real pointer, not by eye. */
+body[data-page="news"] .cw:hover { background: var(--wheat); }
+body[data-page="news"] .newswrap--solo .cwlist {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* The claim, rendered as the card BODY and not as a heading. A Cost Watch row
+ * has no headline of its own; giving the claim an <h4> made a sentence pretend
+ * to be a title and put a heading in the outline that named nothing. Typed to
+ * match `.up-item p` exactly, because it is the same slot. */
+body[data-page="news"] .cw p {
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--fg-2);
+  margin: 10px 0 0;
+  max-width: none;
+}
+
+/* The eyebrow row: publisher + date. `space-between` was right in a 380px
+ * rail and wrong at 1000px, where it threw the date to the far edge and broke
+ * the pair. Left-aligned, hairline-separated, and sized to the update card's
+ * own `.date` so the two eyebrows match. */
+body[data-page="news"] .cw .src {
+  justify-content: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  flex-wrap: wrap;
+}
+body[data-page="news"] .cw .src span + span { position: relative; padding-left: 11px; }
+body[data-page="news"] .cw .src span + span::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 1px;
+  height: 11px;
+  transform: translateY(-50%);
+  background: currentColor;
+}
+
+/* Narrow: the pair stacks instead of wrapping, and the hairline goes with it.
+ * A wrapped flex row put the separator at the START of the second line, which
+ * reads as a stray mark rather than as a join. */
+@media (max-width: 560px) {
+  body[data-page="news"] .cw .src { display: block; }
+  body[data-page="news"] .cw .src span + span { padding-left: 0; display: block; margin-top: 3px; }
+  body[data-page="news"] .cw .src span + span::before { content: none; }
+}
+
+/* "Read at <domain> →" in coral — see the contrast note above for why this is
+ * --coral-deep and not --coral. */
+body[data-page="news"] .cw .ext { color: var(--coral-deep); }
+
+/* C1 item 75 restated at (0,3,1): the hover state repaints the card --wheat,
+ * where --coral-deep measures 3.25:1 and --fg-3 3.91:1. Both resolve to --ink
+ * (10.48:1). The rule already exists in integration.css at (0,2,0); the coral
+ * rule directly above now outranks it, so it has to be re-stated here or the
+ * hover fix silently regresses. (`.cw p` needs no hover override: --fg-2 on
+ * --wheat is 7.81:1 and passes as it stands.) */
+body[data-page="news"] .cw:hover .src,
+body[data-page="news"] .cw:hover .ext { color: var(--ink); }
+
+/* The Reported chip inverts with the card. It was --cream-2 on a --cream card;
+ * the card is --cream-2 now, so the chip takes --cream and keeps being the one
+ * label on the site with no colour in it. Overrides `.lbl--reported` at
+ * (0,1,0); the existing `.cw:hover .lbl--reported` already resolves to --cream
+ * on the wheat hover and needs no change. */
+body[data-page="news"] .lbl--reported { background: var(--cream); }
+
+/* 77. N6 — the cross-reference block.
+ *
+ *     One block at the top of each news route pointing at the other, so the
+ *     two pages stay one section without either carrying a column of the
+ *     other. On /news/cost-watch/ the Reported definition is folded into the
+ *     same block: it used to print twice on that page — once as the column
+ *     subhead, once inside the list — which is once too many for a definition.
+ *
+ *     Ink left rule, not a full border, so it reads as a note and not as a
+ *     third card. Links are --coral-deep (5.12:1 on --cream-2). CANVAS-SYNC 77. */
+body[data-page="news"] .newsxref {
+  background: var(--cream-2);
+  border-left: 3px solid var(--ink);
+  padding: 14px 16px;
+  margin: 0 0 26px;
+  max-width: 78ch;
+}
+body[data-page="news"] .newsxref p {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--fg-2);
+  margin: 0;
+  max-width: none;
+}
+body[data-page="news"] .newsxref p + p { margin-top: 10px; }
+body[data-page="news"] .newsxref .newsxref-def { font-size: 13px; }
+body[data-page="news"] .newsxref a { color: var(--coral-deep); }
+/* NOT restated here: the word "Reported" in the definition. integration.css
+ * line 927 is a site-wide `b, .b { color: var(--coral-deep) !important }`, so
+ * the term already prints in the accent, exactly as it did when this
+ * definition lived in `.cwdef`. Measured on --cream-2 it is 5.12:1, which
+ * passes AA at 13px, so there is nothing to override and the old
+ * `.cwdef b { color: var(--ink) }` rule was never winning anyway. */
+
+/* ---------------------------------------------------------------------------
+ * Stream S — site search. `.so-receipts` above was deleted with the button it
+ * styled: the "Search the Receipts" CTA is now one of the `.so-links` blocks.
+ * --------------------------------------------------------------------------- */
+ * css-S.css — stream S (site search). FOR INTEGRATION INTO
+ * website/src/css/integration.css, which stream S does not own.
+ *
+ * Context: the search overlay (partials/search.njk) now renders a real search
+ * box — label, input, a status line and a results list — revealed by
+ * js/site-search.js. design-system/site.css already styles `.search-ov`,
+ * `.search-ov label`, `.search-ov input` and `.search-ov .so-links`; nothing
+ * below overrides a design value. Everything here is for markup the export
+ * never had (the results list) or is a consequence of removing markup the
+ * export did have (`.so-note`, `.so-receipts`).
+ *
+ * Without these rules the feature still WORKS and does not overflow — the
+ * results render as unstyled inline spans inside a default <ul>. These rules
+ * are what make it legible.
+ * ==========================================================================*/
+
+
+/* ---------------------------------------------------------------------------
+ * 1. DEAD RULE — please DELETE from integration.css.
+ *
+ *    integration.css line ~797:  .so-receipts { margin: 14px 0 0; }
+ *
+ * `<p class="so-receipts">` is gone: "Search the Receipts" is now one of the
+ * `.so-links` blocks, visually identical to the other eight destinations,
+ * rather than a standalone `.u-btn.u-btn--ink`. No element carries the class
+ * any more, so the rule matches nothing.
+ *
+ * `.search-ov .so-note` in design-system/site.css is likewise now unused (the
+ * "Site search is planned" note went with the thing it described). That one is
+ * in the GOVERNED PACKET — do NOT delete it there; it costs nothing dormant.
+ * ------------------------------------------------------------------------ */
+
+
+/* ---------------------------------------------------------------------------
+ * 2. The search box is the overlay's flex child, so it has to own the width
+ * the label/input/results share. `.search-ov` is `display:flex;
+ * flex-direction:column`, which makes a bare <div> child stretch to the
+ * cross-axis by default — but `min-width:0` is what stops a long unbroken
+ * snippet (a URL in body text, say) from forcing the flex item wider than the
+ * overlay and producing a horizontal scrollbar at 390px.
+ * ------------------------------------------------------------------------ */
+.search-ov .so-search {
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* The box ships `hidden` and js/site-search.js reveals it. There is no global
+ * [hidden] rule in this codebase (integration.css items 66 and 73 are scoped
+ * to .cards .card / .cw / .up-item precisely so they cannot mask a bug), and
+ * no rule sets `display` on .so-search, so the UA reset's [hidden] already
+ * wins here. This is stated explicitly so that adding a future
+ * `.search-ov > * { display: block }`-style rule cannot silently reveal a
+ * control to readers without JS — the exact failure the `hidden` pattern
+ * exists to prevent. */
+.search-ov .so-search[hidden] { display: none !important; }
+
+
+/* ---------------------------------------------------------------------------
+ * 3. Status line — "12 results" / "No results" / "Search is unavailable."
+ * Matches the register filter's count (`.rfilter-count`) in role and weight so
+ * the two counters read as the same device. Kept in flow rather than absolutely
+ * positioned: it is a live region, and a reader using a screen magnifier needs
+ * it next to the input it describes.
+ * ------------------------------------------------------------------------ */
+.search-ov .so-status {
+  margin: 12px 0 0;
+  min-height: 1.2em;            /* reserve the line so results do not jump when
+                                   the first character is typed */
+  font-family: var(--font-body);
+  font-size: 14px;
+  letter-spacing: .04em;
+  color: var(--fg-3);
+}
+
+
+/* ---------------------------------------------------------------------------
+ * 4. Results list. The overlay is `position:fixed; inset:0` with a single
+ * column of children, so the list is the only thing that may scroll — hence
+ * `overflow-y:auto` here and NOT on `.search-ov` itself (scrolling the overlay
+ * would take the close button off screen).
+ * ------------------------------------------------------------------------ */
+.search-ov .so-results {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  max-width: 62rem;             /* a full-bleed 1440px line of snippet text is
+                                   unreadable; the design caps prose the same way */
+  max-height: min(52vh, 34rem);
+  overflow-y: auto;
+  overscroll-behavior: contain; /* stop the page behind the overlay scrolling
+                                   when the list hits its end */
+}
+
+.search-ov .so-result + .so-result {
+  border-top: 2px solid var(--rule-soft);
+}
+
+/* The whole block is one link: title, snippet and route are spans inside the
+ * <a>, so the hit target is the result, not just its title. */
+.search-ov .so-result-link {
+  display: block;
+  padding: 14px 4px;
+  text-decoration: none;
+  color: var(--ink);
+}
+.search-ov .so-result-link:hover,
+.search-ov .so-result-link:focus-visible {
+  background: var(--wheat);
+}
+.search-ov .so-result-link:focus-visible {
+  outline: 3px solid var(--coral-deep);
+  outline-offset: -3px;         /* inset, so the outline is not clipped by the
+                                   scroll container at the list's edges */
+}
+
+.search-ov .so-result-title {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 1.25;
+}
+
+/* `overflow-wrap:anywhere` is the horizontal-overflow guard: snippets are raw
+ * page text and may contain an unbroken token longer than a 390px viewport. */
+.search-ov .so-result-snippet {
+  display: block;
+  margin-top: 4px;
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--fg-2);
+  overflow-wrap: anywhere;
+}
+
+.search-ov .so-result-route {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: .04em;
+  color: var(--fg-3);
+  overflow-wrap: anywhere;
+}
+
+/* The matched term, in both the title and the snippet. <mark>'s UA default is
+ * a yellow that is not in the palette; wheat is, and it keeps ink-on-wheat
+ * contrast well above 4.5:1. Unset the UA background rather than layering a
+ * second one on top of it. */
+.search-ov .so-result-link mark {
+  background: var(--wheat);
+  color: inherit;
+  padding: 0 1px;
+}
+/* On hover the row is already wheat, so the mark needs a second step to stay
+ * visible as a highlight rather than disappearing into the row. */
+.search-ov .so-result-link:hover mark,
+.search-ov .so-result-link:focus-visible mark {
+  background: var(--cream);
+}
+
+
+/* ---------------------------------------------------------------------------
+ * 5. Small screens. At 390px the overlay's own padding is already
+ * clamp(20px,6vw,64px); the list simply needs more of the viewport's height
+ * because the link blocks below it wrap onto several rows.
+ * ------------------------------------------------------------------------ */
+@media (max-width: 40rem) {
+  .search-ov .so-results { max-height: 44vh; }
+  .search-ov .so-result-title { font-size: 17px; }
+  .search-ov .so-result-snippet { font-size: 14px; }
+}
+
+/* 85. G4 — FIGURE CARD, variant 08 adopted, with four corrections.
+ *
+ *  a. CHECKERBOARD BY RENDERED ROW, NOT BY INDEX.
+ *     `nth-child(odd/even)` is a checkerboard only when the column count is
+ *     ODD: at three columns, index parity and (row+column) parity coincide.
+ *     At TWO columns they do not — index parity paints vertical stripes, and
+ *     every card sits directly above one of its own colour. Measured on the
+ *     rendered grid rather than reasoned about: /receipts/ at 1024 and 768 had
+ *     10 adjacent same-colour pairs out of 12 cards; 1440 and 390 were clean.
+ *     Two columns need a period of four. The cell colour is now a custom
+ *     property set once per breakpoint, so the card and its chips can never
+ *     disagree about which cell they are in. */
+.cards .card { background: var(--cell); }
+.cards .card:nth-child(odd)  { --cell: var(--cream);   --cell-alt: var(--cream-2); }
+.cards .card:nth-child(even) { --cell: var(--cream-2); --cell-alt: var(--cream); }
+
+/* Any two-column state — the default grid between 680 and 1040, and the
+ * always-two-up grids at every width above 680. */
+.cards--2up .card:nth-child(4n+1), .cards--2up .card:nth-child(4n+4),
+body[data-page="case"] .cards .card:nth-child(4n+1),
+body[data-page="case"] .cards .card:nth-child(4n+4) { --cell: var(--cream); --cell-alt: var(--cream-2); }
+.cards--2up .card:nth-child(4n+2), .cards--2up .card:nth-child(4n+3),
+body[data-page="case"] .cards .card:nth-child(4n+2),
+body[data-page="case"] .cards .card:nth-child(4n+3) { --cell: var(--cream-2); --cell-alt: var(--cream); }
+
+@media (max-width: 1040px) {
+  .cards .card:nth-child(4n+1), .cards .card:nth-child(4n+4) { --cell: var(--cream);   --cell-alt: var(--cream-2); }
+  .cards .card:nth-child(4n+2), .cards .card:nth-child(4n+3) { --cell: var(--cream-2); --cell-alt: var(--cream); }
+}
+/* One column: index parity is a checkerboard again, for every grid. */
+@media (max-width: 680px) {
+  .cards .card:nth-child(odd),  .cards--2up .card:nth-child(odd),
+  body[data-page="case"] .cards .card:nth-child(odd)  { --cell: var(--cream);   --cell-alt: var(--cream-2); }
+  .cards .card:nth-child(even), .cards--2up .card:nth-child(even),
+  body[data-page="case"] .cards .card:nth-child(even) { --cell: var(--cream-2); --cell-alt: var(--cream); }
+}
+
+/*  b. THE NUMERAL AND THE CAPTION ECHO ARE THE SAME CORAL.
+ *     C1 split them — numeral --coral, echo --coral-deep — on the rule that
+ *     small text stays deep. The caption is not small text: it is 31px and
+ *     bold, so it clears the 3:1 large-text bar at --coral. Two shades of the
+ *     same colour on one card read as an inconsistency, not a distinction.
+ *     The echo is explicitly bold so the rule still holds at the narrow end,
+ *     where the caption scales to 20px — bold at 20px is still large text. */
+.cards .card .claim .echo { color: var(--coral); font-weight: 700; }
+
+/*  c. THE NUMERAL:CAPTION RATIO HOLDS AT EVERY WIDTH.
+ *     The numeral scaled with the viewport and the caption did not, so the
+ *     desktop ratio of 2.0 (62/31) collapsed to 1.29 (40/31) at 390 — below
+ *     the 1.5 floor. Giving the caption the same viewport step at exactly half
+ *     the numeral's values holds 2.0 at every width by construction. */
+.cards .card .claim { font-size: clamp(20px, 2.2vw, 31px); }
+
+/*  d. CHIPS READ LABEL: VALUE.
+ *     Two of the four chips are dates, and nothing but format distinguished
+ *     them. The label is small-caps and quiet; the value is near-ink and
+ *     carries the weight, because the value is the thing being read. The
+ *     confidence chip stays unlabelled — it is the only chip whose colour
+ *     carries meaning, so a label would be redundant. */
+.cards .card .foot .row span.m {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  background: var(--cell-alt);
+}
+.cards .card .foot .row span.m .k {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+.cards .card .foot .row span.m .k::after { content: ":"; }
+.cards .card .foot .row span.m .v { color: var(--ink); font-weight: 600; }
+/* The row wraps rather than truncating: a value that is cut off is worse than
+ * a row that is two lines tall, and this row is the card's provenance. */
+.cards .card .foot .row { flex-wrap: wrap; }
+.cards .card .foot .row span.m .v { white-space: normal; overflow-wrap: anywhere; }
+
+/* 86. G5 — chip-row colour, variant 01 of six: ONE HUE PER FIELD TYPE.
+ *
+ *     Six logics were rendered at 1440 and 390 on /receipts/ and /case/ and
+ *     reviewed as PNGs (2026-09-19-chips, 24 files, nothing committed):
+ *       01 one hue per field type      <- shipped
+ *       02 one hue for dates, another for period/region
+ *       03 graded tints by recency
+ *       04 outline weight instead of hue
+ *       05 two-tone
+ *       06 single accent
+ *
+ *     01 ships because the card's problem was never "which chip is older", it
+ *     was "which of these two dates am I looking at". A hue per field answers
+ *     that at a glance and survives the label being read second.
+ *
+ *     The palette is provably outside the confidence colours, which own sage
+ *     #7FA86E, wheat #E8B84A, ink-blue #2B5F7F and the coral family
+ *     #D64A1E/#C1472C. Plum, teal and umber share no hue with any of them.
+ *     Measured on both cell colours, every label clears the 4.5:1 small-text
+ *     bar: plum 7.66/7.02, umber 6.96/6.37, teal 5.56/5.09.
+ *
+ *     Dates carry ONE hue for the field and lean on data-era only for weight,
+ *     so recency is still visible and nothing is keyed to a literal year. */
+.cards .card .foot .row .m--date   { border-color: #6B3F6E; }
+.cards .card .foot .row .m--date .k   { color: #6B3F6E; }
+.cards .card .foot .row .m--scope  { border-color: #1F6F68; }
+.cards .card .foot .row .m--scope .k  { color: #1F6F68; }
+.cards .card .foot .row .m--region { border-color: #7A4A18; }
+.cards .card .foot .row .m--region .k { color: #7A4A18; }
+
+/* Recency, within the date hue: the current year is drawn firmly, last year
+ * lighter, anything older lighter still. Computed at build time from
+ * data-era, so no rule needs editing each January. */
+.cards .card .foot .row .m--date[data-era="current"] { border-width: 2.5px; }
+.cards .card .foot .row .m--date[data-era="prior"]   { border-width: 1.5px; }
+.cards .card .foot .row .m--date[data-era="older"]   { border-width: 1px; border-style: dashed; }

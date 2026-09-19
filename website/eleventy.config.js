@@ -19,6 +19,14 @@ module.exports = function (eleventyConfig) {
   const md = markdownIt({ html: false });
   eleventyConfig.addFilter("md", (content) => md.render(content || ""));
 
+  // Capitalise only the first character, leaving the rest alone — unlike
+  // Nunjucks' `capitalize`, which lowercases the remainder and would turn
+  // "Week ending 17 August 2026" into "Week ending 17 august 2026".
+  eleventyConfig.addFilter("sentenceCase", (v) => {
+    const s = String(v == null ? "" : v);
+    return s ? s.charAt(0).toUpperCase() + s.slice(1) : s;
+  });
+
   // First n of a list — the split landing shows the latest 3 updates and the
   // latest 5 Cost Watch items, while the dedicated routes show everything.
   eleventyConfig.addFilter("take", (arr, n) => (Array.isArray(arr) ? arr.slice(0, n) : arr));
@@ -74,6 +82,10 @@ module.exports = function (eleventyConfig) {
     "assets/downloads/the-case-for-uncost.pdf": "downloads/the-case-for-uncost.pdf",
   });
   eleventyConfig.addPassthroughCopy({ "src/_headers": "_headers" });
+  // Cloudflare Pages redirect table. Routes that have moved keep working
+  // rather than 404ing, and the old URL is not left to rot in someone's
+  // bookmarks or a feed reader.
+  eleventyConfig.addPassthroughCopy({ "src/_redirects": "_redirects" });
 
   // Brand image pipeline. Source PNGs under assets/brand/ remain the sole
   // canonical, manifest-pinned authority (website/assets/brand/ASSET_MANIFEST.json);
@@ -143,8 +155,28 @@ module.exports = function (eleventyConfig) {
   // did, and a receipt wearing "Reported" would understate one that it did.
   // The check is on the class markers, not on prose — the plain English words
   // "reported" and "confirmed" are free to appear in body copy.
-  eleventyConfig.on("eleventy.after", async ({ dir }) => {
-    const out = path.resolve(__dirname, dir.output);
+  eleventyConfig.on("eleventy.after", async ({ dir, results }) => {
+    // Scan the files Eleventy actually WROTE, not a directory reconstructed
+    // from config. `dir.output` is the configured value and ignores the CLI
+    // `--output` flag, so a build written anywhere else was silently checked
+    // against a stale ./dist and passed without inspecting anything — proven
+    // by building a deliberate leak to another directory and getting exit 0.
+    // An audit that cannot see its subject must fail, not pass quietly
+    // (standing rule, DESIGN_IMPORT_RUNBOOK 2026-09-19).
+    const written = (results || []).map((r) => r.outputPath).filter(Boolean);
+    const out = written.length
+      ? path.resolve(written.reduce((a, b) => {
+          let i = 0;
+          while (i < a.length && i < b.length && a[i] === b[i]) i++;
+          return a.slice(0, i);
+        }))
+      : path.resolve(__dirname, dir.output);
+    if (!written.length && !fs.existsSync(out)) {
+      throw new Error(
+        `News label guard could not find any build output to inspect (looked in ${out}). ` +
+        `Refusing to report a clean result on a build it never saw.`
+      );
+    }
     const REPORTED = /class="[^"]*\blbl--reported\b/;
     const CONFIDENCE = /class="[^"]*\brcpt-conf\b/;
     const leaks = [];

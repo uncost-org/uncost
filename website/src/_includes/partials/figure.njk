@@ -45,10 +45,14 @@
     <div class="pub">{{ row.publisher }}</div>
     <div class="ttl">{% if row.url %}<a href="{{ row.url }}" target="_blank" rel="noopener">{{ row.publication_work }}</a>{% else %}{{ row.publication_work }}{% endif %}</div>
     <div class="row">
-      <span class="m m--date" data-era="{{ row.checkedEra }}">Checked {{ row.last_checked }}</span>
-      {% if row.publication_year %}<span class="m m--date" data-era="{{ row.publishedEra }}">Published {{ row.publication_year }}</span>{% endif %}
-      <span class="m m--scope">{{ row.data_period }}</span>
-      <span class="m m--region" data-region="{{ row.regionCode }}">{{ row.region }}</span>
+      {#- G4d: every metadata chip reads LABEL: value. The label says which
+          date or which place, so a reader never has to infer from format
+          which of two dates is which. The confidence chip stays unlabelled —
+          it is the only chip whose colour carries the meaning. -#}
+      <span class="m m--date" data-era="{{ row.checkedEra }}"><span class="k">Checked</span><span class="v">{{ row.last_checked }}</span></span>
+      {% if row.publication_year %}<span class="m m--date" data-era="{{ row.publishedEra }}"><span class="k">Published</span><span class="v">{{ row.publication_year }}</span></span>{% endif %}
+      <span class="m m--scope"><span class="k">Period</span><span class="v">{{ row.data_period | sentenceCase }}</span></span>
+      <span class="m m--region" data-region="{{ row.regionCode }}"><span class="k">Region</span><span class="v">{{ row.region | sentenceCase }}</span></span>
       <span class="rcpt-conf rcpt-conf--{{ "confirmed" if row.confidence.startsWith("confirmed") else "estimate" }}">{{ "Confirmed" if row.confidence.startsWith("confirmed") else "Estimate" }}</span>
     </div>
   </div>
