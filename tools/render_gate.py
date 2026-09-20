@@ -188,6 +188,44 @@ SECTION_EXEMPTIONS = [
      "Approved copy: the slot vacated by the accessibility statement carries the "
      "member-voice section on the Assembly and the privacy commitment. There is no "
      "export counterpart. CANVAS-SYNC item 22."),
+    # ── Sweep 3 (batches G and H) ─────────────────────────────────────────
+    ("faq", "The basics",
+     "H7: the /faq/ question sections move to --wheat. The export paints this "
+     "band #F2EBE1 via .u-45, one of the two unnamed hexes CANVAS-SYNC item 74 "
+     "had to work around; the template now drops .u-45 for the named repo class "
+     "and the !important fight with it. Inverting a full band's fill changes "
+     "nearly every pixel by definition, hence ~99.7%. Measured at 1440: the "
+     "section box is 1440x447 in the export and 1440x451 built — same x, same "
+     "width, +4px tall — so this is fill, not reflow and not a layout break. "
+     "Sweep 3, batch H."),
+    ("treasury", "Principles",
+     "G1 + G2: the band takes the one headline scale and the 728px measure. "
+     "Measured at 1440 the fill is unchanged (cream-2 dominant on both sides) "
+     "while the section grows 533px to 754px and its ink coverage goes 1% to "
+     "5% — a narrower measure wrapping more lines under a larger headline, "
+     "which is the change itself, not a defect in it. Sweep 3, batch G."),
+    ("faq", "Money",
+     "H7, same change as \"The basics\": the question section moves to --wheat. "
+     "Measured at 1440 the section box is 1440x303 in BOTH trees — identical "
+     "geometry, zero reflow — and the dominant fill goes #F2EBE1 (95% of the "
+     "band) to #E8B84A (95%). The diff is the fill and nothing else. "
+     "Sweep 3, batch H."),
+    ("faq", "Evidence",
+     "H7, same change as \"The basics\": the question section moves to --wheat. "
+     "Measured at 1440 the section box is 1440x303 in BOTH trees and the "
+     "dominant fill goes #F2EBE1 to #E8B84A at 95% coverage either way. "
+     "Sweep 3, batch H."),
+    ("faq", "Governance",
+     "H7, same change as \"The basics\": the question section moves to --wheat. "
+     "Measured at 1440 the section box is 1440x303 in BOTH trees and the "
+     "dominant fill goes #F2EBE1 to #E8B84A at 95% coverage either way. "
+     "All four .faqsec--wheat sections are now named; there are exactly four. "
+     "Sweep 3, batch H."),
+    ("index", "S4 What we run",
+     "G1 + G2 at mobile: same palette on both sides, section height 919px to "
+     "1006px at 390. The homepage's worst band is the one with the most running "
+     "text, so it moves most when the headline scale and the measure change. "
+     "Sweep 3, batch G."),
 ]
 
 
