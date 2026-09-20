@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>band fixture — bad, invisible rule colours</title>
+<link rel="stylesheet" href="band.css"></head>
+<body><main>
+  <div class="band bg-cream"><p>First band.</p></div>
+  <!-- FAULT A: a coral rule drawn onto a coral band. R1 requires ink here. -->
+  <div class="band bg-coral r-coral"><p>Coral rule on a coral band.</p></div>
+  <div class="band bg-ink r-wheat"><p>This boundary is correct.</p></div>
+  <!-- FAULT B: an ink rule between two ink bands. R1 requires coral here. -->
+  <div class="band bg-ink r-ink"><p>Ink rule on ink, both sides.</p></div>
+</main></body></html>

@@ -200,6 +200,13 @@ verification behind it, so:
 3. **Validation runs on the cases the audit calls CLEAN**, not only on the ones
    it already flags. A defect an audit flags is already visible; a defect it
    passes over is the one that ships.
+4. **A verification result may be reported only if the script that produced it
+   is committed in the repo at that commit. A check that lives in a scratchpad
+   is not a check.** Adopted 2026-09-20, after a sweep reported R1, R2, overflow
+   and contrast clean from harnesses that were never committed. When the next
+   session opened, the scripts were gone and not one of those results could be
+   reproduced, re-run, or audited. An uncommitted check produces a claim with
+   nothing behind it.
 
 This rule exists because four audits in this repository have passed over a real
 defect:

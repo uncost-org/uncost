@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>band fixture — bad, two rules at one boundary</title>
+<link rel="stylesheet" href="band.css"></head>
+<body><main>
+  <div class="band bg-cream"><p>First band.</p></div>
+  <!-- FAULT: the upper band keeps a bottom rule AND the lower band draws its
+       top rule, so the single cream-to-wheat boundary carries two. -->
+  <div class="band bg-cream rb-coral"><p>This band draws a bottom rule.</p></div>
+  <div class="band bg-wheat r-coral"><p>...and this one draws the same boundary again.</p></div>
+</main></body></html>

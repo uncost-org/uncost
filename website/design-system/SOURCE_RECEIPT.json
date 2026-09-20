@@ -138,7 +138,7 @@
     },
     {
       "path": "scripts/audit_design_handoff.py",
-      "sha256": "adb1eacfa36bf158a46ebdf661f73f081208832a8904774e115a39b2e39f2752",
+      "sha256": "49ae5b2d15a9fd5153b56c4b7af8ba68133d4e92655ff3ef2302751ba7a873b5",
       "role": "reproducible-checks"
     },
     {

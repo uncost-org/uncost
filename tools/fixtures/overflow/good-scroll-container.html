@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GOOD — wide content inside its own scroller</title>
+<link rel="stylesheet" href="./base.css">
+<style>
+  /* The real site does this on purpose (the sector anchor bars are
+     overflow-x:auto). Content wider than the viewport inside an opted-in
+     scroller is not page overflow, and must not be reported — otherwise the
+     sweep cries wolf and gets ignored. */
+  .scroller { overflow-x: auto; }
+  .rail { display: flex; gap: 16px; width: max-content; }
+  .rail > span { white-space: nowrap; padding: 8px 14px; background: #efe9dd; }
+</style>
+</head><body>
+<div class="wrap">
+  <h1>Opt-in horizontal scroller</h1>
+  <div class="scroller"><div class="rail">
+    <span>Shelter</span><span>Food</span><span>Energy</span><span>Water</span>
+    <span>Healthcare</span><span>Education</span><span>Transportation</span>
+    <span>Communication</span><span>Clothing</span><span>Goods</span>
+    <span>Care</span><span>Safety</span><span>Leisure</span><span>Materials</span>
+    <span>Environment</span>
+  </div></div>
+</div>
+</body></html>

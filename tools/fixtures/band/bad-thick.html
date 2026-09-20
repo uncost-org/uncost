@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>band fixture — bad, rule thicker than declared</title>
+<link rel="stylesheet" href="band.css">
+<style>
+  /* FAULT: .r-coral declares the R1 rule at 4px; this overrides the rendered
+     weight to 9px, the way two stacked 4px rules of one colour would read. */
+  #over { border-top-width: 9px; }
+</style></head>
+<body><main>
+  <div class="band bg-cream"><p>First band.</p></div>
+  <div class="band bg-wheat r-coral" id="over"><p>Renders a 9px coral rule.</p></div>
+  <div class="band bg-ink r-coral"><p>This boundary is correct.</p></div>
+</main></body></html>

@@ -1,0 +1,44 @@
+/* Fixture stylesheet for tools/band_audit.py --selftest.
+   A miniature of the real R1/R2 system: bands are direct children of <main>,
+   the lower band's top edge draws the boundary at 4px, component frames are a
+   complete 2px ink box. Nothing here is loaded by the site. */
+:root {
+  --coral: #D64A1E;
+  --ink:   #0E0E0C;
+  --cream: #FAF7F0;
+  --cream-2: #F2EDE1;
+  --wheat: #E8B84A;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: var(--cream); font: 16px/1.4 system-ui, sans-serif; color: var(--ink); }
+main { display: block; }
+
+/* A band: full bleed, tall enough to sample 24px either side of every edge. */
+.band { min-height: 140px; padding: 40px 24px; }
+.bg-cream  { background: var(--cream); }
+.bg-cream2 { background: var(--cream-2); }
+.bg-wheat  { background: var(--wheat); }
+.bg-ink    { background: var(--ink); color: var(--cream); }
+.bg-coral  { background: var(--coral); color: var(--cream); }
+
+/* R1 rules — declared at 4px, drawn by the lower band's top edge. */
+.r-coral { border-top: 4px solid var(--coral); }
+.r-ink   { border-top: 4px solid var(--ink); }
+.r-wheat { border-top: 4px solid var(--wheat); }
+
+/* Deliberate faults, used only by the bad-* fixtures. */
+.rb-coral { border-bottom: 4px solid var(--coral); }
+.rb-ink   { border-bottom: 4px solid var(--ink); }
+
+/* R2 component frame: a complete 2px ink box with 2px ink cell dividers. */
+.frame {
+  border: 2px solid var(--ink);
+  background: var(--ink);
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2px;
+}
+.frame > .cell { background: #FFFFFF; padding: 40px 24px; min-height: 140px; }
+
+/* Label text is kept off the band edges so pixel columns stay readable. */
+.band > p, .cell > p { max-width: 40ch; }

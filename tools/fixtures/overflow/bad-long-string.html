@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BAD — unbreakable string</title>
+<link rel="stylesheet" href="./base.css">
+<style>
+  /* A single token with no break opportunity and no overflow-wrap. The element
+     box is auto-width, so the offender is the text's own inline box pushing the
+     line box past the viewport. Worst at the narrow end. */
+  .token { white-space: nowrap; font-family: ui-monospace, monospace; font-size: 18px; }
+</style>
+</head><body>
+<div class="wrap">
+  <h1>Unbreakable token</h1>
+  <p class="token" id="token">urn:uncost:receipt:0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000</p>
+</div>
+</body></html>

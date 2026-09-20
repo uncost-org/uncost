@@ -1045,6 +1045,32 @@ def main() -> int:
             "source_transformations": source_verification_mode,
             "changed_file_coverage": coverage_mode,
         },
+        # State the boundary of the contrast result in the result itself. A
+        # green "contrast_pairs" here says nothing about the integration layer,
+        # and a reader has no way to know that from a count alone. Reported on
+        # every run so the limit travels with the number.
+        "contrast_coverage": {
+            "files_checked": ["website/design-system/tokens.css",
+                              "website/design-system/components.css",
+                              "website/design-system/site.css"],
+            "files_NOT_checked": ["website/design-system/sections.css",
+                                  "website/src/css/integration.css",
+                                  "website/src/css/integration-v43-gap.css"],
+            "why": (
+                "This matrix is selector-based: it pairs a colour rule against "
+                "the nearest ancestor rule that declares a background. "
+                "sections.css and the integration layer lean on an idiom that "
+                "model cannot see — a card grid sets background:var(--ink) on "
+                "the CONTAINER purely so a 2px gap draws the divider, while "
+                "each child repaints its own cream surface. Pairing a child's "
+                "colour against that container reports failures for text that "
+                "never renders on ink. Colour in those files is constrained "
+                "instead by validate_no_raw_hex(), and their RENDERED contrast "
+                "is covered by tools/contrast_audit.py, which measures the "
+                "composited background in a real browser at rest and on hover."
+            ),
+            "rendered_audit": "tools/contrast_audit.py",
+        },
     }
     print(json.dumps(result, indent=2))
     return 0 if not errors else 1
