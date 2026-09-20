@@ -1213,36 +1213,47 @@ h2.sec, .blk h2.sec, h2.u-146, h2.u-38 {
   max-width: 728px !important;
 }
 
-/* 79. G3 — ONE CORAL PER BACKGROUND: ink.
+/* 79. G3 — ONE CORAL PER BACKGROUND: ink. AMENDED 2026-09-20.
  *
- *     Two coral values rendered on ink: --coral (#D64A1E, 4.47:1) on headline
- *     accents, and --coral-on-ink (#E8734A, 6.42:1) on eyebrows, numerals and
- *     links. Founder preference is the DEEPER value, used wherever it clears
- *     AA for the size carrying it.
+ *     G3 as first shipped kept TWO corals on ink, split by size: --coral-deep
+ *     (3.23:1) on display runs, clearing the 3:1 large bar and missing the
+ *     4.5:1 small bar, and --coral-on-ink (6.42:1) on everything under 24px.
+ *     The reasoning was that the deeper value should be used wherever it
+ *     passes for the size carrying it.
  *
- *     Measured against ink, --coral-deep (#B23A14) is 3.23:1. That clears the
- *     3:1 bar for large text and misses the 4.5:1 bar for small text, and it
- *     is not close. So the deeper value ships on every large run, and small
- *     runs keep --coral-on-ink, which passes at 6.42:1.
+ *     Founder decision, 2026-09-20: one coral on ink, and it is the value that
+ *     passes at BOTH bars. Every run below moves from --coral-deep to
+ *     --coral-on-ink, so ink carries a single coral at 6.42:1 regardless of
+ *     size and the size-split disappears. The earlier note here claimed "one
+ *     coral per background" and "use the deeper value wherever it passes"
+ *     could not both be honoured on ink. That was wrong: it treated DEEPER as
+ *     the goal rather than ONE. Only one of the two is a rule about the
+ *     design; the other was a preference.
  *
- *     This does NOT reduce ink to one coral, and it cannot: the instruction
- *     "one coral per background" and the instruction "use the deeper value
- *     wherever it passes AA" point in opposite directions on ink, and the
- *     second one wins because shipping a known contrast failure is not an
- *     option. Ink therefore carries two values by size, not by whim — deep on
- *     display text, --coral-on-ink on anything under 24px. */
+ *     The exchange is not symmetric and this value must not travel. On ink,
+ *     --coral-on-ink is 6.42:1 and --coral-deep 3.23:1. On cream those invert
+ *     hard — --coral-on-ink is 2.81:1 (2.57:1 on cream-2), below even the
+ *     large bar. It belongs on ink and nowhere else. */
 .blk--ink :is(h1, h2, h3) :is(.u-1, .hl, .hl-on-ink),
 .u-block--ink :is(h1, h2, h3) :is(.u-1, .hl, .hl-on-ink),
 .block--ink :is(h1, h2, h3) :is(.u-1, .hl, .hl-on-ink),
 .blk--ink .cn, .u-block--ink .cn, .blk--ink .em, .u-block--ink .em,
-/* The page title band is ink on almost every route, and its accent was the
-   last large coral run still at --coral. Leaving it there would have kept two
-   display corals on ink for a new reason — hero versus section — which is the
-   thing G3 exists to stop. On the few non-ink title bands --coral-deep is
-   5.60:1, so the same rule is safe there. */
+/* The page title band is ink on 23 of the 24 routes that render one. */
 .titleband h1 :is(.u-1, .hl, em),
 /* Column headings inside an ink band: 40px/900 on /movement/. */
 .blk--ink .path .p h3, .u-block--ink .path .p h3 {
+  color: var(--coral-on-ink) !important;
+}
+
+/* 79a. The one title band that is NOT ink. /accessibility/ is a repo-only
+ *      route (CANVAS-SYNC 14) and the export defines no .titleband background
+ *      for it, so it renders on cream. It carries no accent today — its h1 is
+ *      plain text — so the rule above matches nothing there, and this guard
+ *      matches nothing either. It is here because the selector above is scoped
+ *      by COMPONENT, not by ground: the moment an accent is added to a non-ink
+ *      title band it would ship --coral-on-ink at 2.81:1 on cream. Deep is
+ *      5.59:1 there. */
+body[data-page="accessibility"] .titleband h1 :is(.u-1, .hl, em) {
   color: var(--coral-deep) !important;
 }
 
