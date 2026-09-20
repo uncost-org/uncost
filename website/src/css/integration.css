@@ -633,7 +633,9 @@ body[data-page="case"] .cards { grid-template-columns: repeat(2, 1fr); }
                 .tiers, .parts4, .rule3, .focus3, .runs, .asks, .happens, .prin,
                 .ways, .next, .fund, .rel, .basket, .conftable, .vhist, .mdrawer,
                 .scope, .loop, .evd-empty, table)) p {
-  max-width: 64ch !important;
+  max-width: 728px !important   /* G2: absolute, not ch — a ch measure is a
+     different width at every font-size, which is how one rule produced 565px
+     at 14px and 727px at 16px and still looked like one measure in the CSS */;
 }
 
 /* 58 — R5 TABLE RULE (new). The sector "04 · Related projects" Ledger (`.lg`)
@@ -1203,7 +1205,12 @@ h2.sec, .blk h2.sec, h2.u-146, h2.u-38 {
  *     measure applies to running text, not to layout. */
 .blk > p, .blk > .lead, section > p.lead, section > p.u-11,
 .introband p, .faqsec .a {
-  max-width: 728px;
+  /* !important because the .u-* layer declares its own measures that way, and
+     five paragraphs kept them: 565 (.u-43), 607 (.u-155), 646 (.u-10), 760
+     (.u-137) and 795 (.u-130). One measure means one measure. A paragraph in
+     a container narrower than this still renders narrower — the cap is a
+     ceiling, not a width. */
+  max-width: 728px !important;
 }
 
 /* 79. G3 — ONE CORAL PER BACKGROUND: ink.
