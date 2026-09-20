@@ -42,7 +42,6 @@ import argparse
 import collections
 import http.server
 import json
-import os
 import pathlib
 import shutil
 import socketserver
@@ -365,10 +364,6 @@ def same_px(a, b):
     return delta(a, b) <= SAME_PIXEL
 
 
-def read_column(px, x, height):
-    return [px[x, j] for j in range(height)]
-
-
 def column_signature(col, palette):
     """What is painted between the two flat backgrounds in this column?
 
@@ -408,6 +403,13 @@ def column_signature(col, palette):
     return tuple(lines)
 
 
+# Sampling depths tried, deepest first. A band whose own content starts close
+# below a boundary (a card grid, a bordered list) has no flat colour 24px down,
+# but it does at 12 or 8. Backing off is how a reading gets made instead of
+# shrugged at; the deepest one that reads cleanly is the one used.
+SAMPLE_DEPTHS = (24, 16, 12, 8)
+
+
 def pixel_verdict(shot):
     """Modal painted signature across clean columns, or (None, reason)."""
     if shot is None:
@@ -417,24 +419,40 @@ def pixel_verdict(shot):
     path = pathlib.Path(shot["file"])
     if not path.exists():
         return None, "strip missing on disk"
+    palette = [CORAL, INK, WHEAT]
+    tried = []
     with Image.open(path) as im:
         im = im.convert("RGB")
         w, h = im.size
         px = im.load()
-        palette = [CORAL, INK, WHEAT]
-        sigs = []
-        for x in range(2, max(3, w - 2), COLUMN_STEP):
-            sig = column_signature(read_column(px, x, h), palette)
-            if sig is not None:
-                sigs.append(sig)
-    if len(sigs) < MIN_CLEAN_COLUMNS:
-        return None, "only %d clean pixel columns (need %d)" % (len(sigs), MIN_CLEAN_COLUMNS)
-    counts = collections.Counter(sigs)
-    sig, n = counts.most_common(1)[0]
-    if n / len(sigs) < MODAL_SHARE:
-        return None, "no modal signature (%d columns, best %d: %s)" % (
-            len(sigs), n, counts.most_common(3))
-    return {"lines": sig, "columns": len(sigs), "share": n / len(sigs)}, None
+        br = shot["boundaryRow"]
+        xs = list(range(2, max(3, w - 2), COLUMN_STEP))
+        seen = set()
+        for depth in SAMPLE_DEPTHS:
+            up, down = min(depth, br), min(depth, h - br)
+            if up < 4 or down < 4 or (up, down) in seen:
+                continue
+            seen.add((up, down))
+            sigs = []
+            for x in xs:
+                col = [px[x, j] for j in range(br - up, br + down)]
+                sig = column_signature(col, palette)
+                if sig is not None:
+                    sigs.append(sig)
+            if len(sigs) < MIN_CLEAN_COLUMNS:
+                tried.append("%dpx: only %d clean columns" % (depth, len(sigs)))
+                continue
+            counts = collections.Counter(sigs)
+            sig, n = counts.most_common(1)[0]
+            if n / len(sigs) < MODAL_SHARE:
+                tried.append("%dpx: no modal signature of %d columns (%s)" % (
+                    depth, len(sigs), counts.most_common(3)))
+                continue
+            return {"lines": sig, "columns": len(sigs), "share": n / len(sigs),
+                    "depth": depth}, None
+    if not tried:
+        tried.append("strip too short to sample at any depth")
+    return None, "no clean reading at any depth — " + "; ".join(tried)
 
 
 # ============================================================================
