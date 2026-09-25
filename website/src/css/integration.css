@@ -600,7 +600,7 @@ body[data-page="case"] .cards { grid-template-columns: repeat(2, 1fr); }
 .cards > .card { min-width: 0; }
 
 /* P2 — accent on an ink band uses the on-ink coral, not --coral-deep. */
-.hl-on-ink { color: var(--coral-on-ink); }
+.hl-on-ink { color: var(--coral); }  /* C2: one coral on ink */
 
 /* 57 — R4 PROSE-BAND RULE (new). A text-only band — eyebrow + headline + body,
  *      no grid or table — uses one style everywhere: the headline at the size
@@ -852,10 +852,14 @@ body[data-page="sectors-leisure"] { --gp: 0.1701; }
 .u-102, .u-73, .u-120, .u-50, .echo,
 .blk b, .block b, .pol-body .num { color: var(--coral-deep) !important; }
 
+/* C2, 2026-09-25: --coral, at every size on ink. C1 moved --ink to #0A0A0A,
+ * where --coral measures 4.58:1 — over the 4.5 small-text bar — so ink no
+ * longer needs a second, lighter coral for small runs. One value now covers
+ * eyebrows, numerals and display accents alike. */
 .blk--ink :is(.u-1,.num,.n,.cn,.pn,.eq,.go,.tag,.eyebrow,.when,.idx,b),
 .u-block--ink :is(.u-1,.num,.n,.cn,.pn,.eq,.go,.tag,.eyebrow,.when,.idx,b),
 .block--ink :is(.u-1,.num,.n,.cn,.pn,.eq,.go,.tag,.eyebrow,.when,.idx,b),
-.blk--ink .u-56, .u-block--ink .u-56 { color: var(--coral-on-ink) !important; }
+.blk--ink .u-56, .u-block--ink .u-56 { color: var(--coral) !important; }
 
 .blk--coral :is(.u-1,.num,.n,.cn,.pn,.eq,.go,.tag,.eyebrow,.when,.idx,b),
 .hero.blk--coral :is(.n,.eq,b) { color: var(--ink) !important; }
@@ -918,7 +922,20 @@ body[data-page^="sectors-"] #evidence .eyebrow { color: var(--coral-deep) !impor
 .steps6 :is(.n,.eq,b), .step6 :is(.n,.eq,b) { color: var(--ink) !important; }
 .u-124 :is(.eyebrow,.go,.tag,b) { color: var(--ink) !important; }
 b, .b { color: var(--coral-deep) !important; }
-.blk--ink b, .u-block--ink b, .block--ink b { color: var(--coral-on-ink) !important; }
+.blk--ink b, .u-block--ink b, .block--ink b { color: var(--coral) !important; }  /* C2 */
+
+/* C2 — the export's own ink text rules still name the retired token, and they
+ * are not reached by the class list above because they select bare <a>:
+ *   sections.css  .blk--ink a:not(.u-btn)      { color: var(--coral-on-ink) }
+ *   sections.css  .blk--ink .eyebrow, .fact .src b
+ *   components.css .site-foot .foot-col a:hover { color: var(--coral-on-ink) }
+ * Retiring the token from TEXT means overriding these too, or ink links keep
+ * rendering the old value. --coral is 4.58:1 on ink at any size.
+ * Focus rings keep --coral-on-ink: outline-color is not text, and a ring wants
+ * the lighter value against the band. */
+.blk--ink a:not(.u-btn), .u-block--ink a:not(.u-btn), .block--ink a:not(.u-btn),
+.blk--ink .plan, .block--ink .plan, .fact .src b,
+.site-foot .foot-col a:hover { color: var(--coral) !important; }
 .sector-head :is(b,.nb), .sector-num b { color: var(--ink) !important; }
 [class*="coral"] :is(.eq,.pid), .hero :is(.eq,.pid) { color: var(--ink) !important; }
 .p-head .pid, .p-meta .pid { color: var(--ink) !important; }
@@ -1213,27 +1230,26 @@ h2.sec, .blk h2.sec, h2.u-146, h2.u-38 {
   max-width: 728px !important;
 }
 
-/* 79. G3 — ONE CORAL PER BACKGROUND: ink. AMENDED 2026-09-20.
+/* 79. ONE CORAL ON INK. G3 (2026-09-19), amended 2026-09-20, settled by C2
+ *     on 2026-09-25.
  *
- *     G3 as first shipped kept TWO corals on ink, split by size: --coral-deep
- *     (3.23:1) on display runs, clearing the 3:1 large bar and missing the
- *     4.5:1 small bar, and --coral-on-ink (6.42:1) on everything under 24px.
- *     The reasoning was that the deeper value should be used wherever it
- *     passes for the size carrying it.
+ *     The history is worth keeping because the rule changed twice for the same
+ *     reason. G3 first shipped TWO corals on ink split by size: --coral-deep
+ *     on display runs (3.23:1, clearing the 3:1 large bar and missing the 4.5
+ *     small bar) and --coral-on-ink below 24px. The amendment collapsed that to
+ *     --coral-on-ink everywhere on ink (6.42:1). Both versions were working
+ *     around the same fact: on the export's #0E0E0C, brand --coral measured
+ *     4.47:1 and could not be used for small text.
  *
- *     Founder decision, 2026-09-20: one coral on ink, and it is the value that
- *     passes at BOTH bars. Every run below moves from --coral-deep to
- *     --coral-on-ink, so ink carries a single coral at 6.42:1 regardless of
- *     size and the size-split disappears. The earlier note here claimed "one
- *     coral per background" and "use the deeper value wherever it passes"
- *     could not both be honoured on ink. That was wrong: it treated DEEPER as
- *     the goal rather than ONE. Only one of the two is a rule about the
- *     design; the other was a preference.
+ *     C1 removed the fact. Ink is #0A0A0A, where --coral is 4.58:1 and clears
+ *     the small bar, so the workaround is no longer needed: ink now carries
+ *     the BRAND coral at every size, like every other ground carries its own
+ *     one value. --coral-on-ink is retired from text entirely.
  *
- *     The exchange is not symmetric and this value must not travel. On ink,
- *     --coral-on-ink is 6.42:1 and --coral-deep 3.23:1. On cream those invert
- *     hard — --coral-on-ink is 2.81:1 (2.57:1 on cream-2), below even the
- *     large bar. It belongs on ink and nowhere else. */
+ *     What has not changed is that a value chosen for ink must not travel.
+ *     --coral is 4.58 on ink but 4.04 on cream and 3.70 on cream2 — fine for
+ *     display type, under the bar for small. That is why the light grounds
+ *     keep the display/small split in item 68 and only ink is one value. */
 .blk--ink :is(h1, h2, h3) :is(.u-1, .hl, .hl-on-ink),
 .u-block--ink :is(h1, h2, h3) :is(.u-1, .hl, .hl-on-ink),
 .block--ink :is(h1, h2, h3) :is(.u-1, .hl, .hl-on-ink),
@@ -1242,7 +1258,7 @@ h2.sec, .blk h2.sec, h2.u-146, h2.u-38 {
 .titleband h1 :is(.u-1, .hl, em),
 /* Column headings inside an ink band: 40px/900 on /movement/. */
 .blk--ink .path .p h3, .u-block--ink .path .p h3 {
-  color: var(--coral-on-ink) !important;
+  color: var(--coral) !important;
 }
 
 /* 79a. The one title band that is NOT ink. /accessibility/ is a repo-only
@@ -1251,8 +1267,9 @@ h2.sec, .blk h2.sec, h2.u-146, h2.u-38 {
  *      plain text — so the rule above matches nothing there, and this guard
  *      matches nothing either. It is here because the selector above is scoped
  *      by COMPONENT, not by ground: the moment an accent is added to a non-ink
- *      title band it would ship --coral-on-ink at 2.81:1 on cream. Deep is
- *      5.59:1 there. */
+ *      title band it would ship --coral at 4.04:1 on cream, which is under the
+ *      4.5 bar for anything but display type. --coral-deep is 5.59:1 there and
+ *      is safe whatever size the accent turns out to be. */
 body[data-page="accessibility"] .titleband h1 :is(.u-1, .hl, em) {
   color: var(--coral-deep) !important;
 }
