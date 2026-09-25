@@ -2225,3 +2225,39 @@ body[data-page="about"] main > div:not([class]) > .step:last-child { border-bott
  *        component ends the page, the footer does not draw its own. Same
  *        component list as item 67. Only /contact/ matches today. */
 main:has(> :is(.tiers, .ways, .next, .parts4, .cwrap, .sgrid):last-child) + .ft { border-top: 0 !important; }
+
+/* 98. F2 — THE BODY MEASURES C4 DID NOT REACH.
+ *     tools/type_audit.py reported 77 prose bands whose headline and body
+ *     wrap at different points (85 after F1 scaled nine more headlines). C4
+ *     moved every section headline to min(66vw, 960px), but its body rule is
+ *     gated by R4's `:not(:has(.scope, .evd-empty, .fund, …))` grid list, so
+ *     bodies in those bands kept the export's `ch` caps:
+ *       sector #scope      p.u-139              547.6px  (15 routes)
+ *       sector #evidence   .evd-empty > p       625.8px  (15 routes)
+ *       project Funding    .fund > .fb > p      704 / 586.7px  (7 routes)
+ *       "on the way" card  .sys .card .bd > p   524.9px  (7 routes)
+ *       /pledge/thanks/    .share > p.sub       547.6px
+ *     and on /assembly/ two containers were narrower than the wrap point:
+ *       .bound (max 860px) held its body at 800px; the "A look ahead"
+ *       headline shared a flex row with a status chip and wrapped at 748px.
+ *
+ *     Bodies take the one wrap point. The three BOXED bodies (.fund,
+ *     .evd-empty, .bound) widen by exactly their own padding + border, so
+ *     their text can reach that point too — at 390 each box is already
+ *     container-width and the text wraps at 66vw with the headline. The
+ *     preview headline's column grows to fill its row, so the chip sits at
+ *     the row's end instead of squeezing the headline. The /pledge/thanks/
+ *     share block is centred text, so its now-capped headline and body are
+ *     centred as blocks too. */
+body[data-page^="sectors-"] #scope > p,
+body[data-page^="sectors-"] #evidence .evd-empty > p,
+body[data-page^="projects-"] .fund > .fb > p,
+main > .sys:not(:first-child) .card .bd > p,
+body[data-page="pledge-thanks"] .share > p.sub,
+body[data-page="assembly"] .bound > p { max-width: min(66vw, 960px) !important; }
+
+body[data-page^="sectors-"] #evidence .evd-empty { max-width: calc(min(66vw, 960px) + 76px); }  /* 2px + 36px each side */
+body[data-page^="projects-"] .fund { max-width: calc(min(66vw, 960px) + 52px); }              /* 2px + 24px each side */
+body[data-page="assembly"] .bound { max-width: calc(min(66vw, 960px) + 60px); }               /* 2px + 28px each side */
+body[data-page="assembly"] .u-20 > div:first-child { flex: 1 1 auto; }
+body[data-page="pledge-thanks"] .share > :is(h2, p.sub) { margin-left: auto; margin-right: auto; }
