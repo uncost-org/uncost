@@ -2175,3 +2175,44 @@ body[data-page="treasury"] .kpis { gap: 2px; background: var(--ink); }
 body[data-page="treasury"] .kpis .kpi { border: 0 !important; }
 
 body[data-page="error-404"] .e-wrap { border: 2px solid var(--ink); margin-top: -2px; }
+
+/* 97. C13 — THE REMAINING BAND-AUDIT PROBLEMS.
+ *     tools/band_audit.py on the unchanged baseline reported 23 (once its own
+ *     stale-ink and 304 defects were fixed). C11 cleared the six on /faq/'s
+ *     48px gap; C14's frames cleared the six on /404 (e-wrap | e-quick is now
+ *     a framed edge, R2) and the six on /treasury/ (the kpis band is framed
+ *     and the panel below no longer draws its own top). The rest:
+ *
+ *     a. /about/ Mechanism -> Principles, all widths: the last step carries
+ *        `.u-2`'s 2px ink bottom border (the export's, !important), and the
+ *        ink band below draws R1's 4px coral top — two lines. The step list
+ *        is a band body that stays unframed (D3), so its trailing line is not
+ *        a frame edge; R1's coral rule is the boundary and the step's line
+ *        goes. */
+body[data-page="about"] main > div:not([class]) > .step:last-child { border-bottom: 0 !important; }
+
+/*     b. /about/ "01-04" grid at 390: every cell keeps its divider borders on
+ *        the grid's OUTER edges once the grid collapses, so they stack on the
+ *        item-54 frame — 4px of ink where the frame is 2px (the audit read
+ *        the bottom; the right edge stacks the same way, unaudited because it
+ *        is vertical). Item 54 only zeroed the last cell's right edge, which
+ *        is correct at four columns and nowhere else. Dividers now run only
+ *        BETWEEN cells at every column count the export uses. */
+@media (max-width: 1020px) and (min-width: 561px) {
+  body[data-page="about"] .parts4 > .part4:nth-child(2n) { border-right: 0; }
+  body[data-page="about"] .parts4 > .part4:nth-last-child(-n+2) { border-bottom: 0; }
+}
+@media (max-width: 560px) {
+  body[data-page="about"] .parts4 > .part4 { border-right: 0; }
+  body[data-page="about"] .parts4 > .part4:last-child { border-bottom: 0; }
+}
+
+/*     c. /contact/ — the coral rule stacked under the framed panel. `.cwrap`
+ *        is the LAST thing in <main>, and the footer draws a 4px coral top on
+ *        every page, so the panel's 2px ink frame edge sat on a coral line.
+ *        No committed audit sees this seam: band_audit and pixel_validator
+ *        both stop at <main>'s last child. R2 says the frame edge is the
+ *        boundary, so item 67's rule extends past <main>: when a framed band
+ *        component ends the page, the footer does not draw its own. Same
+ *        component list as item 67. Only /contact/ matches today. */
+main:has(> :is(.tiers, .ways, .next, .parts4, .cwrap, .sgrid):last-child) + .ft { border-top: 0 !important; }
