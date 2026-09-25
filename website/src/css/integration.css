@@ -925,7 +925,12 @@ h1 .hl, h2 .hl, h3 .hl { color: var(--coral) !important; }
 .block--ink :is(h1,h2,h3) .u-1 { color: var(--coral) !important; }
 
 /* 3. Wheat is the named exception: --coral is 2.34 there, below even the
- *    large bar, so display accents keep --coral-deep. */
+ *    large bar, so display accents keep --coral-deep.
+ *    D4, founder decision 2026-09-25, option (a): this stands as the ONE
+ *    named exception to the one-coral rule. Accent headlines on wheat keep
+ *    --coral-deep at 3.25:1 — headings only, so always large text against a
+ *    3.0 bar. Measured: homepage "keep people alive" and /movement/ "price
+ *    tag", #B23A14 on #E8B84A at 56px (1440) and 34px (390). CANVAS-SYNC 83. */
 .blk--wheat :is(h1,h2,h3) .u-1, .u-87 :is(h1,h2,h3) .u-1,
 .blk--wheat .hl, .u-87 .hl,
 .blk--wheat .plus, .u-87 .plus { color: var(--coral-deep) !important; }
