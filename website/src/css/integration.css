@@ -2053,3 +2053,19 @@ body[data-page="index"] .hero-grid h1 .u-50 { margin-top: .35em; }
   border: 1.5px solid var(--ink) !important;
 }
 .cards .card .foot .row span.m .k { color: #5A574F; }
+
+/* 91. C8 — NAV DROPDOWN ILLUSTRATIONS: CENTRED, ~70% OF THE PANEL.
+ *     The export floors each illustration (`align-items:flex-end`) and caps it
+ *     at 140px. Measured on all four panels at 1440 before this change: panel
+ *     268px, artwork drawn 105x140 — 52.2% of the panel's height and 54px below
+ *     its centre. Now centred on both axes in the right-hand column and sized
+ *     to 70% of the panel's height. Vertical padding goes to zero so the 70%
+ *     is of the panel itself, not of a padded box inside it; the column is a
+ *     stretched grid item, so the percentage resolves against the row height
+ *     and follows the panel if a longer panel ever grows it. `contain: size`
+ *     stops the loop the other way: without it the image's own height fed the
+ *     row's auto height and the panel grew 268 -> 304px to fit a picture sized
+ *     from the panel. The text columns set the height; the picture follows.
+ *     Item 82's equal panel heights still hold, so all four land on one Y. */
+.hd-mega .mg-pic { align-items: center; justify-content: center; padding: 0 10px; contain: size; }
+.hd-mega .mg-pic img { align-self: center; height: 70%; max-height: none; width: auto; max-width: 100%; }
