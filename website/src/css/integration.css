@@ -579,7 +579,7 @@ body[data-page="sectors"] .sgrid { border-top: 2px solid var(--ink) !important; 
   color: var(--ink);
   letter-spacing: -.015em;
 }
-.cards .card .claim .echo { color: var(--coral-deep); }
+.cards .card .claim .echo { color: var(--coral-deep); }  /* superseded by E1, item 85b */
 /* SOURCE eyebrow above the publisher. */
 .cards .card .src-eyebrow {
   font-family: var(--font-body);
@@ -895,7 +895,7 @@ body[data-page="sectors-leisure"] { --gp: 0.1701; }
 /* 1. Per-band default for every coral-family token. */
 .u-1, .num, .n, .cn, .pn, .eq, .go, .tag, .pd, .free, .when, .date, .mail,
 .src-num, .idx, .pid, .eyebrow, .plus, .u-56, .u-19, .u-132, .u-70, .u-3,
-.u-102, .u-73, .u-120, .u-50, .echo,
+.u-102, .u-73, .u-120, .u-50,
 .blk b, .block b, .pol-body .num { color: var(--coral-deep) !important; }
 
 /* C2, 2026-09-25: --coral, at every size on ink. C1 moved --ink to #0A0A0A,
@@ -1823,8 +1823,17 @@ body[data-page="case"] .cards .card:nth-child(4n+3) { --cell: var(--cream-2); --
  *     bold, so it clears the 3:1 large-text bar at --coral. Two shades of the
  *     same colour on one card read as an inconsistency, not a distinction.
  *     The echo is explicitly bold so the rule still holds at the narrow end,
- *     where the caption scales to 20px — bold at 20px is still large text. */
-.cards .card .claim .echo { color: var(--coral); font-weight: 700; }
+ *     where the caption scales to 20px — bold at 20px is still large text.
+ *
+ *     E1, 2026-09-25: this rule was written and never took effect. `.echo`
+ *     also sat in C1's per-band default list (item 68, rule 1), which is
+ *     `!important`, so every echo kept rendering --coral-deep beside a --coral
+ *     numeral. Measured on the rendered page, every echo is 31px/700 at 1440
+ *     and 20px/700 at 390 — WCAG large text at both ends — so `.echo` leaves
+ *     that list and this rule carries `!important` to hold against the next
+ *     per-band list. On the cells it sits on: --coral 4.04 cream / 3.70
+ *     cream2, against a 3.0 bar. */
+.cards .card .claim .echo { color: var(--coral) !important; font-weight: 700; }
 
 /*  c. THE NUMERAL:CAPTION RATIO HOLDS AT EVERY WIDTH.
  *     The numeral scaled with the viewport and the caption did not, so the
