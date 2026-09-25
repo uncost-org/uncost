@@ -268,6 +268,13 @@ SECTION_EXEMPTIONS = [
     ("pledge-thanks", "Share",
      "F1: \"Now make it count double.\" heads its own band and takes the one "
      "section-headline scale (was 22px). F2 aligns its body. CANVAS-SYNC item 95."),
+    ("contact", "Contact",
+     "formsOpen is false (CHECKLIST H: no page may ship a live form), so the "
+     "export's Name/Email/Phone/Message form is replaced by the forms-closed "
+     "partial — 'The contact form opens at launch… email works' — restated by "
+     "tools/post_patch_pages.py. Measured 35.73% at 390 on the unchanged "
+     "2e44290 build as well: it was the gate's one standing FAIL, not a change "
+     "from this batch. The email, social and GitHub blocks above it match."),
 ]
 
 
