@@ -197,31 +197,63 @@ const IN_PAGE = (rootSel) => {
     // Walk the ancestor chain compositing backgrounds until opaque. A layer we
     // cannot parse (gradient, image) is reported as unresolved rather than
     // guessed at.
-    let acc = [0, 0, 0, 0];
+    // A GRADIENT layer is judged at every one of its colour stops: each stop
+    // is a colour some of the text can sit on, so each becomes a candidate
+    // ground and the worst one decides. That is conservative — it can only
+    // fail text a stop-by-stop reading would pass, never the reverse. An
+    // image (url(), image-set, cross-fade) has no stops to read and stays
+    // unresolved, which fails.
+    const GRAD = /^(repeating-)?(linear|radial|conic)-gradient\(/;
+    let accs = [[0, 0, 0, 0]];
     let unresolved = null;
     let node = el;
+    const opaque = () => accs.every((a) => a[3] >= 0.999);
     while (node && node !== document.documentElement.parentNode) {
       const ns = getComputedStyle(node);
       if (ns.backgroundImage && ns.backgroundImage !== "none") {
-        unresolved = "background-image:" + ns.backgroundImage.slice(0, 60);
-        break;
+        // Split into layers on TOP-LEVEL commas only: a gradient's own
+        // arguments contain commas, and so do the rgba() stops inside them.
+        const layers = [];
+        { let depth = 0, cur = "";
+          for (const ch of ns.backgroundImage) {
+            if (ch === "(") depth++;
+            if (ch === ")") depth--;
+            if (ch === "," && depth === 0) { layers.push(cur.trim()); cur = ""; } else cur += ch;
+          }
+          layers.push(cur.trim()); }
+        const stops = [];
+        for (const layer of layers) {
+          if (!GRAD.test(layer) || /url\(|image-set\(|cross-fade\(/.test(layer)) { unresolved = "background-image:" + layer.slice(0, 60); break; }
+          for (const c of layer.match(/rgba?\([^)]*\)/g) || []) {
+            const v = parse(c);
+            if (!v) { unresolved = "gradient stop:" + c; break; }
+            stops.push(v);
+          }
+          if (unresolved) break;
+        }
+        if (unresolved) break;
+        if (!stops.length) { unresolved = "gradient with no readable stops"; break; }
+        const next = [];
+        for (const a of accs) for (const st of stops) next.push(over(a, st));
+        accs = next;
       }
       const bg = parse(ns.backgroundColor);
       if (bg === undefined) { unresolved = "background-color:" + ns.backgroundColor; break; }
-      if (bg) acc = over(acc, bg);
-      if (acc[3] >= 0.999) break;
+      if (bg) accs = accs.map((a) => over(a, bg));
+      if (opaque()) break;
       node = node.parentElement;
     }
-    if (!unresolved && acc[3] < 0.999) {
+    if (!unresolved && !opaque()) {
       const hb = parse(getComputedStyle(document.documentElement).backgroundColor);
-      if (hb && hb[3] > 0) acc = over(acc, hb);
+      if (hb && hb[3] > 0) accs = accs.map((a) => over(a, hb));
     }
     out.push({
       sel: sel(el),
       text: (el.textContent || "").trim().slice(0, 40),
       fg: fg === undefined ? null : fg,
       fgRaw: cs.color,
-      bg: unresolved ? null : acc,
+      bg: unresolved ? null : accs[0],
+      bgs: unresolved || accs.length < 2 ? null : accs,
       unresolved,
       px: parseFloat(cs.fontSize),
       weight: parseInt(cs.fontWeight, 10) || 400,
@@ -402,11 +434,24 @@ def evaluate(payload, exemptions=None):
                 errors.append(f"UNRESOLVED {where}: background never reached an "
                               f"opaque value (alpha={bg[3] if bg else 'n/a'})")
                 continue
-            fg_rgb = r["fg"][:3]
-            # Text alpha < 1 composites over its own background.
-            if r["fg"][3] < 0.999:
-                a = r["fg"][3]
-                fg_rgb = [fg_rgb[i] * a + bg[i] * (1 - a) for i in range(3)]
+            # A gradient ground carries several candidate grounds; the worst one
+            # decides, and it is the one reported.
+            cands = [c for c in (r.get("bgs") or [bg])]
+            if any(c[3] < 0.999 for c in cands):
+                unresolved += 1
+                errors.append(f"UNRESOLVED {where}: a gradient stop never reached an "
+                              f"opaque ground")
+                continue
+
+            def _fg_over(ground):
+                f = r["fg"][:3]
+                # Text alpha < 1 composites over its own background.
+                if r["fg"][3] < 0.999:
+                    a = r["fg"][3]
+                    f = [f[i] * a + ground[i] * (1 - a) for i in range(3)]
+                return f
+            bg = min(cands, key=lambda c: ratio(_fg_over(c), c[:3]))
+            fg_rgb = _fg_over(bg)
             got = ratio(fg_rgb, bg[:3])
             need = required(r["px"], r["weight"])
             checked += 1
@@ -517,10 +562,25 @@ BAD_HOVER = """<!doctype html><meta charset=utf-8><title>bad hover</title>
 .cw .meta{font-size:11px;color:#B23A14}</style>
 <body><div class=cw><span class=meta>publisher and period, 3.25:1 on hover</span></div></body>"""
 
-# An unresolvable ground. Must be an ERROR, not a silent pass.
-BAD_UNRESOLVED = """<!doctype html><meta charset=utf-8><title>gradient</title>
+# An unresolvable ground: an IMAGE has no colour stops to read. Must be an
+# ERROR, not a silent pass.
+BAD_UNRESOLVED = """<!doctype html><meta charset=utf-8><title>image ground</title>
+<style>body{background:#FAF7F0 url(data:image/gif;base64,R0lGODlhAQABAAAAACw=);color:#B23A14;font:13px sans-serif}</style>
+<body><p>ground is an image — cannot be judged</p></body>"""
+
+# A gradient is judged at its WORST stop. On the cream stop this text passes
+# (5.59); on the wheat stop it is 3.25. An audit that read the first stop, or
+# averaged, would pass it.
+BAD_GRADIENT_WORST_STOP = """<!doctype html><meta charset=utf-8><title>gradient</title>
 <style>body{background:linear-gradient(#FAF7F0,#E8B84A);color:#B23A14;font:13px sans-serif}</style>
-<body><p>ground is a gradient — cannot be judged</p></body>"""
+<body><p>passes on the cream stop, fails on the wheat stop</p></body>"""
+
+# The /receipts/ "Illustrative only" hatch: ink on a 12%-coral stripe over
+# cream. Every stop clears 4.5, so it must PASS — resolved, not skipped.
+GOOD_GRADIENT_HATCH = """<!doctype html><meta charset=utf-8><title>hatch</title>
+<style>body{background:#FAF7F0;font:11px sans-serif}
+.h{color:#0A0A0A;font-weight:700;background:repeating-linear-gradient(45deg,transparent,transparent 5px,rgba(214,74,30,.12) 5px,rgba(214,74,30,.12) 10px)}</style>
+<body><span class=h>Illustrative only</span></body>"""
 
 # Alpha text over a light ground: 50% ink on cream is ~4.0:1, under the bar.
 BAD_ALPHA = """<!doctype html><meta charset=utf-8><title>alpha</title>
@@ -563,6 +623,8 @@ CASES = [
     ("bad-onink-on-cream.html", BAD_ONINK_ON_CREAM, False),
     ("bad-hover.html", BAD_HOVER, False),
     ("bad-unresolved-ground.html", BAD_UNRESOLVED, False),
+    ("bad-gradient-worst-stop.html", BAD_GRADIENT_WORST_STOP, False),
+    ("good-gradient-hatch.html", GOOD_GRADIENT_HATCH, True),
     ("bad-alpha-text.html", BAD_ALPHA, False),
     ("good-exempt.html", GOOD_EXEMPT, True),
     ("bad-exempt-lookalike.html", BAD_EXEMPT_LOOKALIKE, False),
@@ -622,14 +684,20 @@ def show(payload, needles):
             row = {"route": page["route"], "width": page["width"],
                    "state": page.get("state", "rest"), "sel": r["sel"],
                    "text": r["text"], "px": r["px"], "weight": r["weight"]}
-            if r.get("fg") and r.get("bg") and r["bg"][3] >= 0.999:
-                fg = r["fg"][:3]
-                if r["fg"][3] < 0.999:
-                    a = r["fg"][3]
-                    fg = [fg[i] * a + r["bg"][i] * (1 - a) for i in range(3)]
+            if r.get("fg") and r.get("bg") and all(c[3] >= 0.999 for c in (r.get("bgs") or [r["bg"]])):
+                def _fo(g):
+                    f = r["fg"][:3]
+                    if r["fg"][3] < 0.999:
+                        a = r["fg"][3]
+                        f = [f[i] * a + g[i] * (1 - a) for i in range(3)]
+                    return f
+                ground = min(r.get("bgs") or [r["bg"]], key=lambda g: ratio(_fo(g), g[:3]))
+                fg = _fo(ground)
                 row["fg"] = "#%02X%02X%02X" % tuple(int(round(c)) for c in fg)
-                row["bg"] = "#%02X%02X%02X" % tuple(int(round(c)) for c in r["bg"][:3])
-                row["ratio"] = round(ratio(fg, r["bg"][:3]), 2)
+                row["bg"] = "#%02X%02X%02X" % tuple(int(round(c)) for c in ground[:3])
+                row["ratio"] = round(ratio(fg, ground[:3]), 2)
+                if r.get("bgs"):
+                    row["ground"] = "worst of %d gradient-stop grounds" % len(r["bgs"])
                 row["required"] = required(r["px"], r["weight"])
             else:
                 row["unresolved"] = r.get("unresolved") or "no opaque ground"
