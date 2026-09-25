@@ -207,6 +207,18 @@ verification behind it, so:
    session opened, the scripts were gone and not one of those results could be
    reproduced, re-run, or audited. An uncommitted check produces a claim with
    nothing behind it.
+5. **Never run `git add -A` or `git add .` while any sub-agent stream is
+   running. Stage explicit paths only.** Adopted 2026-09-25. A blanket stage
+   cannot tell your work from a concurrent stream's half-written files, so it
+   sweeps them into a commit whose message describes something else. This has
+   mislabelled a commit twice: once in Batch T, where an in-progress
+   `band_audit.py` draft was committed as part of the tooling batch and its
+   finished version had to follow in a separate commit, and once in Batch U,
+   where `git add -A` put the C16 search work and the C19 type audit inside a
+   commit whose message said only C15. Both were caught and split, but only
+   because someone looked; a mislabelled commit is not visible from its own
+   message. Stage the paths the item actually touches, and check `git status`
+   before committing, not after.
 
 This rule exists because four audits in this repository have passed over a real
 defect:
