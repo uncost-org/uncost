@@ -43,6 +43,7 @@ import collections
 import http.server
 import json
 import pathlib
+import re
 import shutil
 import socketserver
 import subprocess
@@ -64,10 +65,38 @@ PORT = 8199
 WIDTHS = (1440, 1290, 390)
 
 # --- the rule system's own constants -----------------------------------------
-CORAL = (0xD6, 0x4A, 0x1E)
-INK = (0x0E, 0x0E, 0x0C)
-WHEAT = (0xE8, 0xB8, 0x4A)
-RULE_ORDER = (("coral", CORAL), ("ink", INK), ("wheat", WHEAT))
+# The three R1 rule colours are READ from the stylesheet the pages are built
+# with, never written here. They used to be literals, and C1 (2026-09-25) moved
+# --ink from #0E0E0C to #0A0A0A: the site changed, this file did not, and every
+# ink rule on the site started failing as "wrong colour" against an ink value
+# the site no longer uses. A 4-point channel difference is invisible and was
+# still 150+ false findings. So the palette follows the tokens, and a token that
+# cannot be read is a hard failure, not a fallback to a remembered value.
+TOKENS_CSS = WEBSITE / "design-system" / "tokens.css"
+CORAL = INK = WHEAT = None
+RULE_ORDER = ()
+
+
+def load_palette(css_path):
+    """-> {'coral': rgb, 'ink': rgb, 'wheat': rgb} from `--name: #RRGGBB;`."""
+    text = pathlib.Path(css_path).read_text(encoding="utf-8")
+    out = {}
+    for name in ("coral", "ink", "wheat"):
+        m = re.search(r"--%s:\s*#([0-9A-Fa-f]{6})\s*;" % name, text)
+        if not m:
+            raise RuntimeError("cannot read --%s from %s — the R1 palette is "
+                               "unknown, so no boundary can be judged" % (name, css_path))
+        h = m.group(1)
+        out[name] = tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+    return out
+
+
+def set_palette(css_path):
+    global CORAL, INK, WHEAT, RULE_ORDER
+    pal = load_palette(css_path)
+    CORAL, INK, WHEAT = pal["coral"], pal["ink"], pal["wheat"]
+    RULE_ORDER = (("coral", CORAL), ("ink", INK), ("wheat", WHEAT))
+    return pal
 R1_RULE_PX = 4.0          # item 40: `border-top: 4px solid ...`
 # Two colours closer than this are not distinguishable as a line against each
 # other. #0E0E0C (ink) vs #1A1A17 (ink-2) is 12, and an ink rule on an ink-2
@@ -106,12 +135,19 @@ const GAP_EPS = job.gapEps, PAD = job.pad, MIN_PAD = job.minPad;
   });
   const page = await browser.newPage();
   await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "reduce" }]);
+  // Widths are the OUTER loop, so every route is revisited at 1290 and 390.
+  // http.server honours If-Modified-Since and answers the revisit 304, which
+  // is not res.ok(): every page after the first width was reported as "did
+  // not load" — 134 false findings out of 139 on the 2026-09-25 baseline. The
+  // other five Batch T tools already disable the cache and accept 304; this
+  // one never did.
+  await page.setCacheEnabled(false);
   const out = [];
   for (const width of job.widths) {
     await page.setViewport({ width, height: 1000, deviceScaleFactor: 1 });
     for (const route of job.routes) {
       const res = await page.goto(job.base + route, { waitUntil: "networkidle0", timeout: 60000 });
-      if (!res || !res.ok()) {
+      if (!res || !(res.ok() || res.status() === 304)) {
         out.push({ route, width, fetchError: `HTTP ${res ? res.status() : "no response"}` });
         continue;
       }
@@ -827,6 +863,9 @@ def selftest(port=PORT):
     if DIST.resolve() == resolved or DIST.resolve() in resolved.parents:
         return {"ok": False, "selftest_cases": 0,
                 "failures": ["refusing to run the selftest against the built site"]}
+    # The fixtures carry their own palette in band.css; the selftest never
+    # reads a tracked site source, tokens.css included.
+    set_palette(FIXTURES / "band.css")
     result = run_audit(FIXTURES, widths=(1440,), port=port)
     failures = []
     for route, expect, why in SELFTEST_CASES:
@@ -873,6 +912,12 @@ def main():
         print(json.dumps({"ok": False, "errors": [
             "built site not found at %s — run `cd website && npm run build`" % root],
             "counts": {"boundaries": 0, "problems": 1, "suppressed_by_frame": 0}}, indent=2))
+        return 1
+    try:
+        set_palette(TOKENS_CSS)
+    except (OSError, RuntimeError) as exc:
+        print(json.dumps({"ok": False, "errors": [str(exc)],
+                          "counts": {"boundaries": 0, "problems": 1, "suppressed_by_frame": 0}}, indent=2))
         return 1
     result = run_audit(root, port=args.port)
     out = report(result)
