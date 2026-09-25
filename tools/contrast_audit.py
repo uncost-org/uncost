@@ -112,6 +112,11 @@ EXEMPTIONS = [
      "drawn with ten U+2588 FULL BLOCK glyphs in ink on ink, 1.00:1 because it "
      "is meant to be unreadable. It carries no words, so no aria-label is "
      "needed to stop a screen reader speaking hidden text. CANVAS-SYNC 81."),
+    ("/", "span.u-51", "#E8B84A", "#FAF7F0",
+     "D5 (founder decision 2026-09-25): the homepage hero word \"Uncost\" keeps "
+     "--wheat #E8B84A on cream — a founder-accepted AA exception at 1.72:1 "
+     "against the 3.0 large-text bar (77.8px/700 at 1440, 38px/700 at 390). "
+     "CANVAS-SYNC 82."),
 ]
 
 
