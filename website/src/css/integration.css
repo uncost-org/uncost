@@ -1904,19 +1904,8 @@ body[data-page="case"] .cards .card:nth-child(4n+3) { --cell: var(--cream-2); --
  *
  *     Dates carry ONE hue for the field and lean on data-era only for weight,
  *     so recency is still visible and nothing is keyed to a literal year. */
-.cards .card .foot .row .m--date   { border-color: #6B3F6E; }
-.cards .card .foot .row .m--date .k   { color: #6B3F6E; }
-.cards .card .foot .row .m--scope  { border-color: #1F6F68; }
-.cards .card .foot .row .m--scope .k  { color: #1F6F68; }
-.cards .card .foot .row .m--region { border-color: #7A4A18; }
-.cards .card .foot .row .m--region .k { color: #7A4A18; }
 
-/* Recency, within the date hue: the current year is drawn firmly, last year
- * lighter, anything older lighter still. Computed at build time from
- * data-era, so no rule needs editing each January. */
-.cards .card .foot .row .m--date[data-era="current"] { border-width: 2.5px; }
-.cards .card .foot .row .m--date[data-era="prior"]   { border-width: 1.5px; }
-.cards .card .foot .row .m--date[data-era="older"]   { border-width: 1px; border-style: dashed; }
+/* (Variant 01's hue and recency-weight rules were removed by C7, item 90.) */
 
 /* 83. C17 — the measurement sectors' stop note.
  *
@@ -2035,3 +2024,32 @@ body[data-page="index"] .hero-grid h1 .u-50 { margin-top: .35em; }
  *     fill still carries the state. */
 :root { --status-rim: rgba(10,10,10,.18); }
 .status { border: 2px solid var(--status-rim) !important; }
+
+/* 90. C7 — FIGURE-CARD CHIP ROW: G5 VARIANT 05, INK BORDERS AT ONE WEIGHT.
+ *     Supersedes item 86 (variant 01), whose rules are removed above.
+ *
+ *     What variant 05 looked like is taken from the PNGs it was chosen from
+ *     (review/2026-09-19-chips/05-two-tone--*), read pixel by pixel, not from
+ *     the CSS the render injected. That CSS never took effect: its rules were
+ *     written at (0,5,0)/(0,6,0) and lost to item 85d's `span.m` and
+ *     `span.m .k` at (0,5,1)/(0,6,1). All four variant-05 PNGs contain ZERO
+ *     pixels of its violet #4A4A8C; variant 01's contains 2,512 of its plum
+ *     because its border rule carried an attribute selector and won. What the
+ *     founder chose from therefore shows:
+ *        labels   --fg-3 #5A574F on every chip
+ *        fills    the checkerboard's --cell-alt (#F2EDE1 on a cream cell)
+ *        borders  ink #0E0E0C on some chips, --fg-3 #5A574F on others
+ *     — and C7's amendment removes exactly the last line's inconsistency:
+ *     every metadata-chip border ink, one weight. 1.5px is the confidence
+ *     chip's weight too, so the whole row is one weight (Chrome snaps it to
+ *     one device pixel at 1x). The variant's intended colours (violet dates on
+ *     a tint, olive context) were never seen, so they are not shipped; they
+ *     are rendered correctly for review in review/2026-09-25-c7/.
+ *
+ *     Labels are pinned to the light-ground --fg-3 value: an ink band
+ *     redefines --fg-3 to #8E8B82, which is 2.92:1 on these cells (the
+ *     homepage's cards sit in one). #5A574F is 6.74 cream / 6.18 cream2. */
+.cards .card .foot .row span.m {
+  border: 1.5px solid var(--ink) !important;
+}
+.cards .card .foot .row span.m .k { color: #5A574F; }
