@@ -2261,3 +2261,24 @@ body[data-page^="projects-"] .fund { max-width: calc(min(66vw, 960px) + 52px); }
 body[data-page="assembly"] .bound { max-width: calc(min(66vw, 960px) + 60px); }               /* 2px + 28px each side */
 body[data-page="assembly"] .u-20 > div:first-child { flex: 1 1 auto; }
 body[data-page="pledge-thanks"] .share > :is(h2, p.sub) { margin-left: auto; margin-right: auto; }
+
+/* 99. CONTRAST RESIDUE — the last text runs under AA once D1–D5 were applied,
+ *     all found by tools/contrast_audit.py on the rendered site.
+ *
+ *     a. A figure card is a light surface wherever it sits. On the homepage
+ *        the cards sit in an ink band, and `.blk--ink` / `.u-block--ink`
+ *        redefine --fg, --fg-2 and --fg-3 for ink. Inside a cream card those
+ *        inherited values turned the SRC id and the SOURCE eyebrow #8E8B82:
+ *        3.18 on cream, 2.92 on cream-2 (12 runs). The card restores the
+ *        light-ground values of those three tokens (:root's own), so every
+ *        tertiary run in it reads as it does on /receipts/: 6.74 / 6.18. */
+.cards .card { --fg: var(--ink); --fg-2: #2A2A26; --fg-3: #5A574F; }
+
+/*     b. Small tertiary text on the wheat family, which item 69 already
+ *        resolves to --ink everywhere it reached: /projects/ group headings
+ *        ("One system, three parts") sit on the export's hardcoded #E7B84A at
+ *        14px/600, and /receipts/ "Figures are re-checked…" (p.u-131) sits on
+ *        the wheat register band at 14px — both --fg-3, 3.90 / 3.91 against a
+ *        4.5 bar. Ink is 10.70 / 10.73. */
+body[data-page="projects"] .grouphd span,
+body[data-page="receipts"] .blk--wheat .u-131 { color: var(--ink) !important; }
