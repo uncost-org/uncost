@@ -2016,3 +2016,22 @@ a.here:not([class*="btn"]) { --coral: var(--hover-coral); }
  *     after "…price tag." is a <br> in _data/home.json, restated by
  *     tools/post_patch_pages.py because re-derivation rewrites that file. */
 body[data-page="index"] .hero-grid h1 .u-50 { margin-top: .35em; }
+
+/* 89. C6 — ONE BORDER FOR EVERY LIFECYCLE/STATUS CHIP: BRIEF'S.
+ *     BRIEF (`.status--planned`) draws 2px solid rgba(10,10,10,.18) — ink at
+ *     18%, which composites over the chip's own fill into a soft rim of that
+ *     fill's colour. The other families drew a hard 2px ink edge (or, for the
+ *     /sectors/ `s-future` legend chip, 2px --fg-3). Enumerated on every
+ *     route at 1440, 7 families:
+ *       already BRIEF's   status--planned, status--future
+ *       changed           status--dev (IN BUILD, DRAFT, DRAFT — NOT IN FORCE),
+ *                         status--focus (FOCUS), status--next (NEXT),
+ *                         status--dossier (DOSSIER), and /sectors/' legend
+ *                         s-next, s-dossier (ink) and s-future (--fg-3)
+ *     The value is pinned rather than read from --rule-soft: `.blk--ink`
+ *     redefines --rule-soft to #3A3A36, so the token would draw a different
+ *     rim on any chip inside an ink band. It equals :root --rule-soft, which
+ *     is ink at 18% (C1). Fills, text colours and dots are untouched, so the
+ *     fill still carries the state. */
+:root { --status-rim: rgba(10,10,10,.18); }
+.status { border: 2px solid var(--status-rim) !important; }
