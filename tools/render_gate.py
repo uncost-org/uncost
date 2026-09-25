@@ -260,6 +260,14 @@ SECTION_EXEMPTIONS = [
     ("error-404", "div.e-wrap",
      "C14: the split panel gains its complete 2px ink frame; its top edge sits "
      "under the header's own line, so one line shows. CANVAS-SYNC item 93."),
+    ("later/", "div.sys",
+     "F1: each 'on the way' band holds exactly one card, so its heading is the "
+     "band's section headline and takes the one headline scale (56px at 1440, "
+     "34px at 390) instead of the card's 40/28px. F2 then puts its body on the "
+     "same wrap point. CANVAS-SYNC item 95."),
+    ("pledge-thanks", "Share",
+     "F1: \"Now make it count double.\" heads its own band and takes the one "
+     "section-headline scale (was 22px). F2 aligns its body. CANVAS-SYNC item 95."),
 ]
 
 

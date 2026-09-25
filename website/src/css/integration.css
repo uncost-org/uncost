@@ -651,14 +651,23 @@ body[data-page="case"] .cards { grid-template-columns: repeat(2, 1fr); }
  *     rather than by weight, and the two cannot silently diverge. */
 /* `.introband` and `.seqhd` are prose bands too — eyebrow, headline, body —
  * but neither carries a .blk/.block class, so R4 never reached them and their
- * headlines kept the export's 42px/52px. A card heading (.sys > .card > .bd >
- * h2) and a component heading (.share, .u-98) are NOT section headlines and
- * are deliberately left alone: resizing those to the section scale would make
- * a card shout as loudly as the band holding it. */
+ * headlines kept the export's 42px/52px.
+ *
+ * F1, 2026-09-25 — this comment used to say a card heading (.sys > .card >
+ * .bd > h2) and a component heading (.share, .u-98) were not section
+ * headlines. tools/type_audit.py showed otherwise: each `.sys` band holds
+ * exactly ONE card, so its heading IS the band's headline, and on
+ * /pledge/thanks/ "Now make it count double." and "What's next?" each head a
+ * band of their own. Those were 18 real misses at 40/28px and 22-30px
+ * against the 56/34px scale. They join the rule. `.sys` is excluded where it
+ * is the page's FIRST band (the three /pledge/ status pages), because there
+ * it is the page hero and keeps the hero's own scale. */
 .blk:not(.hero):not(.titleband) h2,
 .block:not(.hero):not(.titleband) h2,
 .introband > h2,
-.seqhd > h2 {
+.seqhd > h2,
+main > .sys:not(:first-child) > .card > .bd > h2,
+body[data-page="pledge-thanks"] main > div:not(.hero) > h2 {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: clamp(34px, 4.2vw, 56px) !important;
