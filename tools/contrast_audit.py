@@ -97,6 +97,32 @@ def required(px: float, weight: int) -> float:
 
 
 # --------------------------------------------------------------------------
+# named exemptions — founder decisions, never a way to quiet a finding
+# --------------------------------------------------------------------------
+# A run is exempt only when ALL of route, selector, foreground and background
+# match exactly. Keying on the colour pair is the point: if either colour
+# changes, the run is no longer the thing the founder accepted and it fails
+# again until someone decides again. Every exercised exemption is printed with
+# its measured ratio, and an exemption whose route was audited but which
+# matched nothing is an error (STALE), so the list cannot rot unnoticed.
+#   (route, selector as the probe prints it, fg hex, bg hex, reason)
+EXEMPTIONS = [
+    ("/treasury/", "span.redact", "#0A0A0A", "#0A0A0A",
+     "D2 (founder decision 2026-09-25): a deliberate redaction device — a bar "
+     "drawn with ten U+2588 FULL BLOCK glyphs in ink on ink, 1.00:1 because it "
+     "is meant to be unreadable. It carries no words, so no aria-label is "
+     "needed to stop a screen reader speaking hidden text. CANVAS-SYNC 81."),
+]
+
+
+def exemption_for(route, sel, fg_hex, bg_hex, table):
+    for e in table:
+        if e[0] == route and e[1] == sel and e[2] == fg_hex and e[3] == bg_hex:
+            return e
+    return None
+
+
+# --------------------------------------------------------------------------
 # the browser side
 # --------------------------------------------------------------------------
 # Returned per text run: colour, the composited background stack, font size and
@@ -338,12 +364,15 @@ def routes_in(directory: pathlib.Path):
     return ["/" if r == "//" else r for r in out]
 
 
-def evaluate(payload):
+def evaluate(payload, exemptions=None):
     """Turn measured runs into errors. Fails closed on anything unresolved."""
+    table = EXEMPTIONS if exemptions is None else exemptions
     errors = []
     checked = 0
     pairs = set()
     unresolved = 0
+    exempted = {}
+    audited_routes = {p.get("route") for p in payload}
     for page in payload:
         route, width = page.get("route"), page.get("width")
         if page.get("loadError"):
@@ -381,6 +410,18 @@ def evaluate(payload):
                 "#%02X%02X%02X" % tuple(int(round(c)) for c in bg[:3]),
                 need,
             ))
+            fg_hex = "#%02X%02X%02X" % tuple(int(round(c)) for c in fg_rgb)
+            bg_hex = "#%02X%02X%02X" % tuple(int(round(c)) for c in bg[:3])
+            if got + 1e-9 < need and exemption_for(route, r["sel"], fg_hex, bg_hex, table):
+                ex = exemption_for(route, r["sel"], fg_hex, bg_hex, table)
+                k = (route, r["sel"], fg_hex, bg_hex)
+                rec = exempted.setdefault(k, {"route": route, "selector": r["sel"],
+                                              "fg": fg_hex, "bg": bg_hex,
+                                              "ratio": round(got, 2), "required": need,
+                                              "text": r["text"], "runs": 0,
+                                              "reason": ex[4]})
+                rec["runs"] += 1
+                continue
             if got + 1e-9 < need:
                 errors.append(
                     f"CONTRAST {where}: {got:.2f} < {need} "
@@ -413,8 +454,16 @@ def evaluate(payload):
          for k, v in groups.items()),
         key=lambda d: -d["occurrences"],
     )
+    used = {(k[0], k[1], k[2], k[3]) for k in exempted}
+    for e in table:
+        if e[0] in audited_routes and tuple(e[:4]) not in used:
+            errors.append(f"STALE EXEMPTION {e[0]} {e[1]} fg={e[2]} bg={e[3]}: its route was "
+                          f"audited and nothing matched it — the element or its colours "
+                          f"changed, so the founder decision it records no longer "
+                          f"describes the page")
     return errors, {"runs_checked": checked, "distinct_pairs": len(pairs),
-                    "unresolved": unresolved, "failing_pairs": summary}
+                    "unresolved": unresolved, "failing_pairs": summary,
+                    "exempted": sorted(exempted.values(), key=lambda d: (d["route"], d["selector"]))}
 
 
 # --------------------------------------------------------------------------
@@ -474,6 +523,33 @@ BAD_ALPHA = """<!doctype html><meta charset=utf-8><title>alpha</title>
 p{color:rgba(14,14,12,0.42)}</style>
 <body><p>semi-transparent ink on cream</p></body>"""
 
+# Exemptions. The selftest carries its own table (EXEMPT_FIXTURES) so it never
+# depends on the site's. The first fixture's failing run matches an entry and
+# must pass; the second has the SAME route pattern and selector but a different
+# ink, so it must NOT be exempted — an exemption keyed on a selector alone
+# would pass it, and that is the loophole this case exists to close.
+GOOD_EXEMPT = """<!doctype html><meta charset=utf-8><title>exempt</title>
+<style>body{background:#FAF7F0;color:#0A0A0A;font:16px sans-serif}
+.redact{background:#0A0A0A;color:#0A0A0A}</style>
+<body><p>Ink on cream, then a bar: <span class=redact>&#9608;&#9608;&#9608;</span></p></body>"""
+
+BAD_EXEMPT_LOOKALIKE = """<!doctype html><meta charset=utf-8><title>lookalike</title>
+<style>body{background:#FAF7F0;color:#0A0A0A;font:16px sans-serif}
+.redact{background:#0A0A0A;color:#2A2A26}</style>
+<body><p>Same selector, different ink: <span class=redact>hidden words</span></p></body>"""
+
+# A listed exemption whose route is audited and which matches nothing must be
+# reported, or a decision about an element that no longer exists lingers.
+GOOD_NO_REDACT = """<!doctype html><meta charset=utf-8><title>stale</title>
+<style>body{background:#FAF7F0;color:#0A0A0A;font:16px sans-serif}</style>
+<body><p>No redaction bar here at all.</p></body>"""
+
+EXEMPT_FIXTURES = [
+    ("/good-exempt.html", "span.redact", "#0A0A0A", "#0A0A0A", "fixture"),
+    ("/bad-exempt-lookalike.html", "span.redact", "#0A0A0A", "#0A0A0A", "fixture"),
+    ("/bad-exempt-stale.html", "span.redact", "#0A0A0A", "#0A0A0A", "fixture"),
+]
+
 CASES = [
     ("good-cream.html", GOOD_1, True),
     ("good-ink.html", GOOD_2, True),
@@ -483,6 +559,9 @@ CASES = [
     ("bad-hover.html", BAD_HOVER, False),
     ("bad-unresolved-ground.html", BAD_UNRESOLVED, False),
     ("bad-alpha-text.html", BAD_ALPHA, False),
+    ("good-exempt.html", GOOD_EXEMPT, True),
+    ("bad-exempt-lookalike.html", BAD_EXEMPT_LOOKALIKE, False),
+    ("bad-exempt-stale.html", GOOD_NO_REDACT, False),
 ]
 
 
@@ -511,7 +590,8 @@ def selftest(port: int) -> int:
     write_fixtures()
     failures = []
     for name, _, should_pass in CASES:
-        errors, _counts = evaluate(probe(FIXTURES, ["/" + name], WIDTHS, port))
+        errors, _counts = evaluate(probe(FIXTURES, ["/" + name], WIDTHS, port),
+                                   exemptions=EXEMPT_FIXTURES)
         passed = not errors
         if passed != should_pass:
             failures.append({
@@ -525,6 +605,33 @@ def selftest(port: int) -> int:
     return 1 if failures else 0
 
 
+def show(payload, needles):
+    """Every measured run matching a needle, as measured. Reporting aid only."""
+    needles = [n.lower() for n in needles]
+    rows = []
+    for page in payload:
+        for r in page.get("runs", []) or []:
+            hay = (r.get("text") or "").lower() + " " + (r.get("sel") or "").lower()
+            if not any(n in hay for n in needles):
+                continue
+            row = {"route": page["route"], "width": page["width"],
+                   "state": page.get("state", "rest"), "sel": r["sel"],
+                   "text": r["text"], "px": r["px"], "weight": r["weight"]}
+            if r.get("fg") and r.get("bg") and r["bg"][3] >= 0.999:
+                fg = r["fg"][:3]
+                if r["fg"][3] < 0.999:
+                    a = r["fg"][3]
+                    fg = [fg[i] * a + r["bg"][i] * (1 - a) for i in range(3)]
+                row["fg"] = "#%02X%02X%02X" % tuple(int(round(c)) for c in fg)
+                row["bg"] = "#%02X%02X%02X" % tuple(int(round(c)) for c in r["bg"][:3])
+                row["ratio"] = round(ratio(fg, r["bg"][:3]), 2)
+                row["required"] = required(r["px"], r["weight"])
+            else:
+                row["unresolved"] = r.get("unresolved") or "no opaque ground"
+            rows.append(row)
+    return rows
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--built", default=str(DEFAULT_BUILT))
@@ -532,6 +639,10 @@ def main() -> int:
     ap.add_argument("--port", type=int, default=8870)
     ap.add_argument("--selftest", action="store_true")
     ap.add_argument("--max-errors", type=int, default=40)
+    ap.add_argument("--show", nargs="*", default=None, metavar="TEXT",
+                    help="also print every measured run whose text or selector "
+                         "contains TEXT (case-insensitive), with its colours and "
+                         "ratio — so a colour quoted in a report comes from here")
     args = ap.parse_args()
 
     if args.selftest:
@@ -542,15 +653,19 @@ def main() -> int:
         print(json.dumps({"ok": False, "errors": [f"no built directory at {built}"]}))
         return 1
     routes = args.routes or routes_in(built)
-    errors, counts = evaluate(probe(built, routes, WIDTHS, args.port))
+    payload = probe(built, routes, WIDTHS, args.port)
+    errors, counts = evaluate(payload)
     counts["routes"] = len(routes)
     counts["widths"] = len(WIDTHS)
-    print(json.dumps({
+    out = {
         "ok": not errors,
         "errors": errors[: args.max_errors],
         "error_count": len(errors),
         "counts": counts,
-    }, indent=2))
+    }
+    if args.show:
+        out["shown"] = show(payload, args.show)
+    print(json.dumps(out, indent=2))
     return 1 if errors else 0
 
 
