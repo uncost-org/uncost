@@ -220,7 +220,9 @@ SECTION_EXEMPTIONS = [
      "Measured at 1440 the section box is 1440x303 in BOTH trees and the "
      "dominant fill goes #F2EBE1 to #E8B84A at 95% coverage either way. "
      "All four .faqsec--wheat sections are now named; there are exactly four. "
-     "Sweep 3, batch H."),
+     "Sweep 3, batch H. C11 (Batch U): this, the last one, also takes the 48px "
+     "that was the CTA's top margin as bottom padding, so its box is 48px taller "
+     "(1440x351) and the strip below it is wheat. CANVAS-SYNC item 90."),
     ("index", "S4 What we run",
      "G1 + G2 at mobile: same palette on both sides, section height 919px to "
      "1006px at 390. The homepage's worst band is the one with the most running "

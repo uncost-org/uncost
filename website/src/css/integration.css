@@ -2077,3 +2077,17 @@ body[data-page="index"] .hero-grid h1 .u-50 { margin-top: .35em; }
  *     strip's top, so under R2 that frame edge is the boundary; the strip ->
  *     Interest form (cream) boundary keeps the form's 4px coral top. */
 body[data-page="join"] .privacyline { background: var(--cream-2); }
+
+/* 93. C11 — /faq/: the pale strip below the last question becomes wheat.
+ *     The strip was not a band. The coral CTA carries `margin-top:48px`, and
+ *     that margin exposed <main>'s own #F2EBE1 between the last wheat
+ *     question section and the CTA — measured 1726 -> 1774 at 1440. The 48px
+ *     moves from the CTA's margin into the last section's bottom padding, so
+ *     the gap is wheat and the CTA does not move. The wheat -> coral boundary
+ *     is then the CTA's own 4px ink top, which R1 requires there. It also
+ *     removes two band-audit findings: the "upper edge" and "lower edge" of
+ *     that gap were each being judged as boundaries. */
+body[data-page="faq"] .faqsec--wheat:has(+ .blk--coral) { padding-bottom: 48px; }
+/* The export's `.u-47{margin-top:48px !important}` sets that margin, so
+ * clearing it needs !important too. */
+body[data-page="faq"] .faqsec--wheat + .blk--coral { margin-top: 0 !important; }
