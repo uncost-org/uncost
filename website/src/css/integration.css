@@ -2069,3 +2069,11 @@ body[data-page="index"] .hero-grid h1 .u-50 { margin-top: .35em; }
  *     Item 82's equal panel heights still hold, so all four land on one Y. */
 .hd-mega .mg-pic { align-items: center; justify-content: center; padding: 0 10px; contain: size; }
 .hd-mega .mg-pic img { align-self: center; height: 70%; max-height: none; width: auto; max-width: 100%; }
+
+/* 92. C9 — /join/ "We won't sell your data…" strip -> --cream-2, matching
+ *     the three tier cards directly above it (their cells are --cream-2). The
+ *     export paints it --wheat. Its text is ink, so nothing on it changes
+ *     colour. Boundaries: the tiers' 2px ink frame bottom is flush with the
+ *     strip's top, so under R2 that frame edge is the boundary; the strip ->
+ *     Interest form (cream) boundary keeps the form's 4px coral top. */
+body[data-page="join"] .privacyline { background: var(--cream-2); }

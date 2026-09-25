@@ -235,6 +235,10 @@ SECTION_EXEMPTIONS = [
      "sits .35em lower (27px at 1440, 13px at 390) and the intro breaks after "
      "\"…price tag.\", so the hero is taller than the export's by those "
      "amounts plus one intro line. CANVAS-SYNC item 85."),
+    ("join", "div.privacyline",
+     "C9: the \"We won't sell your data…\" strip moves from the export's --wheat "
+     "to --cream-2, matching the tier cards above it. Same box, fill only. "
+     "CANVAS-SYNC item 89."),
 ]
 
 
