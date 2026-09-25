@@ -34,7 +34,9 @@ eleventyComputed:
 <nav class="anchor-bar" aria-label="Page sections">
   <a href="#scope">Scope &amp; opportunity <span class="cnt">01</span></a>
   <a href="#evidence">Evidence status <span class="cnt">02</span></a>
+{%- if sc and sc.workedExample %}
   <a href="#worked">Worked example <span class="cnt">03</span></a>
+{%- endif %}
   <a href="#projects">Related projects <span class="cnt">04</span></a>
   <a href="#sources">Sources <span class="cnt">05</span></a>
 </nav>
@@ -81,16 +83,27 @@ eleventyComputed:
 </section>
 
 <!-- SECTION: sectors/food.Worked example -->
+{%- set wx = sc.workedExample if sc else none %}
+{%- if wx %}
 <section id="worked" class="block" data-screen-label="Worked example">
+{%- if wx.measurement %}
+  <div class="eyebrow">03 · Where the method stops</div>
+  <h2>How far the method goes in {{ sector.name }} — and where it stops.</h2>
+{%- else %}
   <div class="eyebrow">03 · How {{ sector.name | lower }} gets uncosted</div>
-  <h2>The worked example: fresh produce in a confined urban space.</h2>
+  <h2>{{ wx.scenario }}</h2>
+{%- endif %}
   <div class="steps6">
-{% for step in sc.workedExample.steps %}
+{% for step in wx.steps %}
     {% set bits = step.split(" — ") %}
     <div class="step6"><div class="n">{{ loop.index }}</div><div><h3><b>{{ bits[0] }}</b></h3><p>{{ bits | slice(1) | first | join(" — ") if bits.length > 1 else step }}</p></div></div>
 {% endfor %}
   </div>
+{%- if wx.measurement %}
+  <p class="wx-stop"><strong>Then we stop.</strong> Steps 4 to 6 — matching a mechanism, packaging it for others to run, and tracking whether the cost falls — would put a tool between a person and their {{ wx.stopBetween }}. That needs {{ wx.stopReason }} — and none of that exists yet. Until it does, {{ sector.name }} is a measurement sector: we can show what it costs and where the cost sits. We will not package something for a community group to run.</p>
+{%- endif %}
 </section>
+{%- endif %}
 
 <!-- SECTION: sectors/food.Guardrail callout -->
 <section class="callout" data-screen-label="Guardrail callout">

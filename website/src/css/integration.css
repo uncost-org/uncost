@@ -1820,3 +1820,31 @@ body[data-page="case"] .cards .card:nth-child(4n+3) { --cell: var(--cream-2); --
 .cards .card .foot .row .m--date[data-era="current"] { border-width: 2.5px; }
 .cards .card .foot .row .m--date[data-era="prior"]   { border-width: 1.5px; }
 .cards .card .foot .row .m--date[data-era="older"]   { border-width: 1px; border-style: dashed; }
+
+/* 83. C17 — the measurement sectors' stop note.
+ *
+ *     Four sectors (Healthcare, Care, Education, Safety) carry a measurement
+ *     worked example rather than a costed one: their dossier guardrails forbid
+ *     patient-facing, child-facing and enforcement work, so the method runs
+ *     three steps and stops. `sector.njk` renders that stop as `.wx-stop`.
+ *
+ *     The data has been in `_data/sectorContent.js` since 552e6c2 but the
+ *     design-v2 re-derivation dropped the branch that rendered it, which is
+ *     also what left Food's heading hardcoded on all fifteen pages. With the
+ *     branch restored the element renders again, and nothing in this
+ *     stylesheet had a rule for it.
+ *
+ *     Treated as a callout in the house idiom — the `.newsxref` pattern, cream2
+ *     behind a coloured left edge — rather than reviving the pre-v2 rule, which
+ *     hardcoded its own 820px measure. The measure is deliberately NOT set
+ *     here: the band's prose measure governs, so this cannot drift from it.
+ *     --coral-deep on cream2 is 5.12:1; the edge is decoration either way. */
+.wx-stop {
+  background: var(--cream-2);
+  border-left: 4px solid var(--coral-deep);
+  padding: 20px 24px;
+  margin: 28px 0 0;
+  line-height: 1.6;
+  color: var(--ink);
+}
+.wx-stop strong { font-family: var(--font-display); font-weight: 700; }

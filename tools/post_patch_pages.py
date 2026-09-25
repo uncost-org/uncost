@@ -274,4 +274,45 @@ patch("website/src/sectors/sector.njk",
       r'  <div class="srcs">\n    <div class="srcs-head"><span>ID</span><span>Source</span></div>\n\1  </div>\n\2',
       "R5 sector sources table", guard='<div class="srcs">')
 
+print("C17 — sector 03 renders THAT sector's worked example, not Food's:")
+# The export hard-codes Food's scenario heading into every re-derived sector
+# page. The heading, and the research-gated sectors' measurement-only pattern,
+# come from _data/sectorContent.js; nothing here authors copy. The gated branch
+# restores the rendering first shipped in 552e6c2, which the design-v2
+# re-derivation dropped.
+SECTOR_WORKED = '''{%- set wx = sc.workedExample if sc else none %}
+{%- if wx %}
+<section id="worked" class="block" data-screen-label="Worked example">
+{%- if wx.measurement %}
+  <div class="eyebrow">03 \u00b7 Where the method stops</div>
+  <h2>How far the method goes in {{ sector.name }} \u2014 and where it stops.</h2>
+{%- else %}
+  <div class="eyebrow">03 \u00b7 How {{ sector.name | lower }} gets uncosted</div>
+  <h2>{{ wx.scenario }}</h2>
+{%- endif %}
+  <div class="steps6">
+{% for step in wx.steps %}
+    {% set bits = step.split(" \u2014 ") %}
+    <div class="step6"><div class="n">{{ loop.index }}</div><div><h3><b>{{ bits[0] }}</b></h3><p>{{ bits | slice(1) | first | join(" \u2014 ") if bits.length > 1 else step }}</p></div></div>
+{% endfor %}
+  </div>
+{%- if wx.measurement %}
+  <p class="wx-stop"><strong>Then we stop.</strong> Steps 4 to 6 \u2014 matching a mechanism, packaging it for others to run, and tracking whether the cost falls \u2014 would put a tool between a person and their {{ wx.stopBetween }}. That needs {{ wx.stopReason }} \u2014 and none of that exists yet. Until it does, {{ sector.name }} is a measurement sector: we can show what it costs and where the cost sits. We will not package something for a community group to run.</p>
+{%- endif %}
+</section>
+{%- endif %}
+'''
+
+patch("website/src/sectors/sector.njk",
+      r'<section id="worked" class="block" data-screen-label="Worked example">.*?\n</section>\n',
+      SECTOR_WORKED,
+      "C17 sector worked example is per-sector", guard="{%- set wx = sc.workedExample")
+
+patch("website/src/sectors/sector.njk",
+      r'  <a href="#worked">Worked example <span class="cnt">03</span></a>\n',
+      '{%- if sc and sc.workedExample %}\n'
+      '  <a href="#worked">Worked example <span class="cnt">03</span></a>\n'
+      '{%- endif %}\n',
+      "C17 anchor 03 drops with the section", guard="{%- if sc and sc.workedExample %}")
+
 print("done")
