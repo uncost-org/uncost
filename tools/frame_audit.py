@@ -473,6 +473,11 @@ const SRC = fs.readFileSync(path.join(__dirname, "analyze.js"), "utf8");
   const browser = await puppeteer.launch({ args: ["--no-sandbox", "--force-device-scale-factor=1"] });
   const page = await browser.newPage();
   await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "reduce" }]);
+  // The same route is loaded once per width. When the build is seconds old,
+  // Chrome revalidates it, http.server answers 304, and 304 is not res.ok():
+  // the page was reported "could not be rendered". Whether it happened
+  // depended on how long ago the site was built. Same fix as the other tools.
+  await page.setCacheEnabled(false);
   const pageErrors = [];
   page.on("pageerror", (e) => pageErrors.push(String(e)));
   const all = [];
@@ -482,7 +487,7 @@ const SRC = fs.readFileSync(path.join(__dirname, "analyze.js"), "utf8");
       try {
         await page.setViewport({ width: w, height: 1000, deviceScaleFactor: 1 });
         const res = await page.goto(base + route, { waitUntil: "networkidle0", timeout: 60000 });
-        if (!res || !res.ok()) { rec.error = "HTTP " + (res ? res.status() : "no response"); all.push(rec); continue; }
+        if (!res || !(res.ok() || res.status() === 304)) { rec.error = "HTTP " + (res ? res.status() : "no response"); all.push(rec); continue; }
         await page.evaluate(() => document.fonts && document.fonts.ready);
         await page.evaluate(SRC);
         rec.components = await page.evaluate(() => window.__frameAudit({}));
