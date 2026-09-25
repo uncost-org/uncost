@@ -92,7 +92,70 @@ SELFTEST_CASES = [
     ("good-04-padding-frame.html", "pass", "", 1),
     # 12px gap is spacing, not a drawn divider: nothing to audit at all.
     ("neutral-01-spacing-gap.html", "pass", "", 0),
+    # Named exemptions (D3). The fixtures carry their own table below.
+    ("good-05-exempt-band-body.html", "pass", "", 1),
+    ("bad-09-exempt-lookalike.html", "fail", "frame edge is open", 1),
+    ("bad-10-exempt-still-unresolved.html", "fail", "not uniform", 1),
+    ("bad-11-exempt-stale.html", "fail", "STALE EXEMPTION", 1),
 ]
+
+# --- named exemptions -------------------------------------------------------
+# A founder decision that a component stays unframed. An exemption matches on
+# the exact route AND the exact component path the analyser reports, and it
+# covers only frame-EDGE findings (an open edge, or an edge whose weight or
+# colour differs from the dividers). An "unresolved" finding is never exempt:
+# a decision about how a thing should look is not a licence for the audit to
+# stop knowing what it is looking at. An exemption whose route was rendered but
+# which matched no component is an error, so a decision cannot outlive its
+# subject unnoticed.
+#   (route, component path as reported, reason)
+EXEMPT_KINDS = {"open", "weight", "colour", "weight+colour"}
+NAMED_EXEMPTIONS = [
+    ("/about/", "html > body > main > div",
+     "D3 (founder decision 2026-09-25): the Mechanism step list is a full-bleed "
+     "band body, not a component panel, and stays unframed. CANVAS-SYNC 84."),
+    ("/roadmap/", "html > body > main > section",
+     "D3 (founder decision 2026-09-25): the Year one phase list is a full-bleed "
+     "band body and stays unframed. CANVAS-SYNC 84."),
+    ("/pledge/", "html > body > main > div.pwrap > div",
+     "D3 (founder decision 2026-09-25): the pledge body beside the form is a "
+     "full-bleed band body and stays unframed. C14 listed `.pwrap > div` for a "
+     "frame, but deferred band bodies to D3, and the D3 renders are exactly this "
+     "element. CANVAS-SYNC 84."),
+]
+SELFTEST_EXEMPTIONS = [
+    ("/good-05-exempt-band-body.html", "html > body > div.band > div.g3", "fixture"),
+    # Same route, a DIFFERENT path: a route-only key would wrongly exempt it.
+    ("/bad-09-exempt-lookalike.html", "html > body > div.band > div.g4", "fixture"),
+    ("/bad-10-exempt-still-unresolved.html", "html > body > div.band > div.mix3.fr-full", "fixture"),
+    ("/bad-11-exempt-stale.html", "html > body > div.band > div.nothing-here", "fixture"),
+]
+
+
+def apply_exemptions(data, table):
+    """-> (data with exempt frame-edge problems removed, extra errors, exercised)."""
+    rendered = {r["route"] for r in data["pages"] if not r.get("error")}
+    matched, exercised = set(), {}
+    for rec in data["pages"]:
+        for c in rec.get("components", []) or []:
+            for route, path, why in table:
+                if rec["route"] != route or c.get("path") != path:
+                    continue
+                matched.add((route, path))
+                kept = [q for q in c["problems"] if q["kind"] not in EXEMPT_KINDS]
+                dropped = len(c["problems"]) - len(kept)
+                if dropped:
+                    e = exercised.setdefault((route, path), {"route": route, "path": path,
+                                                             "findings_exempted": 0, "reason": why})
+                    e["findings_exempted"] += dropped
+                c["problems"] = kept
+    extra = []
+    for route, path, why in table:
+        if route in rendered and (route, path) not in matched:
+            extra.append((route, "STALE EXEMPTION %s %s: the route rendered and no component "
+                                 "has this path, so the decision no longer describes the page"
+                          % (route, path)))
+    return data, extra, list(exercised.values())
 
 # ---------------------------------------------------------------------------
 # The page-side analyser. Runs in Chrome; reads computed style and geometry.
@@ -541,8 +604,11 @@ def selftest():
     failures = ["fixture file missing: %s" % n for n in missing]
     failures += ["fixture %s exists but is not a selftest case" % n for n in present if n not in names]
     data = drive(FIXTURES, ["/" + n for n in names if (FIXTURES / n).is_file()], [1440])
+    data, stale, _ = apply_exemptions(data, SELFTEST_EXEMPTIONS)
     _, _, _, per_page = collect(data)
     detail = {}
+    for route, text in stale:
+        detail.setdefault(route, {"components": 0, "problems": []})["problems"].append(text)
     for rec in data["pages"]:
         d = detail.setdefault(rec["route"], {"components": 0, "problems": []})
         if rec.get("error"):
@@ -599,11 +665,14 @@ def main():
     except Exception as exc:                                   # noqa: BLE001 - reported, never swallowed
         print(json.dumps({"ok": False, "errors": [str(exc)], "counts": {"components": 0, "incomplete": 0}}, indent=2))
         return 1
+    data, stale, exempted = apply_exemptions(data, NAMED_EXEMPTIONS)
     errors, seen, incomplete, _ = collect(data)
-    out = {"ok": not errors,
-           "errors": ["%s  [%d instance(s); e.g. %s]" % (e["text"], e["instances"], "; ".join(e["where"]))
-                      for e in errors],
-           "counts": {"components": seen, "incomplete": incomplete}}
+    errs = ["%s  [%d instance(s); e.g. %s]" % (e["text"], e["instances"], "; ".join(e["where"]))
+            for e in errors] + [text for _, text in stale]
+    out = {"ok": not errs,
+           "errors": errs,
+           "counts": {"components": seen, "incomplete": incomplete},
+           "exempted": exempted}
     print(json.dumps(out, indent=2))
     return 0 if not errors else 1
 
