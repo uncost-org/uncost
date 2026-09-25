@@ -242,8 +242,20 @@ def validate_boundary(img, b, width):
     if not (0 <= x < img.width):
         return key, [f"{key}: boundary x={x} is outside the {img.width}px shot"]
     runs = rle_column(img, x, y - PROBE_PX, y + PROBE_PX)
-    upper = css_rgb(b.get("upperBg"))
-    lower = css_rgb(b.get("lowerBg"))
+    # The two band fills are read from the PIXELS at the ends of the probe
+    # window, not from computed style. A band whose own background is
+    # transparent (most of them — the page, or a full-width child, paints
+    # the fill) computes to rgba(0,0,0,0), and css_rgb() drops the alpha and
+    # returns black. Once C1 moved --ink to #0A0A0A, every ink rule was
+    # within tolerance of that phantom black, was counted as band fill, and
+    # was reported as "no rule renders" — the tool contradicting a line that
+    # is plainly on screen. Before C1 the ink was #0E0E0C, 14 points from
+    # black, which is the only reason this went unnoticed.
+    if len(runs) >= 2:
+        upper, lower = runs[0][0], runs[-1][0]
+    else:
+        upper = css_rgb(b.get("upperBg"))
+        lower = css_rgb(b.get("lowerBg"))
     declared = b.get("declared", [])
     decl_set = [(d["w"], css_rgb(d["c"]), d["src"]) for d in declared]
 
