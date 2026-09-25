@@ -1127,9 +1127,17 @@ def contrast_selftest() -> int:
     # 3. text on the dark footer
     expect_caught("footer descendant text", base_comp + "\n.ft .st_qq{color:#1a1a1a}\n", "st_qq")
     # 4. button / CTA with its own background
-    expect_caught("button ink-on-coral", base_comp + "\n.st_evilbtn{background:var(--coral);color:var(--ink)}\n", "st_evilbtn")
+    # Was --ink on coral (4.47). C1 moved --ink to #0A0A0A, which measures 4.58
+    # and passes, so that fixture stopped being adversarial and the selftest
+    # correctly reported it as no longer caught. --cream on coral is 4.04 and
+    # is the export's other real mistake on this fill, so the case keeps its
+    # teeth and still stands for "text on a coral fill that misses the floor".
+    expect_caught("button cream-on-coral", base_comp + "\n.st_evilbtn{background:var(--coral);color:var(--cream)}\n", "st_evilbtn")
     # 5. small pill must not be exempted by claiming a size
-    expect_caught("small pill not exempted", base_comp + "\n.status--st_evil{background:var(--coral);color:var(--ink);font-size:12px}\n", "st_evil")
+    # Same substitution, same reason: the point of this case is that a SMALL
+    # pill cannot be waved through by claiming a display size, so the colour
+    # only has to be one that genuinely fails (--cream on coral, 4.04).
+    expect_caught("small pill not exempted", base_comp + "\n.status--st_evil{background:var(--coral);color:var(--cream);font-size:12px}\n", "st_evil")
     # 6. a comment before a failing rule must not skip it
     expect_caught("comment-prefixed rule", base_comp + "\n/* benign */\n.u-block--ink .st_cc{color:#1a1a1a}\n", "st_cc")
     # 7. focus ring that fails on colored surfaces must be caught. Anchor on the

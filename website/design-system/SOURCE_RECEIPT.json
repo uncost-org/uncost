@@ -40,7 +40,7 @@
       "logical_source_path": "design-source/css/tokens.css",
       "source_sha256": "f51d6ddf4170589f45b23309f747d6b09551b33b34bc62be301bad74a526488f",
       "output_path": "website/design-system/tokens.css",
-      "output_sha256": "baa28aa90f10bd9103b9fc62775bc0a192f8a0c10f7f778999f12c947c33938d",
+      "output_sha256": "dbe7c5e7f8829950d079f5c06cdb2c9daa8b05ec63a7c3fd27749200cd270f5b",
       "mode": "transform"
     },
     {
@@ -54,14 +54,14 @@
       "logical_source_path": "design-source/css/site.css",
       "source_sha256": "5bfeef94d074e549385c057103439215f63cc31fc02331a0145e8ce51e2d5cd1",
       "output_path": "website/design-system/site.css",
-      "output_sha256": "ba3a8f11567135a822298a6be8504567a76ff61d717daaaf9a27f313e627821c",
+      "output_sha256": "9ce31bf09b756b6036bd74425eb3b3b972e2860b490d1f30f294541ee8d6b579",
       "mode": "transform"
     },
     {
       "logical_source_path": "design-source/css/sections.css",
       "source_sha256": "4a194a912215a739ad2a257ed80597e1f67922c6b73983cbef31a703e064f7f0",
       "output_path": "website/design-system/sections.css",
-      "output_sha256": "e2b0d72e16350dc0598f805ad6d1824b16c1e3f62e95235686e4cd4839a428f6",
+      "output_sha256": "0a3d0892f6776fb4c1e1dcb8877ea3000fab1b64b49ab0dc73bdd3b16e651010",
       "mode": "adopt"
     },
     {
@@ -138,7 +138,7 @@
     },
     {
       "path": "scripts/audit_design_handoff.py",
-      "sha256": "49ae5b2d15a9fd5153b56c4b7af8ba68133d4e92655ff3ef2302751ba7a873b5",
+      "sha256": "add49858a62f918ef2268b159266c55861d842a7115f54c5d6d8cd70e2a21767",
       "role": "reproducible-checks"
     },
     {
@@ -163,7 +163,7 @@
     },
     {
       "path": "website/design-system/tokens.css",
-      "sha256": "baa28aa90f10bd9103b9fc62775bc0a192f8a0c10f7f778999f12c947c33938d",
+      "sha256": "dbe7c5e7f8829950d079f5c06cdb2c9daa8b05ec63a7c3fd27749200cd270f5b",
       "role": "semantic-tokens"
     },
     {
@@ -173,11 +173,11 @@
     },
     {
       "path": "website/design-system/sections.css",
-      "sha256": "e2b0d72e16350dc0598f805ad6d1824b16c1e3f62e95235686e4cd4839a428f6"
+      "sha256": "0a3d0892f6776fb4c1e1dcb8877ea3000fab1b64b49ab0dc73bdd3b16e651010"
     },
     {
       "path": "website/design-system/site.css",
-      "sha256": "ba3a8f11567135a822298a6be8504567a76ff61d717daaaf9a27f313e627821c"
+      "sha256": "9ce31bf09b756b6036bd74425eb3b3b972e2860b490d1f30f294541ee8d6b579"
     },
     {
       "path": "website/design-system/icons/icons.svg",

@@ -28,10 +28,15 @@
   /* Base surfaces */
   --cream:        #FAF7F0;
   --cream-2:      #F2EDE1;   /* subtle band separation on cream */
-  --ink:          #0E0E0C;
-  /* ink-on-coral — AA correction applied on adoption. The export puts --ink
-     (4.47:1) or #FFFFFF (4.32:1) on brand coral; both miss the 4.5 floor for
-     normal text. #0A0A0A measures 4.58:1 and is visually indistinguishable. */
+  /* C1, 2026-09-25. Ink is #0A0A0A, the design-system value, not the export's
+     #0E0E0C. The two are visually indistinguishable and the difference is
+     entirely in what clears AA: on #0A0A0A, --coral measures 4.58:1 and ink on
+     coral measures 4.58:1, so both pass the 4.5 floor at EVERY size. On
+     #0E0E0C both were 4.47:1 and failed it at small sizes. That single
+     0.11 is what lets C2 put one coral on ink instead of two by size. */
+  --ink:          #0A0A0A;
+  /* Now identical to --ink and kept only so the export's own rules and the
+     post-adoption patches keep resolving. It is no longer a correction. */
   --ink-on-coral: #0A0A0A;
   /* AA text variants (see DESIGN-TOKENS.md §Contrast)
      --coral-deep   : coral text <24px on cream/wheat  5.60:1
@@ -51,9 +56,9 @@
   /* Coral (primary) also owns: Safety-Justice, Energy */
 
   /* Rules + dividers — never gray, always ink at reduced weight */
-  --rule:         #0E0E0C;
-  --rule-soft:    rgba(14,14,12,0.18);
-  --rule-hair:    rgba(14,14,12,0.08);
+  --rule:         #0A0A0A;
+  --rule-soft:    rgba(10,10,10,0.18);
+  --rule-hair:    rgba(10,10,10,0.08);
 
   /* ============ COLOR — SEMANTIC (LIGHT) ============ */
   --bg:           var(--cream);

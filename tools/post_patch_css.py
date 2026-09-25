@@ -32,9 +32,43 @@ def sub(path, old, new, label, required=True, marker=None):
     path.write_text(t.replace(old, new, 1), encoding="utf-8")
     print(f"  + {label}")
 
+def sub_all(path, old, new, label, marker=None):
+    """Like sub(), but every occurrence. Used where the export repeats a raw
+    literal — the ink hex appears nine times in site.css alone, and a
+    first-occurrence-only replace would leave the rest at the old value and
+    ship two different inks."""
+    t = path.read_text(encoding="utf-8")
+    probe = marker if marker is not None else new
+    if probe in t and old not in t:
+        print(f"  = {label} (already applied)"); return
+    n = t.count(old)
+    if not n:
+        print(f"  - {label} (anchor absent, skipped)"); return
+    path.write_text(t.replace(old, new), encoding="utf-8")
+    print(f"  + {label} ({n} occurrence(s))")
+
+
 print("WCAG 2.2 AA corrections (AUTHORITY.md; founder-approved divergence):")
-sub(T, "  --ink:          #0E0E0C;",
-    "  --ink:          #0E0E0C;\n"
+# C1, 2026-09-25 — ink is #0A0A0A. Runs FIRST: the --ink-on-coral correction
+# below anchors on the --ink line, so the value it looks for has to be the
+# post-C1 one. On #0A0A0A, --coral is 4.58:1 and ink-on-coral is 4.58:1, so
+# both clear 4.5 at every size; on the export's #0E0E0C both were 4.47:1.
+sub(T, "  --ink:          #0E0E0C;", "  --ink:          #0A0A0A;",
+    "--ink -> #0A0A0A (C1)", marker="  --ink:          #0A0A0A;")
+sub(T, "  --rule:         #0E0E0C;", "  --rule:         #0A0A0A;",
+    "--rule follows ink (C1)", marker="  --rule:         #0A0A0A;")
+sub(T, "  --rule-soft:    rgba(14,14,12,0.18);", "  --rule-soft:    rgba(10,10,10,0.18);",
+    "--rule-soft follows ink (C1)", marker="rgba(10,10,10,0.18)")
+sub(T, "  --rule-hair:    rgba(14,14,12,0.08);", "  --rule-hair:    rgba(10,10,10,0.08);",
+    "--rule-hair follows ink (C1)", marker="rgba(10,10,10,0.08)")
+# The export also writes the ink hex as a raw literal, which no token change
+# reaches: nine times in site.css (the .ft-updates footer block) and once in
+# sections.css (.u-105's ink background). Left behind they render a second,
+# slightly different ink beside the token one.
+sub_all(S, "#0E0E0C", "#0A0A0A", "site.css raw ink literals (C1)")
+sub_all(SEC, "#0E0E0C", "#0A0A0A", "sections.css raw ink literal (C1)")
+sub(T, "  --ink:          #0A0A0A;",
+    "  --ink:          #0A0A0A;\n"
     "  /* ink-on-coral — AA correction applied on adoption. The export puts --ink\n"
     "     (4.47:1) or #FFFFFF (4.32:1) on brand coral; both miss the 4.5 floor for\n"
     "     normal text. #0A0A0A measures 4.58:1 and is visually indistinguishable. */\n"
@@ -94,7 +128,7 @@ sub(C, ".site-foot .foot-col a:hover { color: var(--coral); }",
 # v4.2 hardcodes #5B574F here; on the wheat band that is 3.68:1.
 sub(S, ".ft-updates .chk{color:#5B574F}",
     ".ft-updates .chk{color:var(--fg-2)}", "updates checkbox on wheat", required=False)
-sub(S, ".ft-updates .ft-form button:hover{background:var(--coral);color:#0E0E0C;border-color:#0E0E0C}",
+sub(S, ".ft-updates .ft-form button:hover{background:var(--coral);color:#0A0A0A;border-color:#0A0A0A}",
     ".ft-updates .ft-form button:hover{background:var(--coral);color:var(--ink-on-coral);border-color:var(--ink-on-coral)}",
     "updates form button hover", required=False)
 
