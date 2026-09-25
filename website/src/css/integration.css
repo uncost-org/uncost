@@ -873,7 +873,9 @@ body[data-page="sectors-leisure"] { --gp: 0.1701; }
 .next + *,
 .parts4 + *,
 .cwrap + *,
-.sgrid + * { border-top: 0 !important; }
+.sgrid + *,
+body[data-page="error-404"] .e-wrap + *,                /* C14, item 96 */
+body[data-page="treasury"] section:has(> .kpis) + * { border-top: 0 !important; }
 
 /* 68 — C1 ONE CORAL, BY BACKGROUND.
  *      Driven by the BACKGROUND, not by chasing class names — `.u-1`, `.num`,
@@ -1245,6 +1247,8 @@ body[data-page="policies"] .u-8 + .u-106 { border-top: 0; }
  *        selector written against `.kpis` matches nothing, which is how the
  *        first attempt at this fix silently did nothing. */
 body[data-page="treasury"] .statusband + :has(.kpis) { border-top: 0 !important; }
+/*        (Superseded by C14, item 96: the band is now a framed component and
+ *        its own 2px ink frame edge is the boundary.) */
 
 /* 77. G1 — ONE SECTION-HEADLINE SCALE, GRID OR NO GRID.
  *
@@ -2125,3 +2129,49 @@ body[data-page="news"] .newswrap--solo .costwatch { max-width: none; }
 body[data-page="news"] :is(.up-item, .cw) { background: #FFF; }
 body[data-page="news"] :is(.up-item, .cw) :is(p, h3, h4) { max-width: min(66vw, 960px); }
 body[data-page="news"] .rfilter { background: var(--cream-2); padding: 14px 18px; }
+
+/* 96. C14 — COMPLETE FRAMES (R2) on the components the frame audit found
+ *     drawing dividers with an open frame.
+ *
+ *     .steps6   sector six-step list, 15 routes — 2px ink dividers, no frame
+ *     .rules    /assembly/ standing rules, on ink — 2px CREAM dividers, so
+ *               its frame is cream: R2 asks for the dividers' own colour
+ *     .kpis     /treasury/ — dividers were each card's border-right, plus a
+ *               4px coral top on every card (item 76c). Now one gap grid:
+ *               2px ink gaps, 2px ink frame on the band that holds it, so the
+ *               divider and frame are one line at 4, 2 and 1 columns alike
+ *               (at 390 the stacked cards were split by 4px coral before).
+ *               The frame is on the class-less <section> because that is the
+ *               band: under R2 its edges ARE the boundaries — wheat status
+ *               band above, cream panel below — and the band audit only
+ *               recognises a frame drawn by the band element itself. The
+ *               panel below loses its own 2px top via item 67's list.
+ *     .e-wrap   /404 split panel — ink gap divider, open top/left/right. Its
+ *               frame top would stack on the header's own 2px ink bottom
+ *               border, so it is pulled up 2px beneath the sticky header:
+ *               one line on screen. The quick-links grid below loses its own
+ *               top via item 67's list; the frame's bottom is that line.
+ *
+ *     Cells that sat flush against where the frame now is get 24px of
+ *     horizontal padding, so text does not touch the new line.
+ *
+ *     NOT framed, and why:
+ *       .pwrap > div  a full-bleed band body — D3 (item 84), exempt by name.
+ *       .pol-wrap     CONFLICT, not built. It sits flush under the ink policy
+ *                     header on all 11 routes. R2 makes its frame edge the
+ *                     boundary, at the dividers' 2px ink — invisible against
+ *                     the ink header, where R1 requires a visible (coral)
+ *                     rule. Both rules cannot hold at that edge; this needs a
+ *                     decision (CANVAS-SYNC 93). */
+.steps6 { border: 2px solid var(--ink); }
+.steps6 > .step6 { padding-left: 24px; padding-right: 24px; }
+
+body[data-page="assembly"] .rules { border: 2px solid var(--cream); }
+body[data-page="assembly"] .rules > .rule { padding-left: 24px; padding-right: 24px; }
+
+body[data-page="treasury"] section:has(> .kpis) { border: 2px solid var(--ink) !important; }
+body[data-page="treasury"] .statusband + section:has(> .kpis) { border-top: 2px solid var(--ink) !important; }
+body[data-page="treasury"] .kpis { gap: 2px; background: var(--ink); }
+body[data-page="treasury"] .kpis .kpi { border: 0 !important; }
+
+body[data-page="error-404"] .e-wrap { border: 2px solid var(--ink); margin-top: -2px; }

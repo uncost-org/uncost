@@ -243,6 +243,23 @@ SECTION_EXEMPTIONS = [
      "C9: the \"We won't sell your data…\" strip moves from the export's --wheat "
      "to --cream-2, matching the tier cards above it. Same box, fill only. "
      "CANVAS-SYNC item 89."),
+    ("sectors/", "Worked example",
+     "C17 (Batch U part 1): each sector renders its own worked example, and the "
+     "four measurement sectors (Healthcare, Care, Education, Safety) stop after "
+     "step 3 with their stop note — content the export's Food-only section does "
+     "not have. C14: the six-step list gains its complete 2px ink frame and 24px "
+     "cell padding. CANVAS-SYNC item 93."),
+    ("assembly", "Standing rules",
+     "C14: the standing-rules list gains a complete 2px cream frame (its "
+     "dividers are cream on this ink band) and 24px cell padding. CANVAS-SYNC "
+     "item 93."),
+    ("treasury", "section.",
+     "C14: the four KPI cards become one gap grid inside a complete 2px ink "
+     "frame drawn by the band itself; the per-card 4px coral tops and "
+     "border-right dividers go. CANVAS-SYNC item 93."),
+    ("error-404", "div.e-wrap",
+     "C14: the split panel gains its complete 2px ink frame; its top edge sits "
+     "under the header's own line, so one line shows. CANVAS-SYNC item 93."),
 ]
 
 
