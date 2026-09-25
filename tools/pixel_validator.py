@@ -49,6 +49,7 @@ Usage
 from __future__ import annotations
 
 import argparse
+import collections
 import http.server
 import json
 import pathlib
@@ -135,14 +136,33 @@ const path = require("node:path");
           // doubling.
           if (px(us.borderBottomWidth) > 0)
             declared.push({ src: "upper-bottom", w: px(us.borderBottomWidth), c: us.borderBottomColor });
-          // R2: a framed component flush against the boundary IS the boundary.
+          // R2: a framed component flush against the boundary IS the boundary
+          // — when it spans the band. An INSET component (narrower than the
+          // band) touching the boundary draws its own frame edge across its
+          // own width only; that edge is the component's, judged by
+          // tools/frame_audit.py, not a band rule. Its columns are set aside
+          // and the band boundary is read across the rest.
+          const r = lower.getBoundingClientRect();
+          const inset = [];
+          const spans = (el) => { const q = el.getBoundingClientRect();
+            return q.left - r.left <= FLUSH && r.right - q.right <= FLUSH; };
           for (const child of lower.children) {
             const ccs = getComputedStyle(child);
             if (px(ccs.borderTopWidth) <= 0) continue;
-            if (Math.abs(top(child) - top(lower)) <= FLUSH)
+            if (Math.abs(top(child) - top(lower)) > FLUSH) continue;
+            if (spans(child))
               declared.push({ src: "flush-frame", w: px(ccs.borderTopWidth), c: ccs.borderTopColor });
+            else { const q = child.getBoundingClientRect();
+              inset.push([Math.round(q.left), Math.round(q.right)]); }
           }
-          const r = lower.getBoundingClientRect();
+          const ub = upper.getBoundingClientRect();
+          for (const child of upper.children) {
+            const ccs = getComputedStyle(child);
+            if (px(ccs.borderBottomWidth) <= 0) continue;
+            const q = child.getBoundingClientRect();
+            if (Math.abs(q.bottom - ub.bottom) > FLUSH || spans(child)) continue;
+            inset.push([Math.round(q.left), Math.round(q.right)]);
+          }
           bounds.push({
             index: i,
             label: label(lower),
@@ -151,6 +171,7 @@ const path = require("node:path");
             x: Math.round(r.left),
             width: Math.round(r.width),
             declared,
+            inset,
             upperBg: us.backgroundColor,
             lowerBg: cs.backgroundColor,
           });
@@ -158,6 +179,22 @@ const path = require("node:path");
         return { boundaries: bounds };
       }, FLUSH);
 
+      // A full-page capture composites fixed and sticky overlays at their
+      // VIEWPORT position, so at 390 the coral mobile pledge bar lands across
+      // whatever boundary sits ~950px down the page and reads as the line —
+      // /case/ "The mechanism" was reported "no rule renders" for exactly
+      // that. Overlays float over the band stack and are not part of it, so
+      // they come out for the capture, as tools/band_audit.py already does.
+      // Bands themselves are never hidden.
+      await page.evaluate(() => {
+        const main = document.querySelector("main");
+        const bands = new Set(main ? [...main.children] : []);
+        for (const el of document.querySelectorAll("body *")) {
+          if (bands.has(el)) continue;
+          const pos = getComputedStyle(el).position;
+          if (pos === "fixed" || pos === "sticky") el.style.visibility = "hidden";
+        }
+      });
       const name = (route.replace(/^\//, "").replace(/\/$/, "").replace(/[\/.]/g, "_") || "index") + "@" + w;
       const file = path.join(outDir, name + ".png");
       await page.screenshot({ path: file, fullPage: true });
@@ -233,14 +270,44 @@ def rle_column(img: Image.Image, x: int, y0: int, y1: int):
     return [(tuple(c), n) for c, n in runs]
 
 
+COLUMN_STEP = 16          # sample every Nth pixel column across the boundary
+MODAL_SHARE = 0.5         # the modal verdict must hold this share of columns
+
+
 def validate_boundary(img, b, width):
-    """Return (key, problems) for one boundary, read from pixels."""
-    y = b["y"]
-    x = b["x"] + max(2, min(b["width"] - 3, b["width"] // 2))
+    """Return (key, problems) for one boundary: the MODAL verdict across columns.
+
+    One column at the band's centre was the whole reading until 2026-09-25.
+    A single column cannot tell a rule from a vertical divider it happens to
+    stand on (a four-column grid puts a gap exactly at 50%), or from a glyph
+    crossing the probe window, so both read as defects that nobody can see.
+    Every COLUMN_STEP-th column is now read and the most common verdict
+    stands, the way tools/band_audit.py already reads a boundary. When no
+    verdict holds MODAL_SHARE of the columns the boundary is an error, never
+    a pass: the pixels disagree with themselves and nothing can be concluded.
+    """
     key = f"{b['upperLabel']} -> {b['label']}"
+    x0, x1 = b["x"] + 2, min(img.width, b["x"] + b["width"]) - 2
+    # Columns under an inset component's flush edge belong to that component.
+    inset = b.get("inset") or []
+    xs = [x for x in range(x0, x1, COLUMN_STEP)
+          if not any(lo - 2 <= x <= hi + 2 for lo, hi in inset)]
+    if not xs:
+        return key, [f"{key}: boundary is too narrow to read ({b['width']}px)"]
+    votes = collections.Counter(tuple(_validate_column(img, b, x, key)) for x in xs)
+    verdict, n = votes.most_common(1)[0]
+    if n / len(xs) < MODAL_SHARE:
+        return key, [f"{key}: no pixel verdict — the most common reading holds "
+                     f"{n}/{len(xs)} columns, under {MODAL_SHARE:.0%}"]
+    return key, list(verdict)
+
+
+def _validate_column(img, b, x, key):
+    """Problems for one pixel column through the boundary (empty = clean)."""
+    y = b["y"]
     problems = []
     if not (0 <= x < img.width):
-        return key, [f"{key}: boundary x={x} is outside the {img.width}px shot"]
+        return [f"{key}: boundary x={x} is outside the {img.width}px shot"]
     runs = rle_column(img, x, y - PROBE_PX, y + PROBE_PX)
     # The two band fills are read from the PIXELS at the ends of the probe
     # window, not from computed style. A band whose own background is
@@ -271,24 +338,24 @@ def validate_boundary(img, b, width):
         rule_runs.append((c, n))
 
     if not decl_set and not rule_runs:
-        return key, []                      # same-colour bands, no rule: fine
+        return []                      # same-colour bands, no rule: fine
     if not decl_set and rule_runs:
         problems.append(
             f"{key}: pixels show {len(rule_runs)} rule run(s) "
             f"{[(f'#%02X%02X%02X' % c, n) for c, n in rule_runs]} but nothing "
             f"declares a rule on this boundary")
-        return key, problems
+        return problems
     if decl_set and not rule_runs:
         problems.append(
             f"{key}: declares {[(w, src) for w, _c, src in decl_set]} but no rule "
             f"renders at the boundary")
-        return key, problems
+        return problems
     if len(rule_runs) > 1:
         problems.append(
             f"{key}: {len(rule_runs)} rule runs render where a boundary may carry "
             f"exactly one — {[(f'#%02X%02X%02X' % c, n) for c, n in rule_runs]} "
             f"(declared {[(w, src) for w, _c, src in decl_set]})")
-        return key, problems
+        return problems
 
     c, n = rule_runs[0]
     match = None
@@ -306,7 +373,7 @@ def validate_boundary(img, b, width):
             problems.append(
                 f"{key}: rule renders #%02X%02X%02X at {n}px; declared colours are "
                 f"{[('#%02X%02X%02X' % dc) if dc else None for _w, dc, _s in decl_set]}" % c)
-    return key, problems
+    return problems
 
 
 def run(directory: pathlib.Path, routes, port: int):
@@ -384,8 +451,57 @@ BAD_UNDECLARED = _page(
     '<section class="a" data-screen-label="A">A</section>'
     '<section class="b" data-screen-label="B"><div class="r"></div>B</section>')
 
+# A correct boundary whose CENTRE column stands on a vertical ink divider: the
+# lower band is a two-column grid with a 2px ink gap at exactly 50%. A reader
+# sees one coral rule. A single centre column saw only ink and called it a
+# defect — the /treasury/ and /404 false findings. Must PASS.
+GOOD_DIVIDER_AT_CENTRE = _page(
+    "divider at centre",
+    ".a{background:#FAF7F0;height:80px}"
+    ".b{border-top:4px solid #D64A1E;display:grid;grid-template-columns:1fr 1fr;"
+    "gap:2px;background:#0A0A0A;height:80px}.b>div{background:#FAF7F0}",
+    '<section class="a" data-screen-label="A">A</section>'
+    '<section class="b" data-screen-label="B"><div>one</div><div>two</div></section>')
+# The same grid with the boundary rule drawn twice. Every column but the
+# divider shows the doubling, so the modal reading must still FAIL it —
+# reading more columns must not dilute a real defect.
+BAD_DOUBLE_WITH_DIVIDER = _page(
+    "double with divider",
+    ".a{background:#FAF7F0;height:80px;border-bottom:4px solid #0A0A0A}"
+    ".b{border-top:4px solid #D64A1E;display:grid;grid-template-columns:1fr 1fr;"
+    "gap:2px;background:#0A0A0A;height:80px}.b>div{background:#FAF7F0}",
+    '<section class="a" data-screen-label="A">A</section>'
+    '<section class="b" data-screen-label="B"><div>one</div><div>two</div></section>')
+
+# An INSET framed box whose top edge touches a same-colour boundary. The band
+# boundary itself carries no rule, correctly; the box's edge is the box's.
+# Columns inside and outside the box disagree, so without setting the box's
+# columns aside there is no majority reading. Must PASS.
+GOOD_INSET_BOX = _page(
+    "inset box",
+    ".a{background:#FAF7F0;height:80px}.b{background:#FAF7F0;height:80px}"
+    ".box{border:2px solid #0A0A0A;margin:0 auto;max-width:40%;height:40px}",
+    '<section class="a" data-screen-label="A">A</section>'
+    '<section class="b" data-screen-label="B"><div class="box"></div></section>')
+
+# A correct boundary with a position:fixed coral bar parked over it in the
+# viewport — the /case/ 390 false finding. A full-page capture paints the bar
+# at its viewport position, across the boundary. Must PASS.
+GOOD_FIXED_OVERLAY = _page(
+    "fixed overlay",
+    ".a{background:#FAF7F0;height:950px}.b{background:#F2EDE1;height:400px;"
+    "border-top:4px solid #D64A1E}"
+    ".bar{position:fixed;left:0;right:0;bottom:0;height:70px;background:#D64A1E}",
+    '<section class="a" data-screen-label="A">A</section>'
+    '<section class="b" data-screen-label="B">B</section>'
+    '</main><div class="bar">Sign the Pledge</div><main>')
+
 SELF_CASES = [
     ("good-one-rule.html", GOOD_ONE_RULE, True),
+    ("good-fixed-overlay-over-boundary.html", GOOD_FIXED_OVERLAY, True),
+    ("good-inset-box-at-boundary.html", GOOD_INSET_BOX, True),
+    ("good-divider-at-centre.html", GOOD_DIVIDER_AT_CENTRE, True),
+    ("bad-double-with-divider.html", BAD_DOUBLE_WITH_DIVIDER, False),
     ("good-no-rule-same-colour.html", GOOD_NO_RULE, True),
     ("bad-double-rule.html", BAD_DOUBLE, False),
     ("bad-rule-thicker-than-declared.html", BAD_THICK, False),
