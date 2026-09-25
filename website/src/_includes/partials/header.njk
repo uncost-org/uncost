@@ -29,7 +29,15 @@
         <a href="{{ link.url }}"{% if page.url == link.url %} class="here"{% endif %}>{{ link.label }}</a>
         {% endfor %}
       </nav>
-      <button class="hd-search" type="button" aria-label="Search" data-search><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5L21 21"></path></svg></button>
+      {#- The search control is a LINK, not a button. The overlay it used to
+          toggle is `display:none` until js/ui.js adds `open`, so with script
+          off the button was a dead control: nothing it could do. It now points
+          at /search/, a real page carrying the same destinations, and ui.js
+          intercepts the click to open the overlay when script is available.
+          `u-navlink` is the export's own utility (tokens.css): it restores the
+          ink colour and drops the underline the global `a` rule would give an
+          anchor here, so the control looks exactly as it did — no new CSS. -#}
+      <a class="hd-search u-navlink" href="/search/" aria-label="Search" data-search><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5L21 21"></path></svg></a>
       <a class="cta-btn" href="/pledge/">Sign the Pledge</a>
       <button class="hd-burger" type="button" aria-label="Open menu" data-drawer-open><i></i><i></i><i></i></button>
     </div>

@@ -1634,6 +1634,35 @@ body[data-page="news"] .newsxref a { color: var(--coral-deep); }
  * exists to prevent. */
 .search-ov .so-search[hidden] { display: none !important; }
 
+/* C16 — the JS-off state of the search overlay.
+ *
+ *     `.search-ov` is `display:none` until js/ui.js adds `open`, so with script
+ *     off its nine shortcut links were rendered to nobody and the header
+ *     control was a button that could not do anything. behaviour_checks read
+ *     "only 0 of 9 link blocks rendered" — and read it from offsetParent, which
+ *     is why it caught what reading the markup did not: the links ARE in the
+ *     HTML, they just never render.
+ *
+ *     The control is now a real <a href="/search/">, and ui.js intercepts the
+ *     click when script is present. partials/search.njk ships the overlay
+ *     carrying `search-ov--nojs`, and ui.js removes that class, so this state
+ *     exists only where script is absent: an ordinary in-flow block of the same
+ *     destinations at the end of the page — not a fixed full-viewport panel,
+ *     which is what adding `open` in markup would have meant for every no-JS
+ *     reader.
+ *
+ *     The second rule is not cosmetic. `.so-top` holds the close button, and a
+ *     close button with nothing to close is exactly the dead control this
+ *     change exists to remove. */
+.search-ov--nojs {
+  position: static;
+  display: block;
+  background: none;
+  z-index: auto;
+  padding: 0 clamp(24px, 6vw, 80px) clamp(56px, 10vw, 120px);
+}
+.search-ov--nojs .so-top { display: none; }
+
 
 /* ---------------------------------------------------------------------------
  * 3. Status line — "12 results" / "No results" / "Search is unavailable."

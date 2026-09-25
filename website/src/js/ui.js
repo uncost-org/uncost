@@ -9,6 +9,20 @@
     var drawerEl = document.querySelector('.drawer');
     var searchEl = document.querySelector('.search-ov');
 
+    /* The overlay is a JS-only control: it is display:none until `open` is set
+       below, so with this file absent it can never appear. partials/search.njk
+       therefore ships it as an ordinary in-flow block (.search-ov--nojs) with
+       no dialog semantics, and the header control ships as a real link to
+       /search/. Everything that makes it a dialog is added here, where a
+       dialog can actually open — a reader without script is never offered
+       dialog semantics, and never a close button that cannot close anything. */
+    if (searchEl) {
+      searchEl.classList.remove('search-ov--nojs');
+      searchEl.setAttribute('role', 'dialog');
+      searchEl.setAttribute('aria-modal', 'true');
+      searchEl.setAttribute('aria-label', 'Search');
+    }
+
     function closeAll(){
       items.forEach(function(it){ it.classList.remove('open'); it.querySelector('a').setAttribute('aria-expanded','false'); });
       megas.forEach(function(m){ m.classList.remove('open'); });
@@ -37,7 +51,13 @@
     var sOpen = document.querySelector('[data-search]'),      sClose = document.querySelector('[data-search-close]');
     if (bOpen)  bOpen.addEventListener('click', function(){ toggleDrawer(true); });
     if (bClose) bClose.addEventListener('click', function(){ toggleDrawer(false); });
-    if (sOpen)  sOpen.addEventListener('click', function(){ toggleSearch(true); });
+    /* [data-search] is an <a href="/search/">, so it works with this file
+       absent. Where it is present the overlay is the faster answer, so the
+       navigation is cancelled and the overlay opened instead — the link's
+       destination stays the honest fallback, and Enter on the link behaves
+       exactly like the click. */
+    if (sOpen)  { sOpen.setAttribute('aria-haspopup', 'dialog');
+                  sOpen.addEventListener('click', function(e){ e.preventDefault(); toggleSearch(true); }); }
     if (sClose) sClose.addEventListener('click', function(){ toggleSearch(false); });
     document.addEventListener('keydown', function(e){ if(e.key==='Escape'){ closeAll(); toggleDrawer(false); toggleSearch(false); } });
 
