@@ -1972,3 +1972,32 @@ body[data-page="case"] .cards .card:nth-child(4n+3) { --cell: var(--cream-2); --
  *     SPANS inside a heading — and this heading carries the accent colour
  *     itself, so nothing matched it. That is why the item read as resolved. */
 .u-7 h2.u-4, .u-7 h2.u-4.sec { color: var(--coral-deep) !important; }
+
+/* 87. D1 — LINK HOVER BY GROUND (founder decision 2026-09-25, option a).
+ *
+ *     Hover and the current-page state (`a.here`, which the export styles in
+ *     the same rule as :hover) repaint a link --coral. On a light ground that
+ *     is 4.04:1 on cream, 3.70 on cream2 and 4.32 on white — under the 4.5
+ *     bar for the 13-16px links that carry it (476 failing runs on the
+ *     2026-09-25 baseline, every one of them this pair).
+ *
+ *       light grounds (cream, cream2, white)  hover -> --coral-deep
+ *                                             5.59 / 5.12 / 5.99
+ *       ink grounds (footer, ink bands)       hover -> --coral, 4.58
+ *                                             (--coral-deep is 3.31 on ink
+ *                                             and fails small text)
+ *       rest colours                          unchanged
+ *
+ *     The export sets hover colour in some twenty rules across site.css and
+ *     sections.css, all as `color: var(--coral)`. Rather than chase each one,
+ *     the hovered link redefines --coral for itself, so every one of those
+ *     rules resolves to the ground's hover shade. The shade is a ground
+ *     token: light by default, brand coral inside every ink container that
+ *     holds links — found by walking each link's ancestors on 25 routes at
+ *     1440 and 390, not by guessing class names. Buttons are excluded: their
+ *     hover repaints a fill, not a text colour. */
+:root { --hover-coral: var(--coral-deep); }
+.ft, .site-foot, .blk--ink, .u-block--ink, .block--ink, .titleband,
+.p-head, .anchor-bar, .skip-link { --hover-coral: var(--coral); }
+a:not([class*="btn"]):hover,
+a.here:not([class*="btn"]) { --coral: var(--hover-coral); }
