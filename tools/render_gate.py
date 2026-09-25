@@ -44,7 +44,9 @@ SECTION_EXEMPTIONS = [
      "Every Cost Watch card also gains the Reported label. That is most of the "
      "section's pixels by design, hence ~41%; the section's x and width still "
      "have to match the export and do, so the gate's geometry check is "
-     "unaffected. CANVAS-SYNC items 72 and 73."),
+     "unaffected. CANVAS-SYNC items 72 and 73. " "C10 (Batch U): the list runs the container's full width (the 840px "
+     "column cap is gone), cards are #FFF and the filter bar is a --cream-2 band. "
+     "CANVAS-SYNC item 92."),
     ("projects/", "At a glance",
      "The dossier's reviewed prose is the content authority and runs far longer "
      "than the export's designed one-liner placeholder; structure is identical."),

@@ -2104,3 +2104,24 @@ body[data-page="faq"] .faqsec--wheat + .blk--coral { margin-top: 0 !important; }
  *     still paints the 2px gaps between the cards. */
 .blk--white { background: #FFF; color: var(--ink); }
 body[data-page="receipts"] .blk--white .rule3 > div { background: var(--cream-2); }
+
+/* 95. C10 — /news/ and /news/cost-watch/: full-width list, cream-2 filter
+ *     band, white cards.
+ *     Measured at 1440 before: the column was capped at 840px (item 76), so
+ *     each card was 712px wide on a 1440px page.
+ *       list     the cap goes; the list runs the container's full width
+ *                (1312px cards at 1440 inside the column's own padding)
+ *       filter   the keyword filter bar becomes a --cream-2 band
+ *       cards    #FFF (both item types), so they lift off the cream page
+ *       small    coral text on the cards (.date, .src, "Read at … →") stays
+ *                --coral-deep: 5.99 on white; --coral would be 4.32
+ *     Card text keeps the site's one wrap point, min(66vw, 960px) (C4). A
+ *     full-width card is a surface; a 1260px line of 16px body copy would be
+ *     ~190 characters, so the words stop at the same measure as every other
+ *     body on the site. The hover state (item 75, wheat at (0,3,1)) still
+ *     outranks the white. */
+body[data-page="news"] .newswrap--solo .updates,
+body[data-page="news"] .newswrap--solo .costwatch { max-width: none; }
+body[data-page="news"] :is(.up-item, .cw) { background: #FFF; }
+body[data-page="news"] :is(.up-item, .cw) :is(p, h3, h4) { max-width: min(66vw, 960px); }
+body[data-page="news"] .rfilter { background: var(--cream-2); padding: 14px 18px; }
