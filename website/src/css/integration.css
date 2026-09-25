@@ -2091,3 +2091,16 @@ body[data-page="faq"] .faqsec--wheat:has(+ .blk--coral) { padding-bottom: 48px; 
 /* The export's `.u-47{margin-top:48px !important}` sets that margin, so
  * clearing it needs !important too. */
 body[data-page="faq"] .faqsec--wheat + .blk--coral { margin-top: 0 !important; }
+
+/* 94. C12 — /receipts/ "If we can't show where a number came from, we don't
+ *     print it." band -> #FFF, its three cards -> --cream-2.
+ *     `.blk--white` is repo-owned: the export has no white band class, and
+ *     `--white` is not a token (item 48), so the value is written here once.
+ *     The template changes the band's CLASS from .blk--wheat (restated in
+ *     tools/post_patch_pages.py), because C1's wheat rules key on that class
+ *     and would otherwise keep the eyebrow and 01/02/03 numerals in ink. On
+ *     white they take the light-ground default, --coral-deep: eyebrow 5.99 on
+ *     white, numerals 5.12 on the cream-2 cards. `.rule3`'s ink container
+ *     still paints the 2px gaps between the cards. */
+.blk--white { background: #FFF; color: var(--ink); }
+body[data-page="receipts"] .blk--white .rule3 > div { background: var(--cream-2); }

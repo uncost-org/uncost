@@ -326,4 +326,12 @@ patch("website/src/_data/home.json",
       "C5 hero intro breaks after \"price tag.\"",
       guard="price tag</u>.<br>We aim")
 
+# C12 (Batch U, 2026-09-25) — /receipts/ "The rule" band goes white. The band's
+# CLASS changes, not just its paint: kept as .blk--wheat, C1's wheat rules would
+# go on turning its eyebrow and numerals ink on a white ground.
+patch("website/src/receipts.njk",
+      r'<section class="blk blk--wheat" data-screen-label="The rule">',
+      '<section class="blk blk--white" data-screen-label="The rule">',
+      "C12 receipts rule band is white")
+
 print("done")
