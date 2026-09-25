@@ -1894,3 +1894,35 @@ body[data-page="case"] .cards .card:nth-child(4n+3) { --cell: var(--cream-2); --
   color: var(--ink);
 }
 .wx-stop strong { font-family: var(--font-display); font-weight: 700; }
+
+/* 85. C15 — two failures CANVAS-SYNC records as resolved that were still
+ *     shipping. Both were found by tools/contrast_audit.py, which measures the
+ *     rendered page; both had been "fixed" in a note rather than in the CSS.
+ *
+ * (a) /treasury/ KPI placeholders. `.kpi .pending` is the em-dash standing in
+ *     for a number that does not exist yet, at clamp(40px,4.5vw,64px)/900, and
+ *     the export colours it `--rule-soft` — ink at 18% alpha, which composites
+ *     to #C8C4BA on cream-2 and measures 1.49:1 against a 3.0 bar. Item 60
+ *     recorded exactly this colour as "unreadable" on cream2 and moved the
+ *     REGISTER label off it; the KPI placeholders were never moved with it.
+ *     --fg-3 is 6.18:1 and is still the muted tertiary token, so the
+ *     placeholder stays visibly a placeholder without being invisible.
+ *
+ * (b) /about/ "How a cost gets uncosted." `.u-4` is #D64A1F on the band's
+ *     #F5AB2E, 2.21:1 against the 3.0 large bar. Item 74 judged this band's
+ *     family and set the rule — display accents keep --coral-deep — but the
+ *     rule was applied to the eyebrow and the answer body, not to this
+ *     heading. --coral-deep measures 3.06:1 here. That clears the large bar by
+ *     0.06, which is thin; it holds only because the heading is 52-56px and
+ *     can never be small text. If this band ever moves off the wheat family,
+ *     re-measure rather than assuming. D4 is deciding the wheat accent
+ *     question for the homepage and /movement/ bands; this one is named in C15
+ *     and fixed to item 74's own rule. */
+:where(body[data-page="treasury"]) .kpi .pending { color: var(--fg-3); }
+/*     The failing element is NOT the .seqhd heading — that one sits on the page
+ *     cream, where #D64A1F is 4.04:1 and clears the large bar at 52px. It is
+ *     `h2.u-4.sec` inside `section.u-7`, the band that paints #F5AB2E. Item
+ *     74's rule reached `.u-7 :is(h1,h2,h3) .u-1` and `.u-7 .hl` — accent
+ *     SPANS inside a heading — and this heading carries the accent colour
+ *     itself, so nothing matched it. That is why the item read as resolved. */
+.u-7 h2.u-4, .u-7 h2.u-4.sec { color: var(--coral-deep) !important; }
