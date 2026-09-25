@@ -895,7 +895,7 @@ body[data-page="sectors-leisure"] { --gp: 0.1701; }
 /* 1. Per-band default for every coral-family token. */
 .u-1, .num, .n, .cn, .pn, .eq, .go, .tag, .pd, .free, .when, .date, .mail,
 .src-num, .idx, .pid, .eyebrow, .plus, .u-56, .u-19, .u-132, .u-70, .u-3,
-.u-102, .u-73, .u-120, .u-50,
+.u-102, .u-73, .u-120,
 .blk b, .block b, .pol-body .num { color: var(--coral-deep) !important; }
 
 /* C2, 2026-09-25: --coral, at every size on ink. C1 moved --ink to #0A0A0A,
@@ -910,8 +910,16 @@ body[data-page="sectors-leisure"] { --gp: 0.1701; }
 .blk--coral :is(.u-1,.num,.n,.cn,.pn,.eq,.go,.tag,.eyebrow,.when,.idx,b),
 .hero.blk--coral :is(.n,.eq,b) { color: var(--ink) !important; }
 
-/* 2. Display accents — headings only, so they are always WCAG large text. */
-h1 .u-1, h2 .u-1, h3 .u-1, .sec .u-1, .hl,
+/* 2. Display accents — headings only, so they are always WCAG large text.
+ *    E2, 2026-09-25: `h1 .u-50` is the homepage hero's second line, "Uncost
+ *    the cost of living." It sat in list 1 above, so it rendered
+ *    --coral-deep #B23A14 while the first line's accent, "not billionaires
+ *    richer" (`.hl`), rendered --coral #D64A1E — two corals in one headline.
+ *    The export writes `.u-50{color:var(--coral)}`; it is h1 text at
+ *    38-82px, so the bar is 3.0 and --coral on cream is 4.04. The word
+ *    "Uncost" inside it is `.u-51`, which declares its own colour and so is
+ *    untouched here (D5). */
+h1 .u-1, h2 .u-1, h3 .u-1, .sec .u-1, .hl, h1 .u-50,
 h1 .hl, h2 .hl, h3 .hl { color: var(--coral) !important; }
 .blk--ink :is(h1,h2,h3) .u-1, .u-block--ink :is(h1,h2,h3) .u-1,
 .block--ink :is(h1,h2,h3) .u-1 { color: var(--coral) !important; }

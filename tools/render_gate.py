@@ -226,6 +226,12 @@ SECTION_EXEMPTIONS = [
      "1006px at 390. The homepage's worst band is the one with the most running "
      "text, so it moves most when the headline scale and the measure change. "
      "Sweep 3, batch G."),
+    # ── Batch U part 2 (2026-09-25) ───────────────────────────────────────
+    ("index.html", "S1 Hero",
+     "E2: the hero's second line, \"Uncost the cost of living.\", renders "
+     "--coral #D64A1E — the export's own `.u-50` value and the same shade as "
+     "\"not billionaires richer\" on the first line. C1's per-band list had "
+     "overridden it to --coral-deep. CANVAS-SYNC item 79."),
 ]
 
 
