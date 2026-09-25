@@ -193,7 +193,7 @@ body[data-page="sectors"] .sgrid .scard img {
 :where(body[data-page^="policies-"]) .pol-toc h2{font-family:var(--font-body);font-weight:600;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg-3);margin:0 0 14px}
 :where(body[data-page^="policies-"]) .pol-toc a{display:block;font-size:14px;line-height:1.4;color:var(--fg-2);text-decoration:none;padding:6px 0;border-bottom:1px solid var(--rule-hair)}
 :where(body[data-page^="policies-"]) .pol-toc a:hover{color:var(--coral)}
-:where(body[data-page^="policies-"]) .pol-body{padding:36px clamp(24px,5vw,64px) 20px;max-width:76ch}
+:where(body[data-page^="policies-"]) .pol-body{padding:36px clamp(24px,5vw,64px) 20px;max-width:min(66vw, 960px)}
 :where(body[data-page^="policies-"]) .callout{border:2px solid var(--ink);background:var(--wheat);padding:24px 26px;margin-bottom:36px}
 :where(body[data-page^="policies-"]) .callout h3{font-family:var(--font-display);font-weight:700;font-size:20px;margin:0 0 8px}
 :where(body[data-page^="policies-"]) .callout p{font-size:16px;line-height:1.6;margin:0;color:var(--ink)}
@@ -623,7 +623,50 @@ body[data-page="case"] .cards { grid-template-columns: repeat(2, 1fr); }
   font-size: clamp(34px, 4.2vw, 56px) !important;  /* beats .u-NN sizes */
   line-height: 1.02;
   letter-spacing: -.02em;
-  max-width: none !important;   /* beats .sec / .u-NN wrap widths */
+  max-width: min(66vw, 960px) !important;   /* C4: headline shares the body's wrap point */
+}
+
+/* 84. C3 — ONE HEADLINE SIZE, INCLUDING IN BANDS THAT CARRY A GRID.
+ *
+ *     R4 above gates the whole prose rule behind `:not(:has(.cards, …))`, and
+ *     that exclusion is right for the MEASURE: a wrap point belongs to running
+ *     text, not to a card grid. It was wrong for the SIZE. The two travelled
+ *     together, so any band holding a grid kept whatever `.u-NN` size the
+ *     export gave its headline, and the headline scale simply stopped at the
+ *     band's edge.
+ *
+ *     The homepage shows it: "Working harder, still falling behind." is
+ *     `h2.u-57.sec` inside "S2 The problem", a band that also carries `.cards`
+ *     and `.scope`. R4 skips the band, the headline keeps the export's size,
+ *     and it renders smaller than every other section headline on the page.
+ *     That is the G1 miss.
+ *
+ *     Size, weight and family therefore apply to every section headline in a
+ *     band, grid or not. The measure does not — C4 owns that. Page heroes keep
+ *     their own larger scale: they are h1 in `.hero`/`.titleband`, and
+ *     `.hero h2` is excluded by name for the pages that head a band with one.
+ *
+ *     Specificity is matched to R4's deliberately — `.blk:not(.hero)` is
+ *     (0,2,1), the same as `.blk:not(:has(…))` — so this rule wins by order
+ *     rather than by weight, and the two cannot silently diverge. */
+/* `.introband` and `.seqhd` are prose bands too — eyebrow, headline, body —
+ * but neither carries a .blk/.block class, so R4 never reached them and their
+ * headlines kept the export's 42px/52px. A card heading (.sys > .card > .bd >
+ * h2) and a component heading (.share, .u-98) are NOT section headlines and
+ * are deliberately left alone: resizing those to the section scale would make
+ * a card shout as loudly as the band holding it. */
+.blk:not(.hero):not(.titleband) h2,
+.block:not(.hero):not(.titleband) h2,
+.introband > h2,
+.seqhd > h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(34px, 4.2vw, 56px) !important;
+  line-height: 1.02;
+  letter-spacing: -.02em;
+  /* C4: the headline wraps where the body wraps. A grid-bearing band gets the
+     shared wrap point for its HEADLINE even though its grid is untouched. */
+  max-width: min(66vw, 960px) !important;
 }
 .blk:not(:has(.cards, .sgrid, .plist, .pollist, .grid3, .path, .isnot, .can,
               .tiers, .parts4, .rule3, .focus3, .runs, .asks, .happens, .prin,
@@ -633,9 +676,12 @@ body[data-page="case"] .cards { grid-template-columns: repeat(2, 1fr); }
                 .tiers, .parts4, .rule3, .focus3, .runs, .asks, .happens, .prin,
                 .ways, .next, .fund, .rel, .basket, .conftable, .vhist, .mdrawer,
                 .scope, .loop, .evd-empty, table)) p {
-  max-width: 728px !important   /* G2: absolute, not ch — a ch measure is a
-     different width at every font-size, which is how one rule produced 565px
-     at 14px and 727px at 16px and still looked like one measure in the CSS */;
+  /* C4, 2026-09-25: one wrap point, headline and body alike, replacing
+     G2's 728px. Absolute above 1454px and proportional below it, so a
+     1920 display gets a wider column instead of a 728px ribbon in the
+     middle of the screen — which is what G2 produced and what C4 is
+     here to end. */
+  max-width: min(66vw, 960px) !important;
 }
 
 /* 58 — R5 TABLE RULE (new). The sector "04 · Related projects" Ledger (`.lg`)
@@ -953,7 +999,7 @@ b, .b { color: var(--coral-deep) !important; }
  *      CANVAS-SYNC item 70. */
 body[data-page="index"] .intent { display: block; }
 body[data-page="index"] .intent > * + * { margin-top: 18px; }
-body[data-page="index"] .intent p { max-width: 64ch; }
+body[data-page="index"] .intent p { max-width: min(66vw, 960px); }   /* C4 */
 body[data-page="index"] .intent h2,
 body[data-page="index"] .intent + h2 {
   font-size: clamp(34px, 4.2vw, 56px);
@@ -1221,13 +1267,13 @@ h2.sec, .blk h2.sec, h2.u-146, h2.u-38 {
  *     grids, tables, card bodies, chip rows — are untouched, because the
  *     measure applies to running text, not to layout. */
 .blk > p, .blk > .lead, section > p.lead, section > p.u-11,
-.introband p, .faqsec .a {
+.introband p, .faqsec .a, .seqhd + * > p, .introband > p {
   /* !important because the .u-* layer declares its own measures that way, and
      five paragraphs kept them: 565 (.u-43), 607 (.u-155), 646 (.u-10), 760
      (.u-137) and 795 (.u-130). One measure means one measure. A paragraph in
      a container narrower than this still renders narrower — the cap is a
      ceiling, not a width. */
-  max-width: 728px !important;
+  max-width: min(66vw, 960px) !important;   /* C4 */
 }
 
 /* 79. ONE CORAL ON INK. G3 (2026-09-19), amended 2026-09-20, settled by C2
@@ -1509,7 +1555,7 @@ body[data-page="news"] .newsxref {
   border-left: 3px solid var(--ink);
   padding: 14px 16px;
   margin: 0 0 26px;
-  max-width: 78ch;
+  max-width: min(66vw, 960px);   /* C4 */
 }
 body[data-page="news"] .newsxref p {
   font-size: 15px;
