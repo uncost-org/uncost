@@ -2006,3 +2006,13 @@ body[data-page="case"] .cards .card:nth-child(4n+3) { --cell: var(--cream-2); --
 .p-head, .anchor-bar, .skip-link { --hover-coral: var(--coral); }
 a:not([class*="btn"]):hover,
 a.here:not([class*="btn"]) { --coral: var(--hover-coral); }
+
+/* 88. C5 — homepage hero spacing.
+ *     The two headline lines ("…not billionaires richer." / "Uncost the cost
+ *     of living.") are two block spans set at line-height .96, so the second
+ *     sat as close under the first as any wrapped line inside either. A step
+ *     of .35em separates the two statements without detaching them — 27px at
+ *     1440 (77.8px type), 13px at 390 (38px type). The intro's line break
+ *     after "…price tag." is a <br> in _data/home.json, restated by
+ *     tools/post_patch_pages.py because re-derivation rewrites that file. */
+body[data-page="index"] .hero-grid h1 .u-50 { margin-top: .35em; }

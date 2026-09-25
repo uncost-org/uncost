@@ -315,4 +315,15 @@ patch("website/src/sectors/sector.njk",
       '{%- endif %}\n',
       "C17 anchor 03 drops with the section", guard="{%- if sc and sc.workedExample %}")
 
+# C5 (Batch U, 2026-09-25) — homepage hero intro: "We aim to significantly…"
+# starts a new line after "…price tag." The copy lives in _data/home.json,
+# which tools/rederive_home.py re-extracts from the export on every adoption,
+# so the break is restated here. No copy changes: the space after the full
+# stop becomes a <br>. Fails loudly if the sentence itself has moved.
+patch("website/src/_data/home.json",
+      r'living should not have a price tag</u>\. We aim to significantly',
+      'living should not have a price tag</u>.<br>We aim to significantly',
+      "C5 hero intro breaks after \"price tag.\"",
+      guard="price tag</u>.<br>We aim")
+
 print("done")

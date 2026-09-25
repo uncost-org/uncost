@@ -231,7 +231,10 @@ SECTION_EXEMPTIONS = [
      "E2: the hero's second line, \"Uncost the cost of living.\", renders "
      "--coral #D64A1E — the export's own `.u-50` value and the same shade as "
      "\"not billionaires richer\" on the first line. C1's per-band list had "
-     "overridden it to --coral-deep. CANVAS-SYNC item 79."),
+     "overridden it to --coral-deep. CANVAS-SYNC item 79. C5: the second line "
+     "sits .35em lower (27px at 1440, 13px at 390) and the intro breaks after "
+     "\"…price tag.\", so the hero is taller than the export's by those "
+     "amounts plus one intro line. CANVAS-SYNC item 85."),
 ]
 
 
