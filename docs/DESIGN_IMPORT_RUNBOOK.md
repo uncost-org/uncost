@@ -219,6 +219,19 @@ verification behind it, so:
    because someone looked; a mislabelled commit is not visible from its own
    message. Stage the paths the item actually touches, and check `git status`
    before committing, not after.
+6. **A decision render is valid only if a pixel diff against its baseline
+   proves the override applied.** Adopted 2026-09-26. A render offered for a
+   founder decision (a variant, an option a/b/c) is evidence only when the
+   same page, rendered without the override, differs from it in pixels —
+   and differs where the override says it should. A render whose override
+   silently lost the cascade is byte-identical, or near it, to the page
+   without it, and presents the unchanged page as the option. This happened
+   in Batch U: G5 variant 05 was chosen from four PNGs that contained zero
+   pixels of the variant's own colour, because its injected rules lost on
+   specificity to the card's existing `span.m` rules; the founder chose
+   between variants that did not exist. Before a decision render is offered,
+   diff it against its baseline, confirm the difference is non-zero and lies
+   in the element the option changes, and state that check with the render.
 
 This rule exists because four audits in this repository have passed over a real
 defect:
