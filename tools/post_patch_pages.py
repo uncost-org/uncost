@@ -113,14 +113,11 @@ if p.exists():
 # wording; these restore the approved copy. Every figure stays register-driven.
 # ---------------------------------------------------------------------------
 print("UNP-82 — receipts:")
-patch("website/src/receipts.njk",
-      r'(<div class="u-126"><span class="rcpt-illus">Illustrative only</span>.*?</div>)',
-      r'\1\n  <p class="u-131">These four labels describe how much confidence a <b>figure</b> carries.'
-      ' They are a deliberately separate system from the status badges on sectors and projects,'
-      ' which describe what stage a <b>piece of work</b> is at. The two never mix: a confirmed'
-      ' figure can sit on a project that hasn&rsquo;t started, and a project already building can'
-      ' rest on an estimate.</p>',
-      "confidence-vs-status note", guard="These four labels describe")
+# The confidence-vs-status note patch is RETIRED 2026-09-26 by V11: the section
+# it wrote into ("Four honest labels") is retired into the labels drawer, and
+# the note now lives in _data/labels.js (the confidence family's `note`), where
+# a re-derivation cannot reach it. After a re-derivation the V11 patches at the
+# end of this file remove the export's section wholesale.
 
 # (The worked-example patch is retired: P2 removed that section from /receipts/
 #  entirely on 2026-09-13, and R3 retired the .fact treatment it used.)
@@ -487,5 +484,33 @@ patch("website/src/sectors/index.njk",
           r'  (<span class="status [^"]+">[^<]+</span>) (<span class="u-138">[^<]+</span>)\n',
           r'  <span class="lg-pair">\1<span class="lg-colon">:</span>\2</span>\n', m.group(2)),
       "V19 /sectors/ legend: chip, colon, meaning", guard='<span class="lg-pair">')
+
+# V11 (Batch V, 2026-09-26) — the labels drawer. The standalone "Four honest
+# labels" section on /receipts/ is retired into it, and the drawer partial is
+# included on /receipts/, /projects/, /policies/, /sectors/, /news/ and
+# /treasury/ (and /news/cost-watch/, which is repo-owned). All six of those
+# templates are re-derived from the export, so both the retirement and the
+# includes are restated. The retirement is a removal, so it is guarded by
+# absence.
+if 'data-screen-label="Confidence labels"' in pathlib.Path("website/src/receipts.njk").read_text(encoding="utf-8"):
+    patch("website/src/receipts.njk",
+          r'<!-- SECTION: receipts\.Confidence labels -->\n<section [^>]*data-screen-label="Confidence labels">.*?</section>\n\n',
+          '', "V11 receipts: Four honest labels retired into the drawer")
+else:
+    print("  = V11 receipts: Four honest labels retired into the drawer (already applied)")
+LABELS_DRAWER = '{% include "partials/labels-drawer.njk" %}\n'
+for path, anchor, where in (
+    ("website/src/receipts.njk", r'(<!-- SECTION: receipts\.Receipts CTA -->\n)', "before the CTA"),
+    ("website/src/projects/index.njk", r'(<!-- SECTION: projects\.Projects CTA -->\n)', "before the CTA"),
+    ("website/src/sectors/index.njk", r'(<!-- SECTION: sectors\.Sectors CTA -->\n)', "before the CTA"),
+    ("website/src/treasury.njk", r'(<!-- SECTION: treasury\.Treasury CTA -->\n)', "before the CTA"),
+    ("website/src/news/index.njk", r'(<script src="/js/keyword-filter\.js" defer></script>\n)', "after the list"),
+):
+    patch(path, anchor, LABELS_DRAWER + ("\n" if "SECTION" in anchor else "") + r"\1",
+          f"V11 {path.split('src/')[1]}: labels drawer {where}", guard=LABELS_DRAWER.strip())
+patch("website/src/policies/index.njk",
+      r'(data-screen-label="How policies change">.*?</section>\n)',
+      r"\1\n" + LABELS_DRAWER,
+      "V11 policies/index.njk: labels drawer after the last section", guard=LABELS_DRAWER.strip())
 
 print("done")

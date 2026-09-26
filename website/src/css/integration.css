@@ -2606,3 +2606,86 @@ body[data-page="sectors"] .legend .lg-pair .u-138 { min-width: 0; }
 @media (max-width: 640px) {
   body[data-page="sectors"] .legend { flex-direction: column; align-items: flex-start; gap: 10px; }
 }
+
+/* 116. V11 — THE LABELS DRAWER (partials/labels-drawer.njk, _data/labels.js).
+ *      Styled as the /case/ Methodology drawer, whose rules are all scoped to
+ *      body[data-page="case"] by the export and so cannot simply be reused.
+ *      These restate its RESOLVED values, read from the rendered /case/
+ *      drawer at 1440, not from the source rules:
+ *        header   white (V17), display face 700 17px, 18px × clamp(24px,6vw,
+ *                 80px) padding, the FAQ chevron in --coral-deep (item 43)
+ *                 turning -135deg when open
+ *        body     --cream-2, 2px ink rule under the header, 28px × the same
+ *                 side padding
+ *        heading  body face 700 24px, uppercase, .06em, --fg-3 (items 34, 59)
+ *        text     17.5px / 1.6, --fg-2 (item 59)
+ *      The families stack in one column (the /case/ drawer's two columns are
+ *      its rules/labels split; this drawer holds a full-width table on
+ *      /receipts/). Label names sit in a wrapping row, chips at their own
+ *      size, no margins of their own. */
+/* Its top edge is a band boundary, so R1 draws it: 4px, coral (no page
+ * places it under a coral band) — as `.blk + .mdrawer` does on /case/. */
+.ldrawer { border-top: 4px solid var(--coral); }
+.ldrawer summary {
+  list-style: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px clamp(24px, 6vw, 80px);
+  background: #FFF;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+}
+.ldrawer summary::-webkit-details-marker { display: none; }
+.ldrawer summary::after {
+  content: "";
+  position: absolute;
+  right: clamp(24px, 6vw, 80px);
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin-top: -9px;
+  border-right: 2.5px solid var(--coral-deep);
+  border-bottom: 2.5px solid var(--coral-deep);
+  transform: rotate(45deg);
+  transition: transform 120ms linear;
+}
+.ldrawer[open] summary::after { transform: rotate(-135deg); }
+.ldrawer-body {
+  display: grid;
+  gap: 32px;
+  padding: 28px clamp(24px, 6vw, 80px);
+  background: var(--cream-2);
+  border-top: 2px solid var(--ink);
+}
+.ldrawer-body h3 {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.1;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  margin: 0 0 10px;
+}
+.ldrawer-body p {
+  font-size: 17.5px;
+  line-height: 1.6;
+  color: var(--fg-2);
+  margin: 16px 0 0;
+  max-width: min(66vw, 960px);
+}
+.ldrawer-names {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+}
+.ldrawer-names li > * { margin: 0; }

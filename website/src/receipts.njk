@@ -71,23 +71,6 @@ description: "Our open methodology and source layer. Every number has a source, 
   </div>
 </section>
 
-<!-- SECTION: receipts.Confidence labels -->
-<section class="blk blk--cream2" data-screen-label="Confidence labels">
-  <div class="eyebrow">What the confidence tags mean</div>
-  <h2 class="u-125 sec">Four honest labels.</h2>
-  <table class="conftable">
-    <thead><tr><th>Label</th><th>What it tells you</th></tr></thead>
-    <tbody>
-      <tr><td><span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span></td><td>Drawn directly from a named, dated, licensed public source. Check it yourself.</td></tr>
-      <tr><td><span class="rcpt-conf rcpt-conf--estimate">Estimate</span></td><td>Derived from sourced inputs plus stated assumptions. The assumptions are published alongside.</td></tr>
-      <tr><td><span class="rcpt-conf rcpt-conf--scenario">Scenario</span></td><td>A modelled &ldquo;what if&rdquo; — a possible outcome under specific conditions, not a prediction.</td></tr>
-      <tr><td><span class="rcpt-conf rcpt-conf--needs-refresh">Needs refresh</span></td><td>The underlying source is past its review date. Treat with caution until updated.</td></tr>
-    </tbody>
-  </table>
-  <div class="u-126"><span class="rcpt-illus">Illustrative only</span> <span class="u-127">— any hypothetical figure on the site carries this hatched marker, so a placeholder is never mistaken for real data.</span></div>
-  <p class="u-131">These four labels describe how much confidence a <b>figure</b> carries. They are a deliberately separate system from the status badges on sectors and projects, which describe what stage a <b>piece of work</b> is at. The two never mix: a confirmed figure can sit on a project that hasn&rsquo;t started, and a project already building can rest on an estimate.</p>
-</section>
-
 <!-- SECTION: receipts.Keeping current -->
 <section class="blk blk--ink u-block--ink" data-screen-label="Keeping current">
   <div class="u-111 eyebrow">Because data goes stale</div>
@@ -106,6 +89,8 @@ description: "Our open methodology and source layer. Every number has a source, 
   </div>
   <p class="u-75"><a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--ghost">View public records on GitHub</a></p>
 </section>
+
+{% include "partials/labels-drawer.njk" %}
 
 <!-- SECTION: receipts.Receipts CTA -->
 <section class="blk blk--coral" data-screen-label="Receipts CTA">

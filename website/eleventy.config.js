@@ -231,6 +231,62 @@ module.exports = function (eleventyConfig) {
     }
   });
 
+  // ── V11 labels-drawer guard ─────────────────────────────────────────────
+  // The labels drawer (partials/labels-drawer.njk) must list EXACTLY the label
+  // families its page renders — the brief's rule is "each page shows only the
+  // label families it uses". _data/labels.js declares the families per page
+  // by hand, so this checks the declaration against the built page, both
+  // directions:
+  //   - every label chip in <main> outside the drawer belongs to one of the
+  //     families the drawer lists (a label the reader sees is explained), and
+  //     is a name labels.js knows at all (a new label cannot slip in unlisted);
+  //   - every family the drawer lists has at least one of its names rendered
+  //     outside the drawer (no family the page does not use);
+  //   - a page with families has the drawer; one without has none.
+  // Chips are read from the rendered markup by their class markers, the same
+  // way the news-label guard reads them.
+  eleventyConfig.on("eleventy.after", async ({ dir, results }) => {
+    const labels = require("./src/_data/labels.js");
+    const written = new Map((results || []).map((r) => [r.url, r.outputPath]));
+    const CHIP = /<span class="(?:[^"]*\s)?(?:rcpt-conf|rcpt-illus|status|lbl)(?:\s[^"]*)?">([\s\S]*?)<\/span>/g;
+    const text = (h) => h.replace(/<[^>]+>/g, "").replace(/&mdash;/g, "\u2014").replace(/\s+/g, " ").trim();
+    const owner = new Map();
+    for (const [key, fam] of Object.entries(labels.families)) {
+      for (const l of fam.labels) owner.set(l.name, [...(owner.get(l.name) || []), key]);
+    }
+    const problems = [];
+    for (const [url, fams] of Object.entries(labels.pages)) {
+      const out = written.get(url);
+      if (!out || !fs.existsSync(out)) {
+        problems.push(`${url}: listed in _data/labels.js but not built — a guard that cannot see its page fails`);
+        continue;
+      }
+      const html = fs.readFileSync(out, "utf8");
+      const main = (html.match(/<main[\s\S]*?<\/main>/) || [""])[0];
+      const drawer = (main.match(/<details class="ldrawer"[\s\S]*?<\/details>/) || [""])[0];
+      const outside = main.replace(drawer, "");
+      if (fams.length && !drawer) problems.push(`${url}: lists ${fams.join(", ")} but renders no labels drawer`);
+      if (!fams.length && drawer) problems.push(`${url}: lists no families but renders a labels drawer`);
+      const shown = [...drawer.matchAll(/data-label-family="([^"]+)"/g)].map((m) => m[1]);
+      if (shown.join() !== fams.join()) problems.push(`${url}: drawer shows [${shown}] but labels.js lists [${fams}]`);
+      const used = new Set();
+      for (const m of outside.matchAll(CHIP)) {
+        const name = text(m[1]);
+        const keys = owner.get(name);
+        if (!keys) { problems.push(`${url}: label "${name}" is in no family in _data/labels.js`); continue; }
+        const hit = keys.filter((k) => fams.includes(k));
+        if (!hit.length) problems.push(`${url}: label "${name}" (${keys}) is rendered but its family is not in this page's drawer`);
+        hit.forEach((k) => used.add(k));
+      }
+      for (const k of fams) {
+        if (!used.has(k)) problems.push(`${url}: drawer lists family "${k}" but the page renders none of its labels`);
+      }
+    }
+    if (problems.length) {
+      throw new Error("Labels drawer guard failed:\n  - " + problems.join("\n  - "));
+    }
+  });
+
   eleventyConfig.on("eleventy.before", async () => {
     await Image(path.join(BRAND_ROOT, "logos", "mark-only-final-light.png"), {
       widths: [1200],
