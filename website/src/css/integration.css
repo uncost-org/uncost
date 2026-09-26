@@ -2405,3 +2405,33 @@ main :is(
  *      edge. All three properties inherit, so one declaration at the root
  *      reaches every underline on the site, including hover-only ones. */
 html { text-decoration-skip-ink: none; text-underline-position: under; }
+
+/* 106. V9 — THE ORANGE SQUARE IS THE STANDARD CARD-HEADING MARKER.
+ *      The 11px coral square beside each "At a glance" card heading on
+ *      /projects/basic-needs-cost-model/ becomes the marker on every
+ *      three-card "At a glance" section (all 7 project pages), the /roadmap/
+ *      Year 2 / Year 3 / Beyond boxes, and the /about/ "Uncost is / is not"
+ *      boxes. Why only one page had it: the export styles `.grid3` on just 3
+ *      of the 7 project pages, and draws the marker only for its `h3 i` —
+ *      the markup is `h2`, so it matched on the one page whose block also
+ *      named `h2 i`. The other FOUR project pages (automation-dividend-study,
+ *      basic-needs-planner, community-resource-simulator, library-of-things-
+ *      kit) had no `.grid3` rules at all and rendered "At a glance" unstyled.
+ *      So the export's own basic-needs-cost-model block is re-scoped to every
+ *      project page, declarations byte-identical (items 29/32 did the same).
+ *      /roadmap/: the export's marker is on `.gates h4 i`, and the repo
+ *      promoted those headings to h3, so it stopped matching; restated for
+ *      h3. /about/ has no `<i>` in the markup, so the same square is drawn as
+ *      a ::before. V6 (item 103) still sets these headings' size. */
+body[data-page^="projects-"] .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--ink);border:2px solid var(--ink)}
+body[data-page^="projects-"] .grid3>div{background:var(--cream);padding:30px 26px}
+body[data-page^="projects-"] .grid3 h2,body[data-page^="projects-"] .grid3 h3{font-family:var(--font-display);font-weight:700;font-size:21px;margin:0 0 10px;display:flex;gap:10px;align-items:center}
+body[data-page^="projects-"] .grid3 h2 i,body[data-page^="projects-"] .grid3 h3 i{width:11px;height:11px;background:var(--coral);flex:0 0 auto}
+body[data-page^="projects-"] .grid3 p{font-size:15px;line-height:1.6;color:var(--fg-2);margin:0}
+@media (max-width:880px){
+  body[data-page^="projects-"] .grid3{grid-template-columns:1fr}
+}
+body[data-page="roadmap"] .gates h3{display:flex;gap:10px;align-items:center}
+body[data-page="roadmap"] .gates h3 i{width:11px;height:11px;background:var(--coral);flex:0 0 auto}
+body[data-page="about"] .isnot h3{display:flex;gap:10px;align-items:center}
+body[data-page="about"] .isnot h3::before{content:"";width:11px;height:11px;background:var(--coral);flex:0 0 auto}
