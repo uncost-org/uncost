@@ -2515,3 +2515,62 @@ body[data-page="movement"] .uncosted-close{margin-top:22px}
  *      77.8px), 19px at 390 (headline 38px). The step between the two lines
  *      stays C5's .35em of the headline. */
 body[data-page="index"] .hero-grid h1 .u-49 { font-size: .5em; color: var(--ink); }
+
+/* 114. V16 — /news/ and /news/cost-watch/: one cream-2 list band, white
+ *      cards, cream hover, three-line "Read more".
+ *        band     the list column (`.updates` / `.costwatch`) goes from
+ *                 --cream to --cream-2, so the cross-reference box and the
+ *                 filter bar (both already --cream-2, item 95) sit on the
+ *                 same ground: the whole list section is one band. The cards
+ *                 stay #FFF (item 95).
+ *        hover    /news/ update cards had no hover state; they now light to
+ *                 --cream at (0,3,1), over item 95's white at (0,2,1). Cost
+ *                 Watch keeps its wheat (item 75).
+ *        clamp    /js/read-more.js adds `.is-clamped` to an item's body only
+ *                 when JS runs, so with JS off every item is at full length.
+ *                 The control exists only on items the clamp actually cuts,
+ *                 measured on the rendered paragraph.
+ *        control  text-weight button in --coral-deep (5.99 on white, the
+ *                 same small-coral rule as the card's own `.date` and "Read
+ *                 at … →"). On a Cost Watch card the control cannot live
+ *                 inside the card's <a>, so it follows it and is drawn as the
+ *                 card's foot: white, the card's own side and bottom edges,
+ *                 pulled up over the grid gap; the card gives up its bottom
+ *                 edge to it. It hides with its card when the filter hides
+ *                 the card, and takes the card's hover ground (with ink text,
+ *                 as item 75 does for "Read at … →" on wheat). */
+body[data-page="news"] .newswrap--solo :is(.updates, .costwatch) { background: var(--cream-2); }
+body[data-page="news"] .up-item:hover { background: var(--cream); }
+body[data-page="news"] [data-news-item] p.is-clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+body[data-page="news"] .readmore {
+  display: inline-block;
+  margin: 10px 0 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--coral-deep);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+body[data-page="news"] .cwlist > .cw:has(+ .readmore) { border-bottom: 0; }
+body[data-page="news"] .cwlist > .readmore {
+  display: block;
+  margin: -14px 0 0;
+  padding: 0 24px 18px;
+  text-align: left;
+  background: #FFF;
+  border: 2px solid var(--ink);
+  border-top: 0;
+}
+body[data-page="news"] .cwlist > .cw:hover + .readmore { background: var(--wheat); color: var(--ink); }
+body[data-page="news"] .cwlist > .cw[hidden] + .readmore { display: none; }

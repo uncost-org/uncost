@@ -451,4 +451,12 @@ patch("website/src/movement.njk",
       r'\1  {% import "partials/uncosted.njk" as uc %}\n  {{ uc.block(uncosted.movement) }}\n\2',
       "V12 movement: uncosted partial", guard="{{ uc.block(uncosted.movement) }}")
 
+# V16 (Batch V, 2026-09-26) — /news/ loads /js/read-more.js (three-line clamp,
+# "Read more"). news/index.njk is re-derived from the export, so the include is
+# restated after the keyword filter's. cost-watch.njk is repo-owned.
+patch("website/src/news/index.njk",
+      r'(<script src="/js/keyword-filter.js" defer></script>\n)',
+      r'\1<script src="/js/read-more.js" defer></script>\n',
+      "V16 news: read-more script", guard='<script src="/js/read-more.js" defer></script>')
+
 print("done")

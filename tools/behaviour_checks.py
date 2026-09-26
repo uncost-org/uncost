@@ -59,7 +59,7 @@ const jobs = JSON.parse(process.argv[4]);   // [{route, js, queries:{name:select
     const page = await browser.newPage();
     await page.setCacheEnabled(false);
     await page.setJavaScriptEnabled(job.js);
-    await page.setViewport({ width: 1440, height: 1000, deviceScaleFactor: 1 });
+    await page.setViewport({ width: job.width || 1440, height: 1000, deviceScaleFactor: 1 });
     let res;
     try {
       res = await page.goto(base + job.route, { waitUntil: job.js ? "networkidle0" : "load", timeout: 60000 });
@@ -72,6 +72,14 @@ const jobs = JSON.parse(process.argv[4]);   // [{route, js, queries:{name:select
       out.push({ ...job, loadError: "HTTP " + (res && res.status()) });
       await page.close();
       continue;
+    }
+    if (job.js) {
+      // Web fonts change line breaks; measure only once they have landed.
+      await page.evaluate(() => document.fonts && document.fonts.ready);
+      await new Promise(r => setTimeout(r, 150));
+    }
+    if (job.js && job.type) {
+      try { await page.type(job.type[0], job.type[1]); await new Promise(r => setTimeout(r, 250)); } catch (e) {}
     }
     if (job.js && job.clickFirst) {
       try { await page.click(job.clickFirst); await new Promise(r => setTimeout(r, 250)); } catch (e) {}
@@ -99,6 +107,22 @@ const jobs = JSON.parse(process.argv[4]);   // [{route, js, queries:{name:select
           // Recorded only to expose the gap between the attribute and reality.
           // Never asserted on.
           attrHidden: els.filter((e) => e.hasAttribute("hidden")).length,
+          // TRUNCATED as drawn: the box is shorter than its own content.
+          // Measured on the rendered element, never inferred from a class.
+          clipped: els.filter((e) => rendered(e) && e.scrollHeight > e.clientHeight + 1).length,
+          // Tallest rendered box, in its own lines.
+          maxLines: Math.max(0, ...els.filter(rendered).map((e) =>
+            Math.round(e.clientHeight / (parseFloat(getComputedStyle(e).lineHeight) || 1)))),
+          // A rendered control whose aria-controls target is NOT truncated
+          // (a control that does nothing), and a truncated element with no
+          // rendered control pointing at it (text the reader cannot reach).
+          orphanControls: els.filter((e) => {
+            if (!rendered(e) || !e.hasAttribute("aria-controls")) return false;
+            const t = document.getElementById(e.getAttribute("aria-controls"));
+            return !t || !(t.scrollHeight > t.clientHeight + 1);
+          }).length,
+          unreachable: els.filter((e) => rendered(e) && e.scrollHeight > e.clientHeight + 1 &&
+            ![...document.querySelectorAll('[aria-controls="' + e.id + '"]')].some(rendered)).length,
         };
       }
       return res;
@@ -159,7 +183,76 @@ SITE_JOBS = [
     {"name": "search-js-on", "route": "/", "js": True,
      "queries": {"links": ".search-ov .so-links a",
                  "searchbox": ".search-ov [data-search-box]"}},
+] + [
+    # V16 — three-line clamp with "Read more" (/js/read-more.js). /news/ is
+    # measured at 1440, where two of its three updates run past three lines;
+    # Cost Watch at 320, the one width where a claim does (a 1440 Cost Watch
+    # card is one line and would assert nothing). `-open` presses the first
+    # control; `-filter` narrows Cost Watch to the BLS rows, hiding the only
+    # card with a control, whose control then must not render either.
+    {"name": f"{key}-{mode}", "route": route, "width": width, "js": mode != "js-off",
+     "queries": {"bodies": f"#{grid} [data-news-item] p", "controls": "[data-read-more]"},
+     **extra}
+    for key, route, width, grid in (("news", "/news/", 1440, "news-uncost"),
+                                    ("costwatch", "/news/cost-watch/", 320, "news-costwatch"))
+    for mode, extra in (("js-off", {}), ("js-on", {}),
+                        ("js-on-open", {"clickFirst": "[data-read-more]"}),
+                        ("js-on-filter", {"type": ["#cfilter-q", "bls"]}))
+    if not (key == "news" and mode == "js-on-filter")
 ]
+
+
+def check_read_more(key, off, on, opened, filtered, errors, results):
+    """V16. With JS off nothing is truncated and no control exists; with JS on
+    every truncated body has a rendered control, no control is dead, and no
+    body shows more than three lines while truncated."""
+    tag = key.upper()
+    if off:
+        b, c = off["bodies"], off["controls"]
+        results[f"{key}_js_off_truncated"] = b["clipped"]
+        if b["total"] == 0:
+            errors.append(f"{tag}-JS-OFF: no item bodies in the markup — nothing to assert on")
+        elif b["rendered"] != b["total"] or b["clipped"]:
+            errors.append(f"{tag}-JS-OFF: {b['clipped']} of {b['total']} item bodies are "
+                          f"truncated with JS off; the full text must render without script")
+        if c["rendered"] or c["total"]:
+            errors.append(f"{tag}-JS-OFF: {c['total']} Read more control(s) in the page with "
+                          f"JS off ({c['rendered']} rendered) — a control with no behaviour")
+
+    def js_on(label, m):
+        b, c = m["bodies"], m["controls"]
+        if b["unreachable"]:
+            errors.append(f"{tag}-{label}: {b['unreachable']} truncated body(ies) with no "
+                          f"rendered Read more — text the reader cannot reach")
+        if c["orphanControls"]:
+            errors.append(f"{tag}-{label}: {c['orphanControls']} Read more control(s) on a "
+                          f"body that is not truncated — a control that does nothing")
+        if c["rendered"] != b["clipped"]:
+            errors.append(f"{tag}-{label}: {c['rendered']} controls for {b['clipped']} "
+                          f"truncated bodies")
+
+    if on:
+        b = on["bodies"]
+        results[f"{key}_js_on_truncated"] = b["clipped"]
+        results[f"{key}_js_on_controls"] = on["controls"]["rendered"]
+        if b["clipped"] == 0:
+            errors.append(f"{tag}-JS-ON: no body is truncated at the measured width — the "
+                          f"check cannot see its subject (a longer item or a narrower width "
+                          f"is needed)")
+        if b["clipped"] and b["maxLines"] > 3:
+            errors.append(f"{tag}-JS-ON: a truncated body shows {b['maxLines']} lines, "
+                          f"expected at most 3")
+        js_on("JS-ON", on)
+    if opened and on:
+        b = opened["bodies"]
+        results[f"{key}_js_on_open_truncated"] = b["clipped"]
+        if b["clipped"] != on["bodies"]["clipped"] - 1:
+            errors.append(f"{tag}-OPEN: pressing Read more left {b['clipped']} bodies "
+                          f"truncated, expected {on['bodies']['clipped'] - 1}")
+        js_on("OPEN", opened)
+    if filtered:
+        results[f"{key}_js_on_filter_controls"] = filtered["controls"]["rendered"]
+        js_on("FILTER", filtered)
 
 
 def check_site(payload, built: pathlib.Path):
@@ -228,7 +321,14 @@ def check_site(payload, built: pathlib.Path):
             errors.append("SEARCH-JS-OFF: the search input is RENDERED with JS off — "
                           "a control that cannot do anything")
 
-    # 4. /news/uncost/ is a 301, not a page. Cloudflare applies _redirects, so
+    # 4. V16 — Read more on both news routes.
+    for key in ("news", "costwatch"):
+        check_read_more(key, need(f"{key}-js-off"), need(f"{key}-js-on"),
+                        need(f"{key}-js-on-open"),
+                        need(f"{key}-js-on-filter") if key == "costwatch" else None,
+                        errors, results)
+
+    # 5. /news/uncost/ is a 301, not a page. Cloudflare applies _redirects, so
     #    this is asserted against the built artefacts: the rule is present and
     #    no real file shadows it (a static file would win over the redirect).
     red = built / "_redirects"
@@ -305,6 +405,38 @@ BAD_NO_LINKS_RENDERED = """<!doctype html><meta charset=utf-8><title>no links</t
 <div class="so-links"><a href="/a/">A</a><a href="/b/">B</a></div></div></body>"""
 
 
+# V16 fixtures. One long body and one short body; `CLAMP_JS` is a minimal
+# read-more (clamp every body, add a control only where it cuts). Run with JS
+# off the good fixture shows full text and no control; run with JS on it
+# truncates the long body and gives exactly that body a control.
+_LONG = "Lorem ipsum dolor sit amet consectetur. " * 40
+_READMORE_HTML = """<!doctype html><meta charset=utf-8><title>{t}</title>
+<style>body{{width:600px;font:16px/1.5 sans-serif}}
+p.cl{{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:{n};overflow:hidden}}
+{css}</style>
+<body><div id=g><article data-news-item><p id=b1>""" + _LONG + """</p></article>
+<article data-news-item><p id=b2>Short.</p></article></div>
+<script>{js}</script></body>"""
+CLAMP_JS = """document.querySelectorAll('[data-news-item] p').forEach(function(p){
+  p.classList.add('cl');
+  if (%s) { var b=document.createElement('button'); b.setAttribute('data-read-more','');
+    b.setAttribute('aria-controls',p.id); b.textContent='Read more'; p.after(b); }
+});"""
+GOOD_READMORE = _READMORE_HTML.format(t="good read-more", n=3, css="",
+                                     js=CLAMP_JS % "p.scrollHeight > p.clientHeight + 1")
+# The clamp is CSS-only, so it cuts text with JS off and there is no control.
+BAD_CLAMP_NO_JS = _READMORE_HTML.format(t="clamp without js", n=3,
+                                       css="#g p{display:-webkit-box;-webkit-box-orient:vertical;"
+                                           "-webkit-line-clamp:3;overflow:hidden}", js="")
+# JS clamps but never adds a control: the rest of the text is unreachable.
+BAD_UNREACHABLE = _READMORE_HTML.format(t="unreachable", n=3, css="", js=CLAMP_JS % "false")
+# A control on every body, including the short one it cannot expand.
+BAD_DEAD_CONTROL = _READMORE_HTML.format(t="dead control", n=3, css="", js=CLAMP_JS % "true")
+# Clamped at five lines, not three.
+BAD_FIVE_LINES = _READMORE_HTML.format(t="five lines", n=5, css="",
+                                      js=CLAMP_JS % "p.scrollHeight > p.clientHeight + 1")
+
+
 def write_fixtures():
     FIXTURES.mkdir(parents=True, exist_ok=True)
     for name, body in (
@@ -313,6 +445,11 @@ def write_fixtures():
         ("bad-cards-not-rendered.html", BAD_CARDS_HIDDEN),
         ("bad-dead-searchbox.html", BAD_DEAD_SEARCHBOX),
         ("bad-links-not-rendered.html", BAD_NO_LINKS_RENDERED),
+        ("good-read-more.html", GOOD_READMORE),
+        ("bad-read-more-clamp-without-js.html", BAD_CLAMP_NO_JS),
+        ("bad-read-more-unreachable.html", BAD_UNREACHABLE),
+        ("bad-read-more-dead-control.html", BAD_DEAD_CONTROL),
+        ("bad-read-more-five-lines.html", BAD_FIVE_LINES),
     ):
         (FIXTURES / name).write_text(body, encoding="utf-8")
     (FIXTURES / "README.md").write_text(
@@ -330,24 +467,32 @@ def write_fixtures():
     )
 
 
-SELF_CASES = [
-    ("good-js-off.html", True),
-    ("bad-hidden-attr-beaten-by-specificity.html", False),
-    ("bad-cards-not-rendered.html", False),
-    ("bad-dead-searchbox.html", False),
-    ("bad-links-not-rendered.html", False),
+SELF_CASES = [   # (fixture, expected to pass, JS enabled)
+    ("good-js-off.html", True, False),
+    ("bad-hidden-attr-beaten-by-specificity.html", False, False),
+    ("bad-cards-not-rendered.html", False, False),
+    ("bad-dead-searchbox.html", False, False),
+    ("bad-links-not-rendered.html", False, False),
+    ("good-read-more.html", True, False),
+    ("good-read-more.html", True, True),
+    ("bad-read-more-clamp-without-js.html", False, False),
+    ("bad-read-more-unreachable.html", False, True),
+    ("bad-read-more-dead-control.html", False, True),
+    ("bad-read-more-five-lines.html", False, True),
 ]
 
 
 def selftest(port: int) -> int:
     write_fixtures()
     failures = []
-    for name, should_pass in SELF_CASES:
-        jobs = [{"name": "fixture", "route": "/" + name, "js": False,
+    for name, should_pass, js in SELF_CASES:
+        jobs = [{"name": "fixture", "route": "/" + name, "js": js,
                  "queries": {"cards": "#register-cards > .card",
                              "showmore": "[data-show-more]",
                              "links": ".search-ov .so-links a",
-                             "searchbox": ".search-ov [data-search-box]"}}]
+                             "searchbox": ".search-ov [data-search-box]",
+                             "bodies": "[data-news-item] p",
+                             "controls": "[data-read-more]"}}]
         payload = run_jobs(FIXTURES, jobs, port)
         errors = []
         for p in payload:
@@ -368,9 +513,16 @@ def selftest(port: int) -> int:
                                   f"/{m['links']['total']}")
                 if m["searchbox"]["total"] and m["searchbox"]["rendered"] != 0:
                     errors.append(f"searchbox rendered {m['searchbox']['rendered']}")
+            if m["bodies"]["total"]:
+                sub = []
+                if js:
+                    check_read_more("fixture", None, m, None, None, sub, {})
+                else:
+                    check_read_more("fixture", m, None, None, None, sub, {})
+                errors.extend(sub)
         passed = not errors
         if passed != should_pass:
-            failures.append({"fixture": name,
+            failures.append({"fixture": name, "js": js,
                              "expected": "PASS" if should_pass else "FAIL",
                              "got": "PASS" if passed else "FAIL",
                              "sample": errors[:3]})
