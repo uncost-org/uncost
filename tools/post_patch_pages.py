@@ -320,11 +320,22 @@ patch("website/src/sectors/sector.njk",
 # which tools/rederive_home.py re-extracts from the export on every adoption,
 # so the break is restated here. No copy changes: the space after the full
 # stop becomes a <br>. Fails loudly if the sentence itself has moved.
+# (V14, below, supersedes the C5 line break: the sentence after "price tag."
+# moved up into the headline, so there is no second sentence to break before.)
+# V14 (Batch V, 2026-09-26) — homepage hero, top to bottom: "We aim to
+# significantly reduce the cost of living by putting AI and robotics to work for
+# humanity." as the headline's first line (display face, ink, half the
+# headline's size — CSS item 113) -> "Uncost the cost of living." -> the intro
+# cut to its first sentence. Every string already existed on the page; home.json
+# is re-extracted from the export on adoption, so both are restated.
 patch("website/src/_data/home.json",
-      r'living should not have a price tag</u>\. We aim to significantly',
-      'living should not have a price tag</u>.<br>We aim to significantly',
-      "C5 hero intro breaks after \"price tag.\"",
-      guard="price tag</u>.<br>We aim")
+      r'("headline": "<span class=\\"u-49\\">).*?(</span><span class=\\"u-50\\">)',
+      r'\1We aim to significantly reduce the cost of living by putting AI and robotics to work for humanity.\2',
+      "V14 hero headline line one", guard="u-49\\\">We aim to significantly")
+patch("website/src/_data/home.json",
+      r'("subhead": "Uncost is a nonprofit, nonpartisan movement that believes <u>living should not have a price tag</u>\.)[^"]*(")',
+      r'\1\2',
+      "V14 hero intro is its first sentence", guard='price tag</u>."')
 
 # C12 (Batch U, 2026-09-25) — /receipts/ "The rule" band goes white. The band's
 # CLASS changes, not just its paint: kept as .blk--wheat, C1's wheat rules would

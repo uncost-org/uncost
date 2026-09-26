@@ -238,7 +238,10 @@ SECTION_EXEMPTIONS = [
      "overridden it to --coral-deep. CANVAS-SYNC item 79. C5: the second line "
      "sits .35em lower (27px at 1440, 13px at 390) and the intro breaks after "
      "\"…price tag.\", so the hero is taller than the export's by those "
-     "amounts plus one intro line. CANVAS-SYNC item 85."),
+     "amounts plus one intro line. CANVAS-SYNC item 85. V14 (Batch V): the first "
+     "line is now \"We aim to significantly reduce the cost of living…\" at half "
+     "the headline size in ink, and the intro is its first sentence only. "
+     "CANVAS-SYNC item 117."),
     ("join", "div.privacyline",
      "C9: the \"We won't sell your data…\" strip moves from the export's --wheat "
      "to --cream-2, matching the tier cards above it. Same box, fill only. "

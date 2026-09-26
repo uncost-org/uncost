@@ -2501,3 +2501,17 @@ body[data-page="movement"] .uncosted-close{margin-top:22px}
 @media (max-width:640px){
   body[data-page="movement"] .step{grid-template-columns:56px 1fr;gap:14px}
 }
+
+/* 113. V14 — homepage hero, top to bottom:
+ *        "We aim to significantly reduce the cost of living by putting AI and
+ *         robotics to work for humanity."  display face, ink, half the
+ *                                          headline's size
+ *        "Uncost the cost of living."     the headline, unchanged
+ *        intro                            its first sentence only
+ *      The first line replaces "Technology should make living cheaper, not
+ *      billionaires richer." Every string already existed on the page — the
+ *      first line was the intro's second sentence. `.5em` of the h1 makes the
+ *      line exactly half the headline at every width: 38.9px at 1440 (headline
+ *      77.8px), 19px at 390 (headline 38px). The step between the two lines
+ *      stays C5's .35em of the headline. */
+body[data-page="index"] .hero-grid h1 .u-49 { font-size: .5em; color: var(--ink); }
