@@ -2464,3 +2464,17 @@ body[data-page="pledge"] .titleband + .pwrap { border-top: 0 !important; }
  *      export's wheat). Its chevron stays --coral-deep: 5.99:1 on white for a
  *      3:1 non-text bar. The drawer body keeps its cream-2. */
 body[data-page="case"] .mdrawer summary { background: #FFF; }
+
+/* 111. V15 — /movement/.
+ *      - "How it works" (the six steps) and "What taking part means" swap
+ *        backgrounds: the six steps on cream-2, taking part on cream.
+ *      - "uncosted" is underlined in the six-step headline (<u>, in
+ *        _data/pageContent.js).
+ *      - The step labels (Measure., Publish., …) are 25% larger than the
+ *        step text: 18px -> 22.5px, set relative so it follows the text.
+ *      - "Follow the news" -> "Follow our news"; the CTA's "Get updates" goes
+ *        to /join/#get-updates. That anchor did not exist: the Get updates
+ *        block is the footer's .ft-updates, id="updates", which the homepage
+ *        still links. The block's own "Get updates" heading now carries
+ *        id="get-updates", so both targets land on it. */
+body[data-page="movement"] .uncosted6 li > b { font-size: 1.25em; }

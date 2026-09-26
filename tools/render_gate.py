@@ -287,6 +287,10 @@ SECTION_EXEMPTIONS = [
      "V25: \"How to read these dates\" becomes a standard prose band — the "
      "export's eyebrow text is now the band's section headline at the one "
      "headline size; eyebrow slot empty; body unchanged. CANVAS-SYNC item 112."),
+    ("movement", "How a cost gets uncosted",
+     "V15: the six-step band moves to --cream-2 (swapped with \"What taking "
+     "part means\"), its headline underlines \"uncosted\" and its step labels "
+     "are 25% larger. CANVAS-SYNC item 115."),
 ]
 
 

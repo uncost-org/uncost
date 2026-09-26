@@ -50,7 +50,7 @@ module.exports = {
     // RULES and CONFIDENCE LABELS, which are genuinely methodology.
     howACostGetsUncosted: {
       eyebrow: 'How it works',
-      h2: 'How a cost gets uncosted',
+      h2: 'How a cost gets <u>uncosted</u>',
       intro: 'Six steps, applied the same way every time, in every sector:',
       steps: [
         '<b>Measure.</b> Establish what a household in a defined region actually spends on the thing in question, using public data, with the date and the region attached.',
@@ -78,7 +78,7 @@ module.exports = {
       // invitation. The approved wording is the verb.
       paths: [
         { h3: 'Sign the pledge', body: 'Free, and it takes a moment. Its only function is to show how many people want this &mdash; which is the argument that opens doors institutions would otherwise keep shut. <a href="/pledge/">Sign the Pledge</a>' },
-        { h3: 'Follow the news', body: 'Updates land on <a href="/news/">News</a> and its <a href="/news/feed.xml">RSS feed</a>, dated and honest about what is and isn&rsquo;t done &mdash; including the updates that aren&rsquo;t good news.' },
+        { h3: 'Follow our news', body: 'Updates land on <a href="/news/">News</a> and its <a href="/news/feed.xml">RSS feed</a>, dated and honest about what is and isn&rsquo;t done &mdash; including the updates that aren&rsquo;t good news.' },
         { h3: 'Volunteer your skills', body: 'The most valuable work available right now is data collection and verification: checking figures against primary sources, reviewing licences, researching a sector, translating. <a href="/join/">Join now</a>' },
       ],
       note: 'Donations open once a fiscal sponsor is confirmed; until then there is nothing to give &mdash; time and skills are worth more anyway.',

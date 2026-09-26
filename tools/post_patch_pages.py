@@ -415,4 +415,17 @@ patch("website/src/case/index.njk",
       "V17 case: question lead follows the headline",
       guard='Tools next.</span></h2>\n  <p class="u-39 lead">The question is no longer whether')
 
+# V15 (Batch V, 2026-09-26) — /movement/: the six-step "How it works" band and
+# "What taking part means" swap backgrounds (cream <-> cream-2), and the CTA's
+# "Get updates" goes to /join/#get-updates. movement.njk is re-derived.
+patch("website/src/movement.njk",
+      r'<section class="blk blk--cream" data-screen-label="How a cost gets uncosted">(.*?)<section class="blk blk--cream2" data-screen-label="What taking part means">',
+      r'<section class="blk blk--cream2" data-screen-label="How a cost gets uncosted">\1<section class="blk blk--cream" data-screen-label="What taking part means">',
+      "V15 movement: swap six-step and taking-part backgrounds",
+      guard='<section class="blk blk--cream2" data-screen-label="How a cost gets uncosted">')
+patch("website/src/movement.njk",
+      r'<a href="#updates" class="u-btn u-btn--ghost">Get updates</a>',
+      '<a href="/join/#get-updates" class="u-btn u-btn--ghost">Get updates</a>',
+      "V15 movement: Get updates -> /join/#get-updates", guard='href="/join/#get-updates"')
+
 print("done")
