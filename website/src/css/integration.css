@@ -2439,3 +2439,13 @@ body[data-page="about"] .isnot h3::before{content:"";width:11px;height:11px;back
 /* 107. V24 — /contribute/ "Useful roles, right now." ends in a "Volunteer now"
  *      button to /contact/ (the page's own ink button style for that route). */
 body[data-page="contribute"] .roles-cta { margin-top: 28px; }
+
+/* 108. V23 — /pledge/: the rule under the title band spans the full width.
+ *      The rule was `.pwrap`'s own 4px coral top, and `.pwrap` is capped at
+ *      760px and centred, so at 1440 it ran 760px across a 1440px page. The
+ *      title band above is full width, so it draws the same 4px coral along
+ *      its bottom edge and `.pwrap` stops drawing its own: one rule, edge to
+ *      edge, and no box moves. (band_audit samples a boundary only where the
+ *      two bands overlap, so a rule shorter than the page never registered.) */
+body[data-page="pledge"] .titleband { border-bottom: 4px solid var(--coral); }
+body[data-page="pledge"] .titleband + .pwrap { border-top: 0 !important; }
