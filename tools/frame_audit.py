@@ -97,6 +97,11 @@ SELFTEST_CASES = [
     ("bad-09-exempt-lookalike.html", "fail", "frame edge is open", 1),
     ("bad-10-exempt-still-unresolved.html", "fail", "not uniform", 1),
     ("bad-11-exempt-stale.html", "fail", "STALE EXEMPTION", 1),
+    # R2 as amended 2026-09-26 (V1, V2).
+    ("good-12-r1-under-ink.html", "pass", "", 1),
+    ("bad-13-r1-where-visible.html", "fail", "weight and colour differ", 1),
+    ("good-14-fullbleed-nosides.html", "pass", "", 1),
+    ("bad-15-fullbleed-sides.html", "fail", "runs along the viewport edge", 1),
 ]
 
 # --- named exemptions -------------------------------------------------------
@@ -109,7 +114,7 @@ SELFTEST_CASES = [
 # which matched no component is an error, so a decision cannot outlive its
 # subject unnoticed.
 #   (route, component path as reported, reason)
-EXEMPT_KINDS = {"open", "weight", "colour", "weight+colour"}
+EXEMPT_KINDS = {"open", "weight", "colour", "weight+colour", "viewport-edge"}
 NAMED_EXEMPTIONS = [
     ("/about/", "html > body > main > div",
      "D3 (founder decision 2026-09-25): the Mechanism step list is a full-bleed "
@@ -169,6 +174,15 @@ window.__frameAudit = function (OPT) {
   // Structural landmarks are the page, not components: the rules between their
   // bands are R1 band boundaries, governed elsewhere.
   const SKIP = new Set(["HTML", "BODY", "MAIN", "HEADER", "FOOTER", "NAV"]);
+  const VW = document.documentElement.clientWidth;
+  const R1W = 4;        // R1's declared rule weight (integration.css item 40)
+  const VIS = 12;       // channel delta under which two colours read as one line
+  // R2 as amended 2026-09-26:
+  //   V1  a frame edge is the boundary only where it is VISIBLE against its
+  //       neighbour; where the frame line would vanish into the neighbouring
+  //       band, R1's rule replaces it on that edge.
+  //   V2  a full-bleed component omits its left/right frame edges where they
+  //       meet the viewport — and must not draw a line along the screen edge.
   const cap = (s) => s[0].toUpperCase() + s.slice(1);
   const num = (v) => { const n = parseFloat(v); return isNaN(n) ? 0 : n; };
   const CS = new Map();
@@ -184,6 +198,15 @@ window.__frameAudit = function (OPT) {
   }
   const key = (c) => { const p = parseColor(c); return p ? `rgba(${p.r},${p.g},${p.b},${+(p.a).toFixed(3)})` : String(c); };
   const opaque = (c) => { const p = parseColor(c); return !!p && p.a > 0.05; };
+  const resolveOpaque = (el) => {
+    for (let e = el; e; e = e.parentElement) {
+      const p = parseColor(getComputedStyle(e).backgroundColor);
+      if (p && p.a > 0.999) return p;
+    }
+    return null;
+  };
+  const sameInk = (a, b) => !!a && !!b &&
+    Math.max(Math.abs(a.r - b.r), Math.abs(a.g - b.g), Math.abs(a.b - b.b)) <= VIS;
 
   function rendered(el) {
     if (el.nodeType !== 1 || el.namespaceURI !== "http://www.w3.org/1999/xhtml") return false;
@@ -287,6 +310,31 @@ window.__frameAudit = function (OPT) {
     if (near(u.l, p.l) && near(u.t, p.t) && near(u.r, p.r) && near(u.b, p.b)) return { mode: "pad", pads: null };
     return null;
   }
+
+  // The band a component meets on its `side`: the nearest rendered in-flow
+  // sibling, walking up only while the ancestor stays flush on that side — and
+  // across </main> to the page header or footer, which are bands too (V5).
+  function neighbourBg(el, side) {
+    const e = EDGE[side], target = box(el)[e];
+    let node = el;
+    for (let up = 0; up < 8 && node && node.tagName !== "BODY"; up++) {
+      let sib = side === "top" ? node.previousElementSibling : node.nextElementSibling;
+      while (sib && !(rendered(sib) && inflow(sib)))
+        sib = side === "top" ? sib.previousElementSibling : sib.nextElementSibling;
+      if (sib) return resolveOpaque(sib);
+      const par = node.parentElement;
+      if (!par || !near(box(par)[e], target)) return null;
+      node = par;
+    }
+    return null;
+  }
+  // Does the component's side edge — or a line drawn just outside it by an
+  // ancestor or neighbour (`reach`, the line's width) — meet the viewport?
+  // /treasury/'s KPI frame is drawn by the wrapping band, 2px outside the
+  // grid, so the grid itself starts at x=2 and a test on its own box misses
+  // the line that runs down the screen edge.
+  const atViewport = (el, side, reach) => side === "left" ? box(el).l - (reach || 0) - scrollX <= 0.5
+    : side === "right" ? box(el).r + (reach || 0) - scrollX >= VW - 0.5 : false;
 
   // A line drawn flush against the component's outer edge by something else:
   // an ancestor's border, or the adjacent band's facing edge. Walk up only
@@ -438,13 +486,34 @@ window.__frameAudit = function (OPT) {
           continue;
         }
         if (!line) {
+          if ((side === "left" || side === "right") && atViewport(el, side)) {
+            frame[side] = { state: "viewport" };          // V2: omitted by rule
+            continue;
+          }
           problems.push({ kind: "open", side: side, text: side + ": frame edge is open (no line drawn); "
             + "internal dividers are " + fmt(divider) });
           frame[side] = { state: "open" };
           continue;
         }
+        const outside = src && src.indexOf("own-border") === -1 && src.indexOf("bg-through-padding") === -1;
+        if ((side === "left" || side === "right") && atViewport(el, side, outside ? line.w : 0)) {
+          problems.push({ kind: "viewport-edge", side: side, text: side + ": a frame edge (" + fmt(line)
+            + ", " + src + ") runs along the viewport edge; a full-bleed component omits it (R2, V2)" });
+          frame[side] = { state: "viewport-line", w: line.w, color: line.color, src: src };
+          continue;
+        }
         frame[side] = { state: "line", w: line.w, color: line.color, src: src };
         const dw = Math.abs(line.w - divider.w) > WTOL, dc = line.color !== divider.color;
+        if ((dw || dc) && (side === "top" || side === "bottom") && Math.abs(line.w - R1W) <= WTOL) {
+          // V1: R1's rule stands in for a frame edge that could not be seen.
+          const nb = neighbourBg(el, side);
+          if (nb && sameInk(nb, parseColor(divider.color))) {
+            frame[side] = { state: "r1", w: line.w, color: line.color, src: src };
+            notes.push(side + ": R1's " + fmt(line) + " replaces a " + fmt(divider)
+              + " frame edge that would be invisible against its neighbour (R2, V1)");
+            continue;
+          }
+        }
         if (dw || dc)
           problems.push({ kind: dw && dc ? "weight+colour" : dw ? "weight" : "colour", side: side,
             text: side + ": frame edge is " + fmt(line) + " (" + src + ") but the internal dividers are "

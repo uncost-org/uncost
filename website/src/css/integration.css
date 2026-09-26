@@ -883,6 +883,7 @@ body[data-page="sectors-leisure"] { --gp: 0.1701; }
 .parts4 + *,
 .cwrap + *,
 .sgrid + *,
+.pol-wrap + *,                                          /* V1, item 100 */
 body[data-page="error-404"] .e-wrap + *,                /* C14, item 96 */
 body[data-page="treasury"] section:has(> .kpis) + * { border-top: 0 !important; }
 
@@ -2282,3 +2283,16 @@ body[data-page="pledge-thanks"] .share > :is(h2, p.sub) { margin-left: auto; mar
  *        4.5 bar. Ink is 10.70 / 10.73. */
 body[data-page="projects"] .grouphd span,
 body[data-page="receipts"] .blk--wheat .u-131 { color: var(--ink) !important; }
+
+/* 100. V1 — R2 AMENDED: A FRAME EDGE IS THE BOUNDARY ONLY WHERE IT CAN BE
+ *      SEEN. (Founder rule, 2026-09-26; resolves CANVAS-SYNC 93.)
+ *      `.pol-wrap` (the policy contents rail + document, 11 routes) draws a
+ *      2px ink divider, so R2 wants a frame — but its top edge sits flush
+ *      under the INK policy header, where a 2px ink frame edge is invisible.
+ *      Under the amendment R1's rule replaces the frame on that edge: the
+ *      existing 4px coral stays. The frame completes BELOW: a 2px ink bottom
+ *      edge, visible against the coral CTA, is that boundary, so the CTA's
+ *      own 4px ink top is suppressed through item 67's list. Its sides meet
+ *      the viewport and are omitted (V2, item 101). Encoded in both
+ *      tools/band_audit.py (frame_roles) and tools/frame_audit.py. */
+.pol-wrap { border-bottom: 2px solid var(--ink); }

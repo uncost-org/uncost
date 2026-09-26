@@ -380,17 +380,70 @@ def border_rule(side):
     return True, w, colour
 
 
-def is_frame(band):
-    """R2 component frame: a complete box, all four sides the same drawn line."""
-    sides = [band["b"][s] for s in ("top", "right", "bottom", "left")]
-    parsed = [border_rule(s) for s in sides]
-    if not all(p[0] for p in parsed):
-        return False, 0.0
-    widths = {round(p[1], 2) for p in parsed}
-    colours = {p[2] for p in parsed}
-    if len(widths) != 1 or len(colours) != 1:
-        return False, 0.0
-    return True, parsed[0][1]
+def frame_roles(band, bg_prev, bg_next, doc_width):
+    """R2 component frame, as amended 2026-09-26 by V1 and V2.
+
+    R2 (item 54): a component that draws dividers carries a complete frame at
+    the dividers' weight and colour, and where a frame edge is flush against a
+    band boundary that edge IS the boundary. Two amendments:
+
+      V1  A frame edge is the boundary only where it is VISIBLE against the
+          neighbouring band. Where the frame line would vanish into its
+          neighbour (a 2px ink edge under the ink policy header), R1's rule
+          replaces it on that edge, and that boundary is judged as an ordinary
+          R1 boundary — colour, weight and all.
+      V2  A full-bleed framed component omits its left and right edges where
+          they meet the viewport; a line drawn along the screen's edge frames
+          nothing.
+
+    Returns (framed, frame_line, roles) where frame_line is (width, colour)
+    and roles maps each side to "frame", "r1" or "viewport". A band that fits
+    none of this is not a frame, and every boundary it touches is judged by
+    R1 alone.
+    """
+    sides = {s: border_rule(band["b"][s]) for s in ("top", "right", "bottom", "left")}
+    r = band.get("rect") or {}
+    full_bleed = bool(r) and doc_width and r["left"] <= 0.5 and \
+        r["left"] + r["width"] >= doc_width - 0.5
+    candidates = []
+    for s in ("bottom", "top"):
+        present, w, colour = sides[s]
+        if present and colour is not None:
+            candidates.append((w, colour))
+    for fw, fc in candidates:
+        roles, ok = {}, True
+        for s in ("top", "right", "bottom", "left"):
+            present, w, colour = sides[s]
+            if present and colour is not None and abs(w - fw) <= WIDTH_TOL \
+                    and delta(colour, fc) <= 2:
+                roles[s] = "frame"
+            elif s in ("left", "right") and not present and full_bleed:
+                roles[s] = "viewport"
+            elif s in ("top", "bottom") and present and abs(w - R1_RULE_PX) <= WIDTH_TOL:
+                nb = bg_prev if s == "top" else bg_next
+                if nb is not None and not visibly_differs(fc, nb):
+                    roles[s] = "r1"
+                else:
+                    ok = False
+                    break
+            else:
+                ok = False
+                break
+        if not ok:
+            continue
+        if not any(roles[s] == "frame" for s in ("top", "bottom")):
+            continue
+        # A 4px line on only some sides is R1 rules, not a frame. The complete
+        # box (every side the same line, R2 as first written) still counts.
+        if abs(fw - R1_RULE_PX) <= WIDTH_TOL and any(v != "frame" for v in roles.values()):
+            continue
+        return True, (fw, fc), roles
+    return False, None, None
+
+
+def is_frame(band, bg_prev=None, bg_next=None, doc_width=None):
+    ok, line, _roles = frame_roles(band, bg_prev, bg_next, doc_width)
+    return ok, (line[0] if ok else 0.0)
 
 
 # ============================================================================
@@ -508,6 +561,18 @@ def audit_page(page, errors, counts, notes):
     bands = {b["domIndex"]: b for b in page["bands"]}
     canvas_bg = page.get("canvasBg")
     canvas_bg = tuple(canvas_bg) if canvas_bg else None
+    doc_width = page.get("docWidth")
+    # Each band's neighbours, for V1: is a frame edge visible against them?
+    live = [b for b in page["bands"] if b.get("rendered")]
+    nbr = {}
+    for i, b in enumerate(live):
+        prev_bg = tuple(live[i - 1]["bg"]) if i > 0 and live[i - 1].get("bg") else None
+        next_bg = tuple(live[i + 1]["bg"]) if i + 1 < len(live) and live[i + 1].get("bg") else None
+        nbr[b["domIndex"]] = (prev_bg, next_bg)
+
+    def roles_of(band):
+        pb, nb = nbr.get(band["domIndex"], (None, None))
+        return frame_roles(band, pb, nb, doc_width)
 
     for b in page["bands"]:
         if b.get("rendered") and b.get("bgUnresolved"):
@@ -566,19 +631,21 @@ def audit_page(page, errors, counts, notes):
         counts["boundaries"] += 1
         problems_before = len(errors)
 
-        # --- R2: is a component frame the boundary here? --------------------
+        # --- R2 (as amended by V1/V2): is a frame edge the boundary here? -----
+        # Only where the owner's edge at THIS boundary plays the "frame" role.
+        # An edge where R1 replaced an invisible frame line (V1) is judged as
+        # an ordinary R1 boundary below.
         frame_w = None
         if edge["kind"] == "single":
-            for cand in (U, L):
-                ok, w = is_frame(cand)
-                if ok:
-                    frame_w, frame_owner = w, cand
-                    break
+            owners = ((U, "bottom"), (L, "top"))
         else:
-            ok, w = is_frame(frame_owner)
-            frame_w = w if ok else None
-            if not ok:
-                frame_owner = None
+            owners = ((frame_owner, "bottom" if edge["kind"] == "upper-edge" else "top"),)
+        frame_owner = None
+        for cand, at in owners:
+            ok, line, roles = roles_of(cand)
+            if ok and roles.get(at) == "frame":
+                frame_w, frame_owner = line[0], cand
+                break
         suppressed = frame_w is not None
         if suppressed:
             counts["suppressed_by_frame"] += 1
@@ -851,6 +918,15 @@ SELFTEST_CASES = [
      "case 4: a rule rendering 9px where the system declares 4px"),
     ("/bad-unresolved.html", ["background not resolvable"],
      "case 5: a band whose background is a gradient — reported, never skipped"),
+    # R2 as amended 2026-09-26.
+    ("/good-frame-under-ink.html", [], "V1: R1's coral replaces a frame edge that "
+     "would vanish into the ink band above; V2: full-bleed, no sides"),
+    ("/bad-frame-under-ink.html", ["paints nothing"],
+     "V1: a 2px ink frame edge under an ink band — R2 alone would pass it"),
+    ("/good-frame-fullbleed.html", [], "V2: a full-bleed frame omits its sides"),
+    ("/bad-frame-inset-nosides.html", ["against 4px declared"],
+     "V2 applies only at the viewport: an inset component without sides is not "
+     "a frame, and its 2px line is not R1"),
 ]
 
 

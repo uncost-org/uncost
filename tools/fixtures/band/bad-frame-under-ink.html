@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>band fixture — bad, V1 invisible frame edge</title>
+<link rel="stylesheet" href="band.css"></head>
+<body><main>
+  <div class="band bg-ink"><p>Ink band.</p></div>
+  <!-- FAULT: the frame keeps its 2px ink top under an ink band. R2 alone would
+       call that edge the boundary; V1 says it only is where it can be seen. -->
+  <div class="frame2">
+    <div class="cell"><p>Cell one.</p></div><div class="cell"><p>Cell two.</p></div>
+  </div>
+  <div class="band bg-coral"><p>This boundary is correct.</p></div>
+</main></body></html>

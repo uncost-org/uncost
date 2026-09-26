@@ -56,3 +56,11 @@ table.t tbody tr + tr { border-top: 2px solid var(--ink); }
 .mix3 { display: grid; grid-template-columns: repeat(3, 1fr); }
 .mix3 > .cell:first-child { border-right: 2px solid var(--ink); }
 .mix3 > .cell:nth-child(2) { border-right: 4px solid var(--ink); }
+
+/* ── R2 as amended 2026-09-26 ──────────────────────────────────────────── */
+.inkhead { background: var(--ink); height: 60px; }
+.c2head  { background: var(--cream-2); height: 60px; }
+/* V1: R1's 4px coral on the edge that meets the neighbour above. */
+.fr-r1top { border: 2px solid var(--ink); border-top: 4px solid var(--coral); }
+/* V2: top and bottom only — for a component that meets the viewport. */
+.fr-tb { border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }

@@ -42,3 +42,13 @@ main { display: block; }
 
 /* Label text is kept off the band edges so pixel columns stay readable. */
 .band > p, .cell > p { max-width: 40ch; }
+
+/* V1/V2 (2026-09-26): a divider component whose container is transparent,
+ * framed top and bottom only, so its sides can be tested separately. */
+.frame2 { display: grid; grid-template-columns: 1fr 1fr;
+          border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+.frame2 > .cell { background: #FFFFFF; padding: 40px 24px; min-height: 140px; }
+.frame2 > .cell + .cell { border-left: 2px solid var(--ink); }
+.frame2.top-r1 { border-top: 4px solid var(--coral); }
+.narrow { max-width: 80%; margin: 0 auto; }
+
