@@ -476,8 +476,12 @@ body[data-page^="sectors-"] #evidence {
 body[data-page^="sectors-"] #evidence .evd-empty { border-color: var(--ink); }
 body[data-page^="sectors-"] #evidence .evd-empty p { color: var(--fg-2); }
 /* .u-1 is --coral (3.70:1 on cream2) — fine for the large h2, but the deep
- * variant is used for consistency with the rest of the light bands. */
-body[data-page^="sectors-"] #evidence .u-1 { color: var(--coral-deep) !important; }
+ * variant is used for consistency with the rest of the light bands.
+ * V7, 2026-09-26: superseded. The one-coral rule (C2) puts display accents on
+ * light grounds in --coral; this was the one accent left on --coral-deep. The
+ * only .u-1 in #evidence is the "receipt" accent in the 34-56px headline, so
+ * it is large text: 3.70:1 against a 3.0 bar. */
+body[data-page^="sectors-"] #evidence .u-1 { color: var(--coral) !important; }
 
 /* 49 — /assembly/ participation-loop boxes. The export paints the box interiors
  *      `--cream` and the band they sit on is also `--cream`, so the four boxes
