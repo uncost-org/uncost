@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>band fixture — good, V1 frame under an ink band</title>
+<link rel="stylesheet" href="band.css"></head>
+<body><main>
+  <div class="band bg-ink"><p>Ink band, like the policy header.</p></div>
+  <!-- V1: a 2px ink frame edge would vanish into the ink band above, so R1's
+       4px coral rule replaces it on that edge. V2: full-bleed, so no sides.
+       The frame's own bottom edge carries the boundary below. -->
+  <div class="frame2 top-r1">
+    <div class="cell"><p>Cell one.</p></div><div class="cell"><p>Cell two.</p></div>
+  </div>
+  <div class="band bg-coral"><p>Ink frame edge on coral: visible, so it is the boundary.</p></div>
+</main></body></html>

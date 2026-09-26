@@ -1,0 +1,192 @@
+{
+  "_note": "Per-sector 'Keep reading' lists, extracted verbatim from the export's own sector pages. The design picks which neighbours to show and each swatch colour; the export renumbers those classes every regeneration, so this is re-extracted by tools/rederive_collections.py rather than hand-maintained.",
+  "_allLink": {
+    "linkClass": "u-120",
+    "squareClass": "u-121 sq"
+  },
+  "care": [
+    {
+      "slug": "healthcare",
+      "sq": "u-119 sq",
+      "name": "Healthcare"
+    },
+    {
+      "slug": "shelter",
+      "sq": "u-118 sq",
+      "name": "Shelter"
+    }
+  ],
+  "clothing": [
+    {
+      "slug": "materials",
+      "sq": "u-149 sq",
+      "name": "Materials"
+    },
+    {
+      "slug": "goods",
+      "sq": "u-115 sq",
+      "name": "Goods"
+    }
+  ],
+  "communication": [
+    {
+      "slug": "education",
+      "sq": "u-149 sq",
+      "name": "Education"
+    },
+    {
+      "slug": "safety",
+      "sq": "u-118 sq",
+      "name": "Safety"
+    }
+  ],
+  "education": [
+    {
+      "slug": "communication",
+      "sq": "u-149 sq",
+      "name": "Communication"
+    },
+    {
+      "slug": "healthcare",
+      "sq": "u-119 sq",
+      "name": "Healthcare"
+    }
+  ],
+  "energy": [
+    {
+      "slug": "shelter",
+      "sq": "u-118 sq",
+      "name": "Shelter"
+    },
+    {
+      "slug": "food",
+      "sq": "u-117 sq",
+      "name": "Food"
+    }
+  ],
+  "environment": [
+    {
+      "slug": "materials",
+      "sq": "u-149 sq",
+      "name": "Materials"
+    },
+    {
+      "slug": "water",
+      "sq": "u-115 sq",
+      "name": "Water"
+    }
+  ],
+  "food": [
+    {
+      "slug": "water",
+      "sq": "u-149 sq",
+      "name": "Water"
+    },
+    {
+      "slug": "shelter",
+      "sq": "u-118 sq",
+      "name": "Shelter"
+    },
+    {
+      "slug": "energy",
+      "sq": "u-119 sq",
+      "name": "Energy"
+    }
+  ],
+  "goods": [
+    {
+      "slug": "materials",
+      "sq": "u-149 sq",
+      "name": "Materials"
+    },
+    {
+      "slug": "clothing",
+      "sq": "u-118 sq",
+      "name": "Clothing"
+    }
+  ],
+  "healthcare": [
+    {
+      "slug": "care",
+      "sq": "u-115 sq",
+      "name": "Care"
+    },
+    {
+      "slug": "education",
+      "sq": "u-149 sq",
+      "name": "Education"
+    }
+  ],
+  "leisure": [
+    {
+      "slug": "goods",
+      "sq": "u-115 sq",
+      "name": "Goods"
+    },
+    {
+      "slug": "communication",
+      "sq": "u-149 sq",
+      "name": "Communication"
+    }
+  ],
+  "materials": [
+    {
+      "slug": "goods",
+      "sq": "u-115 sq",
+      "name": "Goods"
+    },
+    {
+      "slug": "environment",
+      "sq": "u-117 sq",
+      "name": "Environment"
+    }
+  ],
+  "safety": [
+    {
+      "slug": "communication",
+      "sq": "u-149 sq",
+      "name": "Communication"
+    },
+    {
+      "slug": "environment",
+      "sq": "u-117 sq",
+      "name": "Environment"
+    }
+  ],
+  "shelter": [
+    {
+      "slug": "energy",
+      "sq": "u-119 sq",
+      "name": "Energy"
+    },
+    {
+      "slug": "food",
+      "sq": "u-117 sq",
+      "name": "Food"
+    }
+  ],
+  "transportation": [
+    {
+      "slug": "goods",
+      "sq": "u-115 sq",
+      "name": "Goods"
+    },
+    {
+      "slug": "environment",
+      "sq": "u-117 sq",
+      "name": "Environment"
+    }
+  ],
+  "water": [
+    {
+      "slug": "shelter",
+      "sq": "u-118 sq",
+      "name": "Shelter"
+    },
+    {
+      "slug": "environment",
+      "sq": "u-117 sq",
+      "name": "Environment"
+    }
+  ]
+}

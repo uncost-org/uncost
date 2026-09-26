@@ -1,0 +1,23 @@
+<!doctype html><meta charset=utf-8><title>card too small</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.5 system-ui,sans-serif;background:#FAF7F0;color:#0E0E0C}
+main>*{padding:40px 24px;display:block}
+h1,h2{margin:0 0 12px;font-weight:700;line-height:1.03}
+p{margin:0}
+.eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+h2{font-size:60px;max-width:728px}
+.blk>p{max-width:728px}
+h1{font-size:60px;max-width:728px}
+:root{--fs-h1:80px;--fs-h2:60px;--fs-h3:32px;--fs-h4:22px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:#FFFFFF;padding:20px}
+.rows .row h3{font-size:18px}
+.card h3{font-size:20px}</style>
+<body><main>
+<section class="blk blk--first"><h1>A page hero</h1><p>Hero standfirst.</p></section>
+<section class="blk"><h2>Working harder, still falling behind.</h2><p>Body copy on the same measure as the headline above it.</p></section>
+<section class="blk"><h2>Three cards, one step down.</h2><p>Body copy on the same measure as the headline above it.</p>
+  <div class=cards><div class=card><h3>Card one</h3><p>Body.</p></div><div class=card><h3>Card two</h3><p>Body.</p></div><div class=card><h3>Card three</h3><p>Body.</p></div></div>
+  <div class=rows><div class=row><h3>A list row</h3></div><div class=row><h3>Another row</h3></div></div></section>
+</main></body>

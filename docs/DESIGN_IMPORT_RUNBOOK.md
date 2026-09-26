@@ -182,6 +182,73 @@ figure, reword it as a target rather than a measurement, or record a queue
 entry with a written note. No `[PLACEHOLDER]` marker may remain on a page that
 is meant to ship as final content.
 
+### Audits are validated against rendered pixels, never against their own model
+
+**Standing rule, adopted 2026-09-19.** An audit that reports a clean result has
+made a claim about what a reader will see. That claim is only worth the
+verification behind it, so:
+
+1. **An audit fails on "I don't know."** Anything it cannot classify is a
+   failure, not a line of output that gets skipped. A check that prints an
+   unclassified case and keeps counting is reporting a subset while appearing
+   to report the whole.
+2. **Every rendering audit is validated against rendered pixels.** The audit's
+   model of the page — computed styles, border widths, an assumption about
+   which element "owns" an edge — is a hypothesis. Screenshot the result, read
+   the pixels, and diff the pixels against the assertion. Where they disagree,
+   the pixels are right.
+3. **Validation runs on the cases the audit calls CLEAN**, not only on the ones
+   it already flags. A defect an audit flags is already visible; a defect it
+   passes over is the one that ships.
+4. **A verification result may be reported only if the script that produced it
+   is committed in the repo at that commit. A check that lives in a scratchpad
+   is not a check.** Adopted 2026-09-20, after a sweep reported R1, R2, overflow
+   and contrast clean from harnesses that were never committed. When the next
+   session opened, the scripts were gone and not one of those results could be
+   reproduced, re-run, or audited. An uncommitted check produces a claim with
+   nothing behind it.
+5. **Never run `git add -A` or `git add .` while any sub-agent stream is
+   running. Stage explicit paths only.** Adopted 2026-09-25. A blanket stage
+   cannot tell your work from a concurrent stream's half-written files, so it
+   sweeps them into a commit whose message describes something else. This has
+   mislabelled a commit twice: once in Batch T, where an in-progress
+   `band_audit.py` draft was committed as part of the tooling batch and its
+   finished version had to follow in a separate commit, and once in Batch U,
+   where `git add -A` put the C16 search work and the C19 type audit inside a
+   commit whose message said only C15. Both were caught and split, but only
+   because someone looked; a mislabelled commit is not visible from its own
+   message. Stage the paths the item actually touches, and check `git status`
+   before committing, not after.
+6. **A decision render is valid only if a pixel diff against its baseline
+   proves the override applied.** Adopted 2026-09-26. A render offered for a
+   founder decision (a variant, an option a/b/c) is evidence only when the
+   same page, rendered without the override, differs from it in pixels —
+   and differs where the override says it should. A render whose override
+   silently lost the cascade is byte-identical, or near it, to the page
+   without it, and presents the unchanged page as the option. This happened
+   in Batch U: G5 variant 05 was chosen from four PNGs that contained zero
+   pixels of the variant's own colour, because its injected rules lost on
+   specificity to the card's existing `span.m` rules; the founder chose
+   between variants that did not exist. Before a decision render is offered,
+   diff it against its baseline, confirm the difference is non-zero and lies
+   in the element the option changes, and state that check with the render.
+
+This rule exists because four audits in this repository have passed over a real
+defect:
+
+| Audit | What it modelled | What shipped |
+|---|---|---|
+| R1 band audit | collapsed two rules to one wherever a framed component touched the boundary, without checking | `/join/`, `/policies/` render an ink frame edge stacked on a coral band rule; `/treasury/` renders one coral rule at 8px against 4px declared |
+| C1 coral contrast | classified text by the **named** token behind it; printed anything else as unclassified | two export bands paint a hardcoded hex near a token but not equal to one — `/about/` 3.06:1, `/faq/` 3.19:1 |
+| C1 coral contrast | measured resting states only | the Cost Watch card repaints wheat on hover — 3.25:1 and 3.91:1 |
+| P6 filter test | asserted on the counter's text | the counter read "1 of 26" while three cards stayed on screen |
+
+The pixel validator for the band audit is the reference implementation of this
+rule: it run-length-encodes the colour of each pixel row across a boundary and
+compares the rendered rule stack against the declared one. A boundary that
+renders more than one rule run, or a rule thicker than its declaration, is a
+defect whatever the DOM says.
+
 ## Step 4 — move the clean tree to public in one audited commit
 
 Do not merge staging history into public. Move the **result**, not the history:

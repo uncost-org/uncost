@@ -1,14 +1,26 @@
 ---
 layout: layouts/base.njk
+permalink: "/case/tracker/"
+pageId: "later-case-tracker"
 title: "The Tracker"
-description: "The Tracker is a planned public cost-of-living price tracker for The Case. It is not yet built."
-noindex: true
+description: "Planned — the public price tracker"
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
-<section class="blk blk--first">
-  <p class="eyebrow">Planned tool · The Case</p>
-  <h1>The Tracker.</h1>
-  <p class="lead">This page is planned and not yet built. When it ships, The Tracker will be a public cost-of-living price tracker feeding the dashboard and the public content — receipts-first, like everything in <a href="/movement">The Case</a>.</p>
-  {{ gap("tracker-later", "planned; not built for launch") }}
-  <p><a href="/receipts" class="u-btn u-btn--ink">The Receipts</a></p>
-</section>
+{#- Markup taken verbatim from design-source/pages/later/case-tracker.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: later/case-tracker.Tracker — title -->
+<div class="titleband" data-screen-label="Tracker — title"><h1>The <span class="u-1">Tracker</span></h1></div>
+<div class="sys">
+  <!-- SECTION: later/case-tracker.Tracker -->
+  <div class="card" data-screen-label="Tracker">
+    <div class="cap"><span class="status status--planned">Planned</span></div>
+    <div class="bd">
+      <div class="eq">Planned tool · The Case</div>
+      <h2>The Tracker is on the way.</h2>
+      <p>Familiar prices over time — rent, food, energy, wages, and selected basics — with visible sources and dates, so cost pressure is easy to see and share.</p>
+      <p>It feeds the dashboard and the public content. Like everything in The Case, it&rsquo;s receipts-first.</p>
+      <div class="whenrow"><b>When</b><span>With the dashboard — part of one evidence system</span></div>
+      <div class="actions"><a href="/projects/cost-of-living-tracker/" class="u-btn u-btn--ink">See the project brief</a><a href="/receipts/" class="u-btn u-btn--ghost">The Receipts</a></div>
+    </div>
+  </div>
+</div>

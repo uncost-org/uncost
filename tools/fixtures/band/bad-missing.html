@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>band fixture — bad, no rule at a boundary</title>
+<link rel="stylesheet" href="band.css"></head>
+<body><main>
+  <div class="band bg-cream"><p>First band.</p></div>
+  <!-- FAULT: a real cream-to-wheat band boundary with neither edge drawing. -->
+  <div class="band bg-wheat"><p>No rule above this band at all.</p></div>
+  <div class="band bg-ink r-coral"><p>This boundary is correct.</p></div>
+</main></body></html>

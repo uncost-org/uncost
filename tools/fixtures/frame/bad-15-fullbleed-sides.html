@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Full-bleed frame drawing its sides</title><link rel="stylesheet" href="frame.css"></head><body>
+<h1>Full-bleed frame drawing its sides</h1>
+<!-- The /join/ tiers defect: a complete frame on a full-bleed component draws
+     a line down each edge of the screen. V2 omits those. Must FAIL. -->
+<div class="g3 fr-full"><div class="cell">One</div><div class="cell">Two</div><div class="cell">Three</div></div>
+</body></html>

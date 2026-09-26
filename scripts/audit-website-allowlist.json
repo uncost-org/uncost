@@ -161,7 +161,28 @@
     "added": "2026-07-23"
   },
   {
+    "rule": "crypto-generic",
+    "path": "website/src/assembly.njk",
+    "line_sha256": "eccd3408c412bdfb662cbe3bbfb5ca9eb7ba6d2449d369166e132957e64300e0",
+    "justification": "Disavowal sentence from the design export: it names the mechanism in order to rule it out. Removing the vocabulary would weaken the disavowal \u2014 the same treatment the policy prohibition sentences already receive (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-11"
+  },
+  {
     "rule": "crypto-on-chain",
+    "path": "website/src/assembly.njk",
+    "line_sha256": "c9ba7b888f75f9293975e250e5d6c41740f3e909f9ee67492ebf7d9964408458",
+    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
+    "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "website/src/assembly.njk",
+    "line_sha256": "eccd3408c412bdfb662cbe3bbfb5ca9eb7ba6d2449d369166e132957e64300e0",
+    "justification": "Disavowal sentence from the design export: it names the mechanism in order to rule it out. Removing the vocabulary would weaken the disavowal \u2014 the same treatment the policy prohibition sentences already receive (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-11"
+  },
+  {
+    "rule": "crypto-token",
     "path": "website/src/assembly.njk",
     "line_sha256": "c9ba7b888f75f9293975e250e5d6c41740f3e909f9ee67492ebf7d9964408458",
     "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
@@ -170,9 +191,16 @@
   {
     "rule": "crypto-token",
     "path": "website/src/assembly.njk",
-    "line_sha256": "c9ba7b888f75f9293975e250e5d6c41740f3e909f9ee67492ebf7d9964408458",
-    "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
-    "added": "2026-07-23"
+    "line_sha256": "eccd3408c412bdfb662cbe3bbfb5ca9eb7ba6d2449d369166e132957e64300e0",
+    "justification": "Disavowal sentence from the design export: it names the mechanism in order to rule it out. Removing the vocabulary would weaken the disavowal \u2014 the same treatment the policy prohibition sentences already receive (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-11"
+  },
+  {
+    "rule": "crypto-dao",
+    "path": "website/src/faq.njk",
+    "line_sha256": "0bb4a7320c9947c2203f80eedc3cb20279a8ce9192a64fb6ec95806ca66afeb8",
+    "justification": "Disavowal sentence carried from the design export: it names the mechanism in order to rule it out, matching the canon quarantine and the published 'no coin, no wallet, nothing on-chain'. Removing the vocabulary would weaken the disavowal (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-13"
   },
   {
     "rule": "crypto-dao",
@@ -184,6 +212,13 @@
   {
     "rule": "crypto-generic",
     "path": "website/src/faq.njk",
+    "line_sha256": "0bb4a7320c9947c2203f80eedc3cb20279a8ce9192a64fb6ec95806ca66afeb8",
+    "justification": "Disavowal sentence carried from the design export: it names the mechanism in order to rule it out, matching the canon quarantine and the published 'no coin, no wallet, nothing on-chain'. Removing the vocabulary would weaken the disavowal (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-13"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "website/src/faq.njk",
     "line_sha256": "bce8aaf21ed2362ef0d73b811aa1f832f38a4c798febff865abbdf903fa54bc7",
     "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
     "added": "2026-07-23"
@@ -198,9 +233,23 @@
   {
     "rule": "crypto-on-chain",
     "path": "website/src/faq.njk",
+    "line_sha256": "0bb4a7320c9947c2203f80eedc3cb20279a8ce9192a64fb6ec95806ca66afeb8",
+    "justification": "Disavowal sentence carried from the design export: it names the mechanism in order to rule it out, matching the canon quarantine and the published 'no coin, no wallet, nothing on-chain'. Removing the vocabulary would weaken the disavowal (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-13"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "website/src/faq.njk",
     "line_sha256": "f78c5a51de1330876fbc285f11725da5968e660e1af0dd8999ac5831917f748d",
     "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
     "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-token",
+    "path": "website/src/faq.njk",
+    "line_sha256": "0bb4a7320c9947c2203f80eedc3cb20279a8ce9192a64fb6ec95806ca66afeb8",
+    "justification": "Disavowal sentence carried from the design export: it names the mechanism in order to rule it out, matching the canon quarantine and the published 'no coin, no wallet, nothing on-chain'. Removing the vocabulary would weaken the disavowal (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-13"
   },
   {
     "rule": "crypto-token",
@@ -217,6 +266,20 @@
     "added": "2026-07-23"
   },
   {
+    "rule": "tax-deductibility-claim",
+    "path": "website/src/faq.njk",
+    "line_sha256": "f5e76c374a59fd584c23de18d0c9717675c0bc553121bdea03187c035e99489c",
+    "justification": "Conditional statement, not a tax-status claim: it states donations are NOT open and that deductibility depends on fiscal sponsorship being confirmed first. The sentence exists to withhold the claim.",
+    "added": "2026-08-13"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "website/src/privacy.njk",
+    "line_sha256": "0e1763b2d9068c845334db02756813ace49239c282642adc18675ecb27745394",
+    "justification": "Disavowal sentence carried from the design export: it names the mechanism in order to rule it out, matching the canon quarantine and the published 'no coin, no wallet, nothing on-chain'. Removing the vocabulary would weaken the disavowal (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-13"
+  },
+  {
     "rule": "crypto-generic",
     "path": "website/src/privacy.njk",
     "line_sha256": "86c7402331f3cb9153373007033f860da02136480c37389498f228ccebc09aa3",
@@ -226,9 +289,23 @@
   {
     "rule": "crypto-on-chain",
     "path": "website/src/privacy.njk",
+    "line_sha256": "0e1763b2d9068c845334db02756813ace49239c282642adc18675ecb27745394",
+    "justification": "Disavowal sentence carried from the design export: it names the mechanism in order to rule it out, matching the canon quarantine and the published 'no coin, no wallet, nothing on-chain'. Removing the vocabulary would weaken the disavowal (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-13"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "website/src/privacy.njk",
     "line_sha256": "86c7402331f3cb9153373007033f860da02136480c37389498f228ccebc09aa3",
     "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
     "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-token",
+    "path": "website/src/privacy.njk",
+    "line_sha256": "0e1763b2d9068c845334db02756813ace49239c282642adc18675ecb27745394",
+    "justification": "Disavowal sentence carried from the design export: it names the mechanism in order to rule it out, matching the canon quarantine and the published 'no coin, no wallet, nothing on-chain'. Removing the vocabulary would weaken the disavowal (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-13"
   },
   {
     "rule": "crypto-token",
@@ -240,9 +317,30 @@
   {
     "rule": "tax-deductibility-claim",
     "path": "website/src/roadmap.njk",
+    "line_sha256": "1f9770fc95236f9c92ffe1450c5e969a51dacc1470db15e36b07ecc533627649",
+    "justification": "Conditional roadmap statement, not a tax-status claim: it states that deductible donations open ONLY after fiscal sponsorship is confirmed, which is the gate POL-004 requires. The sentence exists to withhold the claim, not to make it.",
+    "added": "2026-08-11"
+  },
+  {
+    "rule": "tax-deductibility-claim",
+    "path": "website/src/roadmap.njk",
     "line_sha256": "51176bb2de0dba722096a505fcf6effce00bf88892bda7083b98a661eff302c6",
     "justification": "Honest gate statement: donations are NOT tax-deductible until fiscal sponsorship is confirmed; the sentence denies current deductibility, it does not claim it.",
     "added": "2026-07-23"
+  },
+  {
+    "rule": "sector-transit",
+    "path": "website/src/sectors/index.njk",
+    "line_sha256": "077a5048d7112f41979b0a137d7c3d761776eeec0c1ecb842bba5e6a9c888878",
+    "justification": "Scope description from the repository's own SEC-008 dossier ('Transit, mobility, logistics, delivery'), not a name substitution: the sector is named Transportation in full on the same card, in the heading, and everywhere else. The rule guards against Transportation being RENAMED Transit; listing transit as one thing the sector covers is the dossier's reviewed wording.",
+    "added": "2026-08-15"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "website/src/treasury.njk",
+    "line_sha256": "2c271286f0fb0cb6bdefd14ef6cad859de317a63078ecdcce211d2677cf2d284",
+    "justification": "Same line, generic-crypto rule. Disavowal vocabulary per DESIGN_IMPORT_RUNBOOK.md: naming the banned mechanism is how the ban is stated.",
+    "added": "2026-09-19"
   },
   {
     "rule": "crypto-generic",
@@ -252,10 +350,45 @@
     "added": "2026-07-23"
   },
   {
+    "rule": "crypto-generic",
+    "path": "website/src/treasury.njk",
+    "line_sha256": "84b97885c2a0d9f11002f46335c249aa34c7195df93d3b89c3675498d977a6da",
+    "justification": "Disavowal heading from the design export ('No crypto treasury'): it names the mechanism in order to rule it out. Same treatment as the policy prohibition sentences per DESIGN_IMPORT_RUNBOOK.md.",
+    "added": "2026-08-11"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "website/src/treasury.njk",
+    "line_sha256": "ccd9cd67369deed31dd6b8e01480b10e2f0dd1c5bacbdf076a6bdda15f487e90",
+    "justification": "Disavowal sentence from the design export: it names the mechanism in order to rule it out. Removing the vocabulary would weaken the disavowal \u2014 the same treatment the policy prohibition sentences already receive (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-11"
+  },
+  {
+    "rule": "crypto-generic",
+    "path": "website/src/treasury.njk",
+    "line_sha256": "ccd9cd67369deed31dd6b8e01480b10e2f0dd1c5bacbdf076a6bdda15f487e90",
+    "justification": "Disavowal heading from the design export ('No crypto treasury') \u2014 names the mechanism in order to rule it out. Same treatment as the policy prohibition sentences (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-11"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "website/src/treasury.njk",
+    "line_sha256": "2c271286f0fb0cb6bdefd14ef6cad859de317a63078ecdcce211d2677cf2d284",
+    "justification": "Disavowal heading and sentence from the design export ('No crypto treasury' / 'No cryptocurrency, no on-chain mechanics'): the prohibition names the mechanism in order to rule it out. Re-recorded 2026-09-19 because H6 demoted this heading h4->h3 for a valid outline under the new band heading, which changed the line and correctly withdrew the prior hash-keyed entry.",
+    "added": "2026-09-19"
+  },
+  {
     "rule": "crypto-on-chain",
     "path": "website/src/treasury.njk",
     "line_sha256": "69d903262d49b8edc8be1747983d6875711ec2ee008aeeab5d32ba0a62d45fd4",
     "justification": "Disavowal sentence stating what Uncost is NOT (no tokens/crypto/DAO/on-chain); the prohibition names the mechanism it bans, per the design-import runbook disavowal-vocabulary rule.",
     "added": "2026-07-23"
+  },
+  {
+    "rule": "crypto-on-chain",
+    "path": "website/src/treasury.njk",
+    "line_sha256": "ccd9cd67369deed31dd6b8e01480b10e2f0dd1c5bacbdf076a6bdda15f487e90",
+    "justification": "Disavowal sentence from the design export: it names the mechanism in order to rule it out. Removing the vocabulary would weaken the disavowal \u2014 the same treatment the policy prohibition sentences already receive (DESIGN_IMPORT_RUNBOOK.md, 'Disavowal vocabulary').",
+    "added": "2026-08-11"
   }
 ]

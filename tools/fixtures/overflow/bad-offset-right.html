@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BAD — negative margin and absolute offset past the right edge</title>
+<link rel="stylesheet" href="./base.css">
+<style>
+  /* Two offenders that a width-only audit misses because neither element is
+     itself "too wide": each is pushed out of the page by offsetting. */
+  .bleed { margin-right: -260px; height: 80px; background: #f0d9a0; }
+  .stage { position: relative; height: 140px; background: #efe9dd; margin-top: 16px; }
+  .flag  { position: absolute; top: 20px; left: 100%; margin-left: 40px;
+           width: 220px; height: 60px; background: #e2725b; }
+</style>
+</head><body>
+<div class="wrap">
+  <h1>Pushed off the right edge</h1>
+  <div class="bleed" id="bleed">negative margin-right</div>
+  <div class="stage">
+    <div class="flag" id="flag">absolute, left:100%</div>
+  </div>
+</div>
+</body></html>

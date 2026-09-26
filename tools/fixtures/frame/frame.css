@@ -1,0 +1,66 @@
+/* Fixture stylesheet for tools/frame_audit.py --selftest.
+   Self-contained on purpose: the selftest must never depend on the built site
+   or on any tracked stylesheet, or a CSS change elsewhere would silently
+   rewrite what the audit is being tested against.
+   Token values mirror website/design-system/tokens.css. */
+:root {
+  --ink: #0E0E0C;
+  --cream: #FAF7F0;
+  --cream-2: #F2EDE1;
+  --coral: #D64A1E;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--cream); color: var(--ink);
+       font: 16px/1.4 system-ui, -apple-system, sans-serif; }
+/* 40px of clear space on every side, so nothing outside a component can be
+   mistaken for a frame line flush against it. */
+.band { padding: 40px; }
+h1 { font-size: 17px; margin: 0 0 20px; font-weight: 700; }
+.cell { background: #FFF; padding: 20px; }
+
+/* ── mechanism 1: dividers drawn by a border on the cell ───────────────── */
+.g3 { display: grid; grid-template-columns: repeat(3, 1fr); }
+.g3 > .cell { border-right: 2px solid var(--ink); }
+.g3 > .cell:last-child { border-right: 0; }
+
+/* ── mechanism 2: dividers drawn by the CONTAINER background showing through
+   a 2px grid gap. No cell carries a border; reading the CSS text for border
+   declarations on the cells reports a false pass. ───────────────────────── */
+.gap3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; background: var(--ink); }
+
+/* Same mechanism, frame drawn by the same background through a 2px padding. */
+.padfr { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+         background: var(--ink); padding: 2px; }
+
+/* 12px apart is spacing, not a drawn divider. */
+.space3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; background: var(--ink); }
+
+/* ── frames ────────────────────────────────────────────────────────────── */
+.fr-full { border: 2px solid var(--ink); }
+.fr-open-bottom { border: 2px solid var(--ink); border-bottom: 0; }
+.fr-thin { border: 1px solid var(--ink); }
+.fr-coral { border: 2px solid var(--coral); }
+
+/* ── tables: dividers on the row, frame on the table ───────────────────── */
+table.t { width: 100%; border-collapse: collapse; background: #FFF; }
+table.t th { background: var(--ink); color: var(--cream); text-align: left; padding: 10px 12px;
+             font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+table.t td { padding: 10px 12px; }
+table.t tbody tr + tr { border-top: 2px solid var(--ink); }
+
+/* ── cases the audit must refuse to classify ───────────────────────────── */
+/* 8px over a contrasting container background: too wide to be the 2px divider
+   line this system draws, too narrow to be spacing. Unresolved, not skipped. */
+.amb3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; background: var(--ink); }
+/* Two different divider weights in one component: no single frame can match. */
+.mix3 { display: grid; grid-template-columns: repeat(3, 1fr); }
+.mix3 > .cell:first-child { border-right: 2px solid var(--ink); }
+.mix3 > .cell:nth-child(2) { border-right: 4px solid var(--ink); }
+
+/* ── R2 as amended 2026-09-26 ──────────────────────────────────────────── */
+.inkhead { background: var(--ink); height: 60px; }
+.c2head  { background: var(--cream-2); height: 60px; }
+/* V1: R1's 4px coral on the edge that meets the neighbour above. */
+.fr-r1top { border: 2px solid var(--ink); border-top: 4px solid var(--coral); }
+/* V2: top and bottom only — for a component that meets the viewport. */
+.fr-tb { border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }

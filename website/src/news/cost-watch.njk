@@ -1,0 +1,57 @@
+---
+layout: layouts/base.njk
+permalink: "/news/cost-watch/"
+pageId: "news"
+title: "Cost Watch"
+description: "Prices in the news, with the publisher and the date attached. Not receipts — verified figures live in The Receipts."
+---
+{% import "partials/news-cards.njk" as nc %}
+{#- N2/N6. The whole Cost Watch list, at full width. Same header pattern and
+    pageId as /news/, so the export's page-scoped news rules apply unchanged.
+
+    N6: the items are now the same card as an Uncost update — publisher and
+    date on the eyebrow row, the claim as the body, the outbound link and the
+    single Reported label in the foot — run one-up down the page instead of
+    two-up in a rail. Nothing is summarised for them: the claim IS the summary.
+
+    The Reported definition used to print twice on this page, once in the
+    column head and once inside the block below it. It prints once now, folded
+    into the cross-reference block at the top — the one place on the page that
+    tells a reader where they are and what the label means.
+
+    It is still deliberately NOT added to the four-label confidence block on
+    /case/ or /receipts/: Reported is not a confidence value: it says a source
+    published a figure, not that we verified one. -#}
+<!-- SECTION: news-cost-watch.Cost Watch — title -->
+<div class="titleband" data-screen-label="Cost Watch — title"><h1>Cost <span class="u-1">Watch</span></h1></div>
+<div class="introband">
+  <h2>Cost Watch</h2>
+  <p>Prices in the news, with the publisher and the date attached. Not receipts &mdash; verified figures live in <a href="/receipts/">The Receipts</a>.</p>
+</div>
+
+<div class="newswrap newswrap--solo">
+  <!-- SECTION: news-cost-watch.Cost Watch -->
+  <div class="costwatch" data-screen-label="Cost Watch">
+    <div class="newsxref">
+      <p>For Uncost&rsquo;s own updates, see <a href="/news/">the news</a>.</p>
+      <p class="newsxref-def"><b>Reported</b> &mdash; a price or cost figure as published by the linked source, with its date. Cost Watch is a watch list, not a receipt; verified figures live in <a href="/receipts/">The Receipts</a>.</p>
+    </div>
+{#- N5 keyword filter, same progressive-enhancement pattern as /receipts/: the
+    bar ships hidden and only /js/keyword-filter.js reveals it, so with JS off
+    every item renders and no dead control is shown. -#}
+    <div class="rfilter" data-keyword-filter data-filter-for="news-costwatch" data-filter-noun="items" hidden>
+      <label for="cfilter-q">Filter these items</label>
+      <input id="cfilter-q" type="search" autocomplete="off" placeholder="Try &ldquo;gasoline&rdquo; or &ldquo;BLS&rdquo;&hellip;">
+      <span class="rfilter-count" data-filter-count></span>
+    </div>
+    <div id="news-costwatch" class="cwlist">
+{% for row in register.newsFeed %}
+      {{ nc.costwatch(row) }}
+{% endfor %}
+    </div>
+    <p class="u-97">Checked {{ register.lastChecked }}. Every figure here has a <a href="/receipts/#register">receipt</a>. Prefer a feed? <a href="/news/cost-watch/feed.xml">Subscribe by RSS</a>.</p>
+  </div>
+</div>
+{% include "partials/labels-drawer.njk" %}
+<script src="/js/keyword-filter.js" defer></script>
+<script src="/js/read-more.js" defer></script>

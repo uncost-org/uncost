@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BAD — fixed width wider than the viewport</title>
+<link rel="stylesheet" href="./base.css">
+<style>
+  /* The plainest defect there is: a hard pixel width that no media query ever
+     relaxes. Overflows at every width below 1200. */
+  .slab { width: 1200px; height: 120px; background: #e2725b; }
+</style>
+</head><body>
+<div class="wrap">
+  <h1>Fixed width slab</h1>
+  <p>The slab below is 1200px wide and never reflows.</p>
+  <div class="slab" id="slab">1200px</div>
+</div>
+</body></html>

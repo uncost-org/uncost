@@ -1,32 +1,63 @@
 ---
 layout: layouts/base.njk
+permalink: "/news/"
+pageId: "news"
 title: "News"
-description: "Pre-launch updates from the Uncost movement — what we have published and why, dated and honest about what is and isn't done."
+description: "What the movement is doing, dated and honest, including the updates that aren't good news."
 ---
-<section class="blk blk--first">
-  <p class="eyebrow">News</p>
-  <h1 class="sec">News.</h1>
-  <p class="lead">Pre-launch updates from the movement — what we’ve published and why. Dated, and honest about what is and isn’t done.</p>
-</section>
+{% import "partials/news-cards.njk" as nc %}
+{#- Markup taken from design-source/pages/news.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author.
 
-<section class="blk">
-  <p class="eyebrow">Updates</p>
-  <h2 class="sec">Movement updates.</h2>
-  {% for item in news %}
-  <article class="news-item">
-    <h3>{{ item.title }}</h3>
-    <p class="news-date"><time datetime="{{ item.dateISO }}">{{ item.date }}</time></p>
-    <p>{{ item.body }}</p>
-  </article>
-  {% endfor %}
-</section>
+    Exception, founder-approved under UNP-82 v1 §4b: Cost Watch is no longer a
+    hand-curated reading list of third-party articles. It renders the register's
+    own `placement=news-feed` rows, so every entry is a sourced, dated figure
+    under the same rule as the rest of the site.
 
-<section class="blk blk--ink">
-  <p class="eyebrow">Get updates</p>
-  <h2 class="sec">Stay in the loop.</h2>
-  <p>Email updates open when there’s a real route for them. For now, signing the pledge is how to be counted — and this page and its <a href="/news/feed.xml">RSS feed</a> are where new updates land.</p>
-  <div class="cta-actions">
-    <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
-    <a href="/join" class="u-btn u-btn--outline-cream">Take part</a>
+    Exception, founder-approved under N6: the split landing is reversed. /news/
+    is now the whole Uncost news page — every update at full length, full
+    width — and Cost Watch lives only at /news/cost-watch/. Two half-pages
+    served neither; a reader arriving at /news/ wanted the movement's own
+    updates, and the ones who wanted prices in the news now get a whole page of
+    them instead of a rail. The cross-reference at the top carries them across
+    in one line, and the old /news/uncost/ route 301s here (src/_redirects).
+
+    Copy on this page is unchanged: the introband paragraph and the items are
+    the approved Uncost-column strings, moved up from the column that is now
+    the page. The only new string is the cross-reference line. -#}
+<!-- SECTION: news.News — title -->
+<div class="titleband" data-screen-label="News — title"><h1>Uncost.org <span class="u-1">News</span></h1></div>
+<div class="introband">
+  <h2>What&rsquo;s moving &mdash; ours and the world&rsquo;s.</h2>
+  <p>What the movement is doing, dated and honest, including the updates that aren&rsquo;t good news.</p>
+</div>
+
+<div class="newswrap newswrap--solo">
+  <!-- SECTION: news.Updates -->
+  <div class="updates" data-screen-label="Updates">
+{#- N6 cross-reference. One line at the top of each news route pointing at the
+    other, so the two pages stay one section without either having to carry a
+    column of the other. -#}
+    <div class="newsxref">
+      <p>For current cost news from around the web, see <a href="/news/cost-watch/">Cost Watch</a>.</p>
+    </div>
+{#- N5 keyword filter, same progressive-enhancement pattern as /receipts/: the
+    bar ships hidden and only /js/keyword-filter.js reveals it, so with JS off
+    every item renders and no dead control is shown. -#}
+    <div class="rfilter" data-keyword-filter data-filter-for="news-uncost" data-filter-noun="updates" hidden>
+      <label for="ufilter-q">Filter these updates</label>
+      <input id="ufilter-q" type="search" autocomplete="off" placeholder="Try &ldquo;policy&rdquo; or &ldquo;repository&rdquo;&hellip;">
+      <span class="rfilter-count" data-filter-count></span>
+    </div>
+    <div id="news-uncost">
+{% for item in news %}
+      {{ nc.update(item, 3) }}
+{% endfor %}
+    </div>
+    <p class="u-96" id="rss">More updates arrive as the movement launches. Prefer a feed? <a href="/news/feed.xml">Subscribe by RSS</a> &mdash; every update, no algorithm in between.</p>
   </div>
-</section>
+</div>
+{% include "partials/labels-drawer.njk" %}
+<script src="/js/keyword-filter.js" defer></script>
+<script src="/js/read-more.js" defer></script>

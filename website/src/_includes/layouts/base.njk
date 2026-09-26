@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% if home %}Uncost — Living should not have a price tag.{% else %}{{ title }} · Uncost{% endif %}</title>
 {% set pageTitle = "Uncost — " + site.tagline if home else title + " · Uncost" %}
 {% set pageDesc = description or site.description %}
 {% set canonical = site.origin + (page.url | default("/")) %}
+<title>{{ pageTitle }}</title>
 <meta name="description" content="{{ pageDesc }}">
 {% if noindex %}<meta name="robots" content="noindex">
 {% else %}<link rel="canonical" href="{{ canonical }}">
@@ -23,38 +23,26 @@
 <meta name="twitter:description" content="{{ pageDesc }}">
 <meta name="twitter:image" content="{{ site.origin + site.ogImage }}">
 <link rel="alternate" type="application/rss+xml" title="Uncost — News" href="{{ site.origin }}/news/feed.xml">
-<link rel="stylesheet" href="/design-system/tokens.css">
-<link rel="stylesheet" href="/design-system/components.css">
+<link rel="alternate" type="application/rss+xml" title="Uncost — Cost Watch" href="{{ site.origin }}/news/cost-watch/feed.xml">
+{#- The design export's four stylesheets, adopted byte-identically and loaded in
+    the order the export requires. Do not add a fifth design stylesheet and do
+    not reorder these: sections.css depends on cascade position. -#}
+<link rel="stylesheet" href="/css/tokens.css">
+<link rel="stylesheet" href="/css/components.css">
 <link rel="stylesheet" href="/css/site.css">
+<link rel="stylesheet" href="/css/sections.css">
+{#- Build-integration shim only — no design values. See the file's header. -#}
+<link rel="stylesheet" href="/css/integration.css">
+<link rel="stylesheet" href="/css/integration-v43-gap.css">
+<script src="/js/ui.js" defer></script>
 </head>
-<body>
-<a class="skip-link" href="#main">Skip to content</a>
-<header class="site-hdr">
-  <a class="brand" href="/">{% image "logos/logo-tight-light.png", "Uncost.org", "10rem", [160, 320], "eager" %}</a>
-  <nav aria-label="Primary">
-    <a href="/movement">The Movement</a>
-    <a href="/case">The Case</a>
-    <a href="/projects">The Projects</a>
-    <a href="/assembly">The Assembly</a>
-    <a href="/sectors">Sectors</a>
-    <a href="/news">News</a>
-    <a href="/roadmap">Roadmap</a>
-    <a href="/faq">FAQ</a>
-    <a href="/about">About</a>
-  </nav>
-  <a class="cta-btn" href="/pledge">Sign the Pledge</a>
-</header>
-<main id="main">
+<body data-page="{{ pageId }}"{% if updatesOff %} data-updates-off{% endif %}>
+{% include "partials/header.njk" %}
+<main{% if mainClass %} class="{{ mainClass }}"{% endif %} id="main">
 {{ content | safe }}
 </main>
-<footer class="site-foot">
-  <p>Get updates — [PLACEHOLDER: the email-updates capture ships with the UNP-57 page contract.] Sign-ups open soon.</p>
-  <p class="ft-note">Nonprofit and nonpartisan.</p>
-  <nav aria-label="Footer">
-    <a href="/privacy">Privacy</a>
-    <a href="/contact">Contact</a>
-    <a href="/news/feed.xml">RSS</a>
-  </nav>
-</footer>
+{% include "partials/footer.njk" %}
+{% include "partials/nav-drawer.njk" %}
+{% include "partials/search.njk" %}
 </body>
 </html>

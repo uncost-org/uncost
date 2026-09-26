@@ -1,0 +1,48 @@
+{#- The labels drawer (V11). One partial, placed on /receipts/, /projects/,
+    /policies/, /sectors/, /news/, /news/cost-watch/ and /treasury/, and driven
+    entirely by _data/labels.js: which families this page shows (only the ones
+    it renders), and each family's label names. Styled as the /case/
+    Methodology drawer — same band, same white header, same chevron
+    (integration.css item 116).
+
+    Only the confidence family carries definitions; it renders as the table
+    that used to stand alone on /receipts/ ("Four honest labels", retired into
+    this drawer). Every other family renders its names only until the
+    founder's glossary is approved: a null title renders nothing.
+
+    A page with no families renders nothing at all — never an empty drawer. -#}
+{%- set labelFams = labels.pages[page.url] or [] %}
+{%- if labelFams.length %}
+<details class="ldrawer" data-screen-label="Labels drawer">
+  <summary>{{ labels.summary }}</summary>
+  <div class="ldrawer-body">
+{%- for key in labelFams %}
+{%- set fam = labels.families[key] %}
+    <div class="ldrawer-fam" data-label-family="{{ key }}">
+{%- if fam.title %}
+      <h3>{{ fam.title }}</h3>
+{%- endif %}
+{%- if fam.columns %}
+      <table class="conftable">
+        <thead><tr><th>{{ fam.columns[0] }}</th><th>{{ fam.columns[1] }}</th></tr></thead>
+        <tbody>
+{%- for l in fam.labels %}
+          <tr><td><span class="{{ l.chip }}">{{ l.name }}</span></td><td>{{ l.definition }}</td></tr>
+{%- endfor %}
+        </tbody>
+      </table>
+{%- else %}
+      <ul class="ldrawer-names">
+{%- for l in fam.labels %}
+        <li><span class="{{ l.chip }}">{{ l.name }}</span></li>
+{%- endfor %}
+      </ul>
+{%- endif %}
+{%- if fam.note %}
+      <p>{{ fam.note | safe }}</p>
+{%- endif %}
+    </div>
+{%- endfor %}
+  </div>
+</details>
+{%- endif %}

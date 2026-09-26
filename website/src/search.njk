@@ -1,0 +1,36 @@
+---
+layout: layouts/base.njk
+permalink: "/search/"
+pageId: "search"
+title: "Search"
+---
+{#- The search page.
+
+    The overlay in partials/search.njk is a JS-only control: it is
+    `display:none` until js/ui.js adds `open`, so with script off it can never
+    appear and the header's search control was a button that did nothing. The
+    control is now a real link to this page, and ui.js intercepts the click
+    when script is available.
+
+    This page carries the same destinations the overlay's `.so-links` block
+    lists, as ordinary page markup that renders with script off.
+
+    CONTENT: destinations from _data/chrome.json (searchShortcuts) plus the
+    Receipts link the overlay lists first — the same list, the same labels.
+    Nothing here is new copy.
+
+    DESIGN: `.titleband` / `.breadcrumb` follow accessibility.njk; the
+    destinations use the export's own `.btn-row` + `.u-btn` pattern (see
+    about.njk), so this page needs no new CSS. -#}
+<header class="titleband">
+  <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <span>Search</span></div>
+  <h1>Search</h1>
+</header>
+<section class="blk" data-screen-label="Search">
+  <div class="btn-row">
+    <a href="/receipts/" class="u-btn u-btn--ghost">Search the Receipts</a>
+    {%- for link in chrome.searchShortcuts %}
+    <a href="{{ link.url }}" class="u-btn u-btn--ghost">{{ link.label }}</a>
+    {%- endfor %}
+  </div>
+</section>
