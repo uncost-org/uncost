@@ -346,4 +346,14 @@ patch("website/src/news/index.njk",
       '<h1>Uncost.org <span class="u-1">News</span></h1>',
       "V10 /news/ title band reads Uncost.org News", guard='<h1>Uncost.org <span class="u-1">News</span></h1>')
 
+# V18 (Batch V, 2026-09-26) — the /sectors/ headline, exact founder string,
+# accent on "fifteen sectors". sectors/index.njk is re-derived by
+# tools/rederive_collections.py, which would restore the export's headline (and
+# with it would already have lost H5's), so the introband's headline is
+# restated here whatever the export wrote into it.
+patch("website/src/sectors/index.njk",
+      r'(<div class="[^"]*\bintroband\b[^"]*">\s*)<h2>.*?</h2>',
+      r'\1<h2>Basic human needs break into <span class="u-1">fifteen sectors</span> &mdash; and we have a plan to reduce the cost of each.</h2>',
+      "V18 sectors headline", guard="and we have a plan to reduce the cost of each.")
+
 print("done")
