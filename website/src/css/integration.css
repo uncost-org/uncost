@@ -2296,3 +2296,24 @@ body[data-page="receipts"] .blk--wheat .u-131 { color: var(--ink) !important; }
  *      the viewport and are omitted (V2, item 101). Encoded in both
  *      tools/band_audit.py (frame_roles) and tools/frame_audit.py. */
 .pol-wrap { border-bottom: 2px solid var(--ink); }
+
+/* 101. V2 — VIEWPORT-EDGE RULE (founder rule 2026-09-26; R2 amendment).
+ *      A full-bleed framed component omits its left and right frame edges
+ *      where they meet the viewport: a line drawn down the edge of the screen
+ *      frames nothing. /join/ tiers were named; tools/frame_audit.py (which
+ *      now FAILS a frame line at the viewport edge) enumerated the rest on
+ *      the built site at 1440/1290/390:
+ *        /join/ .tiers · /about/ .parts4 · /contact/ .cwrap ·
+ *        /contribute/ .ways · /sectors/ .sgrid · /404 .e-wrap ·
+ *        /treasury/ the KPI band (drawn by its section) ·
+ *        /pledge/thanks/ .next — only at <= 960px, where its 960px cap
+ *        meets the viewport; above that it is inset and keeps its sides.
+ *      Top and bottom edges, dividers and cell padding are untouched. */
+.tiers, .parts4, .cwrap,
+body[data-page="error-404"] .e-wrap { border-left: 0; border-right: 0; }
+.ways,
+body[data-page="sectors"] .sgrid,
+body[data-page="treasury"] section:has(> .kpis) { border-left: 0 !important; border-right: 0 !important; }
+@media (max-width: 960px) {
+  body[data-page="pledge-thanks"] .next { border-left: 0; border-right: 0; }
+}
