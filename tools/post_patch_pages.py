@@ -334,4 +334,16 @@ patch("website/src/receipts.njk",
       '<section class="blk blk--white" data-screen-label="The rule">',
       "C12 receipts rule band is white")
 
+# V10 (Batch V, 2026-09-26) — exact strings. chrome.json is repo-owned and not
+# re-derived; home.json and news/index.njk are, so their two changes are
+# restated here.
+patch("website/src/_data/home.json",
+      r'"cta": "See the projects →"',
+      '"cta": "See The Projects →"',
+      "V10 homepage CTA reads The Projects", guard='"cta": "See The Projects →"')
+patch("website/src/news/index.njk",
+      r'<h1><span class="u-1">News</span></h1>',
+      '<h1>Uncost.org <span class="u-1">News</span></h1>',
+      "V10 /news/ title band reads Uncost.org News", guard='<h1>Uncost.org <span class="u-1">News</span></h1>')
+
 print("done")
