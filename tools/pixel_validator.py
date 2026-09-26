@@ -390,22 +390,25 @@ def run(directory: pathlib.Path, routes, port: int):
     try:
         payload = capture(directory, routes, WIDTHS, port, shots)
         errors, clean, checked = [], [], 0
+        measured, loaded = set(), set()
         for page in payload:
             route, width = page.get("route"), page.get("width")
             if page.get("loadError"):
                 errors.append(f"LOAD {route}@{width}: {page['loadError']} "
                               f"(an audit that cannot see its subject fails)")
                 continue
+            loaded.add(f"{route}@{width}")
             img = Image.open(page["shot"]).convert("RGB")
             for b in page.get("boundaries", []):
                 checked += 1
                 key, problems = validate_boundary(img, b, width)
                 full = f"{route}@{width} {key}"
+                measured.add(full)
                 if problems:
                     errors.extend(f"{route}@{width} {p}" for p in problems)
                 else:
                     clean.append(full)
-        return errors, clean, checked
+        return errors, clean, checked, measured, loaded
     finally:
         shutil.rmtree(shots, ignore_errors=True)
 
@@ -561,7 +564,7 @@ def selftest(port: int) -> int:
     write_fixtures()
     failures = []
     for name, _body, should_pass in SELF_CASES:
-        errors, _clean, checked = run(FIXTURES, ["/" + name], port)
+        errors, _clean, checked, _measured, _loaded = run(FIXTURES, ["/" + name], port)
         passed = not errors
         if checked == 0:
             failures.append({"fixture": name, "expected": "PASS" if should_pass else "FAIL",
@@ -574,9 +577,65 @@ def selftest(port: int) -> int:
                              "expected": "PASS" if should_pass else "FAIL",
                              "got": "PASS" if passed else "FAIL",
                              "sample": errors[:2]})
-    print(json.dumps({"ok": not failures, "selftest_cases": len(SELF_CASES),
+    # The baseline comparison is pure logic; pin its three outcomes down.
+    for name, wc, nc, ms, rq, ld, want_r, want_v in COMPARE_CASES:
+        got_r, got_v = compare(wc, nc, ms, rq, ld)
+        if (got_r, got_v) != (want_r, want_v):
+            failures.append({"fixture": "compare: " + name,
+                             "expected": {"regressions": want_r, "vanished": want_v},
+                             "got": {"regressions": got_r, "vanished": got_v}})
+    print(json.dumps({"ok": not failures,
+                      "selftest_cases": len(SELF_CASES) + len(COMPARE_CASES),
                       "failures": failures}, indent=2))
     return 1 if failures else 0
+
+
+def compare(was_clean, now_clean, measured, requested, loaded):
+    """Baseline comparison -> (regressions, vanished).
+
+    A REGRESSION is a baseline-clean boundary that this run measured and found
+    not clean, or that sits on a page this run asked for and could not load
+    (a check that cannot see its subject fails).
+
+    A VANISHED boundary is a baseline-clean boundary on a page that loaded,
+    but which the page no longer has — the two bands are no longer adjacent
+    because a section was added between them, retired, or moved. Its pixels
+    are not wrong; they are not there. Before Batch V this was counted as a
+    regression, so inserting the V11 labels drawer above three closing CTAs
+    and retiring the /receipts/ table failed the run on ten boundaries that
+    no longer exist while all 744 that do were clean. Vanished boundaries are
+    listed in full on every run and never fail it; the new boundaries that
+    replaced them are measured like any other.
+
+    Baseline boundaries on pages this run did not ask for (--routes) are
+    neither: they were not in scope."""
+    regressions, vanished = [], []
+    for key in sorted(was_clean):
+        page = key.split(" ", 1)[0]
+        if page.split("@", 1)[0] not in requested:
+            continue
+        if page not in loaded:
+            regressions.append(key)
+        elif key not in measured:
+            vanished.append(key)
+        elif key not in now_clean:
+            regressions.append(key)
+    return regressions, vanished
+
+
+COMPARE_CASES = [
+    # (name, was_clean, now_clean, measured, requested, loaded, regressions, vanished)
+    ("still clean", {"/a/@1440 A -> B"}, {"/a/@1440 A -> B"}, {"/a/@1440 A -> B"},
+     {"/a/"}, {"/a/@1440"}, [], []),
+    ("measured, now dirty", {"/a/@1440 A -> B"}, set(), {"/a/@1440 A -> B"},
+     {"/a/"}, {"/a/@1440"}, ["/a/@1440 A -> B"], []),
+    ("section inserted between", {"/a/@1440 A -> B"}, {"/a/@1440 A -> X", "/a/@1440 X -> B"},
+     {"/a/@1440 A -> X", "/a/@1440 X -> B"}, {"/a/"}, {"/a/@1440"}, [], ["/a/@1440 A -> B"]),
+    ("page failed to load", {"/a/@1440 A -> B"}, set(), set(),
+     {"/a/"}, set(), ["/a/@1440 A -> B"], []),
+    ("route not requested", {"/a/@1440 A -> B"}, set(), set(),
+     {"/b/"}, {"/b/@1440"}, [], []),
+]
 
 
 BASELINE_LABEL = ("self-declared baseline at ddc77f0 — certifies drift from here, "
@@ -601,7 +660,7 @@ def main() -> int:
         print(json.dumps({"ok": False, "errors": [f"no built directory at {built}"]}))
         return 1
     routes = args.routes or routes_in(built)
-    errors, clean, checked = run(built, routes, args.port)
+    errors, clean, checked, measured, loaded = run(built, routes, args.port)
 
     if args.rebuild_baseline:
         BASELINE.parent.mkdir(parents=True, exist_ok=True)
@@ -626,7 +685,7 @@ def main() -> int:
     base = json.loads(BASELINE.read_text(encoding="utf-8"))
     was_clean = set(base.get("clean", []))
     now_clean = set(clean)
-    regressions = sorted(was_clean - now_clean)
+    regressions, vanished = compare(was_clean, now_clean, measured, set(routes), loaded)
     # Newly clean boundaries are reported, never failed on.
     recovered = sorted(now_clean - was_clean)
     print(json.dumps({
@@ -634,6 +693,10 @@ def main() -> int:
         "baseline": {"label": base.get("label"), "commit": base.get("commit")},
         "regressions": regressions[: args.max_errors],
         "regression_count": len(regressions),
+        # Listed in full, never truncated: a boundary that disappears is a
+        # structural change a reader must be able to see and account for.
+        "vanished": vanished,
+        "vanished_count": len(vanished),
         "newly_clean": recovered[: args.max_errors],
         "counts": {"boundaries": checked, "clean": len(clean),
                    "not_clean": len(errors),
