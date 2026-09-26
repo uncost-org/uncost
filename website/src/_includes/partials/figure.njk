@@ -32,6 +32,15 @@
             CHECKED · PUBLISHED (only when the register has a year) · region ·
             confidence
 
+  V4: the confidence chip reads "Needs refresh" (rcpt-conf--needs-refresh)
+  whenever register.js marks the row due — last_checked older than its
+  refresh_cadence allows — whatever the CSV's confidence says. The label is
+  computed at build and never written into the register. A row that is not
+  due renders the Confirmed/Estimate chip exactly as before. The switch is an
+  inline output expression, not an if/else block tag: the site runs Nunjucks with
+  trimBlocks/lstripBlocks, so a block tag on this line would eat its indent and
+  newline and change the markup of every card, due or not.
+
   Wrap a run of these in <div class="cards"> — the grid supplies the ink frame
   and 2px dividers (R2) and the cream/cream2 checkerboard.
 -#}
@@ -53,7 +62,7 @@
       {% if row.publication_year %}<span class="m m--date" data-era="{{ row.publishedEra }}"><span class="k">Published</span><span class="v">{{ row.publication_year }}</span></span>{% endif %}
       <span class="m m--scope"><span class="k">Period</span><span class="v">{{ row.data_period | sentenceCase }}</span></span>
       <span class="m m--region" data-region="{{ row.regionCode }}"><span class="k">Region</span><span class="v">{{ row.region | sentenceCase }}</span></span>
-      <span class="rcpt-conf rcpt-conf--{{ "confirmed" if row.confidence.startsWith("confirmed") else "estimate" }}">{{ "Confirmed" if row.confidence.startsWith("confirmed") else "Estimate" }}</span>
+      <span class="rcpt-conf rcpt-conf--{{ "needs-refresh" if row.needsRefresh else ("confirmed" if row.confidence.startsWith("confirmed") else "estimate") }}">{{ "Needs refresh" if row.needsRefresh else ("Confirmed" if row.confidence.startsWith("confirmed") else "Estimate") }}</span>
     </div>
   </div>
 </div>

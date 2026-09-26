@@ -112,6 +112,80 @@ module.exports = function () {
     row.regionCode = /united states/i.test(row.region || "") ? "us" : "other";
   }
 
+  // V4: NEEDS REFRESH by construction. /receipts/ promises that a figure past
+  // its review date "is relabelled Needs refresh rather than quietly left
+  // standing" — so the label is computed here, at build, from each row's own
+  // last_checked + refresh_cadence, and is never typed into the CSV. The
+  // confidence column is left exactly as the register says; the card
+  // (partials/figure.njk) shows Needs refresh INSTEAD of it while a row is due.
+  //
+  // Periods are V4's: weekly 7d, monthly 31d, quarterly 92d, annual 366d —
+  // each the longest that calendar unit can run (a 31-day month, a 92-day
+  // quarter, a leap year), so a row re-checked on schedule is never flagged a
+  // day early. on-change has no clock (it is re-checked when the source
+  // changes), so it never flips by date.
+  //
+  // Boundary: a row is due when the whole days elapsed since last_checked are
+  // STRICTLY GREATER than the period. A monthly row checked 31 days ago is
+  // still in date; on day 32 it flips.
+  //
+  // Any other cadence — today `biennial` and `retired-final-edition` — has NO
+  // period in V4, and one is deliberately not invented here: those rows never
+  // flip by date, and are listed in `undefinedCadence` so the build surfaces
+  // them for a founder decision instead of silently passing them as fresh. An
+  // empty or misspelt cadence lands in the same list.
+  //
+  // A missing or malformed last_checked is not evidence of freshness: that row
+  // is due whatever its cadence, and is listed in `uncheckable`.
+  const CADENCE_DAYS = { weekly: 7, monthly: 31, quarterly: 92, annual: 366, "on-change": null };
+  const DAY_MS = 24 * 60 * 60 * 1000;
+  // Strict YYYY-MM-DD -> UTC-midnight ms, or null. The round-trip rejects dates
+  // JS would silently roll over (2026-02-30 would otherwise become March 2).
+  const isoDay = (s) => {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s || "").trim());
+    if (!m) return null;
+    const t = Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    return new Date(t).toISOString().slice(0, 10) === m[0] ? t : null;
+  };
+  // "Today" is the build date in UTC, so every build machine agrees on it.
+  // UNCOST_TODAY=YYYY-MM-DD overrides it, so the flip can be proven in both
+  // directions without waiting on the calendar. A malformed override fails the
+  // build rather than quietly falling back to the real date.
+  const override = (process.env.UNCOST_TODAY || "").trim();
+  const refreshAsOf = override || new Date().toISOString().slice(0, 10);
+  const todayMs = isoDay(refreshAsOf);
+  if (todayMs === null) {
+    throw new Error(`register: UNCOST_TODAY "${override}" is not a valid YYYY-MM-DD date (V4)`);
+  }
+  const undefinedCadence = [];
+  const uncheckable = [];
+  for (const row of all) {
+    const cadence = (row.refresh_cadence || "").trim();
+    const known = Object.prototype.hasOwnProperty.call(CADENCE_DAYS, cadence);
+    const period = known ? CADENCE_DAYS[cadence] : null;
+    const checkedMs = isoDay(row.last_checked);
+    row.checkedDaysAgo = checkedMs === null ? null : Math.round((todayMs - checkedMs) / DAY_MS);
+    if (!known) undefinedCadence.push({ source_id: row.source_id, refresh_cadence: cadence });
+    if (checkedMs === null) {
+      uncheckable.push({ source_id: row.source_id, last_checked: row.last_checked || "" });
+      row.needsRefresh = true;
+    } else {
+      row.needsRefresh = period !== null && row.checkedDaysAgo > period;
+    }
+  }
+  const needsRefresh = all.filter((r) => r.needsRefresh).map((r) => r.source_id);
+  // One line per build, so the rows that flipped and the cadences awaiting a
+  // founder decision are visible in the build log, not only in page markup.
+  console.log(
+    `[register] V4 as of ${refreshAsOf}: needs refresh ${needsRefresh.length}` +
+      (needsRefresh.length ? ` (${needsRefresh.join(", ")})` : "") +
+      `; undefined cadence ${undefinedCadence.length}` +
+      (undefinedCadence.length
+        ? ` (${undefinedCadence.map((u) => `${u.source_id}=${u.refresh_cadence || "(empty)"}`).join(", ")})`
+        : "") +
+      (uncheckable.length ? `; no valid last_checked: ${uncheckable.map((u) => u.source_id).join(", ")}` : "")
+  );
+
   // display_value is the headline numeral a page renders large (the design's
   // 104px figure). It is a PRESENTATION EXTRACT of the row, never an
   // independent number: it must appear verbatim inside the row's own
@@ -185,5 +259,9 @@ module.exports = function () {
       return d !== 0 ? d : String(a.source_id).localeCompare(String(b.source_id));
     });
 
-  return { all, byId, stats, newsFeed, lastChecked };
+  return {
+    all, byId, stats, newsFeed, lastChecked,
+    // V4 — see the needs-refresh block above.
+    refreshAsOf, needsRefresh, undefinedCadence, uncheckable,
+  };
 };
