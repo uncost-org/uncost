@@ -24,15 +24,8 @@ description: "What Uncost actually does: the four parts, the six-step uncosting 
 </div>
 
 <!-- SECTION: about.Mechanism -->
-<div class="seqhd" data-screen-label="Mechanism"><div class="u-3 metalabel">The mechanism</div><h2 class="u-4">How a cost gets uncosted.</h2></div>
-<div>
-  <div class="step"><div class="num">1</div><div><h3>Measure</h3><p>Measure the current cost and its context, starting from public data.</p></div></div>
-  <div class="step"><div class="num">2</div><div><h3>Publish</h3><p>Publish the sources, dates, methods, and confidence labels — openly, so anyone can check the work.</p></div></div>
-  <div class="step"><div class="num">3</div><div><h3>Break down</h3><p>Split the cost stack into its real components: labor, energy, land, materials, waste, market structure, financing, fees, and policy.</p></div></div>
-  <div class="step"><div class="num">4</div><div><h3>Match</h3><p>Match plausible AI, robotics, sharing, infrastructure, or public-interest mechanisms to specific components.</p></div></div>
-  <div class="step"><div class="num">5</div><div><h3>Package</h3><p>Package the result as open evidence, software, a brief, or a playbook local groups can use. Uncost publishes; local operators decide and act.</p></div></div>
-  <div class="u-2 step"><div class="num">6</div><div><h3>Track</h3><p>Track whether total cost actually falls — and publish negative results with the same prominence as wins.</p></div></div>
-</div>
+{% import "partials/uncosted.njk" as uc %}
+{{ uc.block(uncosted.about, "Mechanism") }}
 
 <!-- SECTION: about.Principles -->
 <section class="blk blk--ink u-block--ink" data-screen-label="Principles">

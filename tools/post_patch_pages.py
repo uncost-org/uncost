@@ -428,4 +428,16 @@ patch("website/src/movement.njk",
       '<a href="/join/#get-updates" class="u-btn u-btn--ghost">Get updates</a>',
       "V15 movement: Get updates -> /join/#get-updates", guard='href="/join/#get-updates"')
 
+# V12 (Batch V, 2026-09-26) — one "How a cost gets uncosted" partial in the
+# /about/ format, on /about/ and /movement/; words in _data/uncosted.js. Both
+# templates are re-derived from the export, so the call sites are restated.
+patch("website/src/about.njk",
+      r'<div class="seqhd" data-screen-label="Mechanism">.*?</h2></div>\n<div>\n(?:  <div class="[^"]*step">.*?</p></div></div>\n)+</div>\n',
+      '{% import "partials/uncosted.njk" as uc %}\n{{ uc.block(uncosted.about, "Mechanism") }}\n',
+      "V12 about: uncosted partial", guard='{{ uc.block(uncosted.about, "Mechanism") }}')
+patch("website/src/movement.njk",
+      r'(<section class="blk blk--cream2" data-screen-label="How a cost gets uncosted">\n).*?(</section>)',
+      r'\1  {% import "partials/uncosted.njk" as uc %}\n  {{ uc.block(uncosted.movement) }}\n\2',
+      "V12 movement: uncosted partial", guard="{{ uc.block(uncosted.movement) }}")
+
 print("done")

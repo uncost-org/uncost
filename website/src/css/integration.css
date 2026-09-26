@@ -2477,4 +2477,27 @@ body[data-page="case"] .mdrawer summary { background: #FFF; }
  *        block is the footer's .ft-updates, id="updates", which the homepage
  *        still links. The block's own "Get updates" heading now carries
  *        id="get-updates", so both targets land on it. */
-body[data-page="movement"] .uncosted6 li > b { font-size: 1.25em; }
+/* (The step-label rule that was here targeted `.uncosted6 li > b`; V12, item
+ * 112, replaced that list with the /about/ format, whose labels are 24px h3s.) */
+
+/* 112. V12 — ONE "How a cost gets uncosted" BLOCK, IN THE /about/ FORMAT.
+ *      partials/uncosted.njk renders the /about/ shape — metalabel + headline,
+ *      then numbered step rows (numeral, label, text) — on /about/ and inside
+ *      /movement/'s own band; _data/uncosted.js carries each page's own step
+ *      text, unchanged until approved text arrives. /about/'s step rules are
+ *      page-scoped in the export, so they are re-scoped to /movement/ here,
+ *      declarations identical except horizontal padding: on /about/ the rows
+ *      are bands of their own and pad themselves, on /movement/ the band
+ *      already pads. Under this format /movement/'s step labels are the 24px
+ *      h3s /about/ uses — larger than the 22.5px V15 asked of the old list. */
+body[data-page="movement"] .seqhd{padding:0 0 8px}
+body[data-page="movement"] .seqhd h2{font-family:var(--font-display);font-weight:700;font-size:clamp(32px,4.5vw,52px);letter-spacing:-.02em;margin:0}
+body[data-page="movement"] .step{display:grid;grid-template-columns:90px 1fr;gap:24px;align-items:start;padding:24px 0;border-top:2px solid var(--ink)}
+body[data-page="movement"] .step .num{font-family:var(--font-display);font-weight:900;font-size:56px;color:var(--coral);letter-spacing:-.03em;line-height:.85;font-variant-numeric:tabular-nums}
+body[data-page="movement"] .step h3{font-family:var(--font-display);font-weight:700;font-size:24px;letter-spacing:-.01em;margin:0 0 6px}
+body[data-page="movement"] .step p{font-size:15px;line-height:1.6;color:var(--fg-2);margin:0;max-width:66ch}
+body[data-page="movement"] .uncosted-intro{margin:14px 0 22px}
+body[data-page="movement"] .uncosted-close{margin-top:22px}
+@media (max-width:640px){
+  body[data-page="movement"] .step{grid-template-columns:56px 1fr;gap:14px}
+}

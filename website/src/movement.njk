@@ -40,15 +40,8 @@ description: "A nonprofit, nonpartisan movement that treats the cost of living a
 
 <!-- SECTION: movement.How a cost gets uncosted -->
 <section class="blk blk--cream2" data-screen-label="How a cost gets uncosted">
-  <div class="eyebrow">{{ mc.howACostGetsUncosted.eyebrow }}</div>
-  <h2 class="u-88 sec">{{ mc.howACostGetsUncosted.h2 | safe }}</h2>
-  <p class="u-89 lead">{{ mc.howACostGetsUncosted.intro | safe }}</p>
-  <ol class="uncosted6">
-{% for step in mc.howACostGetsUncosted.steps %}
-    <li>{{ step | safe }}</li>
-{% endfor %}
-  </ol>
-  <p class="u-11">{{ mc.howACostGetsUncosted.close | safe }}</p>
+  {% import "partials/uncosted.njk" as uc %}
+  {{ uc.block(uncosted.movement) }}
 </section>
 
 <!-- SECTION: movement.What taking part means -->
