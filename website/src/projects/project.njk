@@ -37,15 +37,24 @@ eleventyComputed:
 </header>
 <!-- SECTION: projects/human-essentials-dashboard.At a glance -->
 <section class="u-124 blk" data-screen-label="At a glance">
-{#- P6-copy: PRJ-001 and PRJ-002 carry a founder-approved opener. The other
-    five keep the export's plain "At a glance" eyebrow. -#}
-{% if pc.opener %}
-  <div class="eyebrow">{{ pc.opener.eyebrow }}</div>
-  <h2 class="sec">{{ pc.opener.h2 }}</h2>
-  <p class="u-11 lead">{{ pc.opener.intro }}</p>
-{% else %}
-  <div class="eyebrow">At a glance</div>
-{% endif %}
+{#- V20: one structure on all seven pages — PRJ-001's opener: eyebrow,
+    headline, intro. PRJ-001 and PRJ-002 carry founder-approved copy (P6-copy).
+    The other five carry the same three slots in projectContent.js, empty until
+    approved copy arrives, and an empty slot renders NOTHING — no element, no
+    [CONTENT NEEDED] marker, no fallback text. (Before V20 those five showed
+    the export's plain "At a glance" eyebrow; that fallback is gone, because
+    the eyebrow is one of the three slots.) -#}
+{%- set op = pc.opener or {} %}
+{%- set headline = op.h2 or "" %}
+{%- if op.eyebrow %}
+  <div class="eyebrow">{{ op.eyebrow }}</div>
+{%- endif %}
+{%- if headline %}
+  <h2 class="sec">{{ headline }}</h2>
+{%- endif %}
+{%- if op.intro %}
+  <p class="u-11 lead">{{ op.intro }}</p>
+{%- endif %}
   <div class="grid3">
     <div><h2><i></i>What it targets</h2><p>{{ pc.atAGlance.targets | safe }}</p></div>
     <div><h2><i></i>The mechanism</h2><p>{{ pc.atAGlance.mechanism | safe }}</p></div>

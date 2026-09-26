@@ -54,6 +54,9 @@ const CONTENT = {
     cta: "Help keep the register honest.",
   },
   "PRJ-003": {
+    // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
+    // null renders nothing.
+    opener: { eyebrow: null, h2: null, intro: null },
     publicSummary: "The math behind every claim that automation could lower a specific cost — including when it can’t.",
     atAGlance: {
       targets: "Breaking a cost into its real components (labor, energy, land, materials, waste, market structure, financing, fees, policy) so a reduction claim can be checked, not just asserted.",
@@ -66,6 +69,9 @@ const CONTENT = {
     cta: "Help stress-test the assumptions.",
   },
   "PRJ-004": {
+    // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
+    // null renders nothing.
+    opener: { eyebrow: null, h2: null, intro: null },
     publicSummary: "A decision-support comparison for a community that already exists, weighing real intervention options side by side.",
     atAGlance: {
       targets: "An existing community’s real context — size, region, existing assets — compared against candidate interventions drawn from the Basic Needs Cost Model’s library.",
@@ -78,6 +84,9 @@ const CONTENT = {
     cta: "Help run a pilot with your community.",
   },
   "PRJ-005": {
+    // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
+    // null renders nothing.
+    opener: { eyebrow: null, h2: null, intro: null },
     publicSummary: "Documentation and templates for launching a shared-tool library — liability and safety first, because that’s where these projects usually die.",
     atAGlance: {
       targets: "Households that individually own expensive, rarely used equipment, and the groups trying to fix that with a shared library who stall on the unglamorous parts: liability, insurance, governance.",
@@ -90,6 +99,9 @@ const CONTENT = {
     cta: "Help review the liability guide.",
   },
   "PRJ-006": {
+    // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
+    // null renders nothing.
+    opener: { eyebrow: null, h2: null, intro: null },
     publicSummary: "A nonpartisan, pre-registered study of where automation’s gains actually go — and the conditions under which they’ve reached consumer prices.",
     atAGlance: {
       targets: "The movement’s own central claim, tested rather than assumed: that productivity keeps rising while essential costs don’t fall accordingly.",
@@ -102,6 +114,9 @@ const CONTENT = {
     cta: "Help keep this one honest — reviewers wanted.",
   },
   "PRJ-007": {
+    // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
+    // null renders nothing.
+    opener: { eyebrow: null, h2: null, intro: null },
     publicSummary: "A requirements-drafting assistant for a proposed site or initiative that doesn’t exist yet — every output a draft for professional review, never an approval.",
     atAGlance: {
       targets: "Groups exploring a community land project, campus, or co-op, before they can even ask professionals the right questions.",
@@ -126,7 +141,7 @@ const ALLOWED_TAG = /<\/?em>/g;
       if (/[<>&]/.test(residue)) {
         throw new Error(`projectContent: ${where} contains raw markup`);
       }
-    } else {
+    } else if (value !== null) {   // null = a slot awaiting approved copy (V20)
       guard(value, where);
     }
   }
