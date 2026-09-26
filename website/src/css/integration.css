@@ -2574,3 +2574,35 @@ body[data-page="news"] .cwlist > .readmore {
 }
 body[data-page="news"] .cwlist > .cw:hover + .readmore { background: var(--wheat); color: var(--ink); }
 body[data-page="news"] .cwlist > .cw[hidden] + .readmore { display: none; }
+
+/* 115. V19 — sector pages (×15) and the /sectors/ status legend.
+ *        01   "bite" takes the accent in "Where automation could bite — and
+ *             what stays visible." (template; on ink, so the ink-band accent
+ *             rule above paints it --coral).
+ *        02   the dashed empty-state box is WHITE inside (it was the band's
+ *             own --cream-2, item 48). Its text is already ink / --fg-2 and
+ *             the four confidence chips carry their own grounds.
+ *        03   the worked-example scenario phrase — the words after "A worked
+ *             example:" — takes the accent (template); light band, so
+ *             --coral. The four measurement sectors' headline has no scenario
+ *             phrase and is unchanged.
+ *        legend  each status is one unit: chip, colon, meaning. The meaning
+ *             sits directly beside its own chip and, when it wraps, wraps
+ *             under itself — never under the chip, never onto the next
+ *             chip's line. Below 640px the units stack, one per line, left-
+ *             aligned under "Status:". Before: at 390 "next wave" and
+ *             "research scaffold" each landed on a line of their own, away
+ *             from their chips. */
+body[data-page^="sectors-"] #evidence .evd-empty { background: #FFF; }
+body[data-page="sectors"] .legend .lg-pair {
+  display: inline-flex;
+  align-items: baseline;
+  min-width: 0;
+  max-width: 100%;
+}
+body[data-page="sectors"] .legend .lg-pair .status { flex: none; }
+body[data-page="sectors"] .legend .lg-colon { margin: 0 7px 0 2px; }
+body[data-page="sectors"] .legend .lg-pair .u-138 { min-width: 0; }
+@media (max-width: 640px) {
+  body[data-page="sectors"] .legend { flex-direction: column; align-items: flex-start; gap: 10px; }
+}

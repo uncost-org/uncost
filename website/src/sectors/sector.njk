@@ -44,7 +44,7 @@ eleventyComputed:
 <!-- SECTION: sectors/food.Scope -->
 <section id="scope" class="u-15 block block--ink" data-screen-label="Scope">
   <div class="eyebrow">01 · Scope, opportunity, guardrail</div>
-  <h2>Where automation could bite — and what stays visible.</h2>
+  <h2>Where automation could <span class="u-1">bite</span> — and what stays visible.</h2>
   <div class="scope">
     <div><h3><i></i>What it includes</h3><p>{% if sector.includes %}{{ sector.includes }}{% else %}{{ gapInline("sector-includes") }}{% endif %}</p></div>
     <div><h3><i></i>The opportunity</h3><p>{% if sector.opportunity %}{{ sector.opportunity }}{% else %}{{ gapInline("sector-opportunity") }}{% endif %}</p></div>
@@ -91,7 +91,13 @@ eleventyComputed:
   <h2>How far the method goes in {{ sector.name }} — and where it stops.</h2>
 {%- else %}
   <div class="eyebrow">03 · How {{ sector.name | lower }} gets uncosted</div>
-  <h2>{{ wx.scenario }}</h2>
+{#- V19: the scenario phrase — the words after "A worked example:" — takes
+    the accent; the full stop stays outside it. A heading with no colon renders
+    whole, unaccented. -#}
+{%- set sp = wx.scenario.split(": ") %}
+{%- set phrase = sp.slice(1).join(": ") %}
+{%- set stop = "." if phrase.endsWith(".") else "" %}
+  <h2>{% if phrase %}{{ sp[0] }}: <span class="u-1">{{ phrase.slice(0, phrase.length - stop.length) }}</span>{{ stop }}{% else %}{{ wx.scenario }}{% endif %}</h2>
 {%- endif %}
   <div class="steps6">
 {% for step in wx.steps %}

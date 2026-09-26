@@ -459,4 +459,33 @@ patch("website/src/news/index.njk",
       r'\1<script src="/js/read-more.js" defer></script>\n',
       "V16 news: read-more script", guard='<script src="/js/read-more.js" defer></script>')
 
+V19_SCENARIO = """{#- V19: the scenario phrase — the words after "A worked example:" — takes
+    the accent; the full stop stays outside it. A heading with no colon renders
+    whole, unaccented. -#}
+{%- set sp = wx.scenario.split(": ") %}
+{%- set phrase = sp.slice(1).join(": ") %}
+{%- set stop = "." if phrase.endsWith(".") else "" %}
+  <h2>{% if phrase %}{{ sp[0] }}: <span class="u-1">{{ phrase.slice(0, phrase.length - stop.length) }}</span>{{ stop }}{% else %}{{ wx.scenario }}{% endif %}</h2>
+"""
+
+# V19 (Batch V, 2026-09-26) — sector pages and the /sectors/ status legend.
+# sector.njk and sectors/index.njk are both re-derived by
+# tools/rederive_collections.py, so the three template changes are restated.
+# The 03 headline is restated after C17 has put the per-sector heading back.
+patch("website/src/sectors/sector.njk",
+      r'<h2>Where automation could bite — and what stays visible\.</h2>',
+      '<h2>Where automation could <span class="u-1">bite</span> — and what stays visible.</h2>',
+      "V19 sector 01 accent on bite", guard='<span class="u-1">bite</span>')
+patch("website/src/sectors/sector.njk",
+      r'  <h2>\{\{ wx\.scenario \}\}</h2>\n',
+      V19_SCENARIO,
+      "V19 sector 03 scenario phrase accent", guard="{%- set sp = wx.scenario.split(\": \") %}")
+patch("website/src/sectors/index.njk",
+      r'(<div class="legend" data-screen-label="Legend">\n  <span>Status:</span>\n)'
+      r'((?:  <span class="status [^"]+">[^<]+</span> <span class="u-138">[^<]+</span>\n){4})',
+      lambda m: m.group(1) + re.sub(
+          r'  (<span class="status [^"]+">[^<]+</span>) (<span class="u-138">[^<]+</span>)\n',
+          r'  <span class="lg-pair">\1<span class="lg-colon">:</span>\2</span>\n', m.group(2)),
+      "V19 /sectors/ legend: chip, colon, meaning", guard='<span class="lg-pair">')
+
 print("done")
