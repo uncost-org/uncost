@@ -2459,3 +2459,8 @@ body[data-page="pledge"] .titleband + .pwrap { border-top: 0 !important; }
  *      around the <u>; flex would have split "Uncost" from "is". Colours come
  *      from the per-band accent rules (C1/C2): --coral on cream, cream-2 and
  *      ink. No new colour rule. */
+
+/* 110. V17 — /case/: the Methodology drawer's header band is white (was the
+ *      export's wheat). Its chevron stays --coral-deep: 5.99:1 on white for a
+ *      3:1 non-text bar. The drawer body keeps its cream-2. */
+body[data-page="case"] .mdrawer summary { background: #FFF; }

@@ -406,4 +406,13 @@ patch("website/src/about.njk", r'<h3>Uncost is</h3>', '<h3>Uncost <u>is</u></h3>
 patch("website/src/about.njk", r'<h3>Uncost is not</h3>', '<h3>Uncost <u>is not</u></h3>',
       "V21 about: underline is not", guard='<h3>Uncost <u>is not</u></h3>')
 
+# V17 (Batch V, 2026-09-26) — /case/ closing band: "The question is no longer
+# whether…" moves from above "Evidence first. Tools next." to directly below
+# it, above "The Case feeds The Projects…". case/index.njk is re-derived.
+patch("website/src/case/index.njk",
+      r'(  <p class="u-39 lead">The question is no longer whether.*?</p>\n)(  <h2 class="u-38 sec">Evidence first\..*?</h2>\n)',
+      r'\2\1',
+      "V17 case: question lead follows the headline",
+      guard='Tools next.</span></h2>\n  <p class="u-39 lead">The question is no longer whether')
+
 print("done")
