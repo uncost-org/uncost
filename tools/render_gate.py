@@ -275,6 +275,10 @@ SECTION_EXEMPTIONS = [
      "tools/post_patch_pages.py. Measured 35.73% at 390 on the unchanged "
      "2e44290 build as well: it was the gate's one standing FAIL, not a change "
      "from this batch. The email, social and GitHub blocks above it match."),
+    ("assembly", "Preview + interest",
+     "V22: the PLANNED TOOL chip is removed from the \"A look ahead\" header "
+     "row and the ink button reads \"How the Assembly works\". F2 had already "
+     "let the headline column fill the row. CANVAS-SYNC item 109."),
 ]
 
 

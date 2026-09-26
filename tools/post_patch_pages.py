@@ -356,4 +356,19 @@ patch("website/src/sectors/index.njk",
       r'\1<h2>Basic human needs break into <span class="u-1">fifteen sectors</span> &mdash; and we have a plan to reduce the cost of each.</h2>',
       "V18 sectors headline", guard="and we have a plan to reduce the cost of each.")
 
+# V22 (Batch V, 2026-09-26) — /assembly/ "A look ahead": the PLANNED TOOL chip
+# goes, and the ink button reads "How the Assembly works", linking the page the
+# nav names that way (/assembly/). assembly.njk is re-derived from the export.
+# A removal has no text of its own to guard on, so it is guarded by absence.
+if "Planned tool</span>" in pathlib.Path("website/src/assembly.njk").read_text(encoding="utf-8"):
+    patch("website/src/assembly.njk",
+          r'\n\s*<span class="status status--planned">Planned tool</span>', '',
+          "V22 assembly look-ahead drops the Planned tool chip")
+else:
+    print("  = V22 assembly look-ahead drops the Planned tool chip (already applied)")
+patch("website/src/assembly.njk",
+      r'(<a href=")[^"]*(" class="u-btn u-btn--ink">)View the illustrative mock(</a>)',
+      r'\1/assembly/\2How the Assembly works\3',
+      "V22 assembly look-ahead button", guard="How the Assembly works</a>")
+
 print("done")
