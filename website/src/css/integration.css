@@ -2689,3 +2689,19 @@ body[data-page="sectors"] .legend .lg-pair .u-138 { min-width: 0; }
   gap: 10px 12px;
 }
 .ldrawer-names li > * { margin: 0; }
+
+/* 117. V12 follow-up — /movement/'s step list takes its R2 frame.
+ *      On /about/ the same list is a full-bleed band body and D3 keeps it
+ *      unframed (frame_audit names it). On /movement/ V12 puts it INSIDE the
+ *      page's padded cream-2 band, so it is an inset panel drawing 2px ink
+ *      dividers — exactly the case C14 framed on the sector six-step list
+ *      (.steps6, item 96). frame_audit caught it at Batch V verify: open on
+ *      all four sides at 1440, 1290 and 390. Same treatment as .steps6: a 2px
+ *      ink frame and 24px cell padding. The frame is now the list's top and
+ *      bottom edge, so the first row gives up its top divider and the last
+ *      gives up `.u-2`'s bottom rule (the export's, !important) — one line
+ *      each, not two. */
+body[data-page="movement"] section > div:has(> .step) { border: 2px solid var(--ink); }
+body[data-page="movement"] section > div:has(> .step) > .step { padding-left: 24px; padding-right: 24px; }
+body[data-page="movement"] section > div:has(> .step) > .step:first-child { border-top: 0; }
+body[data-page="movement"] section > div:has(> .step) > .step.u-2 { border-bottom: 0 !important; }
