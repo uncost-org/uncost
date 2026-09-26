@@ -86,6 +86,11 @@ module.exports = function (eleventyConfig) {
   // rather than 404ing, and the old URL is not left to rot in someone's
   // bookmarks or a feed reader.
   eleventyConfig.addPassthroughCopy({ "src/_redirects": "_redirects" });
+  // V13: the XSLT that both RSS feeds name in their <?xml-stylesheet?> line,
+  // so a feed opened in a browser reads as a page, and the one small
+  // stylesheet that page links. Feed readers ignore both.
+  eleventyConfig.addPassthroughCopy({ "src/news/feed.xsl": "news/feed.xsl" });
+  eleventyConfig.addPassthroughCopy({ "src/css/feed.css": "css/feed.css" });
 
   // Brand image pipeline. Source PNGs under assets/brand/ remain the sole
   // canonical, manifest-pinned authority (website/assets/brand/ASSET_MANIFEST.json);
