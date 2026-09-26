@@ -283,6 +283,10 @@ SECTION_EXEMPTIONS = [
      "V24: \"Useful roles, right now.\" gains a \"Volunteer now\" ink button to "
      "/contact/ after its closing note — one button row taller than the export. "
      "CANVAS-SYNC item 110."),
+    ("roadmap", "Disclaimer",
+     "V25: \"How to read these dates\" becomes a standard prose band — the "
+     "export's eyebrow text is now the band's section headline at the one "
+     "headline size; eyebrow slot empty; body unchanged. CANVAS-SYNC item 112."),
 ]
 
 

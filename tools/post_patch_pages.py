@@ -379,4 +379,15 @@ patch("website/src/contribute.njk",
       r'\1\n  <div class="roles-cta"><a href="/contact/" class="u-btn u-btn--ink">Volunteer now</a></div>\2',
       "V24 contribute roles: Volunteer now", guard='class="roles-cta"')
 
+# V25 (Batch V, 2026-09-26) — /roadmap/ "How to read these dates" becomes a
+# standard prose band: its existing heading (the export's eyebrow text) is the
+# band's h2 headline, the eyebrow slot is left empty until approved copy
+# arrives, and the body is unchanged. roadmap.njk is re-derived.
+patch("website/src/roadmap.njk",
+      r'(<section class="blk blk--wheat" data-screen-label="Disclaimer">\n)  <div class="[^"]*\beyebrow\b[^"]*">How to read these dates</div>\n',
+      '\\1  {#- V25: a standard prose band. The eyebrow slot stays empty until approved\n'
+      '      copy arrives; the band\'s existing heading is its headline. -#}\n'
+      '  <h2 class="sec">How to read these dates</h2>\n',
+      "V25 roadmap dates band is a prose band", guard='<h2 class="sec">How to read these dates</h2>')
+
 print("done")
