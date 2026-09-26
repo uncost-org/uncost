@@ -371,4 +371,12 @@ patch("website/src/assembly.njk",
       r'\1/assembly/\2How the Assembly works\3',
       "V22 assembly look-ahead button", guard="How the Assembly works</a>")
 
+# V24 (Batch V, 2026-09-26) — /contribute/ "Useful roles, right now." gains a
+# "Volunteer now" button to /contact/, after the section's closing note.
+# contribute.njk is re-derived from the export.
+patch("website/src/contribute.njk",
+      r'(<h2 class="[^"]*">Useful roles, right now\.</h2>.*?</p>)(\n</section>)',
+      r'\1\n  <div class="roles-cta"><a href="/contact/" class="u-btn u-btn--ink">Volunteer now</a></div>\2',
+      "V24 contribute roles: Volunteer now", guard='class="roles-cta"')
+
 print("done")

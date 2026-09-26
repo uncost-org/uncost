@@ -2435,3 +2435,7 @@ body[data-page="roadmap"] .gates h3{display:flex;gap:10px;align-items:center}
 body[data-page="roadmap"] .gates h3 i{width:11px;height:11px;background:var(--coral);flex:0 0 auto}
 body[data-page="about"] .isnot h3{display:flex;gap:10px;align-items:center}
 body[data-page="about"] .isnot h3::before{content:"";width:11px;height:11px;background:var(--coral);flex:0 0 auto}
+
+/* 107. V24 — /contribute/ "Useful roles, right now." ends in a "Volunteer now"
+ *      button to /contact/ (the page's own ink button style for that route). */
+body[data-page="contribute"] .roles-cta { margin-top: 28px; }

@@ -279,6 +279,10 @@ SECTION_EXEMPTIONS = [
      "V22: the PLANNED TOOL chip is removed from the \"A look ahead\" header "
      "row and the ink button reads \"How the Assembly works\". F2 had already "
      "let the headline column fill the row. CANVAS-SYNC item 109."),
+    ("contribute", "Volunteer roles",
+     "V24: \"Useful roles, right now.\" gains a \"Volunteer now\" ink button to "
+     "/contact/ after its closing note — one button row taller than the export. "
+     "CANVAS-SYNC item 110."),
 ]
 
 
