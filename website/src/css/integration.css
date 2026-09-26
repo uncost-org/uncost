@@ -2433,8 +2433,7 @@ body[data-page^="projects-"] .grid3 p{font-size:15px;line-height:1.6;color:var(-
 }
 body[data-page="roadmap"] .gates h3{display:flex;gap:10px;align-items:center}
 body[data-page="roadmap"] .gates h3 i{width:11px;height:11px;background:var(--coral);flex:0 0 auto}
-body[data-page="about"] .isnot h3{display:flex;gap:10px;align-items:center}
-body[data-page="about"] .isnot h3::before{content:"";width:11px;height:11px;background:var(--coral);flex:0 0 auto}
+body[data-page="about"] .isnot h3::before{content:"";display:inline-block;width:11px;height:11px;margin-right:10px;vertical-align:middle;background:var(--coral)}
 
 /* 107. V24 — /contribute/ "Useful roles, right now." ends in a "Volunteer now"
  *      button to /contact/ (the page's own ink button style for that route). */
@@ -2449,3 +2448,14 @@ body[data-page="contribute"] .roles-cta { margin-top: 28px; }
  *      two bands overlap, so a rule shorter than the page never registered.) */
 body[data-page="pledge"] .titleband { border-bottom: 4px solid var(--coral); }
 body[data-page="pledge"] .titleband + .pwrap { border-top: 0 !important; }
+
+/* 109. V21 — accent spans, copy unchanged (founder list, 2026-09-26).
+ *      PRJ-001 / PRJ-002 section headlines "covers", "Honest", "first" — the
+ *      three live in the one shared project template, so all seven project
+ *      pages carry them; /treasury/ "single dollar moves" and "help"; /roadmap/
+ *      "ready"; /about/ "is" and "is not" UNDERLINED (not coloured) in the two
+ *      box headings — <u>, as the homepage hero does. The /about/ box marker
+ *      (item 106) became an inline square so each heading stays one text run
+ *      around the <u>; flex would have split "Uncost" from "is". Colours come
+ *      from the per-band accent rules (C1/C2): --coral on cream, cream-2 and
+ *      ink. No new colour rule. */

@@ -55,13 +55,13 @@ eleventyComputed:
 <!-- SECTION: projects/human-essentials-dashboard.Overview -->
 <section class="blk blk--cream2" data-screen-label="Overview">
   <div class="eyebrow">Overview</div>
-  <h2>What this brief covers.</h2>
+  <h2>What this brief <span class="u-1">covers</span>.</h2>
   <p class="lead">{{ pc.overview }}</p>
 </section>
 <!-- SECTION: projects/human-essentials-dashboard.Funding & status -->
 <section class="blk" data-screen-label="Funding & status">
   <div class="eyebrow">Funding &amp; status</div>
-  <h2>Honest about where this stands.</h2>
+  <h2><span class="u-1">Honest</span> about where this stands.</h2>
   <div class="fund">
     <div class="fh"><span>{{ project.id }} &mdash; {{ project.display }}</span><span class="u-115 status status--dev">Draft</span></div>
     <div class="fb">
@@ -74,7 +74,7 @@ eleventyComputed:
 <!-- SECTION: projects/human-essentials-dashboard.Related sectors -->
 <section class="blk blk--cream2" data-screen-label="Related sectors">
   <div class="eyebrow">Related sectors</div>
-  <h2>Where it applies first.</h2>
+  <h2>Where it applies <span class="u-1">first</span>.</h2>
   <p class="lead">{{ pc.relatedSectors }}</p>
   <div class="rel">{% for s in project.sectors %}<a href="/sectors/{{ s.slug }}/"><span class="{{ relSq[loop.index0 % relSq.length] }}"></span> {{ s.name }}</a>{% endfor %}<a class="{{ relatedSectors._allLink.linkClass }}" href="/sectors/"><span class="{{ relatedSectors._allLink.squareClass }}"></span> All 15 sectors &rarr;</a></div>
 </section>

@@ -390,4 +390,20 @@ patch("website/src/roadmap.njk",
       '  <h2 class="sec">How to read these dates</h2>\n',
       "V25 roadmap dates band is a prose band", guard='<h2 class="sec">How to read these dates</h2>')
 
+# V21 (Batch V, 2026-09-26) — accent spans, copy unchanged. treasury.njk,
+# roadmap.njk and about.njk are re-derived from the export; project.njk is not.
+patch("website/src/treasury.njk", r'before a single dollar moves\.</h2>',
+      'before a <span class="u-1">single dollar moves</span>.</h2>',
+      "V21 treasury accent: single dollar moves", guard='<span class="u-1">single dollar moves</span>')
+patch("website/src/treasury.njk", r'Want to help before donations open\?</h2>',
+      'Want to <span class="u-1">help</span> before donations open?</h2>',
+      "V21 treasury accent: help", guard='Want to <span class="u-1">help</span>')
+patch("website/src/roadmap.njk", r'evidence and safety are ready\.</h2>',
+      'evidence and safety are <span class="u-1">ready</span>.</h2>',
+      "V21 roadmap accent: ready", guard='are <span class="u-1">ready</span>.')
+patch("website/src/about.njk", r'<h3>Uncost is</h3>', '<h3>Uncost <u>is</u></h3>',
+      "V21 about: underline is", guard='<h3>Uncost <u>is</u></h3>')
+patch("website/src/about.njk", r'<h3>Uncost is not</h3>', '<h3>Uncost <u>is not</u></h3>',
+      "V21 about: underline is not", guard='<h3>Uncost <u>is not</u></h3>')
+
 print("done")
