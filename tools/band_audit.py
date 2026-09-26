@@ -230,6 +230,58 @@ const GAP_EPS = job.gapEps, PAD = job.pad, MIN_PAD = job.minPad;
           });
         });
 
+        // V5 (2026-09-26): the band stack does not end at </main>. The page
+        // footer is the band after it, and the seam between <main>'s last band
+        // and the footer is a boundary like any other — /contact/ shipped a
+        // frame edge stacked on the footer's coral rule and no audit could see
+        // it. The footer joins the stack as one more band. Its fill is read
+        // from what is painted at its TOP: footer.ft is ink, but its first
+        // full-width child (.ft-updates) paints the colour a reader sees at
+        // the seam, so that is the colour the seam is judged against.
+        const topFill = (el) => {
+          let e = el;
+          for (let d = 0; d < 4; d++) {
+            const kid = [...e.children].find((k) => {
+              const q = k.getBoundingClientRect(); return q.width > 0 && q.height > 0; });
+            if (!kid) break;
+            const er = e.getBoundingClientRect(), kr = kid.getBoundingClientRect();
+            const inner = er.top + (parseFloat(getComputedStyle(e).borderTopWidth) || 0);
+            if (Math.abs(kr.top - inner) > 1 || kr.width < er.width - 1) break;
+            const m = getComputedStyle(kid).backgroundColor.match(/^rgba?\(([^)]+)\)$/);
+            if (m) {
+              const q = m[1].split(",").map((v) => parseFloat(v));
+              if ((q.length > 3 ? q[3] : 1) >= 0.999) {
+                const r0 = resolveBg(kid);
+                return { ...r0, chain: ["top fill via " + kid.tagName.toLowerCase() + "." +
+                  (kid.className || "").toString().trim().split(/\s+/).join(".")].concat(r0.chain) };
+              }
+            }
+            e = kid;
+          }
+          return resolveBg(el);
+        };
+        const foot = main.nextElementSibling;
+        if (foot && foot.tagName === "FOOTER") {
+          const cs = getComputedStyle(foot);
+          const r = foot.getBoundingClientRect();
+          if (cs.display !== "none" && r.height > 0) {
+            const bg = topFill(foot);
+            const cls = (foot.className || "").toString().trim();
+            bands.push({
+              domIndex: main.children.length, footer: true, rendered: true,
+              label: "footer" + (cls ? "." + cls.split(/\s+/).join(".") : ""),
+              bg: bg.bg, bgUnresolved: bg.unresolved, bgChain: bg.chain,
+              rect: { top: r.top + window.scrollY, bottom: r.bottom + window.scrollY,
+                      left: r.left, width: r.width, height: r.height },
+              b: { top: side(cs, "Top"), right: side(cs, "Right"),
+                   bottom: side(cs, "Bottom"), left: side(cs, "Left") },
+              boxShadow: cs.boxShadow,
+              outline: cs.outlineStyle === "none" ? "none" :
+                       cs.outlineWidth + " " + cs.outlineStyle + " " + cs.outlineColor,
+            });
+          }
+        }
+
         // Geometry only: where are the horizontal edges, and how much clean band
         // is available either side of each for a pixel read.
         const live = bands.filter((b) => b.rendered);
@@ -927,6 +979,11 @@ SELFTEST_CASES = [
     ("/bad-frame-inset-nosides.html", ["against 4px declared"],
      "V2 applies only at the viewport: an inset component without sides is not "
      "a frame, and its 2px line is not R1"),
+    # Coverage past </main>, 2026-09-26.
+    ("/good-footer-seam.html", [], "V5: the main -> footer seam, coral as R1 requires"),
+    ("/bad-footer-seam.html", ["paints nothing"],
+     "V5: the footer's coral rule under a coral band — invisible; an audit that "
+     "stops at </main> passes it"),
 ]
 
 

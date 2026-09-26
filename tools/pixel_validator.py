@@ -121,6 +121,15 @@ const path = require("node:path");
           const r = el.getBoundingClientRect();
           return r.height > 0 && r.width > 0;
         });
+        // V5 (2026-09-26): the stack does not end at </main>. The footer is the
+        // band after it, and the seam between the two is a boundary like any
+        // other — /contact/ shipped a frame edge stacked on the footer's rule
+        // where no audit looked.
+        const foot = main.nextElementSibling;
+        if (foot && foot.tagName === "FOOTER") {
+          const fr = foot.getBoundingClientRect();
+          if (fr.height > 0 && fr.width > 0) bands.push(foot);
+        }
         const label = (el) => el.getAttribute("data-screen-label") || el.id
           || (el.tagName.toLowerCase() + "." + (el.className || "").toString().trim().split(/\s+/).join("."));
         const bounds = [];
@@ -496,8 +505,24 @@ GOOD_FIXED_OVERLAY = _page(
     '<section class="b" data-screen-label="B">B</section>'
     '</main><div class="bar">Sign the Pledge</div><main>')
 
+# V5: the seam past </main>. A cream last band over a footer that draws the
+# boundary: one rule, PASS. The same seam with the last band ALSO drawing a
+# bottom rule: two rules stacked where one belongs — an audit that stops at
+# </main> never reads it. Must FAIL.
+FOOTER_TAIL = ("<footer style='border-top:4px solid #D64A1E'>"
+               "<div style='background:#E8B84A;height:80px'>footer</div></footer>")
+GOOD_FOOTER_SEAM = _page("footer seam", ".a{background:#FAF7F0;height:80px}",
+                         '<section class="a" data-screen-label="A">A</section>'
+                         ) .replace("</main></body>", "</main>" + FOOTER_TAIL + "</body>")
+BAD_FOOTER_DOUBLE = _page("footer double", ".a{background:#FAF7F0;height:80px;"
+                          "border-bottom:4px solid #0A0A0A}",
+                          '<section class="a" data-screen-label="A">A</section>'
+                          ).replace("</main></body>", "</main>" + FOOTER_TAIL + "</body>")
+
 SELF_CASES = [
     ("good-one-rule.html", GOOD_ONE_RULE, True),
+    ("good-footer-seam.html", GOOD_FOOTER_SEAM, True),
+    ("bad-footer-double-rule.html", BAD_FOOTER_DOUBLE, False),
     ("good-fixed-overlay-over-boundary.html", GOOD_FIXED_OVERLAY, True),
     ("good-inset-box-at-boundary.html", GOOD_INSET_BOX, True),
     ("good-divider-at-centre.html", GOOD_DIVIDER_AT_CENTRE, True),

@@ -97,11 +97,12 @@ SELFTEST_CASES = [
     ("bad-09-exempt-lookalike.html", "fail", "frame edge is open", 1),
     ("bad-10-exempt-still-unresolved.html", "fail", "not uniform", 1),
     ("bad-11-exempt-stale.html", "fail", "STALE EXEMPTION", 1),
-    # R2 as amended 2026-09-26 (V1, V2).
+    # R2 as amended 2026-09-26 (V1, V2) and <nav> coverage (V5).
     ("good-12-r1-under-ink.html", "pass", "", 1),
     ("bad-13-r1-where-visible.html", "fail", "weight and colour differ", 1),
     ("good-14-fullbleed-nosides.html", "pass", "", 1),
     ("bad-15-fullbleed-sides.html", "fail", "runs along the viewport edge", 1),
+    ("bad-16-nav-open.html", "fail", "frame edge is open", 1),
 ]
 
 # --- named exemptions -------------------------------------------------------
@@ -172,8 +173,12 @@ window.__frameAudit = function (OPT) {
   const SPACING = 12;   // a gap this large is spacing; between the two: unresolved
   const WTOL = 0.51;    // px slack when comparing line weights
   // Structural landmarks are the page, not components: the rules between their
-  // bands are R1 band boundaries, governed elsewhere.
-  const SKIP = new Set(["HTML", "BODY", "MAIN", "HEADER", "FOOTER", "NAV"]);
+  // bands are R1 band boundaries, governed elsewhere. <nav> USED to be here —
+  // V5 (2026-09-26): /404's quick-links grid is a <nav> that draws dividers,
+  // and skipping every <nav> meant it had never been audited. A nav is a
+  // landmark for assistive technology, not a reason to stop looking at what
+  // it draws.
+  const SKIP = new Set(["HTML", "BODY", "MAIN", "HEADER", "FOOTER"]);
   const VW = document.documentElement.clientWidth;
   const R1W = 4;        // R1's declared rule weight (integration.css item 40)
   const VIS = 12;       // channel delta under which two colours read as one line

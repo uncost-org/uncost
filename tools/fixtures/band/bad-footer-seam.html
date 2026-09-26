@@ -1,0 +1,12 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>band fixture — bad, V5 coral footer rule under a coral band</title>
+<link rel="stylesheet" href="band.css"></head>
+<body><main>
+  <div class="band bg-cream"><p>First band.</p></div>
+  <div class="band bg-coral r-ink"><p>Coral CTA, last in main.</p></div>
+</main>
+<!-- FAULT: the footer's coral rule sits under a coral band. R1 requires ink.
+     An audit that stops at </main> never sees this seam. -->
+<footer class="ft r-coral"><div class="ft-top"><p>Footer top.</p></div></footer>
+</body></html>

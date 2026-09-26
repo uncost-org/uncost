@@ -52,3 +52,7 @@ main { display: block; }
 .frame2.top-r1 { border-top: 4px solid var(--coral); }
 .narrow { max-width: 80%; margin: 0 auto; }
 
+/* V5: a page footer whose top is painted by its first full-width child. */
+footer.ft { background: var(--ink); }
+footer.ft > .ft-top { background: var(--wheat); min-height: 140px; }
+footer.ft.r-coral { border-top: 4px solid var(--coral); }

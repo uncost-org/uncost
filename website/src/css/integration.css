@@ -884,7 +884,6 @@ body[data-page="sectors-leisure"] { --gp: 0.1701; }
 .cwrap + *,
 .sgrid + *,
 .pol-wrap + *,                                          /* V1, item 100 */
-body[data-page="error-404"] .e-wrap + *,                /* C14, item 96 */
 body[data-page="treasury"] section:has(> .kpis) + * { border-top: 0 !important; }
 
 /* 68 — C1 ONE CORAL, BY BACKGROUND.
@@ -2317,3 +2316,32 @@ body[data-page="treasury"] section:has(> .kpis) { border-left: 0 !important; bor
 @media (max-width: 960px) {
   body[data-page="pledge-thanks"] .next { border-left: 0; border-right: 0; }
 }
+
+/* 102. V5 — THE SEAM PAST </main>, AND THE <nav> GRID.
+ *      tools/band_audit.py and tools/pixel_validator.py now read the boundary
+ *      between <main>'s last band and the footer, and tools/frame_audit.py no
+ *      longer skips <nav>. What they found:
+ *
+ *      a. Every page that ends on a coral CTA (27 routes) declares TWO rules
+ *         at that seam: the CTA's 4px ink bottom and the footer's 4px coral
+ *         top. The CTA is position:relative / z-index 1 with margin-bottom
+ *         -4px, so it paints over the footer's top 4px and only its ink rule
+ *         is ever seen — which is the colour R1 wants (coral above, the
+ *         footer's orange below -> ink). The coral rule is fully occluded, a
+ *         second declared rule that nothing shows. It goes; the seam is
+ *         unchanged on screen. "Last" means the last child that is not a
+ *         script (`:nth-last-child(1 of …)`; `:has()` cannot nest). */
+main:has(> [class*="blk--coral"]:nth-last-child(1 of :not(script))) + .ft { border-top: 0 !important; }
+
+/*      b. /404's quick-links grid is a <nav>, never audited until now: 2px ink
+ *         gap dividers, sides at the viewport (V2), and no bottom edge — the
+ *         footer's coral sat there. Under V1 a 2px ink edge is visible against
+ *         the footer's orange, so the frame edge is the boundary: the grid
+ *         draws it and the footer draws nothing. Its top is the line it shares
+ *         with the split panel above; that line now belongs to the grid (the
+ *         panel stops drawing a bottom), so each is a whole frame and the
+ *         band audit reads the seam as one frame edge. (Replaces C14's
+ *         `.e-wrap + *` suppression in item 67's list.) */
+body[data-page="error-404"] .e-wrap { border-bottom: 0; }
+body[data-page="error-404"] .e-quick { border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+main:has(> .e-quick:nth-last-child(1 of :not(script))) + .ft { border-top: 0 !important; }
