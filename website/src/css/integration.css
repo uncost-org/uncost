@@ -2393,3 +2393,15 @@ main :is(
 @media (min-width: 1041px) and (max-width: 1330px) {
   body[data-page="sectors"] .sgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
+
+/* 105. V8 — UNDERLINES: CONTINUOUS, AND CLEAR OF THE DESCENDERS.
+ *      `text-decoration-skip-ink: none` draws every underline as one
+ *      unbroken line instead of gapping around g, p, q, y. That only works if
+ *      the line sits BELOW the descenders, or it cuts through them;
+ *      `text-underline-position: under` puts it at the font's descender edge
+ *      at every size — a fixed px offset would clear 15px body text and cut
+ *      56px headline text, or the reverse. The existing text-underline-offset
+ *      values (3px on links, from tokens.css) now measure the gap from that
+ *      edge. All three properties inherit, so one declaration at the root
+ *      reaches every underline on the site, including hover-only ones. */
+html { text-decoration-skip-ink: none; text-underline-position: under; }
