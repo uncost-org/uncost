@@ -294,6 +294,11 @@ SECTION_EXEMPTIONS = [
      "V15: the six-step band moves to --cream-2 (swapped with \"What taking "
      "part means\"), its headline underlines \"uncosted\" and its step labels "
      "are 25% larger. CANVAS-SYNC item 115."),
+    ("case.html", "Methodology drawer",
+     "V17: the drawer's header band is white (was the export's wheat). Closed, "
+     "the drawer IS its header, so recolouring the band is a near-total pixel "
+     "change — 99.5% at 1440. Text, chevron, x and width unchanged, so the "
+     "geometry check still runs. CANVAS-SYNC item 114."),
 ]
 
 
