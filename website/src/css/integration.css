@@ -2345,3 +2345,47 @@ main:has(> [class*="blk--coral"]:nth-last-child(1 of :not(script))) + .ft { bord
 body[data-page="error-404"] .e-wrap { border-bottom: 0; }
 body[data-page="error-404"] .e-quick { border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
 main:has(> .e-quick:nth-last-child(1 of :not(script))) + .ft { border-top: 0 !important; }
+
+/* 103. V6 — COMPONENT HEADINGS ONE STEP BELOW THE SECTION HEADLINE.
+ *      Founder rule 2026-09-26. The section headline sits on the --fs-h2 step
+ *      (clamp(34px, 4.2vw, 56px) — nearest --fs-h2 at every width), so a
+ *      component heading takes --fs-h3: clamp(24px, 3vw, 36px), i.e. 36px at
+ *      1440 and 24px at 390. A component heading is the first heading of a
+ *      CARD: a repeated, visibly boxed item that is not itself a band —
+ *      tools/type_audit.py (C19.3) finds them by that definition, never by
+ *      class name, and this list is what it found on the built site. Before:
+ *      252 component headings, 198 off the step — project "At a glance"
+ *      cards, /treasury/ boxes and /roadmap/ Year 2 / Year 3 / Beyond boxes at
+ *      the full 56px section size (C3's `.blk h2` and an ink-band rule reached
+ *      them), everything else anywhere from 20px to 34px.
+ *      `:not(#v6)` lends ID weight: C3's rule is `!important` at (0,3,1), and
+ *      a class-only selector here would lose to it on the card h2s. */
+main :is(
+  .grid3 > div > h2,
+  .prin > div > h3,
+  .gates > div > h3,
+  .tiers > .tier > h2,
+  .ways > .way > h3,
+  .parts4 > .part4 > h3,
+  .rule3 > div > h3,
+  .scope > div > h3,
+  .can > div > h3,
+  .isnot > div > h3,
+  .runs > .run .rh > h3,
+  .asks > .ask > h3,
+  .focus3 > a .tx > h3,
+  .sgrid > .scard > h3,
+  .plist > .prow h4,
+  .pollist > .polrow h3,
+  article.up-item > :is(h3, h4)
+):not(#v6) { font-size: var(--fs-h3) !important; }
+/* The one place the step does not fit: /sectors/ runs five columns from
+ * 1041px, and at the one-step size "Communication" and "Transportation" are
+ * single words wider than a fifth of the grid until ~1320px (measured short by
+ * 25px at 1041/1100, 23px at 1200, 2px at 1304). The type keeps the rule and
+ * the grid gives way: the export's own three-column layout, which it already
+ * uses below 1041px, now runs up to 1330px. Fifteen cards fill three columns
+ * exactly, so no empty ink cell appears (four columns would leave one). */
+@media (min-width: 1041px) and (max-width: 1330px) {
+  body[data-page="sectors"] .sgrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

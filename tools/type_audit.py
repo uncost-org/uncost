@@ -251,7 +251,69 @@ const IN_PAGE = (maxDepth) => {
       } : null,
     });
   });
-  return { bands: bands };
+  // --- C19.3 (V6, 2026-09-26): component headings ------------------------
+  // A CARD is a repeated item (a sibling of the same tag and class) that is
+  // visibly boxed — its own opaque fill against its ground, or a border on
+  // two or more sides — and is not itself a band. Its component heading is
+  // its first h2/h3/h4. List rows with no box (the sector six steps, the
+  // Assembly rules) are not cards, and neither is a single card that is its
+  // band's only content (the "on the way" pages: F1 made that heading the
+  // band's headline).
+  const colour = (c) => {
+    const m = String(c).match(/rgba?\(([^)]+)\)/);
+    if (!m) return null;
+    const q = m[1].split(/[,\s/]+/).filter(Boolean).map(Number);
+    return { r: q[0], g: q[1], b: q[2], a: q.length > 3 ? q[3] : 1 };
+  };
+  const ground = (el) => {
+    for (let e = el; e; e = e.parentElement) {
+      const c = colour(getComputedStyle(e).backgroundColor);
+      if (c && c.a > 0.999) return c;
+    }
+    return null;
+  };
+  const differs = (a, b) => !!a && !!b &&
+    Math.max(Math.abs(a.r - b.r), Math.abs(a.g - b.g), Math.abs(a.b - b.b)) > 6;
+  const boxed = (el) => {
+    const cs = getComputedStyle(el);
+    const own = colour(cs.backgroundColor);
+    if (own && own.a > 0.999 && differs(own, ground(el.parentElement))) return true;
+    return ["Top", "Right", "Bottom", "Left"]
+      .filter((s) => parseFloat(cs["border" + s + "Width"]) > 0).length >= 2;
+  };
+  const inNonContent = (el) => {
+    for (let e = el; e && e !== main; e = e.parentElement) if (NON_CONTENT.has(e.tagName)) return true;
+    return false;
+  };
+  const components = [];
+  for (const h of main.querySelectorAll("h2,h3,h4")) {
+    if (!visible(h) || inNonContent(h) || !(h.textContent || "").trim().length) continue;
+    let item = null;
+    for (let e = h.parentElement; e && e !== main; e = e.parentElement) {
+      if (e.parentElement !== main && repeated(e) && boxed(e)) { item = e; break; }
+    }
+    if (!item || item.querySelector("h2,h3,h4") !== h) continue;
+    components.push({
+      sel: sel(item.parentElement) + " > " + sel(item) + " > " + pathTo(item, h),
+      text: (h.textContent || "").trim().replace(/\s+/g, " ").slice(0, 50),
+      px: parseFloat(getComputedStyle(h).fontSize),
+    });
+  }
+  // The page's own type scale, read from its tokens. "One step below" is
+  // defined against the scale the page ships, never against a number here.
+  const rootCs = getComputedStyle(document.documentElement);
+  const scale = {};
+  for (const step of ["h1", "h2", "h3", "h4"]) {
+    const raw = rootCs.getPropertyValue("--fs-" + step).trim();
+    if (!raw) { scale[step] = null; continue; }
+    const t = document.createElement("div");
+    t.style.fontSize = "var(--fs-" + step + ")";
+    t.style.position = "absolute";
+    document.body.appendChild(t);
+    scale[step] = parseFloat(getComputedStyle(t).fontSize);
+    t.remove();
+  }
+  return { bands: bands, components: components, scale: scale };
 };
 
 (async () => {
@@ -446,6 +508,46 @@ def evaluate(payload):
                 )
                 measure_example.setdefault(mkey, errors[-1])
 
+    # --- C19.3 component headings one step below the section headline -----
+    # V6, 2026-09-26. The expected size is the step AFTER the one nearest this
+    # width's modal section headline, in the page's own --fs-h1..h4 scale.
+    counts["component_headings"] = 0
+    counts["component_misses"] = 0
+    component_expected = {}
+    for width in sorted(by_width, reverse=True):
+        for page in by_width[width]:
+            comps = page.get("components") or []
+            if not comps:
+                continue
+            counts["component_headings"] += len(comps)
+            steps = [("h1", page.get("scale", {}).get("h1")), ("h2", page.get("scale", {}).get("h2")),
+                     ("h3", page.get("scale", {}).get("h3")), ("h4", page.get("scale", {}).get("h4"))]
+            modal = modal_by_width.get(width)
+            if modal is None or any(v is None or not isinstance(v, (int, float)) for _n, v in steps):
+                errors.append(
+                    f"UNRESOLVED {page['route']}@{width}: {len(comps)} component heading(s) but "
+                    f"no {'section-headline size' if modal is None else '--fs-h1..h4 type scale'} "
+                    f"to measure them against — an unmeasurable heading is a failure, not a skip")
+                continue
+            nearest = min(range(len(steps)), key=lambda i: abs(steps[i][1] - modal))
+            if nearest + 1 >= len(steps):
+                errors.append(f"UNRESOLVED {page['route']}@{width}: the section headline "
+                              f"({modal:g}px) is already the smallest step; nothing is one below it")
+                continue
+            step_name, expected = steps[nearest + 1]
+            component_expected[str(width)] = {"section": steps[nearest][0], "component": step_name,
+                                              "px": expected}
+            for c in comps:
+                if abs(c["px"] - expected) <= SIZE_TOL:
+                    continue
+                counts["component_misses"] += 1
+                errors.append(
+                    f"COMPONENT-SIZE {page['route']}@{width} {c['sel']}: {c['px']:g}px, a "
+                    f"component heading is one step below the section headline "
+                    f"({steps[nearest][0]} {modal:g}px -> {step_name} {expected:g}px) — "
+                    f"text={c['text']!r}")
+    counts["component_scale"] = component_expected
+
     # An audit that measured nothing has proved nothing.
     if not load_failures and counts["headlines"] == 0:
         errors.append(
@@ -600,6 +702,31 @@ BAD_MEASURE_BODY_NONE = """<!doctype html><meta charset=utf-8><title>body uncapp
 <section class="blk"><h2>We start where the money actually goes.</h2><p>Body copy on the same measure as the headline above it.</p></section>
 </main></body>""" % _BASE_CSS
 
+# C19.3 (V6). A page type scale, a section headline on its h2 step, and a row
+# of BOXED repeated cards whose heading must sit on the next step (h3). The
+# good fixture also carries an unboxed list whose row headings are 18px: list
+# rows are not cards, so they must not be measured at all.
+_SCALE = ":root{--fs-h1:80px;--fs-h2:60px;--fs-h3:32px;--fs-h4:22px}"
+_CARDS = """
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{background:#FFFFFF;padding:20px}
+.rows .row h3{font-size:18px}
+"""
+def _cards_page(title, card_css):
+    return ("""<!doctype html><meta charset=utf-8><title>%s</title>
+<style>%s%s%s%s</style>
+<body><main>
+<section class="blk blk--first"><h1>A page hero</h1><p>Hero standfirst.</p></section>
+<section class="blk"><h2>Working harder, still falling behind.</h2><p>Body copy on the same measure as the headline above it.</p></section>
+<section class="blk"><h2>Three cards, one step down.</h2><p>Body copy on the same measure as the headline above it.</p>
+  <div class=cards><div class=card><h3>Card one</h3><p>Body.</p></div><div class=card><h3>Card two</h3><p>Body.</p></div><div class=card><h3>Card three</h3><p>Body.</p></div></div>
+  <div class=rows><div class=row><h3>A list row</h3></div><div class=row><h3>Another row</h3></div></div></section>
+</main></body>""" % (title, _BASE_CSS, _SCALE if "no-scale" not in title else "", _CARDS, card_css))
+GOOD_CARD_STEP = _cards_page("card step", ".card h3{font-size:var(--fs-h3)}")
+BAD_CARD_SECTION_SIZE = _cards_page("card at section size", ".card h3{font-size:60px}")
+BAD_CARD_TOO_SMALL = _cards_page("card too small", ".card h3{font-size:20px}")
+BAD_CARD_NO_SCALE = _cards_page("no-scale", ".card h3{font-size:32px}")
+
 # (name, markup or None, route, should_pass, expected error kinds)
 # A None markup writes no file: the route is deliberately absent, and a route
 # that will not load must be an ERROR rather than a quietly shorter run.
@@ -617,6 +744,13 @@ CASES = [
      "/bad-measure-body-uncapped.html", False, {"MEASURE"}),
     ("(no file — route absent)", None, "/bad-route-that-does-not-exist.html",
      False, {"LOAD"}),
+    ("good-card-step.html", GOOD_CARD_STEP, "/good-card-step.html", True, set()),
+    ("bad-card-at-section-size.html", BAD_CARD_SECTION_SIZE, "/bad-card-at-section-size.html",
+     False, {"COMPONENT-SIZE"}),
+    ("bad-card-too-small.html", BAD_CARD_TOO_SMALL, "/bad-card-too-small.html",
+     False, {"COMPONENT-SIZE"}),
+    ("bad-card-no-scale.html", BAD_CARD_NO_SCALE, "/bad-card-no-scale.html",
+     False, {"UNRESOLVED"}),
 ]
 
 FIXTURE_README = """# type_audit fixtures
@@ -639,6 +773,10 @@ incidental reason would otherwise look like a working audit.
 | `bad-measure-split.html` | FAIL `MEASURE` | a prose band whose headline keeps a narrower measure than its body |
 | `bad-measure-body-uncapped.html` | FAIL `MEASURE` | a prose band whose body has no measure at all while the headline has one |
 | (no file) | FAIL `LOAD` | a route that will not load is an error, never a skipped line |
+| `good-card-step.html` | PASS | C19.3 (V6): boxed repeated cards whose heading sits one step below the section headline in the page's own `--fs-*` scale; an unboxed list beside them has 18px row headings that must NOT be measured |
+| `bad-card-at-section-size.html` | FAIL `COMPONENT-SIZE` | the /treasury/ and project-card defect: card headings at the section headline's size |
+| `bad-card-too-small.html` | FAIL `COMPONENT-SIZE` | card headings below the step |
+| `bad-card-no-scale.html` | FAIL `UNRESOLVED` | cards but no type scale to measure them against: a failure, not a skip |
 
 The measure fixtures fail at 1440 and are clean at 390, which is correct: at
 390 a 728px cap and no cap at all wrap at the same place, because the viewport

@@ -18,6 +18,10 @@ incidental reason would otherwise look like a working audit.
 | `bad-measure-split.html` | FAIL `MEASURE` | a prose band whose headline keeps a narrower measure than its body |
 | `bad-measure-body-uncapped.html` | FAIL `MEASURE` | a prose band whose body has no measure at all while the headline has one |
 | (no file) | FAIL `LOAD` | a route that will not load is an error, never a skipped line |
+| `good-card-step.html` | PASS | C19.3 (V6): boxed repeated cards whose heading sits one step below the section headline in the page's own `--fs-*` scale; an unboxed list beside them has 18px row headings that must NOT be measured |
+| `bad-card-at-section-size.html` | FAIL `COMPONENT-SIZE` | the /treasury/ and project-card defect: card headings at the section headline's size |
+| `bad-card-too-small.html` | FAIL `COMPONENT-SIZE` | card headings below the step |
+| `bad-card-no-scale.html` | FAIL `UNRESOLVED` | cards but no type scale to measure them against: a failure, not a skip |
 
 The measure fixtures fail at 1440 and are clean at 390, which is correct: at
 390 a 728px cap and no cap at all wrap at the same place, because the viewport
