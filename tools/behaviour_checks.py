@@ -49,9 +49,12 @@ SHOW_MORE_STEP = 12
 
 # X17 — the scope filters' labels, in order, from the same file the overlay
 # renders them from. The first is the default.
-SCOPES = [s["label"] for s in json.loads(
-    (WEBSITE / "src" / "_data" / "searchScopes.json").read_text(encoding="utf-8"))]
+_SCOPE_DATA = json.loads((WEBSITE / "src" / "_data" / "searchScopes.json").read_text(encoding="utf-8"))
+SCOPES = [s["label"] for s in _SCOPE_DATA]
+SCOPE_KEYS = [s["key"] for s in _SCOPE_DATA]
+SCOPE_LABEL = dict(zip(SCOPE_KEYS, SCOPES))
 SEARCH_QUERY = "food"   # hits sector pages AND pages outside Sectors today
+NEWS_QUERY = "watch"    # hits /news/ AND /news/cost-watch/ today (X.1)
 
 PROBE_JS = r"""
 const puppeteer = require(require.resolve("puppeteer", { paths: [process.argv[2]] }));
@@ -212,7 +215,7 @@ SITE_JOBS = [
     # X17 — scope filters. `-on` opens the overlay from the header control;
     # `-query-all` types a query under the default scope; `-scope-sectors`
     # then presses "Sectors". The query must hit both sectors and other
-    # sections under "All of the site", or the scope has nothing to prove.
+    # sections under "All of this site", or the scope has nothing to prove.
     {"name": name, "route": "/", "js": True, "steps": steps,
      "queries": {"links": ".search-ov .so-links a",
                  "searchbox": ".search-ov [data-search-box]",
@@ -227,6 +230,20 @@ SITE_JOBS = [
                                      {"type": ["#site-search", SEARCH_QUERY]},
                                      {"waitFor": "[data-search-results] > li"},
                                      {"click": '[data-search-scope="sectors"]'}]),
+        # X.1 — Uncost News and Cost Watch are separate scopes. "watch" hits
+        # /news/ (its "see Cost Watch" line) and /news/cost-watch/ under the
+        # default scope; each news scope must keep only its own page.
+        ("search-js-query-watch", [{"click": "[data-search]"},
+                                   {"type": ["#site-search", NEWS_QUERY]},
+                                   {"waitFor": "[data-search-results] > li"}]),
+        ("search-js-scope-news", [{"click": "[data-search]"},
+                                  {"type": ["#site-search", NEWS_QUERY]},
+                                  {"waitFor": "[data-search-results] > li"},
+                                  {"click": '[data-search-scope="news"]'}]),
+        ("search-js-scope-costwatch", [{"click": "[data-search]"},
+                                       {"type": ["#site-search", NEWS_QUERY]},
+                                       {"waitFor": "[data-search-results] > li"},
+                                       {"click": '[data-search-scope="costwatch"]'}]),
     )
 ] + [
     # V16 — three-line clamp with "Read more" (/js/read-more.js). /news/ is
@@ -345,13 +362,13 @@ def check_search_on(m, errors, results):
 
 
 def check_search_scope(all_m, scoped_m, errors, results, scope_key="sectors",
-                       scope_label="Sectors"):
+                       scope_label=SCOPE_LABEL["sectors"]):
     """A scope filters: the same query under the default scope hits the
     chosen section AND others; pressed, the scope leaves only that section,
     and fewer results than before."""
     a = all_m["results"]
-    results["search_query_all_results"] = a["rendered"]
-    results["search_query_all_sections"] = sorted(set(a["sections"]))
+    results[f"search_query_all_results_for_{scope_key}"] = a["rendered"]
+    results[f"search_query_all_sections_for_{scope_key}"] = sorted(set(a["sections"]))
     if scope_key not in a["sections"] or not [x for x in a["sections"] if x != scope_key]:
         errors.append(f"SEARCH-SCOPE: the query must hit {scope_key!r} and at least one other "
                       f"section under the default scope to prove anything; it hit "
@@ -441,7 +458,13 @@ def check_site(payload, built: pathlib.Path):
         check_search_on(m, errors, results)
     a, s = need("search-js-query-all"), need("search-js-scope-sectors")
     if a and s:
-        check_search_scope(a, s, errors, results)
+        check_search_scope(a, s, errors, results, "sectors", SCOPE_LABEL["sectors"])
+    # X.1 — the two news scopes each keep only their own section.
+    w = need("search-js-query-watch")
+    for key in ("news", "costwatch"):
+        m2 = need(f"search-js-scope-{key}")
+        if w and m2:
+            check_search_scope(w, m2, errors, results, key, SCOPE_LABEL[key])
 
     # 4. V16 — Read more on both news routes.
     for key in ("news", "costwatch"):
@@ -569,7 +592,7 @@ def _search_fixture(title, scopes_outside_box=False, filters=True,
         f'<button type=button data-search-scope="{k}" aria-pressed="'
         f'{"true" if (i == 0 and default_pressed) else "false"}">{label}</button>'
         for i, (k, label) in enumerate(zip(
-            ["all", "receipts", "sectors", "projects", "policies", "case", "news"], SCOPES)))
+            SCOPE_KEYS, SCOPES)))
     scopes = f"<div class=so-scopes>{buttons}</div>"
     hide_js = {
         "wrapper": "ov.querySelector('[data-search-links]').hidden=true;",

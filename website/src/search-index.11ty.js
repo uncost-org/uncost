@@ -106,14 +106,17 @@ function collapse(text) {
 // narrow a query to one part of the site. Derived from the record's own URL at
 // build — one rule, no second list: a register figure lives on /receipts/, so
 // it is "receipts" like the page itself. Anything outside the six named
-// sections is "other", reachable only under "All of the site".
+// sections is "other", reachable only under "All of this site".
+// X.1 (2026-09-28): Uncost News and Cost Watch are separate scopes, so the
+// Cost Watch prefix is matched BEFORE the /news/ prefix that contains it.
 const SECTIONS = [
   ["/receipts/", "receipts"],
   ["/sectors/", "sectors"],
   ["/projects/", "projects"],
   ["/policies/", "policies"],
   ["/case/", "case"],
-  ["/news/", "news"],          // /news/ and everything under it, Cost Watch included
+  ["/news/cost-watch/", "costwatch"],
+  ["/news/", "news"],          // /news/ and its other pages (updates, events)
 ];
 
 function sectionOf(url) {

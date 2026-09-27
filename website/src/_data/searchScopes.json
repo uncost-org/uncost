@@ -1,9 +1,10 @@
 [
-  { "key": "all", "label": "All of the site" },
+  { "key": "all", "label": "All of this site" },
   { "key": "receipts", "label": "The Receipts" },
-  { "key": "sectors", "label": "Sectors" },
-  { "key": "projects", "label": "Projects" },
-  { "key": "policies", "label": "Policies" },
+  { "key": "sectors", "label": "The Sectors" },
+  { "key": "projects", "label": "The Projects" },
+  { "key": "policies", "label": "The Policies" },
   { "key": "case", "label": "The Case" },
-  { "key": "news", "label": "News & Cost Watch" }
+  { "key": "news", "label": "Uncost News" },
+  { "key": "costwatch", "label": "Cost Watch" }
 ]

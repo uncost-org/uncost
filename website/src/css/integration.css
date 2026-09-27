@@ -2736,7 +2736,8 @@ body[data-page="movement"] .blk--wheat + .seqhd { border-top: 4px solid var(--co
  *     _data/searchScopes.json). With script on, the overlay's destination
  *     buttons become scope filters over the compile-time index: "All of the
  *     site" (default, pressed on every open), The Receipts, Sectors, Projects,
- *     Policies, The Case, News & Cost Watch. They are real <button>s with
+ *     Policies, The Case, News & Cost Watch (X.1: eight — The Sectors, The
+ *     Projects, The Policies, Uncost News and Cost Watch). They are real <button>s with
  *     aria-pressed inside `.so-search`, which ships `hidden`, so with script
  *     off none renders and the destination row renders exactly as before;
  *     with script on the row's class-less `[data-search-links]` wrapper is

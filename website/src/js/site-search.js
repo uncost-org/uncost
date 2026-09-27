@@ -22,15 +22,16 @@
  * after ui.js's synchronous focus() call, so the two never fight.
  *
  * Scope filters (X17, Batch X). The overlay's destination buttons become scope
- * filters over the same index: "All of the site" by default, or one section —
- * The Receipts, Sectors, Projects, Policies, The Case, News & Cost Watch. Each
+ * filters over the same index: "All of this site" by default, or one section —
+ * The Receipts, The Sectors, The Projects, The Policies, The Case, Uncost News,
+ * Cost Watch (X.1: eight scopes; the two news scopes are separate). Each
  * index record carries its section (`s`, tagged at build from its URL), and a
  * scope keeps only records whose section matches; changing scope re-runs the
  * current query. The controls are real <button>s with aria-pressed, inside the
  * box this file reveals, so they exist for a reader only where they work. The
  * destination row is hidden here — on its class-less wrapper, so [hidden]
  * cannot be outranked — and only here, so with JS off it renders as before.
- * Every open starts again from "All of the site".
+ * Every open starts again from "All of this site".
  */
 (function () {
   "use strict";
@@ -338,7 +339,7 @@
       if (isOpen === wasOpen) return;
       wasOpen = isOpen;
       if (!isOpen) return;
-      // Every open starts from "All of the site"; a query left in the box
+      // Every open starts from "All of this site"; a query left in the box
       // from last time is re-run against it so results and scope agree.
       setScope(ALL);
       update();
