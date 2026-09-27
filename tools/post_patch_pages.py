@@ -516,4 +516,12 @@ patch("website/src/policies/index.njk",
       r"\1\n" + LABELS_DRAWER,
       "V11 policies/index.njk: labels drawer after the last section", guard=LABELS_DRAWER.strip())
 
+# W6 (Batch X, 2026-09-27) — /case/ intro paragraph, founder-approved, from the
+# content layer (_data/pageContent.js case.intro.lead). case/index.njk is
+# re-derived, so the introband's first paragraph is re-pointed at the data.
+patch("website/src/case/index.njk",
+      r'(<div class="introband">\s*<h2>.*?</h2>\s*)<p>.*?</p>',
+      r'\1<p>{{ pageContent.case.intro.lead | safe }}</p>',
+      "W6 case intro reads pageContent", guard="{{ pageContent.case.intro.lead | safe }}")
+
 print("done")

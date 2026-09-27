@@ -76,6 +76,10 @@ module.exports = {
   },
 
   case: {
+    // The introband. W6 (Batch X, 2026-09-27), founder-approved.
+    intro: {
+      lead: 'The Case is Uncost&rsquo;s evidence layer. What humans need, what it costs by region, where technology could help, and the receipts behind every claim.',
+    },
     mechanism: {
       eyebrow: 'The mechanism',
       h2: 'The technology that could make living cheaper is <span class="hl">instead making ownership more valuable</span>.',
