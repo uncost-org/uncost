@@ -2888,3 +2888,15 @@ body[data-page="about"] .isnot li::before {
  *      is --coral-deep (3.35:1 against the large-text bar; --coral would be
  *      2.2:1 on this ground). */
 body[data-page="about"] .u-7 h2.u-4.sec { color: var(--ink) !important; }
+
+/* 127. X4 — /treasury/: the three standing-rule box titles take the orange
+ *      square bullet. The markup already carries the marker (`<h3><i></i>…`,
+ *      as /about/'s principles do), but the export styles `.prin h3 i` for
+ *      /about/ only, so on /treasury/ the <i> rendered as nothing. Restated
+ *      with /about/'s own values: an 11px --coral square, 10px from the
+ *      title, centred on its first line. */
+/* These titles wrap to two lines at 1440 (/about/'s fit on one), so the
+ * square is set on the FIRST line — half the line box down, less half the
+ * square — rather than centred on the whole title. */
+body[data-page="treasury"] .prin h3 { display: flex; gap: 10px; align-items: flex-start; }
+body[data-page="treasury"] .prin h3 i { width: 11px; height: 11px; background: var(--coral); flex: 0 0 auto; margin-top: calc(.5lh - 5.5px); }
