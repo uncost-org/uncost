@@ -567,4 +567,15 @@ patch("website/src/news/index.njk",
       r'\1{{ pageContent.news.intro.h2 | safe }}\2',
       "W5 news intro headline reads pageContent", guard="{{ pageContent.news.intro.h2 | safe }}")
 
+# X6 (Batch X, 2026-09-27) — /news/: the cross-reference line moves below the
+# keyword filter. news/index.njk is re-derived; the move is made only while the
+# line still sits above the filter (a move has no text of its own to guard on).
+_news = pathlib.Path("website/src/news/index.njk").read_text(encoding="utf-8")
+if 'class="newsxref"' in _news and 'class="rfilter"' in _news and _news.index('class="newsxref"') < _news.index('class="rfilter"'):
+    patch("website/src/news/index.njk",
+          r'(\n    <div class="newsxref">\n.*?\n    </div>)(\n.*?\n    <div class="rfilter".*?\n    </div>)',
+          r'\2\1', "X6 news: cross-reference below the filter")
+else:
+    print("  = X6 news: cross-reference below the filter (already applied)")
+
 print("done")

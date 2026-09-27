@@ -36,12 +36,6 @@ description: "What the movement is doing, dated and honest, including the update
 <div class="newswrap newswrap--solo">
   <!-- SECTION: news.Updates -->
   <div class="updates" data-screen-label="Updates">
-{#- N6 cross-reference. One line at the top of each news route pointing at the
-    other, so the two pages stay one section without either having to carry a
-    column of the other. -#}
-    <div class="newsxref">
-      <p>For current cost news from around the web, see <a href="/news/cost-watch/">Cost Watch</a>.</p>
-    </div>
 {#- N5 keyword filter, same progressive-enhancement pattern as /receipts/: the
     bar ships hidden and only /js/keyword-filter.js reveals it, so with JS off
     every item renders and no dead control is shown. -#}
@@ -49,6 +43,11 @@ description: "What the movement is doing, dated and honest, including the update
       <label for="ufilter-q">Filter these updates</label>
       <input id="ufilter-q" type="search" autocomplete="off" placeholder="Try &ldquo;policy&rdquo; or &ldquo;repository&rdquo;&hellip;">
       <span class="rfilter-count" data-filter-count></span>
+    </div>
+{#- N6 cross-reference, pointing at the other news route. X6 (Batch X): it sits
+    BELOW the filter, italic except its link, with no left bar. -#}
+    <div class="newsxref">
+      <p>For current cost news from around the web, see <a href="/news/cost-watch/">Cost Watch</a>.</p>
     </div>
     <div id="news-uncost">
 {% for item in news %}

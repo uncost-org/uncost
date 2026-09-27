@@ -2784,3 +2784,17 @@ body[data-page="case"] .howlink {
   font-weight: 700;
   font-size: 17px;
 }
+
+/* 121. X6 / X10 — the news cross-reference line ("For current cost news … see
+ *      Cost Watch." / "For Uncost's own updates, see Uncost.org News.") moves
+ *      BELOW the keyword filter on both news routes, italic except its link,
+ *      and loses the 3px ink left bar (item 77). With no bar there is no box
+ *      to pad: the line starts at the list's own left edge. */
+body[data-page="news"] .newsxref {
+  border-left: 0;
+  padding: 0;
+  background: none;
+  margin: 0 0 22px;
+}
+body[data-page="news"] .newsxref p { font-style: italic; }
+body[data-page="news"] .newsxref a { font-style: normal; }
