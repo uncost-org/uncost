@@ -445,8 +445,12 @@ class BuiltPageParser(HTMLParser):
         super().__init__()
         self.valid_source = valid_source
         self.chunks: List[Tuple[int, str, bool]] = []
+        # Cited text with the innermost citing source id, so the audit can say
+        # WHICH register row cites a figure, not only that one does.
+        self.cited_chunks: List[Tuple[int, str, str]] = []
         self.element_text: List[Tuple[int, str]] = []
         self._source_depth = 0
+        self._source_ids: List[str] = []
         self._stack: List[Tuple[str, bool, List[str], int]] = []
 
     def handle_starttag(self, tag: str, attrs: List[Tuple[str, Optional[str]]]) -> None:
@@ -454,14 +458,19 @@ class BuiltPageParser(HTMLParser):
         cited_here = self.valid_source(attrs_dict.get("data-source", "").strip())
         line = self.getpos()[0]
         effective_cited = self._source_depth > 0 or cited_here
+        source_here = attrs_dict.get("data-source", "").strip() if cited_here else (
+            self._source_ids[-1] if self._source_ids else "")
         for attr in self.SPEAKABLE_ATTRS:
             attr_value = attrs_dict.get(attr, "").strip()
             if attr_value:
                 self.chunks.append((line, attr_value, effective_cited))
+                if effective_cited:
+                    self.cited_chunks.append((line, attr_value, source_here))
         if tag in VOID_ELEMENTS:
             return
         if cited_here:
             self._source_depth += 1
+            self._source_ids.append(source_here)
         self._stack.append((tag, cited_here, [], line))
 
     def handle_endtag(self, tag: str) -> None:
@@ -473,6 +482,7 @@ class BuiltPageParser(HTMLParser):
             open_tag, cited, texts, line = self._stack.pop()
             if cited:
                 self._source_depth -= 1
+                self._source_ids.pop()
             if open_tag == tag:
                 direct = " ".join(t.strip() for t in texts if t.strip()).strip()
                 if direct:
@@ -483,6 +493,8 @@ class BuiltPageParser(HTMLParser):
         if not data.strip():
             return
         self.chunks.append((self.getpos()[0], data, self._source_depth > 0))
+        if self._source_depth > 0:
+            self.cited_chunks.append((self.getpos()[0], data, self._source_ids[-1]))
         if self._stack:
             self._stack[-1][2].append(data)
 
@@ -493,6 +505,7 @@ def scan_built_html(
     findings: List[Finding],
     line_texts: Dict[Tuple[str, int], str],
     register_ids: set,
+    cited_figures: Optional[Dict[str, Dict[str, int]]] = None,
 ) -> None:
     text = path.read_text(encoding="utf-8")
     raw_lines = text.splitlines()
@@ -512,6 +525,15 @@ def scan_built_html(
                 if pattern.search(clean(chunk)):
                     findings.append(Finding("WARN", rule, rel, number, chunk.strip()[:90]))
                     line_texts[(rel, number)] = source_line(number)
+    # Built mode reports, per register row, how many figures it cites on each
+    # page — so "SRC-020 cites the /case/ mechanism figures" is a line of the
+    # audit's own output, not an inference from a warning going away.
+    if cited_figures is not None:
+        for _number, chunk, source in parser.cited_chunks:
+            hits = sum(len(pattern.findall(clean(chunk))) for _rule, pattern in WARN_FIGURE_RULES)
+            if hits:
+                per_page = cited_figures.setdefault(source, {})
+                per_page[rel] = per_page.get(rel, 0) + hits
     for number, direct_text in parser.element_text:
         if is_badge_text(direct_text):
             findings.append(Finding("FAIL", "status-badge-bare", rel, number, direct_text[:90]))
@@ -646,10 +668,11 @@ def run_scan(built_dir: Optional[Path]) -> int:
                 retired_vocab_scope=in_render_scope,
             )
     else:
+        cited_figures: Dict[str, Dict[str, int]] = {}
         for path in sorted(built_dir.rglob("*")):
             if path.is_file() and path.suffix.lower() in {".html", ".htm"}:
                 rel = str(path.relative_to(built_dir))
-                scan_built_html(path, rel, findings, line_texts, register_ids)
+                scan_built_html(path, rel, findings, line_texts, register_ids, cited_figures)
         scan_built_assertions(built_dir, findings, line_texts)
         scan_gated_marker_leak(built_dir, findings, line_texts)
 
@@ -730,6 +753,8 @@ def run_scan(built_dir: Optional[Path]) -> int:
                 "queue_count": len(queued),
                 "suppressed_count": len(suppressed),
                 "mode": "built" if built_dir else "source",
+                **({"cited_figures": {k: dict(sorted(v.items())) for k, v in sorted(cited_figures.items())}}
+                   if built_dir is not None else {}),
             }
         )
     )
@@ -859,8 +884,11 @@ def selftest() -> int:
         page.write_text(html, encoding="utf-8")
         for path in sorted(Path(tmp).rglob("*")):
             if path.suffix.lower() in {".html", ".htm"}:
-                scan_built_html(path, path.name, findings, texts, {"SRC-001"})
+                cited_probe: Dict[str, Dict[str, int]] = {}
+                scan_built_html(path, path.name, findings, texts, {"SRC-001"}, cited_probe)
     rules_found = [f.rule for f in findings]
+    expect(cited_probe == {"SRC-001": {"index.htm": 1}},
+           "cited_figures counts the one figure SRC-001 cites (the $40), not the uncited $99 or the empty-source $7")
     expect("crypto-wallet" in rules_found, "built html wallet fires")
     expect(rules_found.count("crypto-wallet") == 2, "placeholder attribute is scanned")
     expect("status-badge-bare" in rules_found, "badge after void element fires")
