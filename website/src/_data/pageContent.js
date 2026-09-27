@@ -79,7 +79,8 @@ module.exports = {
       // invitation. The approved wording is the verb.
       paths: [
         { h3: 'Sign the pledge', body: 'Free, and it takes a moment. Its only function is to show how many people want this &mdash; which is the argument that opens doors institutions would otherwise keep shut. <a href="/pledge/">Sign the Pledge</a>' },
-        { h3: 'Follow our news', body: 'Updates land on <a href="/news/">News</a> and its <a href="/news/feed.xml">RSS feed</a>, dated and honest about what is and isn&rsquo;t done &mdash; including the updates that aren&rsquo;t good news.' },
+        // W4 (Batch X, 2026-09-27), founder-approved; links as briefed.
+        { h3: 'Follow our news', body: 'Uncost.org updates are available via <a href="/news/">Uncost News</a> and its RSS feed, all dated and honest. <a href="/news/cost-watch/">Cost Watch</a> tracks price movements in the news, with its own updates and RSS feed.' },
         { h3: 'Volunteer your skills', body: 'The most valuable work available right now is data collection and verification: checking figures against primary sources, reviewing licences, researching a sector, translating. <a href="/join/">Join now</a>' },
       ],
       note: 'Donations open once a fiscal sponsor is confirmed; until then there is nothing to give &mdash; time and skills are worth more anyway.',
