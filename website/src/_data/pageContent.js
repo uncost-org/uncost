@@ -80,6 +80,16 @@ module.exports = {
     intro: { h2: 'What we&rsquo;ve done, and <span class="u-1">what&rsquo;s next</span>.' },
   },
 
+  // /news/cost-watch/ — X10 (Batch X, 2026-09-27), founder-approved. The
+  // intro band's headline and body, and the one line below the filter.
+  costWatch: {
+    intro: {
+      h2: 'Prices in the <span class="u-1">news</span>.',
+      lead: 'What agencies, newspapers and trade press are reporting about the cost of living &mdash; each item with its publisher, its date and a link. These are reported figures, not receipts: we haven&rsquo;t checked them against a primary source. Verified figures live in <a href="/receipts/">The Receipts</a>.',
+    },
+    xref: 'For Uncost&rsquo;s own updates, see <a href="/news/">Uncost.org News</a>.',
+  },
+
   // /receipts/ — X8 (Batch X, 2026-09-27), founder-approved headlines; the
   // accent span carries the emphasis, the band's accent rule its colour.
   receipts: {

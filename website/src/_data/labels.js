@@ -33,7 +33,11 @@ const LABELS = {
   "Draft": { chip: "status status--dev", definition: null },
   "Draft — not in force": { chip: "status status--dev", definition: null },
   "Public review drafts": { chip: "status status--planned", definition: null },
-  "Reported": { chip: "lbl lbl--reported", definition: null },
+  // Interim, pending W40: the definition Cost Watch printed inline until X10
+  // removed it ("it lives in the drawer now"), moved here verbatim except
+  // the capital, so the site keeps the one definition of Reported it had.
+  "Reported": { chip: "lbl lbl--reported",
+    definition: "A price or cost figure as published by the linked source, with its date." },
   "Not yet active": { chip: "status status--planned", definition: null },
 };
 
