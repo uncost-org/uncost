@@ -2714,3 +2714,46 @@ body:is([data-page="about"], [data-page="movement"]) .seqhd + div > p.uncosted-c
  * /about/ it follows a cream band, so no rule is owed there): R1's boundary
  * rule, 4px coral, drawn by the block's top edge. */
 body[data-page="movement"] .blk--wheat + .seqhd { border-top: 4px solid var(--coral); }
+
+
+/* 119. X17 — SEARCH SCOPE FILTERS (partials/search.njk, js/site-search.js,
+ *     _data/searchScopes.json). With script on, the overlay's destination
+ *     buttons become scope filters over the compile-time index: "All of the
+ *     site" (default, pressed on every open), The Receipts, Sectors, Projects,
+ *     Policies, The Case, News & Cost Watch. They are real <button>s with
+ *     aria-pressed inside `.so-search`, which ships `hidden`, so with script
+ *     off none renders and the destination row renders exactly as before;
+ *     with script on the row's class-less `[data-search-links]` wrapper is
+ *     hidden (the cascade trap in js/show-more.js — never `hidden` on
+ *     `.so-links`, whose class sets display:flex).
+ *       look     the destination row's own treatment (design-system/site.css
+ *                `.search-ov .so-links a`): 2px ink border, --cream ground,
+ *                display face 700 15px, 10px × 16px — the same device, now
+ *                filtering instead of navigating
+ *       pressed  reversed: ink ground, cream text (18.3:1)
+ *       hover    --wheat, as the links (ink on wheat 10.5:1)
+ *       focus    3px --coral-deep outline, as the result links (stream S),
+ *                offset outward here because the row does not scroll
+ *     Sits between the input and the status line; the status keeps its own
+ *     12px top margin. Without these rules the filters still work — they
+ *     render as default buttons. */
+.search-ov .so-scopes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 20px;
+}
+.search-ov .so-scope {
+  border: 2px solid var(--ink);
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.2;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+.search-ov .so-scope:hover { background: var(--wheat); }
+.search-ov .so-scope[aria-pressed="true"] { background: var(--ink); color: var(--cream); }
+.search-ov .so-scope:focus-visible { outline: 3px solid var(--coral-deep); outline-offset: 2px; }
