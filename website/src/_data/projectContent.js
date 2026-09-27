@@ -39,6 +39,9 @@ const CONTENT = {
     overview: "The dashboard turns the cost of living into sourced, dated, regional numbers, tracked over time so anyone can see whether a gap is closing. Early versions cover a handful of launch regions and expand from there.",
     relatedSectors: "Shelter, Food, Energy (primary — the year-one focus). Water, Transportation, Communication, Healthcare next (Healthcare appears only as a measured cost line, not as a claim about the sector itself).",
     support: "engineering, data methodology, and source-review volunteers; in-kind compute or model access.",
+    // W26 (Batch X, 2026-09-27), founder-approved. Shown as "Resourcing:" in
+    // place of the dossier's resource posture (the dossier is not edited).
+    resourcing: "No budget is allocated yet. Resourcing follows fiscal sponsorship and the early donations, and is planned region by region once the methodology and policy gates are met.",
     cta: "Help build the first regional view.",
   },
   "PRJ-002": {
