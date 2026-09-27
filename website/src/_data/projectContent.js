@@ -35,7 +35,8 @@ const CONTENT = {
       // W24 — How it lowers costs (Batch X, 2026-09-27), founder-approved.
       costPath: "It doesn’t cut costs itself. It shows where the money goes — and which of our projects could help to bring it down.",
     },
-    overview: "The dashboard exists because arguing about the cost of living with vibes and headlines gets nobody anywhere. It replaces that with sourced, dated, regional numbers, tracked over time so anyone can see whether a gap is actually closing. Early versions cover only a handful of launch regions and say so plainly, expanding from there — never faking national coverage to look more finished than it is.",
+    // W25 — What this brief covers (Batch X, 2026-09-27), founder-approved.
+    overview: "The dashboard turns the cost of living into sourced, dated, regional numbers, tracked over time so anyone can see whether a gap is closing. Early versions cover a handful of launch regions and expand from there.",
     relatedSectors: "Shelter, Food, Energy (primary — the year-one focus). Water, Transportation, Communication, Healthcare next (Healthcare appears only as a measured cost line, not as a claim about the sector itself).",
     support: "engineering, data methodology, and source-review volunteers; in-kind compute or model access.",
     cta: "Help build the first regional view.",
