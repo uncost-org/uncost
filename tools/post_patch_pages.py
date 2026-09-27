@@ -577,4 +577,12 @@ if 'class="newsxref"' in _news and 'class="rfilter"' in _news and _news.index('c
 else:
     print("  = X6 news: cross-reference below the filter (already applied)")
 
+# W10 (Batch X, 2026-09-27) — /sectors/ intro paragraph, founder-approved, from
+# the content layer (pageContent.sectors.intro.lead). The export's first
+# introband paragraph is re-pointed at the data (X9 then moves it).
+patch("website/src/sectors/index.njk",
+      r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\s*)<p>.*?</p>',
+      r'\1<p>{{ pageContent.sectors.intro.lead | safe }}</p>',
+      "W10 sectors intro reads pageContent", guard="{{ pageContent.sectors.intro.lead | safe }}")
+
 print("done")
