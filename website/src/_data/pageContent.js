@@ -93,6 +93,11 @@ module.exports = {
     // box, while a sector has no registered figures. It replaces the dossier's
     // SRC-### line and the "Reviewed source records come before figures…"
     // paragraph.
+    // W14 — "03" heading on the four research-gated measurement sectors
+    // (Healthcare, Care, Education, Safety), which have no scenario phrase:
+    // the accent sits on "where it stops", the heading's pivot, so all
+    // fifteen 03 headings carry one. {name} is the sector's name.
+    measurementH2: 'How far the method goes in {name} &mdash; and <span class="u-1">where it stops</span>.',
     evidenceEmpty: 'Research and analysis for this sector hasn&rsquo;t started yet. When the first figures are ready they&rsquo;ll appear here &mdash; each with its source, date, region and confidence label.',
   },
 

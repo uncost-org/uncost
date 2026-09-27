@@ -282,7 +282,7 @@ SECTOR_WORKED = '''{%- set wx = sc.workedExample if sc else none %}
 <section id="worked" class="block" data-screen-label="Worked example">
 {%- if wx.measurement %}
   <div class="eyebrow">03 \u00b7 Where the method stops</div>
-  <h2>How far the method goes in {{ sector.name }} \u2014 and where it stops.</h2>
+  <h2>{{ pageContent.sector.measurementH2 | replace("{name}", sector.name) | safe }}</h2>
 {%- else %}
   <div class="eyebrow">03 \u00b7 How {{ sector.name | lower }} gets uncosted</div>
   <h2>{{ wx.scenario }}</h2>

@@ -90,7 +90,7 @@ eleventyComputed:
 <section id="worked" class="block" data-screen-label="Worked example">
 {%- if wx.measurement %}
   <div class="eyebrow">03 · Where the method stops</div>
-  <h2>How far the method goes in {{ sector.name }} — and where it stops.</h2>
+  <h2>{{ pageContent.sector.measurementH2 | replace("{name}", sector.name) | safe }}</h2>
 {%- else %}
   <div class="eyebrow">03 · How {{ sector.name | lower }} gets uncosted</div>
 {#- V19: the scenario phrase — the words after "A worked example:" — takes
