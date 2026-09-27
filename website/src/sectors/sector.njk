@@ -44,7 +44,7 @@ eleventyComputed:
 <!-- SECTION: sectors/food.Scope -->
 <section id="scope" class="u-15 block block--ink" data-screen-label="Scope">
   <div class="eyebrow">01 · Scope, opportunity, guardrail</div>
-  <h2>Where automation could <span class="u-1">bite</span> — and what stays visible.</h2>
+  <h2>{{ pageContent.sector.scope.h2 | safe }}</h2>
   <div class="scope">
     <div><h3><i></i>What it includes</h3><p>{% if sector.includes %}{{ sector.includes }}{% else %}{{ gapInline("sector-includes") }}{% endif %}</p></div>
     <div><h3><i></i>The opportunity</h3><p>{% if sector.opportunity %}{{ sector.opportunity }}{% else %}{{ gapInline("sector-opportunity") }}{% endif %}</p></div>

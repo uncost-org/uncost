@@ -85,6 +85,12 @@ module.exports = {
     },
   },
 
+  // Sector pages (×15) — founder-approved (Batch X, 2026-09-27).
+  sector: {
+    // W12 — the "01 · Scope" headline (V19's accent, now in the content layer).
+    scope: { h2: 'Where automation could <span class="u-1">bite</span> &mdash; and what stays visible.' },
+  },
+
   // /news/ — W5 (Batch X, 2026-09-27), founder-approved introband headline.
   news: {
     intro: { h2: 'What we&rsquo;ve done, and <span class="u-1">what&rsquo;s next</span>.' },

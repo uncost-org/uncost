@@ -471,10 +471,12 @@ V19_SCENARIO = """{#- V19: the scenario phrase — the words after "A worked exa
 # sector.njk and sectors/index.njk are both re-derived by
 # tools/rederive_collections.py, so the three template changes are restated.
 # The 03 headline is restated after C17 has put the per-sector heading back.
+# W12 (Batch X): the 01 headline is read from the content layer
+# (pageContent.sector.scope.h2), whatever the export writes into it.
 patch("website/src/sectors/sector.njk",
-      r'<h2>Where automation could bite — and what stays visible\.</h2>',
-      '<h2>Where automation could <span class="u-1">bite</span> — and what stays visible.</h2>',
-      "V19 sector 01 accent on bite", guard='<span class="u-1">bite</span>')
+      r'(<div class="eyebrow">01 · Scope, opportunity, guardrail</div>\s*)<h2>.*?</h2>',
+      r'\1<h2>{{ pageContent.sector.scope.h2 | safe }}</h2>',
+      "W12 sector 01 headline reads pageContent", guard="{{ pageContent.sector.scope.h2 | safe }}")
 patch("website/src/sectors/sector.njk",
       r'  <h2>\{\{ wx\.scenario \}\}</h2>\n',
       V19_SCENARIO,
