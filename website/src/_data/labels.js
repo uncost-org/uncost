@@ -5,12 +5,11 @@
 // except the four confidence definitions, which read exactly as they always
 // have (the brief: "confidence definitions unchanged").
 //
-// DEFINITIONS STILL TO COME. The brief gives every other label's definition as
-// "W40 … as in the prior Batch W text". No Batch W text reached this
-// repository — it is not in any file, review folder, vault note or session —
-// so those labels carry `definition: null` and render their chip only. Nothing
-// is invented in their place. When the text arrives it goes in the
-// `definition` field below and nowhere else.
+// W40 DEFINITIONS (founder-approved 26 Sep; delivered with Batch X.1 on
+// 28 Sep as the missing "Batch W text"). Verbatim, except that each opens
+// with a capital because it stands alone in the table's "What it tells you"
+// cell (in the brief it followed "Label:"). They replace the two interim
+// definitions X10 and X9 had moved in from on-site text.
 //
 // The news-label guard (eleventy.config.js) still holds: the confidence
 // labels appear on no page under /news/, and Reported on none outside it.
@@ -26,22 +25,27 @@ const LABELS = {
     definition: "A modelled “what if” — a possible outcome under specific conditions, not a prediction." },
   "Needs refresh": { chip: "rcpt-conf rcpt-conf--needs-refresh",
     definition: "The underlying source is past its review date. Treat with caution until updated." },
-  // Interim, pending W40: the meanings the /sectors/ status key printed beside
-  // each chip until X9 retired the strip into this drawer — moved verbatim
-  // except the capital, so the page keeps what each status means.
-  "Focus": { chip: "status status--focus", definition: "Building now" },
-  "Next": { chip: "status s-next", definition: "Next wave" },
-  "Dossier": { chip: "status s-dossier", definition: "Research scaffold" },
-  "Future study": { chip: "status s-future", definition: "High-safety, studied cautiously" },
-  "Draft": { chip: "status status--dev", definition: null },
-  "Draft — not in force": { chip: "status status--dev", definition: null },
-  "Public review drafts": { chip: "status status--planned", definition: null },
-  // Interim, pending W40: the definition Cost Watch printed inline until X10
-  // removed it ("it lives in the drawer now"), moved here verbatim except
-  // the capital, so the site keeps the one definition of Reported it had.
+  // Sectors (W40).
+  "Focus": { chip: "status status--focus", definition: "A year-one sector; research and figures are being built now." },
+  "Next": { chip: "status s-next", definition: "Queued after the year-one three." },
+  "Dossier": { chip: "status s-dossier", definition: "Groundwork only: scope, opportunity and guardrail written, no figures yet." },
+  "Future study": { chip: "status s-future", definition: "Study-level only until safety, legal and partner gates pass." },
+  // Projects (W40). "In build" is defined in the brief only if the chip is
+  // rendered anywhere; it is rendered nowhere (X13 made the homepage chip
+  // "Draft"), so it is not listed. "Brief" (the homepage Dashboard card) and
+  // "Planned" (join, press, quiz, events and the later pages) are rendered,
+  // so they are defined here, though no drawer page carries them today.
+  "Draft": { chip: "status status--dev", definition: "A public review draft; nothing is authorised until review completes." },
+  "Brief": { chip: "status status--planned", definition: "A written brief; no build yet." },
+  "Planned": { chip: "status status--planned", definition: "On the roadmap; not started." },
+  // Policies (W40).
+  "Draft — not in force": { chip: "status status--dev", definition: "Open for comment; not adopted." },
+  "Public review drafts": { chip: "status status--planned", definition: "The whole set is open for comment ahead of launch." },
+  // News / Cost Watch (W40).
   "Reported": { chip: "lbl lbl--reported",
-    definition: "A price or cost figure as published by the linked source, with its date." },
-  "Not yet active": { chip: "status status--planned", definition: null },
+    definition: "A price or cost figure as published by the linked source, with its date. Verified figures live in The Receipts." },
+  // Treasury (W40).
+  "Not yet active": { chip: "status status--planned", definition: "No funds received; reporting begins when donations lawfully open." },
 };
 
 // Per page, keyed by URL (/news/ and /news/cost-watch/ share a pageId).
@@ -84,6 +88,8 @@ const PAGES = {
     id: "how-projects-are-staged",
     summary: "How projects are staged",
     rules: [
+      // W40: the page's rule line, first (it was not among X11's rules).
+      "Stage shows how far the build has got, not how strong the evidence is.",
       "Every project has to earn its cost claim with published evidence.",
       "Nothing is built until review completes and funding exists.",
       "Uncost publishes the plans and software; communities and qualified partners build.",
@@ -97,6 +103,9 @@ const PAGES = {
     rules: [
       "Every policy keeps a permanent reference number.",
       "A change keeps the number and bumps the version, with full history public.",
+      // W40's rule line for Policies is "Nothing here is in force until it is
+      // adopted."; X11 (a day later) already carries it as this line, one
+      // word shorter, so it is treated as present rather than doubled.
       "Nothing is in force until it is adopted.",
       "Legal, fiduciary and safeguarding duties can’t be weakened by popular vote.",
     ],
@@ -107,6 +116,8 @@ const PAGES = {
     id: "how-we-publish-news",
     summary: "How we publish news",
     rules: [
+      // W40: the News / Cost Watch rule line, first.
+      "Cost Watch is a watch list, not a receipt.",
       "Every update is dated.",
       "Updates that aren’t good news are published too.",
       "Corrections are logged, never edited silently.",
@@ -119,6 +130,8 @@ const PAGES = {
     id: "how-cost-watch-works",
     summary: "How Cost Watch works",
     rules: [
+      // W40: the News / Cost Watch rule line, first.
+      "Cost Watch is a watch list, not a receipt.",
       "Every item links to its publisher, with its date.",
       "Every item carries a price or cost figure.",
       "Reported figures aren’t receipts; a figure we verify moves to The Receipts.",
