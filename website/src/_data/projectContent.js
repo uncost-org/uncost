@@ -60,7 +60,8 @@ const CONTENT = {
       targets: "The price of every essential, by sector and region — sourced, dated, and kept as history.",
       // W30 — The mechanism (Batch X, 2026-09-27), founder-approved.
       mechanism: "Collects prices from official and licensed sources on a published schedule, records each with its source, date, licence and confidence, and keeps the history.",
-      costPath: "Removes the recurring cost of re-finding and re-verifying data. Done once, licensed properly, and published openly, so the rest of the movement — and outside researchers — can reuse it instead of re-scraping the same numbers.",
+      // W31 — How it lowers costs (Batch X, 2026-09-27), founder-approved.
+      costPath: "It doesn’t cut costs. It’s the evidence layer — the numbers everything else stands on.",
     },
     overview: "Without a disciplined tracker, the dashboard becomes screenshots of other people’s numbers — undated, unlicensed, unmaintainable. This project is not a scraper farm; official and licensed sources come first, and anything whose licence forbids republication is marked and linked out to rather than reproduced.",
     relatedSectors: "Shelter, Food, Energy (primary). Water, Transportation, Communication, Healthcare (secondary — cost lines only).",
