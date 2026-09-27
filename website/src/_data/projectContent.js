@@ -30,7 +30,8 @@ const CONTENT = {
     atAGlance: {
       // W22 — What it targets (Batch X, 2026-09-27), founder-approved.
       targets: "What one adult’s essentials cost, region by region, across all fifteen sectors.",
-      mechanism: "Presents the Cost-of-Living Tracker’s sourced price data and the Basic Needs Cost Model’s scenarios in one public view, with a plain coverage banner (“data available for N of M regions” — N is whatever is real) instead of a false single national number.",
+      // W23 — The mechanism (Batch X, 2026-09-27), founder-approved.
+      mechanism: "Presents our research and analysis in one place — sourced prices, cost scenarios, and an honest note on coverage.",
       costPath: "It doesn’t lower a cost by itself. It’s the presentation layer: it shows a reader exactly where money goes and which of the other two projects’ reduction paths look real, so the movement’s public case rests on the same evidence it publishes.",
     },
     overview: "The dashboard exists because arguing about the cost of living with vibes and headlines gets nobody anywhere. It replaces that with sourced, dated, regional numbers, tracked over time so anyone can see whether a gap is actually closing. Early versions cover only a handful of launch regions and say so plainly, expanding from there — never faking national coverage to look more finished than it is.",
