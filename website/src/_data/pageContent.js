@@ -127,6 +127,9 @@ module.exports = {
   treasury: {
     // W37 — standing rule 3 (was "No crypto treasury"). The policy drafts are
     // not touched: POL-004 §7 still words it as a crypto prohibition.
+    // W38 — two headlines (V21's accents, now in the content layer).
+    principles: { h2: 'Rules that hold before a <span class="u-1">single dollar moves</span>.' },
+    cta: { h2: 'Want to <span class="u-1">help</span> before donations open?' },
     rule3: { title: 'Segregated accounts only.', body: 'Funds sit in segregated accounts under a confirmed lawful structure.' },
   },
 

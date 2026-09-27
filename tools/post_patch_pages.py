@@ -399,12 +399,14 @@ patch("website/src/roadmap.njk",
 
 # V21 (Batch V, 2026-09-26) — accent spans, copy unchanged. treasury.njk,
 # roadmap.njk and about.njk are re-derived from the export; project.njk is not.
-patch("website/src/treasury.njk", r'before a single dollar moves\.</h2>',
-      'before a <span class="u-1">single dollar moves</span>.</h2>',
-      "V21 treasury accent: single dollar moves", guard='<span class="u-1">single dollar moves</span>')
-patch("website/src/treasury.njk", r'Want to help before donations open\?</h2>',
-      'Want to <span class="u-1">help</span> before donations open?</h2>',
-      "V21 treasury accent: help", guard='Want to <span class="u-1">help</span>')
+# W38 (Batch X) supersedes V21's treasury accents: both headlines read the
+# content layer (pageContent.treasury), whatever the export writes in them.
+patch("website/src/treasury.njk", r'(<div class="eyebrow">The standing rules</div>\s*<h2 class="[^"]*">).*?(</h2>)',
+      r'\1{{ pageContent.treasury.principles.h2 | safe }}\2',
+      "W38 treasury rules headline reads pageContent", guard="{{ pageContent.treasury.principles.h2 | safe }}")
+patch("website/src/treasury.njk", r'(data-screen-label="Treasury CTA">\s*<h2 class="[^"]*">).*?(</h2>)',
+      r'\1{{ pageContent.treasury.cta.h2 | safe }}\2',
+      "W38 treasury CTA headline reads pageContent", guard="{{ pageContent.treasury.cta.h2 | safe }}")
 # W36 (Batch X) supersedes V21's roadmap accent: the headline reads the content
 # layer (pageContent.roadmap.horizon.h2) whatever the export writes in it.
 patch("website/src/roadmap.njk", r'(<div class="[^"]*eyebrow">The longer horizon</div>\s*<h2 class="[^"]*">).*?(</h2>)',
