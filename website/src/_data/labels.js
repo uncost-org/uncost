@@ -1,119 +1,152 @@
-// The labels drawer (V11, Batch V, 2026-09-26) — one partial,
-// partials/labels-drawer.njk, driven by this file.
+// The drawer (X11, Batch X, 2026-09-27; first shipped as V11's labels drawer).
+// ONE partial, partials/labels-drawer.njk, driven by this file: for each page
+// a header, THE RULES (a bullet list) and THE LABELS (chip | what it tells
+// you). Every string here is founder-approved verbatim from the Batch X brief,
+// except the four confidence definitions, which read exactly as they always
+// have (the brief: "confidence definitions unchanged").
 //
-// FAMILIES are the site's label vocabularies. PAGES says which families each
-// drawer shows: exactly the families that page renders, and no others. The
-// two vocabularies the news-label guard in eleventy.config.js keeps apart stay
-// apart here too — the confidence labels never appear under /news/, and
-// Reported appears nowhere else.
+// DEFINITIONS STILL TO COME. The brief gives every other label's definition as
+// "W40 … as in the prior Batch W text". No Batch W text reached this
+// repository — it is not in any file, review folder, vault note or session —
+// so those labels carry `definition: null` and render their chip only. Nothing
+// is invented in their place. When the text arrives it goes in the
+// `definition` field below and nowhere else.
 //
-// WORDS. Only the four confidence labels carry definitions, and they read
-// exactly as the retired "Four honest labels" table on /receipts/ read them,
-// with that section's approved confidence-vs-status note (UNP-82). Every other
-// family renders its label names only: `title: null` and no `definition`
-// until the founder's approved glossary text arrives, and a null renders
-// nothing. The one title that does render, "Confidence labels", is the
-// heading the /case/ Methodology drawer already uses for the same four.
-// Nothing in this file is new copy; the names are the chips' own rendered
-// text, and each `chip` is the class string the page already uses for it.
-//
-// A page listed with no families (/news/: its updates carry no label) renders
-// no drawer at all rather than an empty one.
+// The news-label guard (eleventy.config.js) still holds: the confidence
+// labels appear on no page under /news/, and Reported on none outside it.
 
-const FAMILIES = {
-  confidence: {
-    title: "Confidence labels",
-    columns: ["Label", "What it tells you"],
-    labels: [
-      { name: "Confirmed", chip: "rcpt-conf rcpt-conf--confirmed",
-        definition: "Drawn directly from a named, dated, licensed public source. Check it yourself." },
-      { name: "Estimate", chip: "rcpt-conf rcpt-conf--estimate",
-        definition: "Derived from sourced inputs plus stated assumptions. The assumptions are published alongside." },
-      { name: "Scenario", chip: "rcpt-conf rcpt-conf--scenario",
-        definition: "A modelled “what if” — a possible outcome under specific conditions, not a prediction." },
-      { name: "Needs refresh", chip: "rcpt-conf rcpt-conf--needs-refresh",
-        definition: "The underlying source is past its review date. Treat with caution until updated." },
-    ],
-    // UNP-82, founder-approved; moved here from the retired /receipts/ section.
-    note: "These four labels describe how much confidence a <b>figure</b> carries. They are a deliberately separate system from the status badges on sectors and projects, which describe what stage a <b>piece of work</b> is at. The two never mix: a confirmed figure can sit on a project that hasn’t started, and a project already building can rest on an estimate.",
-  },
-  // The hatched "Illustrative only" marker. No page carries it today — its one
-  // appearance was the specimen in the retired /receipts/ table — so no drawer
-  // lists it (the build guard would fail one that did). Kept so the marker has
-  // a family the day a page uses it.
-  illustrative: {
-    title: null,
-    labels: [{ name: "Illustrative only", chip: "rcpt-illus" }],
-  },
-  corrections: {
-    title: null,
-    labels: [{ name: "No corrections logged yet", chip: "status status--planned" }],
-  },
-  sectorStatus: {
-    title: null,
-    labels: [
-      { name: "Focus", chip: "status status--focus" },
-      { name: "Next", chip: "status s-next" },
-      { name: "Future study", chip: "status s-future" },
-      { name: "Dossier", chip: "status s-dossier" },
-    ],
-  },
-  projectStatus: {
-    title: null,
-    labels: [
-      { name: "Draft", chip: "status status--dev" },
-      { name: "Not approved for build", chip: "status status--planned" },
-    ],
-  },
-  policyStatus: {
-    title: null,
-    labels: [
-      { name: "Draft — not in force", chip: "status status--dev" },
-      { name: "Not yet drafted", chip: "status status--planned" },
-      { name: "Public review drafts", chip: "status status--planned" },
-    ],
-  },
-  treasuryStatus: {
-    title: null,
-    labels: [{ name: "Not yet active", chip: "status status--planned" }],
-  },
-  news: {
-    title: null,
-    labels: [{ name: "Reported", chip: "lbl lbl--reported" }],
-  },
+// Every label a drawer shows: its chip (the class string the page itself uses
+// for it) and its definition, or null.
+const LABELS = {
+  "Confirmed": { chip: "rcpt-conf rcpt-conf--confirmed",
+    definition: "Drawn directly from a named, dated, licensed public source. Check it yourself." },
+  "Estimate": { chip: "rcpt-conf rcpt-conf--estimate",
+    definition: "Derived from sourced inputs plus stated assumptions. The assumptions are published alongside." },
+  "Scenario": { chip: "rcpt-conf rcpt-conf--scenario",
+    definition: "A modelled “what if” — a possible outcome under specific conditions, not a prediction." },
+  "Needs refresh": { chip: "rcpt-conf rcpt-conf--needs-refresh",
+    definition: "The underlying source is past its review date. Treat with caution until updated." },
+  "Focus": { chip: "status status--focus", definition: null },
+  "Next": { chip: "status s-next", definition: null },
+  "Dossier": { chip: "status s-dossier", definition: null },
+  "Future study": { chip: "status s-future", definition: null },
+  "Draft": { chip: "status status--dev", definition: null },
+  "Draft — not in force": { chip: "status status--dev", definition: null },
+  "Public review drafts": { chip: "status status--planned", definition: null },
+  "Reported": { chip: "lbl lbl--reported", definition: null },
+  "Not yet active": { chip: "status status--planned", definition: null },
 };
 
-// Keyed by page URL. /news/ and /news/cost-watch/ share a pageId, so the URL
-// is the only key that tells them apart.
+// Per page, keyed by URL (/news/ and /news/cost-watch/ share a pageId).
+//   id        the drawer's anchor (/receipts/#how-it-works is linked from /case/)
+//   summary   the header row
+//   rules     THE RULES, in order
+//   labels    THE LABELS, in order — exactly the brief's list for the page
+//   elsewhere a label the drawer explains although this page does not carry
+//             it, and where it is used (the brief: Reported on /news/,
+//             "noted as used on Cost Watch")
+//   unlisted  chips the page renders that the brief's list leaves out, named
+//             so the build guard can tell a known gap from a new one (both are
+//             reported to the founder)
 const PAGES = {
-  "/receipts/": ["confidence", "corrections"],
-  "/projects/": ["projectStatus"],
-  "/policies/": ["policyStatus"],
-  "/sectors/": ["sectorStatus"],
-  "/news/": [],
-  "/news/cost-watch/": ["news"],
-  "/treasury/": ["treasuryStatus"],
+  "/receipts/": {
+    id: "how-it-works",
+    summary: "How The Receipts work",
+    rules: [
+      "Every number has a source, a date and a region.",
+      "Every source carries a licence and a review cadence.",
+      "A figure past its review date is relabelled Needs refresh rather than quietly left standing.",
+      "Estimates and scenarios state their assumptions.",
+      "Every change is recorded in the corrections log.",
+    ],
+    labels: ["Confirmed", "Estimate", "Scenario", "Needs refresh"],
+    unlisted: ["No corrections logged yet"],
+  },
+  "/sectors/": {
+    id: "how-sectors-are-sequenced",
+    summary: "How sectors are sequenced",
+    rules: [
+      "All fifteen sectors stay visible — hiding a cost isn’t lowering it.",
+      "Status shows sequence, not importance.",
+      "Year one goes deep on Shelter, Food and Energy; Water is next.",
+      "Healthcare, Care, Education and Safety stay study-level until safety, legal and partner gates pass.",
+    ],
+    labels: ["Focus", "Next", "Dossier", "Future study"],
+  },
+  "/projects/": {
+    id: "how-projects-are-staged",
+    summary: "How projects are staged",
+    rules: [
+      "Every project has to earn its cost claim with published evidence.",
+      "Nothing is built until review completes and funding exists.",
+      "Uncost publishes the plans and software; communities and qualified partners build.",
+      "Negative results are published as prominently as wins.",
+    ],
+    labels: ["Draft"],
+  },
+  "/policies/": {
+    id: "how-policies-are-adopted",
+    summary: "How policies are adopted",
+    rules: [
+      "Every policy keeps a permanent reference number.",
+      "A change keeps the number and bumps the version, with full history public.",
+      "Nothing is in force until it is adopted.",
+      "Legal, fiduciary and safeguarding duties can’t be weakened by popular vote.",
+    ],
+    labels: ["Draft — not in force", "Public review drafts"],
+    unlisted: ["Not yet drafted"],
+  },
+  "/news/": {
+    id: "how-we-publish-news",
+    summary: "How we publish news",
+    rules: [
+      "Every update is dated.",
+      "Updates that aren’t good news are published too.",
+      "Corrections are logged, never edited silently.",
+      "Prices in the news live on Cost Watch.",
+    ],
+    labels: ["Reported"],
+    elsewhere: { "Reported": { name: "Cost Watch", href: "/news/cost-watch/" } },
+  },
+  "/news/cost-watch/": {
+    id: "how-cost-watch-works",
+    summary: "How Cost Watch works",
+    rules: [
+      "Every item links to its publisher, with its date.",
+      "Every item carries a price or cost figure.",
+      "Reported figures aren’t receipts; a figure we verify moves to The Receipts.",
+      "Opinion pieces aren’t included.",
+    ],
+    labels: ["Reported"],
+  },
+  "/treasury/": {
+    id: "how-the-treasury-will-report",
+    summary: "How The Treasury will report",
+    rules: [
+      "No donations until a lawful structure is confirmed.",
+      "Donations never buy conclusions, coverage, votes or influence.",
+      "Every expense keeps a receipt and approval trail.",
+      "Reports are summarised, with donor identities protected and totals preserved.",
+    ],
+    labels: ["Not yet active"],
+  },
 };
 
-// Build-time guards. The note renders unescaped for its two <b>s, so it may
-// carry no other markup; every page must name only families that exist; and a
-// family without a title or definitions must really be names-only.
-for (const [key, fam] of Object.entries(FAMILIES)) {
-  if (fam.note && /[<>&]/.test(fam.note.replace(/<\/?b>/g, ""))) {
-    throw new Error(`labels: ${key}.note contains raw markup beyond <b>`);
+// The column headings, from the brief ("THE RULES", "THE LABELS"; the drawer's
+// heading style sets the capitals), the table's column heads (the retired
+// /receipts/ table's own), and the /news/ note's lead-in ("noted as used on
+// Cost Watch" — the brief names the note, not its words beyond these).
+const HEADINGS = { rules: "The rules", labels: "The labels", label: "Label", meaning: "What it tells you", usedOn: "Used on" };
+
+// Build-time guards: every page names only labels that exist, and has rules.
+for (const [url, page] of Object.entries(PAGES)) {
+  for (const name of page.labels) {
+    if (!LABELS[name]) throw new Error(`labels: ${url} lists unknown label "${name}"`);
   }
-  if (key !== "confidence" && (fam.title || fam.labels.some((l) => l.definition))) {
-    throw new Error(`labels: ${key} carries words beyond label names before the glossary is approved`);
-  }
-}
-for (const [url, keys] of Object.entries(PAGES)) {
-  for (const k of keys) {
-    if (!FAMILIES[k]) throw new Error(`labels: ${url} names unknown family "${k}"`);
-  }
+  if (!page.rules || !page.rules.length) throw new Error(`labels: ${url} has no rules`);
+  // The table shows its "What it tells you" column only where at least one
+  // label on the page has an approved definition.
+  page.hasDefinitions = page.labels.some((name) => Boolean(LABELS[name].definition));
 }
 
-// The drawer's own name, from the brief's item title ("V11 — Labels drawer").
-// It is the one string here that did not already render on the site.
-const SUMMARY = "Labels";
-
-module.exports = { summary: SUMMARY, families: FAMILIES, pages: PAGES };
+module.exports = { labels: LABELS, pages: PAGES, headings: HEADINGS };

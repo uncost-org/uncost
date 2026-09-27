@@ -1,48 +1,46 @@
-{#- The labels drawer (V11). One partial, placed on /receipts/, /projects/,
-    /policies/, /sectors/, /news/, /news/cost-watch/ and /treasury/, and driven
-    entirely by _data/labels.js: which families this page shows (only the ones
-    it renders), and each family's label names. Styled as the /case/
-    Methodology drawer — same band, same white header, same chevron
-    (integration.css item 116).
+{#- The drawer (X11, Batch X; first shipped as V11's labels drawer). ONE
+    partial, driven entirely by _data/labels.js: for this page, a header row,
+    THE RULES (left column, a bullet list) and THE LABELS (right column, the
+    confidence-table style: chip | what it tells you). Variant 1 of the X12
+    decision renders: header and body both --cream-2, no rule line between
+    them, the /case/ chevron (integration.css item 116).
 
-    Only the confidence family carries definitions; it renders as the table
-    that used to stand alone on /receipts/ ("Four honest labels", retired into
-    this drawer). Every other family renders its names only until the
-    founder's glossary is approved: a null title renders nothing.
+    A label with no approved definition yet renders its chip only. Where no
+    label on the page has one, the table drops its second column rather than
+    showing an empty one — nothing is invented to fill it.
 
-    A page with no families renders nothing at all — never an empty drawer. -#}
-{%- set labelFams = labels.pages[page.url] or [] %}
-{%- if labelFams.length %}
-<details class="ldrawer" data-screen-label="Labels drawer">
-  <summary>{{ labels.summary }}</summary>
+    A page with no entry in labels.js renders nothing. -#}
+{%- set drawer = labels.pages[page.url] %}
+{%- if drawer %}
+{%- set lh = labels.headings %}
+<details class="ldrawer" id="{{ drawer.id }}" data-screen-label="Drawer">
+  <summary>{{ drawer.summary }}</summary>
   <div class="ldrawer-body">
-{%- for key in labelFams %}
-{%- set fam = labels.families[key] %}
-    <div class="ldrawer-fam" data-label-family="{{ key }}">
-{%- if fam.title %}
-      <h3>{{ fam.title }}</h3>
-{%- endif %}
-{%- if fam.columns %}
+    <div class="ldrawer-rules">
+      <h3>{{ lh.rules }}</h3>
+      <ul>
+{%- for rule in drawer.rules %}
+        <li>{{ rule }}</li>
+{%- endfor %}
+      </ul>
+    </div>
+    <div class="ldrawer-labels">
+      <h3>{{ lh.labels }}</h3>
       <table class="conftable">
-        <thead><tr><th>{{ fam.columns[0] }}</th><th>{{ fam.columns[1] }}</th></tr></thead>
+        <thead><tr><th>{{ lh.label }}</th>{% if drawer.hasDefinitions %}<th>{{ lh.meaning }}</th>{% endif %}</tr></thead>
         <tbody>
-{%- for l in fam.labels %}
-          <tr><td><span class="{{ l.chip }}">{{ l.name }}</span></td><td>{{ l.definition }}</td></tr>
+{%- for name in drawer.labels %}
+{%- set l = labels.labels[name] %}
+          <tr data-label="{{ name }}"><td><span class="{{ l.chip }}">{{ name }}</span></td>{% if drawer.hasDefinitions %}<td>{{ l.definition or "" }}</td>{% endif %}</tr>
 {%- endfor %}
         </tbody>
       </table>
-{%- else %}
-      <ul class="ldrawer-names">
-{%- for l in fam.labels %}
-        <li><span class="{{ l.chip }}">{{ l.name }}</span></li>
+{%- if drawer.elsewhere %}
+{%- for name, where in drawer.elsewhere %}
+      <p class="ldrawer-note" data-label-note="{{ name }}">{{ lh.usedOn }} <a href="{{ where.href }}">{{ where.name }}</a>.</p>
 {%- endfor %}
-      </ul>
-{%- endif %}
-{%- if fam.note %}
-      <p>{{ fam.note | safe }}</p>
 {%- endif %}
     </div>
-{%- endfor %}
   </div>
 </details>
 {%- endif %}

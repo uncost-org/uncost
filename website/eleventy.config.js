@@ -231,31 +231,32 @@ module.exports = function (eleventyConfig) {
     }
   });
 
-  // ── V11 labels-drawer guard ─────────────────────────────────────────────
-  // The labels drawer (partials/labels-drawer.njk) must list EXACTLY the label
-  // families its page renders — the brief's rule is "each page shows only the
-  // label families it uses". _data/labels.js declares the families per page
-  // by hand, so this checks the declaration against the built page, both
-  // directions:
-  //   - every label chip in <main> outside the drawer belongs to one of the
-  //     families the drawer lists (a label the reader sees is explained), and
-  //     is a name labels.js knows at all (a new label cannot slip in unlisted);
-  //   - every family the drawer lists has at least one of its names rendered
-  //     outside the drawer (no family the page does not use);
-  //   - a page with families has the drawer; one without has none.
+  // ── Drawer guard (V11, reworked by X11) ────────────────────────────────
+  // Each page's drawer (partials/labels-drawer.njk) must show exactly the
+  // labels _data/labels.js lists for it — the founder's list, in order — and
+  // that list must match the page:
+  //   - the drawer explains labels this page actually carries: at least one
+  //     listed label is rendered outside the drawer, or declared `elsewhere`
+  //     (a label the drawer explains for a page that does not carry it:
+  //     Reported on /news/). A list may name a whole vocabulary — /receipts/
+  //     explains all four confidence labels though no register row is an
+  //     Estimate or a Scenario today — so each listed label is not required;
+  //   - every label chip in <main> outside the drawer is either in the list
+  //     or declared `unlisted` — a chip the brief's list leaves out, named so
+  //     a known gap is not mistaken for a new one — and every `unlisted` entry
+  //     is really rendered (no stale declarations);
+  //   - the drawer carries the id labels.js gives it (/receipts/#how-it-works
+  //     is linked from /case/).
   // Chips are read from the rendered markup by their class markers, the same
   // way the news-label guard reads them.
-  eleventyConfig.on("eleventy.after", async ({ dir, results }) => {
+  eleventyConfig.on("eleventy.after", async ({ results }) => {
+    delete require.cache[require.resolve("./src/_data/labels.js")];
     const labels = require("./src/_data/labels.js");
     const written = new Map((results || []).map((r) => [r.url, r.outputPath]));
     const CHIP = /<span class="(?:[^"]*\s)?(?:rcpt-conf|rcpt-illus|status|lbl)(?:\s[^"]*)?">([\s\S]*?)<\/span>/g;
-    const text = (h) => h.replace(/<[^>]+>/g, "").replace(/&mdash;/g, "\u2014").replace(/\s+/g, " ").trim();
-    const owner = new Map();
-    for (const [key, fam] of Object.entries(labels.families)) {
-      for (const l of fam.labels) owner.set(l.name, [...(owner.get(l.name) || []), key]);
-    }
+    const text = (h) => h.replace(/<[^>]+>/g, "").replace(/&mdash;/g, "\u2014").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
     const problems = [];
-    for (const [url, fams] of Object.entries(labels.pages)) {
+    for (const [url, page] of Object.entries(labels.pages)) {
       const out = written.get(url);
       if (!out || !fs.existsSync(out)) {
         problems.push(`${url}: listed in _data/labels.js but not built — a guard that cannot see its page fails`);
@@ -264,26 +265,31 @@ module.exports = function (eleventyConfig) {
       const html = fs.readFileSync(out, "utf8");
       const main = (html.match(/<main[\s\S]*?<\/main>/) || [""])[0];
       const drawer = (main.match(/<details class="ldrawer"[\s\S]*?<\/details>/) || [""])[0];
-      const outside = main.replace(drawer, "");
-      if (fams.length && !drawer) problems.push(`${url}: lists ${fams.join(", ")} but renders no labels drawer`);
-      if (!fams.length && drawer) problems.push(`${url}: lists no families but renders a labels drawer`);
-      const shown = [...drawer.matchAll(/data-label-family="([^"]+)"/g)].map((m) => m[1]);
-      if (shown.join() !== fams.join()) problems.push(`${url}: drawer shows [${shown}] but labels.js lists [${fams}]`);
-      const used = new Set();
-      for (const m of outside.matchAll(CHIP)) {
-        const name = text(m[1]);
-        const keys = owner.get(name);
-        if (!keys) { problems.push(`${url}: label "${name}" is in no family in _data/labels.js`); continue; }
-        const hit = keys.filter((k) => fams.includes(k));
-        if (!hit.length) problems.push(`${url}: label "${name}" (${keys}) is rendered but its family is not in this page's drawer`);
-        hit.forEach((k) => used.add(k));
+      if (!drawer) { problems.push(`${url}: labels.js lists a drawer but the page renders none`); continue; }
+      if (!drawer.includes(`id="${page.id}"`)) problems.push(`${url}: drawer does not carry id="${page.id}"`);
+      const shown = [...drawer.matchAll(/data-label="([^"]+)"/g)].map((m) => m[1].replace(/&amp;/g, "&"));
+      if (shown.join("|") !== page.labels.join("|")) problems.push(`${url}: drawer shows [${shown}] but labels.js lists [${page.labels}]`);
+      const outside = new Set([...main.replace(drawer, "").matchAll(CHIP)].map((m) => text(m[1])));
+      const elsewhere = Object.keys(page.elsewhere || {});
+      if (!page.labels.some((name) => outside.has(name) || elsewhere.includes(name))) {
+        problems.push(`${url}: the drawer lists [${page.labels}] but the page renders none of them`);
       }
-      for (const k of fams) {
-        if (!used.has(k)) problems.push(`${url}: drawer lists family "${k}" but the page renders none of its labels`);
+      for (const name of outside) {
+        if (!page.labels.includes(name) && !(page.unlisted || []).includes(name)) problems.push(`${url}: label "${name}" is rendered but is neither in this page's drawer nor declared unlisted`);
+      }
+      for (const name of page.unlisted || []) {
+        if (!outside.has(name)) problems.push(`${url}: "${name}" is declared unlisted but the page no longer renders it`);
+      }
+    }
+    for (const [url] of written) {
+      if (labels.pages[url]) continue;
+      const out = written.get(url);
+      if (out && out.endsWith(".html") && fs.existsSync(out) && /<details class="ldrawer"/.test(fs.readFileSync(out, "utf8"))) {
+        problems.push(`${url}: renders a drawer but has no entry in _data/labels.js`);
       }
     }
     if (problems.length) {
-      throw new Error("Labels drawer guard failed:\n  - " + problems.join("\n  - "));
+      throw new Error("Drawer guard failed:\n  - " + problems.join("\n  - "));
     }
   });
 
