@@ -2513,7 +2513,8 @@ body[data-page="movement"] .step p{font-size:15px;line-height:1.6;color:var(--fg
  *      line exactly half the headline at every width: 38.9px at 1440 (headline
  *      77.8px), 19px at 390 (headline 38px). The step between the two lines
  *      stays C5's .35em of the headline. */
-body[data-page="index"] .hero-grid h1 .u-49 { font-size: .5em; color: var(--ink); }
+/* (Retired by X5, Batch X: the h1 is again "Technology should make living
+ *  cheaper…" at full size; "We aim…" is now a body-intro paragraph.) */
 
 /* 114. V16 — /news/ and /news/cost-watch/: one cream-2 list band, white
  *      cards, cream hover, three-line "Read more".
@@ -2900,3 +2901,33 @@ body[data-page="about"] .u-7 h2.u-4.sec { color: var(--ink) !important; }
  * square — rather than centred on the whole title. */
 body[data-page="treasury"] .prin h3 { display: flex; gap: 10px; align-items: flex-start; }
 body[data-page="treasury"] .prin h3 i { width: 11px; height: 11px; background: var(--coral); flex: 0 0 auto; margin-top: calc(.5lh - 5.5px); }
+
+/* 128. X5 — homepage hero, in the founder's order:
+ *        1  <h1> "Technology should make living cheaper, not billionaires
+ *           richer." — display face, ink, accent --coral (`.hl` in a heading
+ *           is a display accent, item 41 family). V14 had dropped it; see
+ *           CANVAS-SYNC 137.
+ *        2  "We aim to significantly reduce the cost of living…" — the SAME
+ *           style as the intro sentence below: it is `.u-52.lead` (Inter 500,
+ *           24px at 1440, ink), a second copy of that paragraph's own class.
+ *        3  "Uncost the cost of living." — unchanged: gold "Uncost" (.u-51),
+ *           coral rest (.u-50). It left the <h1> (a heading cannot hold the
+ *           body-style line 2 between its two lines), so it is its own line
+ *           here, restating the hero h1's own type — clamp(38px,5.4vw,82px),
+ *           700, .96 line height, -.02em, 15ch, balanced — so it renders at
+ *           exactly the <h1>'s size at every width.
+ *        4  The intro, broken before "living should not have a price tag.",
+ *           which is underlined and takes the accent. In the body face the
+ *           accent is --coral-deep (the house rule for accents set in running
+ *           text); at 24px either coral would pass. */
+body[data-page="index"] .hero-grid .hero-slogan {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(38px, 5.4vw, 82px);
+  line-height: .96;
+  letter-spacing: -.02em;
+  max-width: 15ch;
+  text-wrap: balance;
+  margin: 30px 0 0;
+}
+body[data-page="index"] .hero-grid .hero-aim { margin-top: 30px; }

@@ -325,14 +325,7 @@ patch("website/src/sectors/sector.njk",
 # headline's size — CSS item 113) -> "Uncost the cost of living." -> the intro
 # cut to its first sentence. Every string already existed on the page; home.json
 # is re-extracted from the export on adoption, so both are restated.
-patch("website/src/_data/home.json",
-      r'("headline": "<span class=\\"u-49\\">).*?(</span><span class=\\"u-50\\">)',
-      r'\1We aim to significantly reduce the cost of living by putting AI and robotics to work for humanity.\2',
-      "V14 hero headline line one", guard="u-49\\\">We aim to significantly")
-patch("website/src/_data/home.json",
-      r'("subhead": "Uncost is a nonprofit, nonpartisan movement that believes <u>living should not have a price tag</u>\.)[^"]*(")',
-      r'\1\2',
-      "V14 hero intro is its first sentence", guard='price tag</u>."')
+# (The two V14 home.json patches are superseded by X5; see the end of this file.)
 
 # C12 (Batch U, 2026-09-25) — /receipts/ "The rule" band goes white. The band's
 # CLASS changes, not just its paint: kept as .blk--wheat, C1's wheat rules would
@@ -672,5 +665,28 @@ patch("website/src/treasury.njk",
       r'(<div class="prin">\n(?:    <div>.*?</div>\n){2})    <div><h3><i></i>.*?</h3><p>.*?</p></div>',
       r'\1    <div><h3><i></i>{{ pageContent.treasury.rule3.title }}</h3><p>{{ pageContent.treasury.rule3.body }}</p></div>',
       "W37 treasury standing rule 3 reads pageContent", guard="{{ pageContent.treasury.rule3.title }}")
+
+# X5 (Batch X, 2026-09-27) — homepage hero, founder's order: h1 "Technology
+# should make living cheaper, [not billionaires richer]." -> "We aim…" in the
+# intro's style -> "Uncost the cost of living." (its own line at the h1's size)
+# -> the intro broken before "[living should not have a price tag]."
+# home.json and index.njk are both re-derived (tools/rederive_home.py), so the
+# s1 strings and the template's hero block are restated.
+_home = pathlib.Path("website/src/_data/home.json").read_text(encoding="utf-8")
+if '"aim": ' not in _home:
+    patch("website/src/_data/home.json",
+          r'  "headline": "[^\n]*",\n  "subhead": "[^\n]*"',
+          '  "headline": "Technology should make living cheaper, <span class=\\\\"hl\\\\">not billionaires richer</span>.",\n'
+          '  "aim": "We aim to significantly reduce the cost of living by putting AI and robotics to work for humanity.",\n'
+          '  "slogan": "<span class=\\\\"u-51\\\\">Uncost</span> the cost of living.",\n'
+          '  "subhead": "Uncost is a nonprofit, nonpartisan movement that believes<br><u class=\\\\"u-1\\\\">living should not have a price tag</u>."',
+          "X5 hero strings in home.json")
+else:
+    print("  = X5 hero strings in home.json (already applied)")
+patch("website/src/index.njk",
+      r'(      <h1>\{\{ home\.s1\.headline \| safe \}\}</h1>\n)(      <p class="u-52 lead">\{\{ home\.s1\.subhead \| safe \}\}</p>)',
+      r'\1      <p class="u-52 lead hero-aim">{{ home.s1.aim | safe }}</p>\n'
+      r'      <p class="hero-slogan"><span class="u-50">{{ home.s1.slogan | safe }}</span></p>\n\2',
+      "X5 hero lines 2 and 3 in the template", guard="{{ home.s1.aim | safe }}")
 
 print("done")
