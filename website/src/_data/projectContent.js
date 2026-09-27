@@ -49,7 +49,9 @@ const CONTENT = {
     opener: {
       eyebrow: "What feeds it",
       h2: "The data underneath.",
-      intro: "The Tracker is the data layer: sourced, dated, licensed prices, refreshed on a published schedule. The Dashboard reads from it.",
+      // W28 (Batch X, 2026-09-27): the intro's first sentence is replaced by the
+      // approved two; the rest of the intro is unchanged.
+      intro: "The Dashboard shows the current picture. The Tracker holds the numbers behind it. The Dashboard reads from it.",
     },
     // W27 — the subline (Batch X, 2026-09-27), founder-approved.
     publicSummary: "The data showing how each sector’s costs have moved over time.",
