@@ -129,6 +129,15 @@ module.exports = {
     lookAhead: { h2: 'What <span class="u-1">The Assembly</span> could look like.' },
   },
 
+  // /contribute/ and /contact/ — X16 (Batch X, 2026-09-27), founder-approved.
+  contribute: {
+    intro: { h2: 'Back the work <span class="u-1">directly</span>.' },
+    roles: { h2: 'Useful roles, right <span class="u-1">now</span>.' },
+  },
+  contact: {
+    intro: { h2: 'Say <span class="u-1">hello</span> &mdash; a human replies.' },
+  },
+
   // /treasury/ — founder-approved (Batch X, 2026-09-27).
   treasury: {
     // W37 — standing rule 3 (was "No crypto treasury"). The policy drafts are

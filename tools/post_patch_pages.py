@@ -375,7 +375,7 @@ patch("website/src/assembly.njk",
 # "Volunteer now" button to /contact/, after the section's closing note.
 # contribute.njk is re-derived from the export.
 patch("website/src/contribute.njk",
-      r'(<h2 class="[^"]*">Useful roles, right now\.</h2>.*?</p>)(\n</section>)',
+      r'(<h2 class="[^"]*">(?:Useful roles, right now\.|\{\{ pageContent\.contribute\.roles\.h2 \| safe \}\})</h2>.*?</p>)(\n</section>)',
       r'\1\n  <div class="roles-cta"><a href="/contact/" class="u-btn u-btn--ink">Volunteer now</a></div>\2',
       "V24 contribute roles: Volunteer now", guard='class="roles-cta"')
 
@@ -698,5 +698,18 @@ patch("website/src/assembly.njk", r'(<h2 class="u-16 sec">).*?(</h2>)',
 patch("website/src/assembly.njk", r'(<h2 class="u-21 sec">).*?(</h2>)',
       r'\1{{ pageContent.assembly.lookAhead.h2 | safe }}\2',
       "X15 assembly look-ahead headline reads pageContent", guard="{{ pageContent.assembly.lookAhead.h2 | safe }}")
+
+# X16 (Batch X, 2026-09-27) — /contribute/ and /contact/ headlines from the
+# content layer, whatever the export writes in them. Both are re-derived. (V24's
+# "Volunteer now" patch above anchors on either form of the roles headline.)
+patch("website/src/contribute.njk", r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>).*?(</h2>)',
+      r'\1{{ pageContent.contribute.intro.h2 | safe }}\2',
+      "X16 contribute intro headline reads pageContent", guard="{{ pageContent.contribute.intro.h2 | safe }}")
+patch("website/src/contribute.njk", r'(<h2 class="u-42 sec">).*?(</h2>)',
+      r'\1{{ pageContent.contribute.roles.h2 | safe }}\2',
+      "X16 contribute roles headline reads pageContent", guard="{{ pageContent.contribute.roles.h2 | safe }}")
+patch("website/src/contact.njk", r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>).*?(</h2>)',
+      r'\1{{ pageContent.contact.intro.h2 | safe }}\2',
+      "X16 contact intro headline reads pageContent", guard="{{ pageContent.contact.intro.h2 | safe }}")
 
 print("done")
