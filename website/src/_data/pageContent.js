@@ -125,6 +125,9 @@ module.exports = {
 
   // /about/ — founder-approved (Batch X, 2026-09-27).
   about: {
+    // W34 — the two box headings: accent + underline on "is" / "is not".
+    isBox: { h3: 'What Uncost <u class="u-1">is</u>' },
+    isNotBox: { h3: 'What Uncost <u class="u-1">is not</u>' },
     yourSay: {
       // W33 — replaces the three Assembly / privacy / principles paragraphs.
       lead: 'Supporters aren&rsquo;t an audience. The Assembly gives every supporter a recorded voice to propose, prioritise, or object. One person, one vote, no payment or donation buying extra weight. We never sell, rent or trade your data, and never use it for partisan targeting. Receipts first, open wherever rights and safety allow, and nonpartisan &mdash; we critique systems, never candidates or parties.',

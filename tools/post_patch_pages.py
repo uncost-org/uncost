@@ -408,10 +408,8 @@ patch("website/src/treasury.njk", r'Want to help before donations open\?</h2>',
 patch("website/src/roadmap.njk", r'evidence and safety are ready\.</h2>',
       'evidence and safety are <span class="u-1">ready</span>.</h2>',
       "V21 roadmap accent: ready", guard='are <span class="u-1">ready</span>.')
-patch("website/src/about.njk", r'<h3>Uncost is</h3>', '<h3>Uncost <u>is</u></h3>',
-      "V21 about: underline is", guard='<h3>Uncost <u>is</u></h3>')
-patch("website/src/about.njk", r'<h3>Uncost is not</h3>', '<h3>Uncost <u>is not</u></h3>',
-      "V21 about: underline is not", guard='<h3>Uncost <u>is not</u></h3>')
+# (V21's about underlines are superseded by W34: the box headings now read
+#  from the content layer, restated at the end of this file.)
 
 # V17 (Batch V, 2026-09-26) — /case/ closing band: "The question is no longer
 # whether…" moves from above "Evidence first. Tools next." to directly below
@@ -635,5 +633,16 @@ patch("website/src/about.njk",
       r'(data-screen-label="Your say">.*?<h2 class="[^"]*">.*?</h2>\n)(?:  <p class="[^"]*lead">.*?</p>\n)+',
       r'\1  <p class="u-10 lead">{{ pageContent.about.yourSay.lead | safe }}</p>\n',
       "W33 about Your say reads pageContent", guard="{{ pageContent.about.yourSay.lead | safe }}")
+
+# W34 (Batch X, 2026-09-27) — /about/ box headings from the content layer
+# (pageContent.about.isBox / isNotBox), whatever the export writes in them.
+# about.njk is re-derived. The second box is matched first so "Uncost is" does
+# not also catch "Uncost is not".
+patch("website/src/about.njk", r'<h3>Uncost (?:<u>)?is not(?:</u>)?</h3>',
+      '<h3>{{ pageContent.about.isNotBox.h3 | safe }}</h3>',
+      "W34 about is-not heading reads pageContent", guard="{{ pageContent.about.isNotBox.h3 | safe }}")
+patch("website/src/about.njk", r'<h3>Uncost (?:<u>)?is(?:</u>)?</h3>',
+      '<h3>{{ pageContent.about.isBox.h3 | safe }}</h3>',
+      "W34 about is heading reads pageContent", guard="{{ pageContent.about.isBox.h3 | safe }}")
 
 print("done")

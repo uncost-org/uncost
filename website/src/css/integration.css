@@ -2433,7 +2433,8 @@ body[data-page^="projects-"] .grid3 p{font-size:15px;line-height:1.6;color:var(-
 }
 body[data-page="roadmap"] .gates h3{display:flex;gap:10px;align-items:center}
 body[data-page="roadmap"] .gates h3 i{width:11px;height:11px;background:var(--coral);flex:0 0 auto}
-body[data-page="about"] .isnot h3::before{content:"";display:inline-block;width:11px;height:11px;margin-right:10px;vertical-align:middle;background:var(--coral)}
+/* (V9's square before each box heading is retired by W34: the squares now
+ *  mark each LINE, item 125, and a heading square as well would double them.) */
 
 /* 107. V24 — /contribute/ "Useful roles, right now." ends in a "Volunteer now"
  *      button to /contact/ (the page's own ink button style for that route). */
@@ -2860,3 +2861,22 @@ body[data-page="sectors"] .sintro .lead b { color: var(--coral-deep) !important;
 :where(body[data-page^="projects-"]) .rel a{display:inline-flex;align-items:center;gap:10px;background:var(--cream);color:var(--ink);border:2px solid var(--ink);padding:12px 18px;text-decoration:none;font-family:var(--font-display);font-weight:700;font-size:18px}
 :where(body[data-page^="projects-"]) .rel a:hover{background:var(--ink);color:var(--cream)}
 :where(body[data-page^="projects-"]) .rel .sq{width:16px;height:16px;display:inline-block}
+
+/* 125. W34 — /about/ "What Uncost is / is not" boxes. Headings read "What
+ *      Uncost is" / "What Uncost is not" with the accent + underline on
+ *      "is" / "is not" (a <u class="u-1">, coral from the accent rule, the
+ *      underline per V8). Every line of both lists takes the orange square
+ *      bullet — the 11px --coral square of the house marker (V9) — in place
+ *      of the default disc, and V9's square before the heading is retired so
+ *      the marker is not doubled. */
+body[data-page="about"] .isnot ul { list-style: none; padding-left: 0; }
+body[data-page="about"] .isnot li { position: relative; padding-left: 23px; }
+body[data-page="about"] .isnot li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .55em;
+  width: 11px;
+  height: 11px;
+  background: var(--coral);
+}
