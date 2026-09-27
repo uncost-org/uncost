@@ -89,6 +89,11 @@ module.exports = {
   sector: {
     // W12 — the "01 · Scope" headline (V19's accent, now in the content layer).
     scope: { h2: 'Where automation could <span class="u-1">bite</span> &mdash; and what stays visible.' },
+    // W13 — the "02 · Evidence status" empty state, inside the white dotted
+    // box, while a sector has no registered figures. It replaces the dossier's
+    // SRC-### line and the "Reviewed source records come before figures…"
+    // paragraph.
+    evidenceEmpty: 'Research and analysis for this sector hasn&rsquo;t started yet. When the first figures are ready they&rsquo;ll appear here &mdash; each with its source, date, region and confidence label.',
   },
 
   // /news/ — W5 (Batch X, 2026-09-27), founder-approved introband headline.

@@ -598,4 +598,15 @@ if 'class="sintro"' not in _sec and 'blk--wheat sintro' not in _sec:
 else:
     print("  = X9 sectors: intro in the wheat band, key strip retired (already applied)")
 
+# W13 (Batch X, 2026-09-27) — sector "02 · Evidence status": inside the white
+# dotted box, the approved empty-state text (pageContent.sector.evidenceEmpty)
+# replaces the dossier's SRC-### line and the "Reviewed source records come
+# before figures…" paragraph, and shows only while the sector has no figures.
+# sector.njk is re-derived by tools/rederive_collections.py.
+patch("website/src/sectors/sector.njk",
+      r'  <div class="evd-empty">\n    (?:\{% if sector\.evidence %\}.*?|<h3>.*?</h3>)\n    <p>Reviewed source records come before figures\..*?</p>\n',
+      "  <div class=\"evd-empty\">\n{%- set secFigs = sectorContent[sector.slug].figures if sectorContent[sector.slug] else none %}\n"
+      "{%- if not secFigs %}\n    <p>{{ pageContent.sector.evidenceEmpty | safe }}</p>\n{%- endif %}\n",
+      "W13 sector evidence empty state reads pageContent", guard="{{ pageContent.sector.evidenceEmpty | safe }}")
+
 print("done")
