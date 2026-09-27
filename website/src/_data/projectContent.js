@@ -66,6 +66,8 @@ const CONTENT = {
     overview: "Without a disciplined tracker, the dashboard becomes screenshots of other people’s numbers — undated, unlicensed, unmaintainable. This project is not a scraper farm; official and licensed sources come first, and anything whose licence forbids republication is marked and linked out to rather than reproduced.",
     relatedSectors: "Shelter, Food, Energy (primary). Water, Transportation, Communication, Healthcare (secondary — cost lines only).",
     support: "data engineering, source and licence review, and public-data partnerships.",
+    // W32 (Batch X, 2026-09-27), founder-approved: same line as PRJ-001 (W26).
+    resourcing: "No budget is allocated yet. Resourcing follows fiscal sponsorship and the early donations, and is planned region by region once the methodology and policy gates are met.",
     cta: "Help keep the register honest.",
   },
   "PRJ-003": {
