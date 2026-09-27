@@ -10,13 +10,60 @@
     {{ fig.line(register.byId["SRC-021"]) }}   (compact, one-line variant)
 -#}
 
-{% macro stat(row) -%}
-<figure class="stat" data-source="{{ row.source_id }}">
-  <p class="stat-claim">{{ row.display_caption }}</p>
-  <figcaption class="stat-src">{{ row.source_line }} · <a href="/receipts#{{ row.source_id }}">Receipt&nbsp;&rarr;</a></figcaption>
-</figure>
-{%- endmacro %}
 
 {% macro line(row) -%}
-<span class="stat-inline" data-source="{{ row.source_id }}">{{ row.display_caption }} <span class="stat-src">({{ row.source_line }})</span></span>
+<span class="rcpt-src" data-source="{{ row.source_id }}">{{ row.display_caption }} <span class="rcpt-src">({{ row.source_line }})</span></span>
+{%- endmacro %}
+
+
+{#-
+  card(row) — THE figure card (R3). One treatment for every sourced statistic on
+  the site: /receipts/ register, /case/ 2x2 and mechanism 2-up, the homepage
+  stats, and the sector-dossier figure slot. Replaces the retired `.fact`.
+
+  Structure, in order:
+    .id     SRC id
+    .fig    the display value, in coral
+    (the data period is NOT here: C3b moves it into the chip row as SCOPE,
+     so it appears exactly once on the card)
+    .claim  the caption, bold, echoing its own display value in the numeral's
+            colour (register.js builds captionHtml and escapes it first)
+    .foot   SOURCE eyebrow, publisher, linked title, then the chip row:
+            CHECKED · PUBLISHED (only when the register has a year) · region ·
+            confidence
+
+  V4: the confidence chip reads "Needs refresh" (rcpt-conf--needs-refresh)
+  whenever register.js marks the row due — last_checked older than its
+  refresh_cadence allows — whatever the CSV's confidence says. The label is
+  computed at build and never written into the register. A row that is not
+  due renders the Confirmed/Estimate chip exactly as before. The switch is an
+  inline output expression, not an if/else block tag: the site runs Nunjucks with
+  trimBlocks/lstripBlocks, so a block tag on this line would eat its indent and
+  newline and change the markup of every card, due or not.
+
+  Wrap a run of these in <div class="cards"> — the grid supplies the ink frame
+  and 2px dividers (R2) and the cream/cream2 checkerboard.
+-#}
+{% macro card(row) -%}
+<div class="card" id="{{ row.source_id }}" data-source="{{ row.source_id }}">
+  <div class="id">{{ row.source_id }}</div>
+  <div class="fig">{{ row.display_value }}</div>
+  <div class="claim">{{ row.captionHtml | safe }}</div>
+  <div class="foot">
+    <div class="src-eyebrow">Source</div>
+    <div class="pub">{{ row.publisher }}</div>
+    <div class="ttl">{% if row.url %}<a href="{{ row.url }}" target="_blank" rel="noopener">{{ row.publication_work }}</a>{% else %}{{ row.publication_work }}{% endif %}</div>
+    <div class="row">
+      {#- G4d: every metadata chip reads LABEL: value. The label says which
+          date or which place, so a reader never has to infer from format
+          which of two dates is which. The confidence chip stays unlabelled —
+          it is the only chip whose colour carries the meaning. -#}
+      <span class="m m--date" data-era="{{ row.checkedEra }}"><span class="k">Checked</span><span class="v">{{ row.last_checked }}</span></span>
+      {% if row.publication_year %}<span class="m m--date" data-era="{{ row.publishedEra }}"><span class="k">Published</span><span class="v">{{ row.publication_year }}</span></span>{% endif %}
+      <span class="m m--scope"><span class="k">Period</span><span class="v">{{ row.data_period | sentenceCase }}</span></span>
+      <span class="m m--region" data-region="{{ row.regionCode }}"><span class="k">Region</span><span class="v">{{ row.region | sentenceCase }}</span></span>
+      <span class="rcpt-conf rcpt-conf--{{ "needs-refresh" if row.needsRefresh else ("confirmed" if row.confidence.startsWith("confirmed") else "estimate") }}">{{ "Needs refresh" if row.needsRefresh else ("Confirmed" if row.confidence.startsWith("confirmed") else "Estimate") }}</span>
+    </div>
+  </div>
+</div>
 {%- endmacro %}

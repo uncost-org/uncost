@@ -1,0 +1,22 @@
+{#-
+  data-form="pledge" — double opt-in. When open, submitting sends a 24h
+  confirmation link and routes to /pledge/check-email/. Disabled unless
+  features.formsOpen; see partials/forms/updates.njk for why nothing renders.
+-#}
+{% if features.formsOpen %}
+<form class="pl-form" data-form="pledge" novalidate>
+  <label for="pl-name">Name <span class="opt">(optional &mdash; shown only as a count)</span></label>
+  <input id="pl-name" type="text" name="name" autocomplete="name">
+  <label for="pl-email">Email <span class="req">(required)</span></label>
+  <input id="pl-email" type="email" name="email" autocomplete="email" required>
+  <label class="chk"><input type="checkbox" name="agree" required><span>I agree with the pledge above.</span></label>
+  <label class="chk"><input type="checkbox" name="updates"><span>Also email me occasional Uncost updates.</span></label>
+  <button class="pl-btn" type="submit">Add my name</button>
+  <div class="err" role="alert" aria-live="polite"></div>
+</form>
+{% else %}
+<div class="form-off" data-pledge-form data-form="pledge">
+  <div class="form-off-msg">Sign-ups open soon.</div>
+  <div class="form-off-sub">The pledge opens at launch. Nothing to enter yet.</div>
+</div>
+{% endif %}

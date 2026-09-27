@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R1 replaces an invisible frame edge</title><link rel="stylesheet" href="frame.css"></head><body>
+<div class="band">
+  <h1>R1 replaces an invisible frame edge</h1>
+  <!-- V1: a 2px ink frame top would vanish into the ink band directly above,
+       so R1's 4px coral rule stands in for it on that edge. Must PASS. -->
+  <div class="inkhead"></div>
+  <div class="g3 fr-r1top"><div class="cell">One</div><div class="cell">Two</div><div class="cell">Three</div></div>
+</div>
+</body></html>

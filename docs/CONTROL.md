@@ -1,6 +1,6 @@
 # Public source control and authority
 
-Updated: 2026-07-25
+Updated: 2026-08-22
 
 ## Controlling movement source
 
@@ -13,6 +13,27 @@ Updated: 2026-07-25
 - Supersedes: the 2026-07-15 edition, SHA-256 `5b99100ecbeeb068b89c7f5a19d38e5382b01ee79f991d35df98106764d48670` (24 pages). Documents stamped with the superseded hash as `source_sha256` were derived from that edition; they keep the derivation stamp plus a `source_superseded_by_sha256` marker until re-reviewed against this edition. See `records/changes/CHG-001-controlling-source-repin.md`.
 - Publication boundary: the source PDF is not embedded in this repository. These documents are public derivatives; a separately designed public edition can be added after its own review.
 - Derived distribution copy: an email/web distribution PDF was generated from this controlling source on 2026-07-25 (Ghostscript `/prepress`, images downsampled to ~200 ppi; page count, selectable text, and metadata preserved). SHA-256 `5d9abfc6dc4f783074797f1144b3e78eb505880ceef40337b754a53b92000598`, 13,714,907 bytes, 27 pages. Different bytes, identical content, for distribution only; the pinned original above remains the sole authority. Not committed to this repository.
+
+## Published documents
+
+Documents Uncost publishes to the public web, pinned here the same way the
+controlling source is. Unlike the controlling source, these ARE committed to
+this repository and served from our own origin — a public download must not
+depend on a third-party host.
+
+### The Case for Uncost (August 2026 edition)
+
+- Logical document: **The Case for Uncost, August 2026 edition**
+- SHA-256: `4fc813c0f4935502cd5c20bb8bfd6e0341aae0d451261f43595b76cc23021fce`
+- Size: 14 pages, 3,836,948 bytes
+- Repository path: `website/assets/downloads/the-case-for-uncost.pdf`
+- Published at: `/downloads/the-case-for-uncost.pdf` (Eleventy passthrough copy)
+- Authority: a public derivative of the controlling movement source. It states
+  the case; it does not add canon. Where it and the controlling source differ,
+  the controlling source governs.
+- Verification: `shasum -a 256 website/assets/downloads/the-case-for-uncost.pdf`
+  must return the hash above. Replacing the file without re-pinning this hash is
+  a governance change, not a content update.
 
 ## Merged canon baseline
 

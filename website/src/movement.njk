@@ -1,69 +1,76 @@
 ---
 layout: layouts/base.njk
+permalink: "/movement/"
+pageId: "movement"
 title: "The Movement"
-description: "The Movement is how Uncost reaches people with sourced, shareable material, welcomes them through one front door, and offers a clear path from agreement to action — support, contribute, partner."
+description: "A nonprofit, nonpartisan movement that treats the cost of living as a problem to be measured and solved — not endured."
 ---
-<section class="blk blk--first">
-  <p class="eyebrow">The Movement</p>
-  <h1 class="sec">The Movement.</h1>
-  <p class="lead">From agreement to action — one front door.</p>
-  <p>Most people already know living costs too much. The Movement turns that into something organised: reach people with something true and worth sharing, welcome them in, and give them a clear way to act. Everything we publish leads back to the evidence — and to a way to take part.</p>
+{#- Markup from design-source/pages/movement.html; the BODY COPY is the UNP-82 v2
+    (a) rewrite, founder-approved, wired verbatim.
+    Structure mapping (v2 gave copy, not markup): v2's four blocks land on the
+    page's four content sections. Block 1 is a `.blk--first` — the export's own
+    "first block after a hero" modifier (border-top:0) — replacing the introband,
+    because v2 writes block 1 as eyebrow + lead + body, which is `.eyebrow` +
+    `.lead` + `<p>`, not the introband's h2 + p. The h1 stays in the titleband, so
+    v2's "h1: The Movement." is satisfied without a second h1.
+    Block 4's specified buttons ([Sign the Pledge] [Get updates]) are the coral
+    CTA directly below, which already renders exactly those two — so the ink
+    block's own button row is dropped rather than duplicating them. -#}
+<!-- SECTION: movement.Movement — title -->
+<div class="titleband" data-screen-label="Movement — title"><h1>Measure it. Publish it. <span class="u-1">Bring it down.</span></h1></div>
+<!-- SECTION: movement.What this is -->
+{%- set mc = pageContent.movement %}
+<section class="blk blk--first" data-screen-label="What this is">
+  <h2 class="u-88 sec">{{ mc.whatThisIs.h2 | safe }}</h2>
+  <p class="u-89 lead">{{ mc.whatThisIs.lead | safe }}</p>
+{% for para in mc.whatThisIs.body %}
+  <p class="u-11">{{ para | safe }}</p>
+{% endfor %}
 </section>
 
-<section class="blk blk--cream2">
-  <p class="eyebrow">How it reaches people</p>
-  <h2 class="sec">Short, visual, source-led — never outrage alone.</h2>
-  <p>Explainers and data pieces, in the movement’s own illustrated style, shared where attention already is — and carried further by people who share them with their own audiences. The rule doesn’t bend: every public piece leads back to a source and a way to help, never outrage on its own.</p>
+<!-- SECTION: movement.What we stand for -->
+<section class="blk blk--wheat" data-screen-label="What we stand for">
+  <div class="eyebrow">{{ mc.whatWeStandFor.eyebrow }}</div>
+  <h2 class="u-88 sec">{{ mc.whatWeStandFor.h2 | safe }}</h2>
+  <p class="u-89 lead">{{ mc.whatWeStandFor.lead | safe }}</p>
+{% for para in mc.whatWeStandFor.body %}
+  <p class="u-11">{{ para | safe }}</p>
+{% endfor %}
 </section>
 
-<section class="blk">
-  <p class="eyebrow">Ways in</p>
-  <h2 class="sec">Three ways in.</h2>
-  <div class="scope">
-    <div>
-      <h3>The Pledge</h3>
-      <p>A short public statement of what the movement stands for. Signing is free and opens at launch; sharing it onward is how the count grows. <a href="/pledge">Read the pledge →</a></p>
-    </div>
-    <div>
-      <h3>The cost-of-living quiz <span class="status status--planned">Planned</span></h3>
-      <p>Guess what living actually costs — a short test that teaches something surprising, with the full breakdown when you join.</p>
-    </div>
-    <div>
-      <h3>Share-a-stat <span class="status status--planned">Planned</span></h3>
-      <p>Ready-made, sourced cost-of-living facts as graphics and short clips, for supporters to repost to their own networks. Only published, source-backed figures ever become share assets.</p>
-    </div>
+<!-- SECTION: movement.How a cost gets uncosted -->
+<section class="blk blk--cream2" data-screen-label="How a cost gets uncosted">
+  {% import "partials/uncosted.njk" as uc %}
+  {{ uc.block(uncosted.movement) }}
+</section>
+
+<!-- SECTION: movement.What taking part means -->
+<section class="blk blk--cream" data-screen-label="What taking part means">
+  <div class="eyebrow">{{ mc.whatTakingPartMeans.eyebrow }}</div>
+  <h2 class="u-6 sec">{{ mc.whatTakingPartMeans.h2 | safe }}</h2>
+{% for para in mc.whatTakingPartMeans.body %}
+  <p class="u-11">{{ para | safe }}</p>
+{% endfor %}
+</section>
+
+<!-- SECTION: movement.How to take part -->
+<section class="blk blk--ink u-block--ink" data-screen-label="How to take part">
+  <div class="u-5 eyebrow">{{ mc.howToTakePart.eyebrow }}</div>
+  <h2 class="u-91 sec">{{ mc.howToTakePart.h2 | safe }}</h2>
+  <div class="path">
+{% for path in mc.howToTakePart.paths %}
+    <div class="p"><h3>{{ path.h3 }}</h3><p>{{ path.body | safe }}</p></div>
+{% endfor %}
   </div>
+  <p class="u-10">{{ mc.howToTakePart.note | safe }}</p>
 </section>
 
-<section class="blk blk--ink">
-  <p class="eyebrow">The path</p>
-  <h2 class="sec">The path from agreement to action.</h2>
-  <div class="scope">
-    <div>
-      <h3>Support</h3>
-      <p>Free, for anyone who thinks living costs too much: join, share sourced material, sign the pledge. This is the public demand that makes the rest possible.</p>
-    </div>
-    <div>
-      <h3>Contribute</h3>
-      {#- SPONSOR-GATED: the donate half of this tier opens only when a fiscal sponsor is confirmed; volunteering is open now. See records/SPONSOR_TRANSITION.md. -#}
-      <p>Back the work directly — volunteer research, data, engineering, writing, design, or translation. Donations open once a fiscal sponsor is confirmed; until then there is nothing to give, and time is worth more anyway.</p>
-    </div>
-    <div>
-      <h3>Partner</h3>
-      <p>Experts, builders, and institutions: build the tools, advise, coordinate a sector or region, or offer reviewed in-kind support.</p>
-    </div>
-  </div>
-  <div class="cta-actions">
-    <a href="/join" class="u-btn u-btn--primary">Take part</a>
-    <a href="/news" class="u-btn u-btn--outline-cream">Follow the news</a>
-  </div>
-</section>
-
-<section class="blk blk--ink">
-  <h2 class="sec">The simplest first step is to join.</h2>
-  <p>It’s free, and it shows the world how many of us want this.</p>
-  <div class="cta-actions">
-    <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
-    <a href="/join" class="u-btn u-btn--outline-cream">Get updates</a>
+<!-- SECTION: movement.Movement CTA -->
+<section class="u-93 blk blk--coral" data-screen-label="Movement CTA">
+  <h2 class="u-77 sec">{{ mc.cta.h2 | safe }}</h2>
+  <p class="u-94 lead">{{ mc.cta.lead | safe }}</p>
+  <div class="u-95">
+    <a href="/pledge/" class="u-btn u-btn--ink">Sign the Pledge</a>
+    <a href="/join/#get-updates" class="u-btn u-btn--ghost">Get updates</a>
   </div>
 </section>

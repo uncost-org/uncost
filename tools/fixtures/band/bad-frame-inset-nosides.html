@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>band fixture — bad, V2 sides omitted away from the viewport</title>
+<link rel="stylesheet" href="band.css"></head>
+<body><main class="narrow">
+  <div class="band bg-cream"><p>First band.</p></div>
+  <!-- FAULT: no side edges, but the component does NOT meet the viewport, so
+       V2 does not apply: it is not a frame, and a 2px ink line is not R1. -->
+  <div class="frame2">
+    <div class="cell"><p>Cell one.</p></div><div class="cell"><p>Cell two.</p></div>
+  </div>
+  <div class="band bg-cream2"><p>Last band.</p></div>
+</main></body></html>

@@ -1,96 +1,156 @@
 ---
 layout: layouts/base.njk
 home: true
+pageId: "index"
+updatesOff: true
 title: "Home"
-description: "Uncost is a nonprofit, nonpartisan movement working to uncost the cost of living — in the open, with every number sourced."
+description: "The essentials keep getting more expensive while the automation that could make them cheaper mostly makes owners richer. Uncost is working to change that — in the open, with every figure sourced."
 ---
+{#-
+  Homepage — re-derived from the export's own index.html, so its .u-N extraction
+  classes match this export's numbering. Copy is CONTENT and lives in
+  _data/home.json; the S2 figures come from sources/register.csv and the S6
+  counts from the repository's registers. No figure is written here.
+  Regenerate with tools/rederive_home.py after any export adoption.
+-#}
 {% import "partials/figure.njk" as fig %}
-
-<section class="blk blk--first">
-  <p class="eyebrow">A nonprofit, nonpartisan movement</p>
-  <h1>{{ site.tagline }}</h1>
-  <p class="lead">Uncost the cost of living.</p>
-  <p>The machines that could make life cheaper aren’t pointed at the things that keep you alive. We’re working to change where they point — in the open, with every number sourced.</p>
-  <p>
-    <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
-    <a href="/case" class="u-btn u-btn--ghost">See the evidence</a>
-  </p>
-</section>
-
-<section class="blk">
-  <p class="eyebrow">The problem, with receipts · United States</p>
-  <h2 class="sec">Working harder, still falling behind.</h2>
-  {{ fig.stat(register.byId["SRC-020"]) }}
-  {{ fig.stat(register.byId["SRC-021"]) }}
-  {{ fig.stat(register.byId["SRC-004"]) }}
-  <p>Every figure carries its source, its date and its region. If we can’t show you where a number came from, we don’t print it.</p>
-  <p><a href="/receipts">See the receipts →</a></p>
-</section>
-
-<section class="blk blk--cream2">
-  <p class="eyebrow">The idea</p>
-  <h2 class="sec">The idea, in three beats.</h2>
-  <div class="beat">
-    <h3>Everything that keeps you alive got more expensive.</h3>
-    <p>Shelter, food, power, care. The basics, not the luxuries.</p>
-  </div>
-  <div class="beat">
-    <h3>Almost everything else got cheaper to make.</h3>
-    <p>Automation, robotics and software kept driving production costs down.</p>
-  </div>
-  <div class="beat">
-    <h3>Nobody is pointing the cheap machines at the expensive problems.</h3>
-    <p>That’s the gap Uncost works in.</p>
+<!-- SECTION: index.S1 Hero -->
+<section class="blk blk--cream blk--first" data-screen-label="S1 Hero">
+  <div class="hero-grid">
+    <div>
+      <h1>{{ home.s1.headline | safe }}</h1>
+      <p class="u-52 lead">{{ home.s1.subhead | safe }}</p>
+      <div class="u-54">
+        <a href="/pledge/" class="u-btn u-btn--primary">{{ home.s1.cta1 | safe }}</a>
+        <a href="/case/" class="u-55 u-btn u-btn--ghost hero-evidence">{{ home.s1.cta2 | safe }}</a>
+      </div>
+    </div>
+    {% image "robots/40_arms_crossed_transparent.png", "The Uncost robot standing with arms crossed", "100vw", [320, 640, 960], "lazy", "robot" %}
   </div>
 </section>
 
-<section class="blk blk--cream2">
-  <p class="eyebrow">Focus now</p>
-  <h2 class="sec">We start where the money actually goes.</h2>
-  <div>
-    <h3>Shelter <span class="status status--focus">Focus</span></h3>
-    <p>Housing, land use, construction, heating, cooling, and safety.</p>
+<!-- SECTION: index.S2 The problem -->
+<section class="blk blk--ink u-block--ink" data-screen-label="S2 The problem">
+  <div class="u-56 eyebrow">{{ home.s2.eyebrow | safe }}</div>
+  <h2 class="u-57 sec">{{ home.s2.headline | safe }}</h2>
+  <p class="lead">{{ home.s2.body | safe }}</p>
+  <div class="cards">
+    {{ fig.card(register.byId["SRC-021"]) }}
+    {{ fig.card(register.byId["SRC-022"]) }}
+    {{ fig.card(register.byId["SRC-006"]) }}
   </div>
-  <div>
-    <h3>Food <span class="status status--focus">Focus</span></h3>
-    <p>Nutrition, farming, storage, cooking, and distribution.</p>
+  <div class="u-58">
+    <a href="/receipts/" class="u-btn u-btn--outline-cream">See the receipts →</a>
+    <span class="rcpt-updated">Figures checked {{ register.lastChecked }}</span>
   </div>
-  <div>
-    <h3>Energy <span class="status status--focus">Focus</span></h3>
-    <p>Electricity, heat, storage, cooking energy, and microgrids.</p>
+</section>
+
+<!-- SECTION: index.S3 What we intend to do -->
+<section class="blk blk--wheat" data-screen-label="S3 What we intend to do">
+  <div class="eyebrow">{{ home.s3.eyebrow | safe }}</div>
+  <div class="u-59 intent">
+    <h2 class="u-60 sec">{{ home.s3.headline | safe }}</h2>
+    <div>
+      <p>{{ home.s3.body | safe }}</p>
+      <a href="/about/" class="u-11 u-btn u-btn--ink">{{ home.s3.cta | safe }}</a>
+    </div>
   </div>
-  <p>Shelter, food and energy first — to prove the model before expanding. The other twelve sectors are mapped and waiting.</p>
-  <p><a href="/sectors/">All fifteen sectors →</a></p>
 </section>
 
-<section class="blk">
-  <p class="eyebrow">Built in the open</p>
-  <h2 class="sec">No launch video. No funding round. Just the work.</h2>
-  <p>10 draft policies. 7 project briefs. 15 sector dossiers. Every one of them public, sourced, and open to being told it’s wrong.</p>
-  <p><a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--ghost">Read the repository →</a></p>
+<!-- SECTION: index.S4 What we run -->
+<section class="blk blk--cream" data-screen-label="S4 What we run">
+  <div class="eyebrow">{{ home.s4.eyebrow | safe }}</div>
+  <h2 class="u-61 sec">{{ home.s4.headline | safe }}</h2>
+  <p class="lead">{{ home.s4.body | safe }}</p>
+  <div class="runs">
+    <div class="run">
+      <div class="rh"><h3>{{ home.s4.a.title | safe }}</h3><span class="status status--dev">In build</span></div>
+      <div class="rb"><p class="u-62">{{ home.s4.a.body | safe }}</p></div>
+      <div class="rf"><a href="/projects/" class="u-btn u-btn--ink">{{ home.s4.a.cta | safe }}</a></div>
+    </div>
+    <div class="run">
+      <div class="rh"><h3>{{ home.s4.b.title | safe }}</h3><span class="status status--planned">Brief</span></div>
+      <div class="rb"><p class="u-62">{{ home.s4.b.body | safe }}</p></div>
+      <div class="rf"><a href="/case/" class="u-btn u-btn--ink">{{ home.s4.b.cta | safe }}</a></div>
+    </div>
+  </div>
 </section>
 
-<section class="blk blk--cream2">
-  <p class="eyebrow">Imagine</p>
-  <h2 class="sec">Imagine.</h2>
-  <p>A regional dashboard where every cost has a source, a date, a method, and a confidence label.</p>
-  <p>Knowing which part of a housing cost comes from land, materials, labor, energy, finance, regulation, or maintenance — and where automation can and cannot help.</p>
-  <p>Shared tools and equipment supported by reusable governance, safety, and maintenance templates — not every community starting from zero.</p>
-  <p>A negative result published with the same prominence as a win, because trust matters more than protecting a slogan.</p>
+<!-- SECTION: index.S5 Where we start -->
+<section class="blk blk--cream2" data-screen-label="S5 Where we start">
+  <div class="u-63">
+    <div>
+      <div class="eyebrow">{{ home.s5.eyebrow | safe }}</div>
+      <h2 class="u-64 sec">{{ home.s5.headline | safe }}</h2>
+    </div>
+  </div>
+  <p class="u-65 lead">{{ home.s5.body | safe }}</p>
+  <div class="focus3">
+{% for sector in [catalog.sectorsBySlug.shelter, catalog.sectorsBySlug.food, catalog.sectorsBySlug.energy] %}
+    <a href="/sectors/{{ sector.slug }}/"><div class="img">{% image sector.illustration.src, sector.illustration.alt %}</div><div class="tx"><span class="status status--{{ sector.statusClass }}">{{ sector.status }}</span><h3>{{ sector.name }}</h3><p>{{ home.s5[sector.slug] | safe }}</p></div></a>
+{% endfor %}
+  </div>
+  <a href="/sectors/" class="u-btn u-btn--ink">{{ home.s5.cta | safe }}</a>
 </section>
 
-<section class="blk blk--ink">
-  <p class="eyebrow">The Roadmap</p>
-  <h2 class="sec">The road ahead, one milestone at a time.</h2>
-  <p class="lead">Dates are targets. Evidence sets the pace.</p>
-  <p><a href="/roadmap" class="u-btn u-btn--outline-cream">See the roadmap</a></p>
+<!-- SECTION: index.S6 Trust -->
+<section class="blk blk--ink u-block--ink" data-screen-label="S6 Trust">
+  <div class="u-56 eyebrow">{{ home.s6.eyebrow | safe }}</div>
+  <h2 class="u-67 sec">{{ home.s6.headline | safe }}</h2>
+  <p class="u-68 lead">{{ home.s6.body | safe }}</p>
+  <div class="counts">
+    <div class="c"><div class="cn">{{ catalog.counts.policies }}</div><div class="cl">Policies</div><div class="cs">{{ catalog.counts.policyRange }} &mdash; {{ catalog.counts.policiesDrafted }} public review drafts and {{ catalog.counts.policiesReserved }} reserved reference, none adopted or in force.</div></div>
+    <div class="c"><div class="cn">{{ catalog.counts.projects }}</div><div class="cl">Project briefs</div><div class="cs">{{ catalog.counts.projectRange }} &mdash; drafts pending independent review.</div></div>
+    <div class="c"><div class="cn">{{ catalog.counts.sectors }}</div><div class="cl">Sector dossiers</div><div class="cs">One per sector, each with its scope, opportunity and guardrail stated.</div></div>
+  </div>
+  <div class="u-69">
+    <a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--outline-cream">Read the repository →</a>
+    <a href="/receipts/" class="u-btn u-btn--outline-cream">How we source numbers →</a>
+    <span class="rcpt-updated">Records checked {{ register.lastChecked }}</span>
+  </div>
 </section>
 
-<section class="blk blk--ink">
-  <h2 class="sec">Add your name.</h2>
-  <p>It’s free, and it shows the world how many of us want this.</p>
-  <p>
-    <a href="/pledge" class="u-btn u-btn--primary">Sign the Pledge</a>
-    <a href="/join" class="u-btn u-btn--outline-cream">Get updates</a>
-  </p>
+<!-- SECTION: index.S7 Take part -->
+<section class="blk blk--wheat" data-screen-label="S7 Take part">
+  <div class="u-70 eyebrow">{{ home.s7.eyebrow | safe }}</div>
+  <h2 class="u-71 sec">{{ home.s7.headline | safe }}</h2>
+  <div class="asks">
+    <div class="ask">
+      <div class="eff"><span class="num">1</span><span class="lb">Ten seconds</span></div>
+      <h3>{{ home.s7.a.title | safe }}</h3>
+      <p>{{ home.s7.a.body | safe }}</p>
+      <div class="act"><a href="/pledge/" class="u-btn u-btn--primary">{{ home.s7.a.cta | safe }}</a></div>
+    </div>
+    <div class="ask">
+      <div class="eff"><span class="num">2</span><span class="lb">One minute</span></div>
+      <h3>{{ home.s7.b.title | safe }}</h3>
+      <p>{{ home.s7.b.body | safe }}</p>
+      <div class="act">{% if features.formsOpen %}{% include "partials/forms/updates.njk" %}{% else %}<div class="formoff" data-form="updates"><div class="m">Sign-ups open soon.</div><div class="s">The updates list opens at launch. Nothing to enter yet.</div></div>{% endif %}</div>
+    </div>
+    <div class="ask">
+      <div class="eff"><span class="num">3</span><span class="lb">A few hours</span></div>
+      <h3>{{ home.s7.c.title | safe }}</h3>
+      <p>{{ home.s7.c.body | safe }}</p>
+      <div class="act"><a href="/contribute/" class="u-btn u-btn--ink">{{ home.s7.c.cta | safe }}</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION: index.S8 Roadmap -->
+<section class="blk blk--cream" data-screen-label="S8 Roadmap">
+  <div class="eyebrow">{{ home.s8.eyebrow | safe }}</div>
+  <h2 class="u-74 sec">{{ home.s8.headline | safe }}</h2>
+  <p class="u-75 lead">{{ home.s8.body | safe }}</p>
+  <a href="/roadmap/" class="u-76 u-btn u-btn--ink">{{ home.s8.cta | safe }}</a>
+</section>
+
+<!-- SECTION: index.S9 Closing ask -->
+<section class="blk blk--coral" data-screen-label="S9 Closing ask">
+  <h2 class="u-77 sec">{{ home.s9.headline | safe }}</h2>
+  <p class="u-78 lead">{{ home.s9.body | safe }}</p>
+  <div class="u-79">
+    <a href="/pledge/" class="u-btn u-btn--ink">{{ home.s9.cta1 | safe }}</a>
+    <a href="#updates" class="u-btn u-btn--ghost">{{ home.s9.cta2 | safe }}</a>
+  </div>
+  <div class="soc-txt">{% for s in chrome.social %}{% if s.label != "Email" %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.label }}</a>{% endif %}{% endfor %}</div>
 </section>

@@ -23,6 +23,72 @@ Three constraints the repo already enforced were **re-applied** on the adopted C
 - **No `vote` or `dollar` glyph** in the icon set (content-safety omission, per `EXCLUSIONS.md`). The export re-introduced both; they were stripped.
 - **Light theme only.** The export's attribute-only dark theme was stripped (recoverable from the export archive).
 
+## Design-system authority moved to the v2 export (design-v2 integration)
+
+Visual authority (item 5) moved again, to the finished export **"Uncost Design System 10 Aug 2026 v2"**, archive SHA-256 `2da87396f787beb71d855126716ca31e6af1aa29e449f841075f303cf2f214d7` (30,837,335 bytes, 124 members under `design-source/`). The export itself is **not committed to this public repository** — it is held in private staging per `docs/DESIGN_IMPORT_RUNBOOK.md` Step 1, and `website/.eleventyignore` is the standing guard against a local copy ever being built or published.
+
+What changed structurally: the export ships **four** stylesheets rather than a tokens/components pair. All four are adopted into this packet and served in cascade order at `/css/tokens.css`, `/css/components.css`, `/css/site.css`, `/css/sections.css`:
+
+| Packet file | Source | Mode |
+|---|---|---|
+| `tokens.css` | `design-source/css/tokens.css` | transform (AA corrections below) |
+| `components.css` | `design-source/css/components.css` | transform (AA corrections below) |
+| `site.css` | `design-source/css/site.css` | transform (AA corrections below) |
+| `sections.css` | `design-source/css/sections.css` | adopt — byte-identical |
+| `icons/icons.svg` | `design-source/assets/icons/social.svg` | curate |
+
+Fonts are unchanged: the export's `Inter-variable.woff2` and `RobotoCondensed-variable.woff2` are **byte-identical** to the OFL subsets already in this packet, so they are served from copies under `website/assets/fonts/` carrying the export's filenames rather than re-licensed or re-committed. The export's logo, sector and robot binaries are likewise **not** committed: all 11 robots are byte-identical and all 15 sector illustrations are **pixel-identical** to the manifest-pinned originals, so every image renders through the `{% image %}` pipeline against `website/assets/brand/` with alt text from the manifest, exactly as item 4 requires.
+
+The icon sprite stays curated: it gains `box`, `monitor` and `gear` from the export, and the export's `vote` and `dollar` symbols remain withheld under `EXCLUSIONS.md`.
+
+### Re-synced to the v3 export
+
+The export was regenerated as **"uncost design system v3"**, archive SHA-256
+`e68ca4c7f0c491392fdb9f5dac63dcdb45e800a75abdda78e783c8f3b62de44e` (30,880,727 bytes,
+124 members under `design-source/`), and the design layer on this branch was re-derived from it.
+
+**All four stylesheets are byte-identical between v2 and v3**, as are `data/`,
+`templates/`, `js/` and `assets/`. The source hashes pinned in
+`FROZEN_SOURCE_PAIRS` and `SOURCE_RECEIPT.json → source_transformations` are
+therefore unchanged, and so are the AA corrections below — nothing in the packet
+needed re-deriving.
+
+What v3 actually changes is the **chrome markup**, in `partials/header.html`,
+`partials/nav-drawer.html` and the inlined copies in all 61 pages. Verified
+mechanically: `<main>`, `<head>`, `<body>` attributes and the footer are
+identical in all 61 pages between v2 and v3. v2 shipped the CSS and `ui.js` for
+the nav but not its markup; v3 ships the real thing — four `.hd-mega` panels and
+four `.drawer-acc` sections — and the reconstruction this branch had been
+carrying is replaced by it.
+
+One structural correction came out of that. The reconstruction nested each
+`.hd-mega` inside its `.hd-item`; v3 places all four as siblings of `.hd-main`
+inside `<header class="hd">`. That placement is load-bearing — `.hd-mega` is
+`position:absolute` with `left:0;right:0`, so it only spans the header's full
+width when the header is its containing block. v3's CHECKLIST adds a §B2
+regression check for exactly this, and the built output passes it: every page
+carries four of each, with `.drawer`, `.pledgebar` and `.search-ov` after
+`</main>` and only `.hd-mega` inside `<header>`.
+
+### WCAG 2.2 AA corrections applied on adoption
+
+The export's own `README.md` §8.11 records that a final contrast sweep was still outstanding. It was run here, and the corrections below were applied to the adopted CSS. **They are corrections to the design and should be carried back into the design canvas, so the next re-export already passes** rather than being re-patched.
+
+- **Text on a coral fill.** The export uses `--ink` `#0E0E0C` on `--coral` `#D64A1E` (4.47) and `--white` on coral for the header CTA (4.32). Both are below the 4.5 floor. A new token `--ink-on-coral` `#0A0A0A` (4.58) is applied to the coral block, the primary button, the header CTA, the `focus` and `needs-refresh` pills, and the footer form button hover. This is the same correction, and the same value, this repository applied when the previous export was adopted.
+- **Coral as small text.** `--link` pointed at `--coral` (4.04 on cream). It now points at `--coral-deep` `#B23A14` (5.59) — which is what the export's own token comment says deep coral is for. The mega-panel number, the mega-panel and drawer arrows, and the drawer accordion plus/minus move the same way.
+- **Header CTA hover.** `--ink` on `--coral-deep` (3.23) becomes `--cream` on `--coral-deep` (5.59).
+- **Updates band checkbox label.** `--fg-3` on the `--wheat` band (3.91) becomes `--fg-2` (7.6).
+- **Focus ring visibility.** The export switches the ring to `--coral-on-ink` on ink blocks but leaves it `--coral` everywhere else, so on a coral fill the ring measures 1.00 against its own background. `--ink` is applied on coral/wheat/sage fills and `--cream` on the deep fills (clay, ink-blue), clearing the 3.0 non-text floor on every discovered surface.
+
+### Audit changes that came with this adoption
+
+`scripts/audit_design_handoff.py` was extended, and two of the changes close gates that were failing open:
+
+- `resolve_tokens()` now strips CSS comments before parsing. A documentation comment naming a token (`--coral-deep : coral text < 24px on cream`) matched the declaration regex and, because the map is built with `setdefault`, beat the real declaration. `--coral-deep` and `--coral-on-ink` therefore resolved to `None`, and **every contrast pair depending on them was silently skipped rather than checked**.
+- The focus-ring check read only the first `:focus-visible` rule and only the `outline` shorthand, so a multi-tone ring was invisible to it. It now collects ring colours from every focus rule and from `outline-color`.
+- The contrast matrix covers `tokens.css` + `components.css` + `site.css` — the shared vocabulary and the global chrome. Coverage rose from 84 pairs to 103. `sections.css` is deliberately excluded from *pair matching*: its per-page rules use an idiom the selector-only ancestor model cannot see (a card grid sets `background: var(--ink)` on the container purely so a 2px gap draws the divider, while each child repaints its own cream surface), which produces failures for text that never renders on ink. Colour in `sections.css` is instead constrained by the export's own guarantee that it contains no raw hex — every value resolves to an audited token.
+- Receipt coverage is scoped to packet paths plus files the receipt already inventories, so a site-wide integration branch does not have to list every template in a design receipt. Changing a packet file without re-hashing it here still fails.
+
 ## Status vocabulary (changed with this adoption)
 
 The honest-status class set is now `status--{live, dev, planned, focus, next, dossier, future}` (adopted from the finished export), replacing the earlier `status--{prelaunch, draft, scaffold, planned, blocked, receipt}`. The substance is unchanged and preserved: every status renders honest text and no bare `Live`/`Funded`/`Approved`/`Operating` badge appears — for example `.status--live` renders **"Designed — opens at launch"**, never the word "Live." The content audit's badge ban is on rendered text, not class names. This is recorded as a contract-relevant change (UNP-50 rev 4) and in `docs/CONTROL.md` (DEF-05).

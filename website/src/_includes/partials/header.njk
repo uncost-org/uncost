@@ -1,0 +1,68 @@
+{#-
+  Global site header — structure from design-source/partials/header.html (v3).
+
+  DESIGN: do not edit structure. The four .hd-mega panels are siblings of
+  .hd-main INSIDE <header class="hd">, not children of each .hd-item. That
+  placement is load-bearing: .hd-mega is position:absolute with left:0/right:0,
+  so it spans the header's full width only when the header is its containing
+  block; nested inside a .hd-item it would be as narrow as the nav link.
+  (v3 README: "Only the mega-panels belong in the header partial" — the drawer,
+  pledge bar and search overlay are fixed-position overlays and are included
+  after </main> by the base layout.)
+
+  CONTENT: nav labels, descriptions, dropdown links and panel robots come from
+  _data/chrome.json, which carries the export's data/site.json nav[] with the
+  routes reconciled to this repository's contractual URLs.
+-#}
+<a class="skip-link" href="#main">Skip to main content</a>
+<header class="hd">
+  <div class="hd-main">
+    <a class="brand" href="/" aria-label="Uncost — home">{% image "logos/logo-tight-light.png", "uncost.org", "10rem", [160, 320], "eager" %}</a>
+    <nav class="hd-nav" aria-label="Primary">
+      {% for item in chrome.nav %}
+      <div class="hd-item" data-i="{{ loop.index0 }}"><a href="{{ item.url }}" aria-haspopup="true" aria-expanded="false"{% if page.url == item.url %} class="here"{% endif %}>{{ item.label }}<span class="car" aria-hidden="true"></span></a></div>
+      {% endfor %}
+    </nav>
+    <div class="hd-actions">
+      <nav class="hd-quick" aria-label="Secondary">
+        {% for link in chrome.navSecondary %}
+        <a href="{{ link.url }}"{% if page.url == link.url %} class="here"{% endif %}>{{ link.label }}</a>
+        {% endfor %}
+      </nav>
+      {#- The search control is a LINK, not a button. The overlay it used to
+          toggle is `display:none` until js/ui.js adds `open`, so with script
+          off the button was a dead control: nothing it could do. It now points
+          at /search/, a real page carrying the same destinations, and ui.js
+          intercepts the click to open the overlay when script is available.
+          `u-navlink` is the export's own utility (tokens.css): it restores the
+          ink colour and drops the underline the global `a` rule would give an
+          anchor here, so the control looks exactly as it did — no new CSS. -#}
+      <a class="hd-search u-navlink" href="/search/" aria-label="Search" data-search><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="M15.5 15.5L21 21"></path></svg></a>
+      <a class="cta-btn" href="/pledge/">Sign the Pledge</a>
+      <button class="hd-burger" type="button" aria-label="Open menu" data-drawer-open><i></i><i></i><i></i></button>
+    </div>
+  </div>
+  {% for item in chrome.nav %}
+  <div class="hd-mega" data-panel="{{ loop.index0 }}" role="menu" aria-label="{{ item.label }}">
+    <div class="mg">
+      <div class="mg-say">
+        <div class="mg-num">{% if loop.index < 10 %}0{% endif %}{{ loop.index }} &mdash; Section</div>
+        {#- A mega-panel title labels a navigation block, not the document outline, and
+            the header renders before <main>, so this h3 is read as the page's first
+            heading on every page. It is an <h3> because the design styles it that way
+            (css/site.css: .hd-mega .mg-say h3). Only the FIRST panel needs the
+            directive — marking the others would fail no-unused-disable. -#}
+        {% if loop.first %}<!-- [html-validate-disable-next heading-level -- navigation label, not document outline; see template comment] -->{% endif %}
+        <h3><a href="{{ item.url }}" role="menuitem">{{ item.label }}</a></h3>
+        <p class="mg-desc">{{ item.desc }}</p>
+      </div>
+      <div class="mg-go">
+        {% for link in item.links %}
+        <a href="{{ link.url }}"{% if link.external %} target="_blank" rel="noopener"{% endif %}>{{ link.label }}{% if link.badge %}<span class="plan">{{ link.badge }}</span>{% endif %}<span class="ar" aria-hidden="true">&rarr;</span></a>
+        {% endfor %}
+      </div>
+      <div class="mg-pic">{% image item.robot, "" %}</div>
+    </div>
+  </div>
+  {% endfor %}
+</header>

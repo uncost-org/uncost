@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<html><body><p>Not a stylesheet.</p></body></html>

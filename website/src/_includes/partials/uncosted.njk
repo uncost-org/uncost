@@ -1,0 +1,31 @@
+{#-
+  V12 (2026-09-26): ONE "How a cost gets uncosted" block, rendered on /about/
+  and /movement/. The FORMAT is /about/'s — a heading block (metalabel +
+  headline) over numbered step rows (numeral, label, text) — so both pages
+  read the method the same way. The WORDS come from _data/uncosted.js, one set
+  per page, unchanged until approved text arrives.
+
+  On /about/ the heading block and the step list are bands in their own right
+  (direct children of <main>, the step list unframed under D3), so the markup
+  keeps /about/'s exact shape: a bare <div> around the steps, and `.u-2` on the
+  last step as the export writes it. On /movement/ the block sits inside that
+  page's own band.
+
+  block(u, screenLabel)
+    u            { label, heading, intro?, steps: [{label, text}], close? }
+    screenLabel  data-screen-label for the heading block, where it is a band
+-#}
+{%- macro block(u, screenLabel) -%}
+<div class="seqhd"{% if screenLabel %} data-screen-label="{{ screenLabel }}"{% endif %}><div class="u-3 metalabel">{{ u.label | safe }}</div><h2 class="u-4">{{ u.heading | safe }}</h2></div>
+{%- if u.intro %}
+<p class="uncosted-intro lead">{{ u.intro | safe }}</p>
+{%- endif %}
+<div>
+{%- for s in u.steps %}
+  <div class="{% if loop.last %}u-2 {% endif %}step"><div class="num">{{ loop.index }}</div><div><h3>{{ s.label | safe }}</h3><p>{{ s.text | safe }}</p></div></div>
+{%- endfor %}
+</div>
+{%- if u.close %}
+<p class="uncosted-close">{{ u.close | safe }}</p>
+{%- endif %}
+{%- endmacro %}

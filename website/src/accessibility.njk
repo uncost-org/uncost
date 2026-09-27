@@ -1,0 +1,21 @@
+---
+layout: layouts/base.njk
+permalink: "/accessibility/"
+pageId: "accessibility"
+title: "Accessibility"
+description: "How uncost.org is built for accessibility, what that means in practice, and how to report something that is hard or impossible to use."
+---
+{#- The accessibility statement, moved off About onto its own page so the
+    footer link has somewhere real to point. Content is unchanged from the
+    version About carried; every claim in it is a fact about this build and is
+    enforced by the audits in scripts/. -#}
+{% import "partials/mailto.njk" as mail %}
+<header class="titleband">
+  <div class="breadcrumb"><a href="/">Uncost</a> &nbsp;/&nbsp; <span>Accessibility</span></div>
+  <h1>Accessibility</h1>
+</header>
+<section class="blk" data-screen-label="Accessibility">
+  <div class="eyebrow">Accessibility</div>
+  <h2 class="u-12 sec">Built to WCAG 2.2 AA.</h2>
+  <p class="u-13 lead">Real text over images, visible keyboard focus, logical heading order, alt text on meaningful images, reduced-motion respected, and no meaning carried by color alone. Found something that falls short? Tell us: <a href="mailto:contact@uncost.org">contact@uncost.org</a> — accessibility reports get priority.</p>
+</section>

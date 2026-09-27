@@ -2,6 +2,11 @@
 
 Every `[CONTENT NEEDED]` marker in the built site, grouped by field slug — so one row is one writing task, even when it spans many pages. Author each from the July Movement Plan (`a2b640`), the dossiers, and the per-route copy captures in `docs/EXPORT_COPY_DRAFTS/` (which hold the export's design-authored draft for that field). No field is invented copy; each is a deliberate honest gap.
 
+> **Superseded 2026-08-22 — this is a historical snapshot, not the current state.**
+> The built site now renders **zero** `[CONTENT NEEDED]` markers: `grep -ro 'data-gap="[^"]*"' website/dist/` returns nothing.
+> The last markers were closed by the UNP-82 content pass (About "Your say", the sectors intro, all seven project dossiers, the receipts worked example / corrections slots, and Cost Watch).
+> The counts below describe the `feat/content-port` state they were generated from and are kept for provenance — the field taxonomy and the flag tiers are still the reference for how gaps get classified when new ones appear.
+
 **122 distinct fields across 210 markers.**
 
 **Flag tiers in the captures (the 190 former "uncited" flags, re-tiered).** In `docs/EXPORT_COPY_DRAFTS/` each factual/numeric claim now carries one of three tiers instead of a flat "uncited", because "not in the July PDF" is not the same as "no source":

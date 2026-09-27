@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<title>band fixture — good, R2 frame</title>
+<link rel="stylesheet" href="band.css"></head>
+<body><main>
+  <div class="band bg-cream"><p>First band.</p></div>
+  <div class="band bg-wheat r-coral"><p>cream to wheat: coral.</p></div>
+  <div class="frame">
+    <div class="cell"><p>Framed component. Its own 2px ink frame is flush against
+      the band boundary above and below, so under R2 the frame edge IS the
+      boundary and R1's rule is suppressed on both.</p></div>
+    <div class="cell"><p>Cell two.</p></div>
+    <div class="cell"><p>Cell three.</p></div>
+  </div>
+  <div class="band bg-coral"><p>The frame's bottom edge carries this boundary.</p></div>
+</main></body></html>

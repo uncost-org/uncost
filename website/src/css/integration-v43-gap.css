@@ -1,0 +1,35 @@
+/* v4.3 extraction gap — STOPGAP, not design authorship.
+ *
+ * v4.3 moved the named utility layer into numbered .u-N classes but left 21
+ * class names still referenced by its OWN pages with no rule emitted for them
+ * (116 occurrences). Without these the export's own markup renders wrong, so
+ * each declaration below is recovered VERBATIM from v3.1, which did define them.
+ * Nothing here is authored: it is the previous export's value for a class the
+ * current export still uses.
+ *
+ * Delete this file when a re-export defines them again. Their absence is worth
+ * adding to the §A0 parity gate: "every class referenced by a page is defined
+ * by the stylesheets" would have caught it, where the four-stylesheet and
+ * inline-style checks did not.
+ */
+.bd-dashed{border-style:dashed}
+.bg-clay{background:var(--clay)}
+.bg-coral{background:var(--coral)}
+.bg-sage{background:var(--sage)}
+.bg-wheat{background:var(--wheat)}
+.bt-0{border-top:0}
+.bt-ink{border-top-color:var(--ink)}
+.btn-row{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px}
+.btn-row-26{display:flex;flex-wrap:wrap;gap:14px;margin-top:26px}
+/* .focus — not defined in v3.1 either; left to the canvas */
+.lead-52{margin-top:22px;max-width:52ch}
+.logo-44{height:44px;width:auto}
+.meta-13{font-size:13px;color:var(--fg-3)}
+.mw-20ch{max-width:20ch}
+/* .opt — not defined in v3.1 either; left to the canvas */
+/* .pl-btn — not defined in v3.1 either; left to the canvas */
+/* .pl-form — not defined in v3.1 either; left to the canvas */
+.sq-outline{background:transparent;border:1.5px solid var(--ink)}
+.t-coral{color:var(--coral)}
+.w-150{width:150px}
+.w-90{width:90px}

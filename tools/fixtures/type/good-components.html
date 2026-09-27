@@ -1,0 +1,30 @@
+<!doctype html><meta charset=utf-8><title>components</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.5 system-ui,sans-serif;background:#FAF7F0;color:#0E0E0C}
+main>*{padding:40px 24px;display:block}
+h1,h2{margin:0 0 12px;font-weight:700;line-height:1.03}
+p{margin:0}
+.eyebrow{font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+h2{font-size:60px;max-width:728px}
+.blk>p{max-width:728px}
+h1{font-size:60px;max-width:728px}
+
+.cards{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:1200px}
+.card h2{font-size:28px;max-width:none}
+.card p{max-width:none}
+.toc h2{font-size:12px;max-width:none}
+.toc p{max-width:none;font-size:13px}
+</style>
+<body><main>
+<section class="blk blk--first"><h1>A page hero</h1><p>Hero standfirst.</p></section>
+<section class="blk"><h2>Working harder, still falling behind.</h2><p>Body copy on the same measure as the headline above it.</p></section>
+<section class="blk"><div class=eyebrow>The problem, with receipts</div>
+  <div class=cards>
+    <div class=card><h2>Card one</h2><p>Card body copy.</p></div>
+    <div class=card><h2>Card two</h2><p>Card body copy.</p></div>
+  </div></section>
+<section class="blk"><nav class=toc><h2>Contents</h2><p>Jump to a section.</p></nav>
+  <h2>Point the tools at what keeps people alive.</h2><p>Body copy on the same measure as the headline above it.</p></section>
+<section class="blk"><h2>We start where the money actually goes.</h2><p>Body copy on the same measure as the headline above it.</p></section>
+</main></body>

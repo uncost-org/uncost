@@ -1,0 +1,25 @@
+{#-
+  data-form="updates" — email updates capture.
+
+  While features.formsOpen is false NO input, checkbox or submit button is
+  rendered: only the message. That is deliberate (design-source/README.md §5) —
+  a visually dimmed form is still keyboard-focusable and submittable, which
+  fails WCAG. There is no endpoint, no vendor and no third-party script in
+  either state; the backend wires to the data-form hook.
+-#}
+{% if features.formsOpen %}
+<div data-updates-form>
+  <form class="ft-form" data-form="updates" novalidate>
+    <label class="skip-link" for="ft-email">Email address</label>
+    <input id="ft-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+    <button type="submit">Get updates</button>
+    <label class="chk"><input type="checkbox" name="consent" required><span>Yes &mdash; email me Uncost updates. We use your address for updates only: we won&rsquo;t sell your data or use it for partisan targeting, and you can unsubscribe anytime. <a href="/privacy/">Privacy policy</a></span></label>
+  </form>
+  <div class="ft-note" data-updates-note role="status" aria-live="polite"></div>
+</div>
+{% else %}
+<div data-updates-form data-form="updates" class="form-off">
+  <div class="form-off-msg">Sign-ups open soon.</div>
+  <div class="form-off-sub">The updates list opens at launch. Nothing to enter yet.</div>
+</div>
+{% endif %}

@@ -1,0 +1,12 @@
+/* Shared styling for the overflow selftest fixtures. Nothing here is allowed to
+   overflow on its own: each fixture supplies its own defect (or its own proof of
+   innocence). Kept deliberately plain so a failure is attributable to the
+   fixture, not to this file. */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body { font: 16px/1.5 system-ui, sans-serif; background: #fffdf8; color: #1a1a1a; }
+.wrap { padding: 16px; }
+h1 { font-size: 22px; margin: 0 0 12px; }
+p { margin: 0 0 12px; }
+.card { background: #efe9dd; border: 1px solid #d8d0bf; padding: 12px; }
+img { max-width: 100%; height: auto; }

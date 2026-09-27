@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BAD — grid that only breaks in a middle band</title>
+<link rel="stylesheet" href="./base.css">
+<style>
+  /* This reproduces the defect class that actually shipped: a grid whose column
+     track count is pinned by a media-query band, so it is correct at the widths
+     anyone thought to sample and wrong strictly between them.
+
+     Fine at 390 (single column), fine at 1440 (auto-fit). Broken for every
+     width in 461..523, where two 300px tracks plus a 10px gap need 610px. A
+     sweep that samples only 390/1290/1440 passes this file. */
+  .sgrid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  @media (max-width: 460px) { .sgrid { grid-template-columns: 1fr; } }
+  @media (min-width: 461px) and (max-width: 523px) { .sgrid { grid-template-columns: repeat(2, 300px); } }
+</style>
+</head><body>
+<div class="wrap">
+  <h1>Mid-band grid</h1>
+  <div class="sgrid" id="sgrid">
+    <div class="card">One</div>
+    <div class="card">Two</div>
+    <div class="card">Three</div>
+    <div class="card">Four</div>
+  </div>
+</div>
+</body></html>

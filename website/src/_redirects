@@ -1,0 +1,6 @@
+# Cloudflare Pages redirects.
+
+# N6 — /news/ is the whole Uncost news page, so the dedicated /news/uncost/
+# route it used to link to no longer exists. Permanent, not temporary: the
+# content did not move, the split did, and it is not coming back.
+/news/uncost/ /news/ 301

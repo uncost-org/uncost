@@ -1,0 +1,26 @@
+{#-
+  data-form="contact" — email + message required, name and phone optional.
+
+  The export ships this one LIVE, with an inline script that fakes a success
+  state. That contradicts the export's own rule that every form is disabled
+  while formsOpen is false (README §5, CONTENT.md "never do these" #10), and
+  the inline script is blocked by this site's CSP in any case. The rule wins:
+  disabled here like the other two, no endpoint, no vendor.
+-#}
+{% if features.formsOpen %}
+<form class="cform" data-form="contact" novalidate>
+  <div class="row2">
+    <div><label class="fl" for="c-name">Name</label><input class="field" id="c-name" name="name" autocomplete="name" placeholder="Your name"></div>
+    <div><label class="fl" for="c-email">Email <span class="req">(required)</span></label><input class="field" id="c-email" type="email" name="email" autocomplete="email" placeholder="you@example.com" required></div>
+  </div>
+  <label class="fl" for="c-phone">Phone</label><input class="field" id="c-phone" type="tel" name="phone" autocomplete="tel" placeholder="Optional">
+  <label class="fl" for="c-msg">Message <span class="req">(required)</span></label><textarea class="field" id="c-msg" name="message" placeholder="What&rsquo;s on your mind?" required></textarea>
+  <button class="cbtn" type="submit">Send message</button>
+  <div class="cnote" role="alert" aria-live="polite"></div>
+</form>
+{% else %}
+<div class="form-off" data-contact-form data-form="contact">
+  <div class="form-off-msg">Sign-ups open soon.</div>
+  <div class="form-off-sub">The contact form opens at launch. In the meantime, email works &mdash; the address is just below.</div>
+</div>
+{% endif %}

@@ -1,64 +1,91 @@
 ---
 layout: layouts/base.njk
-eleventyComputed:
-  title: "The Case"
-  description: "Uncost's evidence layer: what humans need, what those needs cost by region, where automation could plausibly reduce cost, and the open methodology behind every claim."
+permalink: "/case/"
+pageId: "case"
+title: "The Case"
+description: "The Case is Uncost's evidence layer: what humans need, what those needs cost by region, and where automation can plausibly reduce costs — every figure sourced, dated, and confidence-labeled."
 ---
+{#- Markup taken verbatim from design-source/pages/case.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author.
+    Exception: the UNP-82 v2 (b) additions, founder-approved and wired verbatim —
+    b1 the mechanism section, b2 "How a cost gets uncosted" (inside the export's Methodology
+    drawer, the block v2 names), b3 the closing lead,
+    b5 the download line. b4 (SRC-021 after SRC-004) is NOT applied: v2 was
+    written against origin/main @ 94d2481, whose /case/ carried a register-backed
+    "What living costs" section. The v4.3 re-derivation replaced that page with
+    the export's dashboard preview, so there is no SRC-004 here for SRC-021 to
+    follow. Flagged for the founder rather than guessed at. -#}
 {% import "partials/figure.njk" as fig %}
-<section class="blk blk--first">
-  <p class="eyebrow">The evidence layer</p>
-  <h1 class="sec">The Case.</h1>
-  <p class="lead">The receipts behind every claim we make.</p>
-  <p>The Case is where Uncost shows its work: what a person actually needs, what those needs cost, where automation and shared infrastructure could plausibly bring the cost down — and the method behind every number. It is built to be checked by supporters, journalists, researchers, and sceptics alike.</p>
+<!-- SECTION: case.The Case — title -->
+<div class="titleband" data-screen-label="The Case — title"><h1>The <span class="u-1">Case</span></h1></div>
+<div class="introband">
+  <h2>The receipts behind <span class="u-1">every claim</span> we make.</h2>
+  <p>The Case is Uncost&rsquo;s evidence layer — built to be useful to supporters, journalists, researchers, urban planners, funders, and skeptics alike. It covers what humans need, what those needs cost by region, where automation and shared infrastructure can plausibly help, and the open methodology behind every claim.</p>
+  <p class="u-11"><b>Want the whole argument in one document?</b> Download <em>The Case for Uncost</em> &mdash; the fourteen-page paper this page distills, with every figure&rsquo;s exact reference. <a href="/downloads/the-case-for-uncost.pdf">Download the Case for Uncost (PDF)</a></p>
+</div>
+
+<!-- SECTION: case.The mechanism -->
+{%- set cm = pageContent.case.mechanism %}
+<section class="blk blk--first blk--cream2" data-screen-label="The mechanism">
+  <div class="eyebrow">{{ cm.eyebrow }}</div>
+  <h2 class="sec">{{ cm.h2 | safe }}</h2>
+  <p class="u-11 lead">{{ cm.lead | safe }}</p>
+  <div class="cards cards--2up">
+    {{ fig.card(register.byId["SRC-020"]) }}
+    {{ fig.card(register.byId["SRC-024"]) }}
+  </div>
+  <p class="u-11">{{ cm.close | safe }}</p>
 </section>
 
-<section class="blk">
-  <p class="eyebrow">What living costs</p>
+<!-- SECTION: case.What living costs -->
+<section class="blk blk--wheat" data-screen-label="What living costs">
+  <div class="eyebrow">What living costs</div>
   <h2 class="sec">The numbers, with their receipts.</h2>
-  <p>We go deep on Shelter, Food, and Energy first — the three that hit hardest — and keep all fifteen sectors visible. Every figure here traces to a public source.</p>
-  {{ fig.stat(register.byId["SRC-004"]) }}
-  {{ fig.stat(register.byId["SRC-023"]) }}
-  {{ fig.stat(register.byId["SRC-005"]) }}
-  <p><a href="/sectors/">Every sector, with its evidence →</a></p>
+  <p class="u-11 lead">We go deep on Shelter, Food, and Energy first &mdash; the three that hit hardest &mdash; and keep all fifteen sectors visible. Every figure here traces to a public source.</p>
+  <div class="cards">
+    {{ fig.card(register.byId["SRC-004"]) }}
+    {{ fig.card(register.byId["SRC-021"]) }}
+    {{ fig.card(register.byId["SRC-023"]) }}
+    {{ fig.card(register.byId["SRC-005"]) }}
+  </div>
+  <p class="u-11"><a href="/sectors/">Every sector, with its evidence &rarr;</a></p>
 </section>
 
-<section class="blk blk--cream2">
-  <p class="eyebrow">The question</p>
-  <h2 class="sec">What does one human actually need?</h2>
-  <p class="lead">Instead of starting from ideology, Uncost starts from the physical and social basics of a dignified life — fifteen sectors, from Food and Shelter to Communication and Leisure. Every part of the essential basket maps to one of them.</p>
-  <p>Costs are local, so we measure and label them by region rather than pretending a single national number tells the whole story — and we say plainly how much of the country a figure covers.</p>
-  <p><a href="/sectors/" class="u-btn u-btn--ink">All fifteen sectors</a></p>
-</section>
+<details class="mdrawer" data-screen-label="Methodology drawer">
+  <summary>Methodology — how The Receipts work <span class="plus">+</span></summary>
+  <div class="mdrawer-body">
+    <div>
+      <h3>The rules</h3>
+      <p>Every number has a source. Every source has a date. Every model states its assumptions. Where a claim cannot be sourced, it is labeled an estimate, scenario, or hypothesis — never presented as fact.</p>
+      <ul>
+        <li>Sources carry license, reuse status, and region coverage.</li>
+        <li>Figures show visible &ldquo;last updated&rdquo; dates and a refresh cadence.</li>
+        <li>Every correction is logged publicly.</li>
+        <li>Negative results are published with the same prominence as wins.</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Confidence labels</h3>
+      <div class="u-37">
+        <span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span>
+        <span class="rcpt-conf rcpt-conf--estimate">Estimate</span>
+        <span class="rcpt-conf rcpt-conf--scenario">Scenario</span>
+        <span class="rcpt-conf rcpt-conf--needs-refresh">Needs refresh</span>
+      </div>
+      <p>Derived figures — calculated from two or more sources — display every contributing source, never a single badge.</p>
+      <p>Full methodology, the source register, and the corrections log: <a class="u-1" href="/receipts/">The Receipts</a></p>
+    </div>
+  </div>
+</details>
 
-<section class="blk">
-  <p class="eyebrow">Planned flagship</p>
-  <p><span class="status status--planned">Planned</span></p>
-  <h2 class="sec">The Human Essentials Dashboard.</h2>
-  <p>The flagship is a regional, source-led picture of what one human needs and what those needs cost — carrying its history from day one, so anyone can see whether costs actually fall over time. It is designed, not built: when it ships, every figure in it will carry a source, a date, a region, and a confidence label, exactly like the numbers above.</p>
-  <p><a href="/projects/human-essentials-dashboard/">See the project brief →</a></p>
-</section>
-
-<section class="blk blk--ink">
-  <p class="eyebrow">Methodology</p>
-  <h2 class="sec">How the receipts work.</h2>
-  <p class="lead">Every number has a source. Every source has a date. Every model states its assumptions. Where a claim cannot be sourced, it is labeled an estimate, scenario, or hypothesis — never presented as fact.</p>
-  <h3>The rules</h3>
-  <ul>
-    <li>Sources carry license, reuse status, and region coverage.</li>
-    <li>Figures show visible &ldquo;last updated&rdquo; dates and a refresh cadence.</li>
-    <li>Every correction is logged publicly.</li>
-    <li>Negative results are published with the same prominence as wins.</li>
-  </ul>
-  <h3>Confidence labels</h3>
-  <p>Confirmed · Estimate · Scenario · Needs refresh. Derived figures — calculated from two or more sources — display every contributing source, never a single badge.</p>
-  <p><a href="/receipts" class="u-btn u-btn--outline-cream">The full methodology, source register, and corrections log</a></p>
-</section>
-
-<section class="blk blk--ink">
-  <h2 class="sec">Evidence first. Tools next.</h2>
-  <p>The Case feeds The Projects — open tools that turn the evidence into something a community can actually run. The Human Essentials Dashboard presents the picture; the Cost-of-Living Tracker and Basic Needs Cost Model feed it. Every one is a public draft, not a shipped product.</p>
-  <div class="cta-actions">
-    <a href="/receipts" class="u-btn u-btn--primary">See The Receipts</a>
+<!-- SECTION: case.Case CTA -->
+<section class="blk blk--ink u-block--ink" data-screen-label="Case CTA">
+  <h2 class="u-38 sec">Evidence first. <span class="u-1">Tools next.</span></h2>
+  <p class="u-39 lead">The question is no longer whether humanity can produce enough. The question is why living is not getting cheaper &mdash; and who is going to do something about it.</p>
+  <p class="u-39 lead">The Case feeds The Projects: the Cost-of-Living Tracker supplies the data, the Basic Needs Cost Model tests scenarios, and the Human Essentials Dashboard presents both — openly, with receipts.</p>
+  <div class="u-40">
+    <a href="/receipts/" class="u-btn u-btn--primary">See The Receipts</a>
     <a href="/projects/" class="u-btn u-btn--outline-cream">The Projects</a>
   </div>
 </section>

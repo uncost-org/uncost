@@ -1,14 +1,26 @@
 ---
 layout: layouts/base.njk
-title: "Share"
-description: "Share a Stat — a planned Movement tool for reposting sourced cost-of-living facts — is not yet built."
-noindex: true
+permalink: "/share/"
+pageId: "later-share"
+title: "Share a Stat"
+description: "Planned — ready-made sourced graphics"
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
-<section class="blk blk--first">
-  <p class="eyebrow">Planned tool · The Movement</p>
-  <h1 class="sec">Share.</h1>
-  <p class="lead">A planned Movement tool: ready-made, sourced cost-of-living facts as graphics and short videos you can repost to your own networks — spreading the message for free. Every stat will link back to its source; nothing goes out without receipts.</p>
-  <p>This route is planned and not yet built for launch.</p>
-  {{ gap("share-later", "planned; not built for launch") }}
-</section>
+{#- Markup taken verbatim from design-source/pages/later/share.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: later/share.Share — title -->
+<div class="titleband" data-screen-label="Share — title"><h1>Share a <span class="u-1">Stat</span></h1></div>
+<div class="sys">
+  <!-- SECTION: later/share.Share -->
+  <div class="card" data-screen-label="Share">
+    <div class="cap"><span class="status status--planned">Planned</span></div>
+    <div class="bd">
+      <div class="eq">Planned tool · The Movement</div>
+      <h2>Share a Stat is on the way.</h2>
+      <p>Ready-made, sourced cost-of-living facts as graphics and short videos you can repost to your own networks — spreading the message for free.</p>
+      <p>Every stat will link back to its source. Nothing goes out without receipts.</p>
+      <div class="whenrow"><b>When</b><span>At launch — content engine goes live</span></div>
+      <div class="actions"><a href="/pledge/" class="u-btn u-btn--primary">Sign the Pledge</a><a href="/news/" class="u-btn u-btn--ghost">News &amp; Cost Watch</a></div>
+    </div>
+  </div>
+</div>

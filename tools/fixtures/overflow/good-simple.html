@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GOOD — ordinary responsive page</title>
+<link rel="stylesheet" href="./base.css">
+<style>
+  .row { display: flex; flex-wrap: wrap; gap: 12px; }
+  .row > .card { flex: 1 1 240px; min-width: 0; }
+  .long { overflow-wrap: anywhere; }
+</style>
+</head><body>
+<div class="wrap">
+  <h1>Ordinary page</h1>
+  <p>Fluid type, wrapping flex row, min-width:0 on the flex children.</p>
+  <div class="row">
+    <div class="card">Alpha</div><div class="card">Beta</div>
+    <div class="card">Gamma</div><div class="card">Delta</div>
+  </div>
+  <p class="long">urn:uncost:receipt:0000000000000000000000000000000000000000000000000000000000000000 — long, but allowed to break anywhere.</p>
+</div>
+</body></html>

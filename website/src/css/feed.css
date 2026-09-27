@@ -1,0 +1,20 @@
+/* V13. The browser view of the RSS feeds — the page /news/feed.xsl builds
+   when someone opens /news/feed.xml or /news/cost-watch/feed.xml in a browser.
+   Loaded after /css/tokens.css, which supplies the fonts, colours and base
+   type; every value here is one of its tokens. Linked only from that
+   transform, never from a site page. */
+.feed { max-width: 960px; margin: 0 auto; padding: var(--s-7) var(--block-pad-x); }
+.feed h1 { font-size: var(--fs-h1); line-height: var(--leading-tight); }
+.feed-head { padding-bottom: var(--s-6); border-bottom: var(--rule-w-bold) solid var(--rule); }
+.feed-desc { margin: var(--s-4) 0 0; }
+.feed-meta { margin: var(--s-2) 0 0; font-size: var(--fs-meta); line-height: var(--leading-meta); color: var(--fg-3); }
+.feed-meta a { color: var(--link); }
+.feed-sub { margin: var(--s-6) 0; padding: var(--s-5); background: var(--bg-alt); border: var(--rule-w) solid var(--rule); }
+.feed-sub h2 { margin-bottom: var(--s-2); font-family: var(--font-body); font-size: var(--fs-eyebrow); font-weight: 500; letter-spacing: var(--tracking-eyebrow); text-transform: uppercase; }
+.feed-sub p { margin: 0; }
+.feed-url { font-size: var(--fs-body-s); overflow-wrap: anywhere; user-select: all; }
+.feed-items { margin: 0; padding: 0; list-style: none; }
+.feed-item { padding: var(--s-5) 0; border-top: var(--rule-w) solid var(--rule); }
+.feed-item:first-child { border-top: 0; }
+.feed-item h2 { font-size: var(--fs-h4); }
+.feed-item p { margin: var(--s-2) 0 0; }

@@ -1,0 +1,57 @@
+{#-
+  Full-screen search overlay, from design-source/partials/search.html.
+
+  Site search is BUILT (features.searchEnabled). The index is compiled at build
+  time by src/search-index.11ty.js into /search-index.json and queried in the
+  browser by js/site-search.js — no backend, no form, no third-party service,
+  and no network work beyond one same-origin fetch of that static file.
+
+  Progressive enhancement, the same discipline as the register keyword filter
+  on /receipts/: the search box ships `hidden` and only js/site-search.js
+  reveals it. With JS off a reader never sees an input that does nothing.
+
+  THE OVERLAY IS A JS-ONLY CONTROL. `.search-ov` is `display:none` until
+  js/ui.js adds `open`, so with script off it could never appear — and the
+  shortcut links inside it, which the overlay's whole fallback story rested on,
+  were never rendered to anyone. tools/behaviour_checks.py measured exactly
+  that: "only 0 of 9 link blocks rendered". So:
+
+    - /search/ (src/search.njk) is a real page carrying the same destinations
+      as ordinary page markup, and the header control is now a real link to it
+      (partials/header.njk). With script off, the control navigates.
+    - This element ships the `search-ov--nojs` class and NO dialog semantics.
+      js/ui.js removes the class and adds role/aria-modal/aria-label, so the
+      thing is a dialog only where a dialog can actually open. With script off
+      it stays an ordinary in-flow block of the same destinations, which is
+      what makes those links rendered rather than merely present.
+    - CSS REQUIRED for that state (integration.css, not written here — stream
+      C16 does not own that file). Without it this element simply stays
+      `display:none` with script off, exactly as it is today:
+        .search-ov--nojs{position:static;display:block;background:none;z-index:auto;
+                         padding:0 clamp(24px,6vw,80px) clamp(56px,10vw,120px)}
+        .search-ov--nojs .so-top{display:none}
+      The second rule matters: `.so-top` holds the close button, and a close
+      button that cannot close anything is the dead control this whole change
+      exists to remove.
+
+  The Receipts destination is one of the same .so-links blocks rather than a
+  standalone u-btn, so the overlay presents one consistent row of destinations.
+
+  js/ui.js still owns open/close; site-search.js takes focus from the `open`
+  class ui.js sets, after ui.js's own focus() for that tick.
+
+  DESIGN: structure fixed. CONTENT: shortcuts from _data/chrome.json.
+-#}
+<div class="search-ov search-ov--nojs">
+  <div class="so-top">{% image "logos/logo-tight-light.png", "", "8rem", [160, 320], "lazy", "logo-44" %}<button class="drawer-x" type="button" aria-label="Close search" data-search-close>&#10005;</button></div>
+  {% if features.searchEnabled %}
+  <div class="so-search" data-search-box hidden>
+    <label for="site-search">Search uncost.org</label>
+    <input id="site-search" type="search" placeholder="Try &ldquo;shelter&rdquo; or &ldquo;pledge&rdquo;&hellip;" autocomplete="off" aria-describedby="site-search-status">
+    <p class="so-status" id="site-search-status" role="status" data-search-status></p>
+    <ul class="so-results" data-search-results></ul>
+  </div>
+  {% endif %}
+  <div class="so-links"><a href="/receipts/">Search the Receipts</a>{% for link in chrome.searchShortcuts %}<a href="{{ link.url }}">{{ link.label }}</a>{% endfor %}</div>
+</div>
+<script src="/js/site-search.js" defer></script>

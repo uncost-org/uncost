@@ -1,13 +1,26 @@
 ---
 layout: layouts/base.njk
+permalink: "/news/events/"
+pageId: "later-events"
 title: "Events"
-description: "Community events for the Uncost movement are planned and not yet built."
-noindex: true
+description: "Planned — community events and meetups"
 ---
-{% from "partials/content-needed.njk" import block as gap, inline as gapInline %}
-<section class="blk blk--first">
-  <p class="eyebrow">Events</p>
-  <h1 class="sec">Events</h1>
-  <p class="lead">This page is planned and not yet built. Once the community takes shape, meetups, talks, working sessions, and online gatherings will be listed here.</p>
-  {{ gap("events-later", "planned; not built for launch") }}
-</section>
+{#- Markup taken verbatim from design-source/pages/later/events.html. CONTENT.md marks this
+    page's copy "inline (draft)", so the export supplies both; only asset
+    references and routes are rewritten. Do not re-author. -#}
+<!-- SECTION: later/events.Events — title -->
+<div class="titleband" data-screen-label="Events — title"><h1>Events</h1></div>
+<div class="sys">
+  <!-- SECTION: later/events.Events -->
+  <div class="card" data-screen-label="Events">
+    <div class="cap"><span class="status status--planned">Planned</span></div>
+    <div class="bd">
+      <div class="eq">Planned page</div>
+      <h2>Events are on the way.</h2>
+      <p>Once the community takes shape, this is where we&rsquo;ll list meetups, talks, working sessions, and online gatherings — in the open, and free to join.</p>
+      <p>Nothing to show yet: we&rsquo;re building the movement first.</p>
+      <div class="whenrow"><b>When</b><span>Months 7–9 — as the community grows</span></div>
+      <div class="actions"><a href="/pledge/" class="u-btn u-btn--primary">Sign the Pledge</a><a href="/join/" class="u-btn u-btn--ghost">Take Part</a></div>
+    </div>
+  </div>
+</div>
