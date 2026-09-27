@@ -24,7 +24,8 @@ const CONTENT = {
       h2: "The picture, region by region.",
       intro: "The Dashboard is the presentation layer: what one adult needs, what it costs where you live, and whether that cost is moving \u2014 every figure with its receipt.",
     },
-    publicSummary: "The public, regional picture of what one human needs and what those needs cost — the flagship of The Case.",
+    // W20 — the subline (Batch X, 2026-09-27), founder-approved.
+    publicSummary: "What one person needs, region by region — and what it costs.",
     atAGlance: {
       targets: "The essentials basket for one adult, region by region, honestly mapped to the fifteen sectors — with three of them (Environment, Safety, Materials) treated as cost <em>drivers</em> layered across the basket, not basket line-items themselves.",
       mechanism: "Presents the Cost-of-Living Tracker’s sourced price data and the Basic Needs Cost Model’s scenarios in one public view, with a plain coverage banner (“data available for N of M regions” — N is whatever is real) instead of a false single national number.",
