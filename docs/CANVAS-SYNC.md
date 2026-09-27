@@ -1,5 +1,7 @@
 # Canvas sync — approved changes the export has not made yet
 
+PR #50 was squash-merged as 949f80c; SHAs below resolve via tag archive/design-v2-integration.
+
 Changes the founder approved and this repository implements, which the design
 canvas has **not** made. Each one therefore diverges from the export on purpose,
 so each carries a named exemption in `tools/render_gate.py` (with the same
