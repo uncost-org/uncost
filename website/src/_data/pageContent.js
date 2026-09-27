@@ -75,6 +75,14 @@ module.exports = {
     },
   },
 
+  // /sectors/ — founder-approved (Batch X, 2026-09-27).
+  sectors: {
+    intro: {
+      // W9 — the headline (V18's string, now in the content layer).
+      h2: 'Basic human needs break into <span class="u-1">fifteen sectors</span> &mdash; and we have a plan to reduce the cost of each.',
+    },
+  },
+
   // /news/ — W5 (Batch X, 2026-09-27), founder-approved introband headline.
   news: {
     intro: { h2: 'What we&rsquo;ve done, and <span class="u-1">what&rsquo;s next</span>.' },
