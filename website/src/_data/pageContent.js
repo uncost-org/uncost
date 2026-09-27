@@ -30,8 +30,9 @@ module.exports = {
     whatThisIs: {
       h2: 'Technology should make living cheaper, <span class="hl">not billionaires richer</span>.',
       lead: 'A nonprofit, nonpartisan movement that treats the cost of living as a problem to be measured and solved &mdash; not endured.',
+      // W1 (Batch X, 2026-09-27), founder-approved — "Why we exist".
       body: [
-        'Uncost exists because life keeps getting more expensive while the technology to make it cheaper keeps getting better. We&rsquo;re the people who think that gap is worth closing on purpose &mdash; with evidence, with AI and robotics pointed at real costs instead of just used to describe them, and with everything we produce given away, free, for anyone to check or copy. The Movement is what it looks like when enough people agree that&rsquo;s worth doing, and say so.',
+        'Life keeps getting more expensive. Technology that can lower costs keeps getting better. We&rsquo;re working to close that gap: AI- and robotics-based projects and research aimed at real costs, with all our findings published free.',
       ],
     },
     whatWeStandFor: {
