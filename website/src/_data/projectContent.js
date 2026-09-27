@@ -21,7 +21,8 @@ const CONTENT = {
     // P6-copy: founder-approved opener for the "At a glance" section.
     opener: {
       eyebrow: "What you\u2019ll see",
-      h2: "The picture, region by region.",
+      // W21 (Batch X, 2026-09-27), founder-approved.
+      h2: 'The cost of living, per person, <span class="u-1">region by region</span>.',
       intro: "The Dashboard is the presentation layer: what one adult needs, what it costs where you live, and whether that cost is moving \u2014 every figure with its receipt.",
     },
     // W20 — the subline (Batch X, 2026-09-27), founder-approved.
