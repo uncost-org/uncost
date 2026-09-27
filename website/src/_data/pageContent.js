@@ -127,6 +127,8 @@ module.exports = {
   roadmap: {
     // W35 — the eyebrow V25 left empty on "How to read these dates".
     dates: { eyebrow: 'Reading the roadmap' },
+    // W36 — "The longer horizon" headline (V21's accent, now in the content layer).
+    horizon: { h2: 'Only when the evidence and safety are <span class="u-1">ready</span>.' },
   },
 
   // /about/ — founder-approved (Batch X, 2026-09-27).

@@ -405,9 +405,11 @@ patch("website/src/treasury.njk", r'before a single dollar moves\.</h2>',
 patch("website/src/treasury.njk", r'Want to help before donations open\?</h2>',
       'Want to <span class="u-1">help</span> before donations open?</h2>',
       "V21 treasury accent: help", guard='Want to <span class="u-1">help</span>')
-patch("website/src/roadmap.njk", r'evidence and safety are ready\.</h2>',
-      'evidence and safety are <span class="u-1">ready</span>.</h2>',
-      "V21 roadmap accent: ready", guard='are <span class="u-1">ready</span>.')
+# W36 (Batch X) supersedes V21's roadmap accent: the headline reads the content
+# layer (pageContent.roadmap.horizon.h2) whatever the export writes in it.
+patch("website/src/roadmap.njk", r'(<div class="[^"]*eyebrow">The longer horizon</div>\s*<h2 class="[^"]*">).*?(</h2>)',
+      r'\1{{ pageContent.roadmap.horizon.h2 | safe }}\2',
+      "W36 roadmap horizon headline reads pageContent", guard="{{ pageContent.roadmap.horizon.h2 | safe }}")
 # (V21's about underlines are superseded by W34: the box headings now read
 #  from the content layer, restated at the end of this file.)
 
