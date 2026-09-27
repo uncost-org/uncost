@@ -123,6 +123,12 @@ module.exports = {
     xref: 'For Uncost&rsquo;s own updates, see <a href="/news/">Uncost.org News</a>.',
   },
 
+  // /roadmap/ — founder-approved (Batch X, 2026-09-27).
+  roadmap: {
+    // W35 — the eyebrow V25 left empty on "How to read these dates".
+    dates: { eyebrow: 'Reading the roadmap' },
+  },
+
   // /about/ — founder-approved (Batch X, 2026-09-27).
   about: {
     // X3 — three headlines. "What [Uncost] is — and is not." is ink with only

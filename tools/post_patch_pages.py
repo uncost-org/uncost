@@ -653,4 +653,12 @@ for sel, ref in ((r'(data-screen-label="Is / is not">.*?<h2 class="[^"]*">).*?(<
                  (r'(data-screen-label="Your say">.*?<h2 class="[^"]*">).*?(</h2>)', "{{ pageContent.about.yourSayH2 | safe }}")):
     patch("website/src/about.njk", sel, r"\1" + ref + r"\2", f"X3 about headline -> {ref}", guard=ref)
 
+# W35 (Batch X, 2026-09-27) — /roadmap/ "How to read these dates" takes its
+# eyebrow (pageContent.roadmap.dates.eyebrow) above V25's headline.
+# roadmap.njk is re-derived.
+patch("website/src/roadmap.njk",
+      r'(<section class="blk blk--wheat" data-screen-label="Disclaimer">\n(?:  \{#-.*?-#\}\n)?)(  <h2 class="sec">How to read these dates</h2>)',
+      r'\1  <div class="eyebrow">{{ pageContent.roadmap.dates.eyebrow }}</div>\n\2',
+      "W35 roadmap dates band eyebrow", guard="{{ pageContent.roadmap.dates.eyebrow }}")
+
 print("done")
