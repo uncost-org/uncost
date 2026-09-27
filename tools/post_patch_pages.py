@@ -366,10 +366,12 @@ if "Planned tool</span>" in pathlib.Path("website/src/assembly.njk").read_text(e
           "V22 assembly look-ahead drops the Planned tool chip")
 else:
     print("  = V22 assembly look-ahead drops the Planned tool chip (already applied)")
+# X.1 item 3: the button's words come from the content layer
+# (pageContent.assembly.howItWorks, "How The Assembly works").
 patch("website/src/assembly.njk",
-      r'(<a href=")[^"]*(" class="u-btn u-btn--ink">)View the illustrative mock(</a>)',
-      r'\1/assembly/\2How the Assembly works\3',
-      "V22 assembly look-ahead button", guard="How the Assembly works</a>")
+      r'(<a href=")[^"]*(" class="u-btn u-btn--ink">)(?:View the illustrative mock|How the Assembly works)(</a>)',
+      r'\1/assembly/\2{{ pageContent.assembly.howItWorks }}\3',
+      "V22 assembly look-ahead button", guard="{{ pageContent.assembly.howItWorks }}</a>")
 
 # V24 (Batch V, 2026-09-26) — /contribute/ "Useful roles, right now." gains a
 # "Volunteer now" button to /contact/, after the section's closing note.
@@ -711,5 +713,13 @@ patch("website/src/contribute.njk", r'(<h2 class="u-42 sec">).*?(</h2>)',
 patch("website/src/contact.njk", r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>).*?(</h2>)',
       r'\1{{ pageContent.contact.intro.h2 | safe }}\2',
       "X16 contact intro headline reads pageContent", guard="{{ pageContent.contact.intro.h2 | safe }}")
+
+# X.1 item 3 (2026-09-28) — the /sectors/ CTA's Assembly button reads the same
+# content-layer string as the nav and the /assembly/ button. sectors/index.njk
+# is re-derived.
+patch("website/src/sectors/index.njk",
+      r'(<a href="/assembly/" class="u-btn u-btn--ghost">)How the Assembly works(</a>)',
+      r'\1{{ pageContent.assembly.howItWorks }}\2',
+      "X.1 sectors CTA: How The Assembly works", guard="{{ pageContent.assembly.howItWorks }}")
 
 print("done")

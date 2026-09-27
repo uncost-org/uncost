@@ -125,6 +125,9 @@ module.exports = {
 
   // /assembly/ — X15 (Batch X, 2026-09-27), founder-approved headlines.
   assembly: {
+    // X.1 item 3 (founder, 28 Sep): X15's wording everywhere — the nav, the
+    // /assembly/ button (V22) and the /sectors/ CTA all read this.
+    howItWorks: 'How The Assembly works',
     canCannot: { h2: 'What the Assembly can &mdash; and cannot &mdash; <span class="u-1">decide</span>.' },
     lookAhead: { h2: 'What <span class="u-1">The Assembly</span> could look like.' },
   },
