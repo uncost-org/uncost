@@ -26,10 +26,13 @@ const LABELS = {
     definition: "A modelled “what if” — a possible outcome under specific conditions, not a prediction." },
   "Needs refresh": { chip: "rcpt-conf rcpt-conf--needs-refresh",
     definition: "The underlying source is past its review date. Treat with caution until updated." },
-  "Focus": { chip: "status status--focus", definition: null },
-  "Next": { chip: "status s-next", definition: null },
-  "Dossier": { chip: "status s-dossier", definition: null },
-  "Future study": { chip: "status s-future", definition: null },
+  // Interim, pending W40: the meanings the /sectors/ status key printed beside
+  // each chip until X9 retired the strip into this drawer — moved verbatim
+  // except the capital, so the page keeps what each status means.
+  "Focus": { chip: "status status--focus", definition: "Building now" },
+  "Next": { chip: "status s-next", definition: "Next wave" },
+  "Dossier": { chip: "status s-dossier", definition: "Research scaffold" },
+  "Future study": { chip: "status s-future", definition: "High-safety, studied cautiously" },
   "Draft": { chip: "status status--dev", definition: null },
   "Draft — not in force": { chip: "status status--dev", definition: null },
   "Public review drafts": { chip: "status status--planned", definition: null },

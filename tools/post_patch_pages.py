@@ -479,13 +479,7 @@ patch("website/src/sectors/sector.njk",
       r'  <h2>\{\{ wx\.scenario \}\}</h2>\n',
       V19_SCENARIO,
       "V19 sector 03 scenario phrase accent", guard="{%- set sp = wx.scenario.split(\": \") %}")
-patch("website/src/sectors/index.njk",
-      r'(<div class="legend" data-screen-label="Legend">\n  <span>Status:</span>\n)'
-      r'((?:  <span class="status [^"]+">[^<]+</span> <span class="u-138">[^<]+</span>\n){4})',
-      lambda m: m.group(1) + re.sub(
-          r'  (<span class="status [^"]+">[^<]+</span>) (<span class="u-138">[^<]+</span>)\n',
-          r'  <span class="lg-pair">\1<span class="lg-colon">:</span>\2</span>\n', m.group(2)),
-      "V19 /sectors/ legend: chip, colon, meaning", guard='<span class="lg-pair">')
+# (The V19 /sectors/ legend patch is retired: X9 removes the strip; see below.)
 
 # V11 (Batch V, 2026-09-26) — the labels drawer. The standalone "Four honest
 # labels" section on /receipts/ is retired into it, and the drawer partial is
@@ -584,5 +578,22 @@ patch("website/src/sectors/index.njk",
       r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\s*)<p>.*?</p>',
       r'\1<p>{{ pageContent.sectors.intro.lead | safe }}</p>',
       "W10 sectors intro reads pageContent", guard="{{ pageContent.sectors.intro.lead | safe }}")
+
+# X9 (Batch X, 2026-09-27) — /sectors/: the introband keeps only its headline;
+# the intro moves into a wheat band directly above the cards, replacing the
+# status key strip (now the drawer below the grid). sectors/index.njk is
+# re-derived; both steps are guarded by absence.
+_sec = pathlib.Path("website/src/sectors/index.njk").read_text(encoding="utf-8")
+if 'class="sintro"' not in _sec and 'blk--wheat sintro' not in _sec:
+    patch("website/src/sectors/index.njk",
+          r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\n)(?:  <p>.*?</p>\n)+',
+          r'\1', "X9 sectors: introband keeps only the headline")
+    patch("website/src/sectors/index.njk",
+          r'(?:<!-- SECTION: sectors\.Legend -->\n)?<div class="legend"[^>]*>.*?\n</div>\n',
+          '<!-- SECTION: sectors.Intro -->\n<section class="blk blk--wheat sintro" data-screen-label="Intro">\n'
+          '  <p class="lead">{{ pageContent.sectors.intro.lead | safe }}</p>\n</section>\n',
+          "X9 sectors: the intro takes the wheat band above the cards")
+else:
+    print("  = X9 sectors: intro in the wheat band, key strip retired (already applied)")
 
 print("done")

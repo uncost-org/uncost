@@ -2574,6 +2574,8 @@ body[data-page="news"] .cwlist > .cw:hover + .readmore { background: var(--wheat
 body[data-page="news"] .cwlist > .cw[hidden] + .readmore { display: none; }
 
 /* 115. V19 — sector pages (×15) and the /sectors/ status legend.
+ *      (The legend rules below match nothing since X9 retired the strip into
+ *      the drawer; kept as the record of V19.)
  *        01   "bite" takes the accent in "Where automation could bite — and
  *             what stays visible." (template; on ink, so the ink-band accent
  *             rule above paints it --coral).
@@ -2798,3 +2800,15 @@ body[data-page="news"] .newsxref {
 }
 body[data-page="news"] .newsxref p { font-style: italic; }
 body[data-page="news"] .newsxref a { font-style: normal; }
+
+/* 122. X9 — /sectors/: the introband keeps only the headline; the intro (W10)
+ *      moves into the WHEAT band directly above the fifteen cards, where the
+ *      status key strip was; the strip becomes the drawer below the grid.
+ *      The paragraph is the band's lead, set at 20px, which is what lets the
+ *      fifteen bold sector names keep their accent on wheat: bold at 20px is
+ *      large text (3:1), and --coral-deep on --wheat is 3.25:1. At the old
+ *      18px they would have needed 4.5:1. */
+body[data-page="sectors"] .sintro .lead { font-size: 20px; }
+/* Item 69 sends small bold text on wheat to ink at (0,2,0) !important; at
+ * 20px these names are large text, so the accent is restated above it. */
+body[data-page="sectors"] .sintro .lead b { color: var(--coral-deep) !important; }
