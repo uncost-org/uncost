@@ -123,6 +123,14 @@ module.exports = {
     xref: 'For Uncost&rsquo;s own updates, see <a href="/news/">Uncost.org News</a>.',
   },
 
+  // /about/ — founder-approved (Batch X, 2026-09-27).
+  about: {
+    yourSay: {
+      // W33 — replaces the three Assembly / privacy / principles paragraphs.
+      lead: 'Supporters aren&rsquo;t an audience. The Assembly gives every supporter a recorded voice to propose, prioritise, or object. One person, one vote, no payment or donation buying extra weight. We never sell, rent or trade your data, and never use it for partisan targeting. Receipts first, open wherever rights and safety allow, and nonpartisan &mdash; we critique systems, never candidates or parties.',
+    },
+  },
+
   // /receipts/ — X8 (Batch X, 2026-09-27), founder-approved headlines; the
   // accent span carries the emphasis, the band's accent rule its colour.
   receipts: {

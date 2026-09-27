@@ -628,4 +628,12 @@ patch("website/src/index.njk", r'<span class="status status--dev">In build</span
       '<span class="status status--dev">Draft</span>', "X13 homepage: Open projects chip reads Draft",
       guard='<h3>{{ home.s4.a.title | safe }}</h3><span class="status status--dev">Draft</span>')
 
+# W33 (Batch X, 2026-09-27) — /about/ "Your say": the three Assembly /
+# privacy / principles paragraphs become the one approved paragraph, from the
+# content layer (pageContent.about.yourSay.lead). about.njk is re-derived.
+patch("website/src/about.njk",
+      r'(data-screen-label="Your say">.*?<h2 class="[^"]*">.*?</h2>\n)(?:  <p class="[^"]*lead">.*?</p>\n)+',
+      r'\1  <p class="u-10 lead">{{ pageContent.about.yourSay.lead | safe }}</p>\n',
+      "W33 about Your say reads pageContent", guard="{{ pageContent.about.yourSay.lead | safe }}")
+
 print("done")
