@@ -51,7 +51,8 @@ const CONTENT = {
       h2: "The data underneath.",
       intro: "The Tracker is the data layer: sourced, dated, licensed prices, refreshed on a published schedule. The Dashboard reads from it.",
     },
-    publicSummary: "The sourced, dated price data that everything else in The Case stands on.",
+    // W27 — the subline (Batch X, 2026-09-27), founder-approved.
+    publicSummary: "The data showing how each sector’s costs have moved over time.",
     atAGlance: {
       targets: "A disciplined register of prices and their sources. It has no public page of its own — its product is trustworthy data, not a dashboard.",
       mechanism: "Official-statistics-first sourcing: national statistical agencies and regulators first, licensed commercial indices only where irreplaceable. Every source is logged with its licence, region coverage, and refresh cadence, and auto-flags “needs refresh” once it goes stale.",
