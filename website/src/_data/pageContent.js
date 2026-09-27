@@ -82,7 +82,8 @@ module.exports = {
     },
     mechanism: {
       eyebrow: 'The mechanism',
-      h2: 'The technology that could make living cheaper is <span class="hl">instead making ownership more valuable</span>.',
+      // W7 (Batch X, 2026-09-27), founder-approved.
+      h2: 'Technology that could cut the cost of living for all is <span class="hl">making its owners wealthier instead</span>.',
       lead: 'Automation is extraordinarily effective at cutting the cost of producing things &mdash; that&rsquo;s not in dispute. The question is who receives the benefit when it does. When a company automates, its costs fall and its value rises, and that value accrues to whoever owns the company. Ownership itself is concentrated: the bottom half of American households collectively hold about 1% of the stocks and funds owned outside retirement accounts. The wealthiest 1% hold about half. On the broader measure &mdash; total household net worth &mdash; the top 1% still hold roughly thirty per cent.',
       // The two figures between lead and close are rendered FROM the register
       // by the template (SRC-020, SRC-024). They are citations, not copy, and
