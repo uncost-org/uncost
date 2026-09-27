@@ -75,6 +75,14 @@ const CONTENT = {
   "PRJ-004": {
     // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
     // null renders nothing.
+    // W16 (Batch X) proposed "What it simulates" / "What a community could [run
+    // for itself]." / "…test shared resources — a greenhouse, a tool library, a
+    // microgrid — against its own costs before anyone spends a dollar." LEFT
+    // EMPTY: it names a greenhouse and a microgrid, which the dossier does not
+    // (its summary names shared solar, a tool library and community growing;
+    // "greenhouse" and "microgrid" appear nowhere in it), and the dossier frames
+    // the Simulator as decision support that compares options, not as something a
+    // community runs.
     opener: { eyebrow: null, h2: null, intro: null },
     publicSummary: "A decision-support comparison for a community that already exists, weighing real intervention options side by side.",
     atAGlance: {
@@ -90,6 +98,11 @@ const CONTENT = {
   "PRJ-005": {
     // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
     // null renders nothing.
+    // W17 (Batch X) proposed "What it packages" / "Own less, [borrow more]." / "A
+    // ready-to-run kit … — the inventory, the rules, the software — …" LEFT EMPTY:
+    // the dossier says the kit "is not inventory" and lists "custom software
+    // builds" as explicitly cut; its summary names liability, insurance, safety
+    // checklists, governance and economics.
     opener: { eyebrow: null, h2: null, intro: null },
     publicSummary: "Documentation and templates for launching a shared-tool library — liability and safety first, because that’s where these projects usually die.",
     atAGlance: {
@@ -105,6 +118,12 @@ const CONTENT = {
   "PRJ-006": {
     // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
     // null renders nothing.
+    // W18 (Batch X) proposed "What it studies" / "Where the savings [actually
+    // go]." / "…who captures the gains when automation cuts a cost — and where
+    // those gains could be routed back to the cost of living." LEFT EMPTY: "routed
+    // back" is a redistribution claim; the dossier says the study "is not advocacy
+    // for any redistribution policy" and cuts policy recommendations from report
+    // one.
     opener: { eyebrow: null, h2: null, intro: null },
     publicSummary: "A nonpartisan, pre-registered study of where automation’s gains actually go — and the conditions under which they’ve reached consumer prices.",
     atAGlance: {
@@ -120,6 +139,12 @@ const CONTENT = {
   "PRJ-007": {
     // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
     // null renders nothing.
+    // W19 (Batch X) proposed "What it plans" / "A plan for one household, [one
+    // region]." / "The Planner turns the Model and the Tracker into a practical
+    // plan for a household or a community …" LEFT EMPTY: the dossier is about a
+    // group planning a community site or initiative, never a household, does not
+    // name the Model or the Tracker as inputs, and produces a draft for
+    // professional review ("It drafts; it never certifies"), not a practical plan.
     opener: { eyebrow: null, h2: null, intro: null },
     publicSummary: "A requirements-drafting assistant for a proposed site or initiative that doesn’t exist yet — every output a draft for professional review, never an approval.",
     atAGlance: {
