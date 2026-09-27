@@ -101,6 +101,28 @@ function collapse(text) {
   return text.replace(/\s+/g, " ").trim();
 }
 
+// X17 (Batch X, 2026-09-27) — every record is tagged with the site section it
+// belongs to, so the overlay's scope filters (_data/searchScopes.json) can
+// narrow a query to one part of the site. Derived from the record's own URL at
+// build — one rule, no second list: a register figure lives on /receipts/, so
+// it is "receipts" like the page itself. Anything outside the six named
+// sections is "other", reachable only under "All of the site".
+const SECTIONS = [
+  ["/receipts/", "receipts"],
+  ["/sectors/", "sectors"],
+  ["/projects/", "projects"],
+  ["/policies/", "policies"],
+  ["/case/", "case"],
+  ["/news/", "news"],          // /news/ and everything under it, Cost Watch included
+];
+
+function sectionOf(url) {
+  for (const [prefix, key] of SECTIONS) {
+    if (url.startsWith(prefix)) return key;
+  }
+  return "other";
+}
+
 function headingsOf(html) {
   const found = [];
   const re = /<h([1-6])\b[^>]*>([\s\S]*?)<\/h\1>/gi;
@@ -140,6 +162,7 @@ module.exports = class {
       docs.push({
         t: String((item.data && item.data.title) || "").trim(),
         r: url,
+        s: sectionOf(url),
         h: headingsOf(body),
         b: toText(body),
       });
@@ -155,6 +178,7 @@ module.exports = class {
       t: collapse(String(row.display_caption || "")),
       p: collapse(String(row.publisher || "")),
       r: REGISTER_ROUTE + (row.source_id ? "#" + row.source_id : REGISTER_FALLBACK_HASH),
+      s: sectionOf(REGISTER_ROUTE),
       m: collapse([row.data_period, row.region].filter(Boolean).join(" · ")),
       id: String(row.source_id || ""),
     }));

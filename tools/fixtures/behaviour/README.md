@@ -10,3 +10,8 @@ The control carries the `hidden` ATTRIBUTE and still renders, because
 that reads `el.hidden` calls this page clean; this repository shipped
 exactly that bug (CANVAS-SYNC 66). The tool must assert on
 `offsetParent` and FAIL here.
+
+The `*-search-*` fixtures (X17) are a minimal search overlay with
+scope filters. `bad-search-links-beside-scopes.html` is the same trap
+again: the destination row is hidden on `.so-links`, whose class sets
+`display:flex`, so it keeps rendering beside the filters.

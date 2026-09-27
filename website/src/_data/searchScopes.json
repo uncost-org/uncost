@@ -1,0 +1,9 @@
+[
+  { "key": "all", "label": "All of the site" },
+  { "key": "receipts", "label": "The Receipts" },
+  { "key": "sectors", "label": "Sectors" },
+  { "key": "projects", "label": "Projects" },
+  { "key": "policies", "label": "Policies" },
+  { "key": "case", "label": "The Case" },
+  { "key": "news", "label": "News & Cost Watch" }
+]

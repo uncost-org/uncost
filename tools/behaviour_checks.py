@@ -47,6 +47,12 @@ FIXTURES = ROOT / "tools" / "fixtures" / "behaviour"
 REGISTER_CARDS = 26
 SHOW_MORE_STEP = 12
 
+# X17 — the scope filters' labels, in order, from the same file the overlay
+# renders them from. The first is the default.
+SCOPES = [s["label"] for s in json.loads(
+    (WEBSITE / "src" / "_data" / "searchScopes.json").read_text(encoding="utf-8"))]
+SEARCH_QUERY = "food"   # hits sector pages AND pages outside Sectors today
+
 PROBE_JS = r"""
 const puppeteer = require(require.resolve("puppeteer", { paths: [process.argv[2]] }));
 const base = process.argv[3];
@@ -83,6 +89,20 @@ const jobs = JSON.parse(process.argv[4]);   // [{route, js, queries:{name:select
     }
     if (job.js && job.clickFirst) {
       try { await page.click(job.clickFirst); await new Promise(r => setTimeout(r, 250)); } catch (e) {}
+    }
+    // An ordered interaction script: open an overlay, type a query, press a
+    // control. A step that cannot run is skipped, never fatal — the
+    // measurement then shows what the reader is left with, and the assertions
+    // fail on that, which is the honest result.
+    if (job.js && job.steps) {
+      for (const st of job.steps) {
+        try {
+          if (st.click) await page.click(st.click);
+          if (st.type) await page.type(st.type[0], st.type[1]);
+          if (st.waitFor) await page.waitForSelector(st.waitFor, { visible: true, timeout: 5000 });
+        } catch (e) {}
+        await new Promise(r => setTimeout(r, 250));
+      }
     }
     const measured = await page.evaluate((queries) => {
       // RENDERED, not declared. offsetParent is null for display:none and for
@@ -123,6 +143,13 @@ const jobs = JSON.parse(process.argv[4]);   // [{route, js, queries:{name:select
           }).length,
           unreachable: els.filter((e) => rendered(e) && e.scrollHeight > e.clientHeight + 1 &&
             ![...document.querySelectorAll('[aria-controls="' + e.id + '"]')].some(rendered)).length,
+          // Visible text of every rendered match, in document order.
+          texts: els.filter(rendered).map((e) => e.textContent.replace(/\s+/g, " ").trim()),
+          // Visible text of rendered toggle buttons that are pressed.
+          pressed: els.filter((e) => rendered(e) && e.getAttribute("aria-pressed") === "true")
+            .map((e) => e.textContent.replace(/\s+/g, " ").trim()),
+          // data-section of every rendered match (search results carry it).
+          sections: els.filter(rendered).map((e) => e.getAttribute("data-section")),
         };
       }
       return res;
@@ -179,10 +206,28 @@ SITE_JOBS = [
                  "showmore": "[data-show-more]"}},
     {"name": "search-js-off", "route": "/", "js": False,
      "queries": {"links": ".search-ov .so-links a",
-                 "searchbox": ".search-ov [data-search-box]"}},
-    {"name": "search-js-on", "route": "/", "js": True,
+                 "searchbox": ".search-ov [data-search-box]",
+                 "scopes": ".search-ov [data-search-scope]"}},
+] + [
+    # X17 — scope filters. `-on` opens the overlay from the header control;
+    # `-query-all` types a query under the default scope; `-scope-sectors`
+    # then presses "Sectors". The query must hit both sectors and other
+    # sections under "All of the site", or the scope has nothing to prove.
+    {"name": name, "route": "/", "js": True, "steps": steps,
      "queries": {"links": ".search-ov .so-links a",
-                 "searchbox": ".search-ov [data-search-box]"}},
+                 "searchbox": ".search-ov [data-search-box]",
+                 "scopes": ".search-ov [data-search-scope]",
+                 "results": ".search-ov [data-search-results] > li"}}
+    for name, steps in (
+        ("search-js-on", [{"click": "[data-search]"}]),
+        ("search-js-query-all", [{"click": "[data-search]"},
+                                 {"type": ["#site-search", SEARCH_QUERY]},
+                                 {"waitFor": "[data-search-results] > li"}]),
+        ("search-js-scope-sectors", [{"click": "[data-search]"},
+                                     {"type": ["#site-search", SEARCH_QUERY]},
+                                     {"waitFor": "[data-search-results] > li"},
+                                     {"click": '[data-search-scope="sectors"]'}]),
+    )
 ] + [
     # V16 — three-line clamp with "Read more" (/js/read-more.js). /news/ is
     # measured at 1440, where two of its three updates run past three lines;
@@ -255,6 +300,81 @@ def check_read_more(key, off, on, opened, filtered, errors, results):
         js_on("FILTER", filtered)
 
 
+def check_search_off(m, errors, results):
+    """JS off: every destination link block renders; neither the search box
+    nor any scope filter does (they would be controls that cannot act)."""
+    l = m["links"]
+    results["search_js_off_links_rendered"] = l["rendered"]
+    if l["total"] == 0:
+        errors.append("SEARCH-JS-OFF: no .so-links anchors in the markup")
+    elif l["rendered"] != l["total"]:
+        errors.append(f"SEARCH-JS-OFF: only {l['rendered']} of {l['total']} link "
+                      f"blocks rendered; with JS off they are the whole feature")
+    b = m["searchbox"]
+    results["search_js_off_box_rendered"] = b["rendered"]
+    if b["rendered"] != 0:
+        errors.append("SEARCH-JS-OFF: the search input is RENDERED with JS off — "
+                      "a control that cannot do anything")
+    s = m.get("scopes")
+    if s is not None:
+        results["search_js_off_scopes_rendered"] = s["rendered"]
+        if s["rendered"] != 0:
+            errors.append(f"SEARCH-JS-OFF: {s['rendered']} scope filter(s) RENDERED with JS "
+                          f"off — buttons with no index behind them")
+
+
+def check_search_on(m, errors, results):
+    """JS on, overlay open: the scope filters replace the destination row —
+    all of them render, in order, exactly one is pressed and it is the
+    default — and the destination row does not."""
+    s = m["scopes"]
+    results["search_js_on_scopes_rendered"] = s["rendered"]
+    results["search_js_on_scope_pressed"] = s["pressed"]
+    if s["texts"] != SCOPES:
+        errors.append(f"SEARCH-JS-ON: scope filters render as {s['texts']}, expected {SCOPES}")
+    if s["pressed"] != SCOPES[:1]:
+        errors.append(f"SEARCH-JS-ON: pressed scope(s) {s['pressed']} on open, expected "
+                      f"exactly [{SCOPES[0]!r}]")
+    if m["searchbox"]["rendered"] < 1:
+        errors.append("SEARCH-JS-ON: the search box is not rendered in the open overlay")
+    l = m["links"]
+    results["search_js_on_links_rendered"] = l["rendered"]
+    if l["rendered"] != 0:
+        errors.append(f"SEARCH-JS-ON: {l['rendered']} destination link block(s) still render "
+                      f"beside the scope filters; with JS on the filters replace them")
+
+
+def check_search_scope(all_m, scoped_m, errors, results, scope_key="sectors",
+                       scope_label="Sectors"):
+    """A scope filters: the same query under the default scope hits the
+    chosen section AND others; pressed, the scope leaves only that section,
+    and fewer results than before."""
+    a = all_m["results"]
+    results["search_query_all_results"] = a["rendered"]
+    results["search_query_all_sections"] = sorted(set(a["sections"]))
+    if scope_key not in a["sections"] or not [x for x in a["sections"] if x != scope_key]:
+        errors.append(f"SEARCH-SCOPE: the query must hit {scope_key!r} and at least one other "
+                      f"section under the default scope to prove anything; it hit "
+                      f"{sorted(set(a['sections']))} ({a['rendered']} results)")
+        return
+    r = scoped_m["results"]
+    results[f"search_scope_{scope_key}_results"] = r["rendered"]
+    results[f"search_scope_{scope_key}_pressed"] = scoped_m["scopes"]["pressed"]
+    if scoped_m["scopes"]["pressed"] != [scope_label]:
+        errors.append(f"SEARCH-SCOPE: pressed scope(s) {scoped_m['scopes']['pressed']} after "
+                      f"pressing {scope_label!r}")
+    if r["rendered"] == 0:
+        errors.append(f"SEARCH-SCOPE: no results under {scope_label!r} for a query that hit "
+                      f"{a['sections'].count(scope_key)} {scope_key} record(s)")
+    stray = sorted({x for x in r["sections"] if x != scope_key})
+    if stray:
+        errors.append(f"SEARCH-SCOPE: {scope_label!r} still shows results from {stray} — the "
+                      f"scope does not filter")
+    if r["rendered"] >= a["rendered"]:
+        errors.append(f"SEARCH-SCOPE: {r['rendered']} results under {scope_label!r} against "
+                      f"{a['rendered']} under the default scope — nothing was narrowed")
+
+
 def check_site(payload, built: pathlib.Path):
     errors, results = [], {}
 
@@ -305,21 +425,23 @@ def check_site(payload, built: pathlib.Path):
             errors.append(f"RECEIPTS-JS-ON: {c['rendered']} cards rendered before any "
                           f"interaction; the control pages at {SHOW_MORE_STEP}")
 
-    # 3. Search overlay with JS off: link blocks render, the input does not.
+    # 3. Search overlay with JS off: link blocks render; the input and the
+    #    scope filters do not. The filters must exist in the markup, or "zero
+    #    rendered" proves nothing.
     m = need("search-js-off")
     if m:
-        l = m["links"]
-        results["search_js_off_links_rendered"] = l["rendered"]
-        if l["total"] == 0:
-            errors.append("SEARCH-JS-OFF: no .so-links anchors in the markup")
-        elif l["rendered"] != l["total"]:
-            errors.append(f"SEARCH-JS-OFF: only {l['rendered']} of {l['total']} link "
-                          f"blocks rendered; with JS off they are the whole feature")
-        b = m["searchbox"]
-        results["search_js_off_box_rendered"] = b["rendered"]
-        if b["rendered"] != 0:
-            errors.append("SEARCH-JS-OFF: the search input is RENDERED with JS off — "
-                          "a control that cannot do anything")
+        check_search_off(m, errors, results)
+        if m["scopes"]["total"] != len(SCOPES):
+            errors.append(f"SEARCH-JS-OFF: {m['scopes']['total']} scope filters in the markup, "
+                          f"expected {len(SCOPES)} — the check cannot see its subject")
+
+    # 3b. X17 — with JS on the destination buttons become scope filters.
+    m = need("search-js-on")
+    if m:
+        check_search_on(m, errors, results)
+    a, s = need("search-js-query-all"), need("search-js-scope-sectors")
+    if a and s:
+        check_search_scope(a, s, errors, results)
 
     # 4. V16 — Read more on both news routes.
     for key in ("news", "costwatch"):
@@ -437,8 +559,72 @@ BAD_FIVE_LINES = _READMORE_HTML.format(t="five lines", n=5, css="",
                                       js=CLAMP_JS % "p.scrollHeight > p.clientHeight + 1")
 
 
+# X17 fixtures — a minimal search overlay with scope filters, same hooks as
+# the site: a [data-search] opener, the box shipped `hidden`, scope buttons
+# inside it, results tagged data-section, the destination row in a class-less
+# [data-search-links] wrapper. Each bad variant breaks exactly one thing.
+def _search_fixture(title, scopes_outside_box=False, filters=True,
+                    hide="wrapper", default_pressed=True):
+    buttons = "".join(
+        f'<button type=button data-search-scope="{k}" aria-pressed="'
+        f'{"true" if (i == 0 and default_pressed) else "false"}">{label}</button>'
+        for i, (k, label) in enumerate(zip(
+            ["all", "receipts", "sectors", "projects", "policies", "case", "news"], SCOPES)))
+    scopes = f"<div class=so-scopes>{buttons}</div>"
+    hide_js = {
+        "wrapper": "ov.querySelector('[data-search-links]').hidden=true;",
+        # The cascade trap: `hidden` on an element whose class sets display.
+        "classed": "ov.querySelector('.so-links').hidden=true;",
+    }[hide]
+    return f"""<!doctype html><meta charset=utf-8><title>{title}</title>
+<style>.search-ov{{display:none;position:fixed;inset:0;background:#fff}}
+.search-ov.open{{display:block}} .search-ov--nojs{{position:static;display:block}}
+.so-links{{display:flex;gap:4px}}</style>
+<body><a href="/x/" data-search>Search</a>
+<div class="search-ov search-ov--nojs">
+<div class=so-search data-search-box hidden><input id=site-search>
+{"" if scopes_outside_box else scopes}<ul data-search-results></ul></div>
+{scopes if scopes_outside_box else ""}
+<div data-search-links><div class=so-links><a href="/a/">A</a><a href="/b/">B</a></div></div>
+</div>
+<script>
+var ov=document.querySelector('.search-ov'); ov.classList.remove('search-ov--nojs');
+var box=ov.querySelector('[data-search-box]'), inp=ov.querySelector('#site-search'),
+    list=ov.querySelector('[data-search-results]'), scope='all', FILTERS={str(filters).lower()};
+var DATA=[{{t:'Food sector',s:'sectors'}},{{t:'Food project',s:'projects'}},{{t:'Food case',s:'case'}}];
+function render(){{ list.textContent=''; var q=inp.value.trim().toLowerCase(); if(!q) return;
+  DATA.forEach(function(d){{ if(FILTERS && scope!=='all' && d.s!==scope) return;
+    if(d.t.toLowerCase().indexOf(q)<0) return;
+    var li=document.createElement('li'); li.setAttribute('data-section',d.s); li.textContent=d.t;
+    list.appendChild(li); }}); }}
+ov.querySelectorAll('[data-search-scope]').forEach(function(b){{ b.addEventListener('click',function(){{
+  scope=b.getAttribute('data-search-scope');
+  ov.querySelectorAll('[data-search-scope]').forEach(function(x){{ x.setAttribute('aria-pressed', x===b?'true':'false'); }});
+  render(); }}); }});
+inp.addEventListener('input',render);
+document.querySelector('[data-search]').addEventListener('click',function(e){{ e.preventDefault(); ov.classList.add('open'); }});
+box.hidden=false; {hide_js}
+</script></body>"""
+
+
+SEARCH_FIXTURES = {
+    "good-search-scopes.html": dict(title="good scopes"),
+    # Scope buttons outside the hidden box: they render with JS off.
+    "bad-search-scopes-without-js.html": dict(title="scopes without js", scopes_outside_box=True),
+    # Pressing a scope sets aria-pressed but does not narrow anything.
+    "bad-search-scope-does-not-filter.html": dict(title="scope does not filter", filters=False),
+    # The destination row is hidden on .so-links itself, whose class sets
+    # display:flex — the attribute is set and the row still renders.
+    "bad-search-links-beside-scopes.html": dict(title="links beside scopes", hide="classed"),
+    # No scope pressed on open.
+    "bad-search-no-default-scope.html": dict(title="no default scope", default_pressed=False),
+}
+
+
 def write_fixtures():
     FIXTURES.mkdir(parents=True, exist_ok=True)
+    for name, kw in SEARCH_FIXTURES.items():
+        (FIXTURES / name).write_text(_search_fixture(**kw), encoding="utf-8")
     for name, body in (
         ("good-js-off.html", GOOD_JS_OFF),
         ("bad-hidden-attr-beaten-by-specificity.html", BAD_HIDDEN_BEATEN),
@@ -462,7 +648,11 @@ def write_fixtures():
         "`[hidden]{display:none}` is (0,1,0) and a class rule beats it. A check\n"
         "that reads `el.hidden` calls this page clean; this repository shipped\n"
         "exactly that bug (CANVAS-SYNC 66). The tool must assert on\n"
-        "`offsetParent` and FAIL here.\n",
+        "`offsetParent` and FAIL here.\n\n"
+        "The `*-search-*` fixtures (X17) are a minimal search overlay with\n"
+        "scope filters. `bad-search-links-beside-scopes.html` is the same trap\n"
+        "again: the destination row is hidden on `.so-links`, whose class sets\n"
+        "`display:flex`, so it keeps rendering beside the filters.\n",
         encoding="utf-8",
     )
 
@@ -480,6 +670,56 @@ SELF_CASES = [   # (fixture, expected to pass, JS enabled)
     ("bad-read-more-dead-control.html", False, True),
     ("bad-read-more-five-lines.html", False, True),
 ]
+
+# X17 — search scope cases: (fixture, expected to pass, kind). "off" runs the
+# JS-off assertions; "on" opens the overlay; "scope" types a query, measures
+# it under the default scope, then presses Sectors and measures again.
+SEARCH_SELF_CASES = [
+    ("good-search-scopes.html", True, "off"),
+    ("good-search-scopes.html", True, "on"),
+    ("good-search-scopes.html", True, "scope"),
+    ("bad-search-scopes-without-js.html", False, "off"),
+    ("bad-search-scope-does-not-filter.html", False, "scope"),
+    ("bad-search-links-beside-scopes.html", False, "on"),
+    ("bad-search-no-default-scope.html", False, "on"),
+]
+SEARCH_QUERIES = {"links": ".search-ov .so-links a",
+                  "searchbox": ".search-ov [data-search-box]",
+                  "scopes": ".search-ov [data-search-scope]",
+                  "results": ".search-ov [data-search-results] > li"}
+
+
+def search_selftest_errors(name, kind, port):
+    """Run one X17 case through the same assertions the site gets."""
+    route = "/" + name
+    if kind == "off":
+        jobs = [{"name": "off", "route": route, "js": False, "queries": SEARCH_QUERIES}]
+    elif kind == "on":
+        jobs = [{"name": "on", "route": route, "js": True, "queries": SEARCH_QUERIES,
+                 "steps": [{"click": "[data-search]"}]}]
+    else:
+        typed = [{"click": "[data-search]"}, {"type": ["#site-search", SEARCH_QUERY]},
+                 {"waitFor": "[data-search-results] > li"}]
+        jobs = [{"name": "all", "route": route, "js": True, "queries": SEARCH_QUERIES,
+                 "steps": typed},
+                {"name": "scoped", "route": route, "js": True, "queries": SEARCH_QUERIES,
+                 "steps": typed + [{"click": '[data-search-scope="sectors"]'}]}]
+    payload = run_jobs(FIXTURES, jobs, port)
+    errors, by = [], {}
+    for p in payload:
+        if p.get("loadError"):
+            errors.append(p["loadError"])
+        else:
+            by[p["name"]] = p["measured"]
+    if errors:
+        return errors
+    if kind == "off":
+        check_search_off(by["off"], errors, {})
+    elif kind == "on":
+        check_search_on(by["on"], errors, {})
+    else:
+        check_search_scope(by["all"], by["scoped"], errors, {})
+    return errors
 
 
 def selftest(port: int) -> int:
@@ -526,7 +766,16 @@ def selftest(port: int) -> int:
                              "expected": "PASS" if should_pass else "FAIL",
                              "got": "PASS" if passed else "FAIL",
                              "sample": errors[:3]})
-    print(json.dumps({"ok": not failures, "selftest_cases": len(SELF_CASES),
+    for name, should_pass, kind in SEARCH_SELF_CASES:
+        errors = search_selftest_errors(name, kind, port)
+        passed = not errors
+        if passed != should_pass:
+            failures.append({"fixture": name, "kind": kind,
+                             "expected": "PASS" if should_pass else "FAIL",
+                             "got": "PASS" if passed else "FAIL",
+                             "sample": errors[:3]})
+    print(json.dumps({"ok": not failures,
+                      "selftest_cases": len(SELF_CASES) + len(SEARCH_SELF_CASES),
                       "failures": failures}, indent=2))
     return 1 if failures else 0
 
