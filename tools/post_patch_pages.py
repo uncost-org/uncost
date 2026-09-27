@@ -609,4 +609,23 @@ patch("website/src/sectors/sector.njk",
       "{%- if not secFigs %}\n    <p>{{ pageContent.sector.evidenceEmpty | safe }}</p>\n{%- endif %}\n",
       "W13 sector evidence empty state reads pageContent", guard="{{ pageContent.sector.evidenceEmpty | safe }}")
 
+# X13 (Batch X, 2026-09-27) — /projects/: three headlines from the content
+# layer (pageContent.projects), and every project chip is one label, "Draft",
+# in one style (the Now/Next headings carry the sequence). The homepage's
+# "Open projects" chip reads "Draft" too. projects/index.njk and index.njk are
+# both re-derived.
+for sel, key in ((r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>).*?(</h2>)', "intro"),
+                 (r'(<div class="u-111 eyebrow">Later[^<]*</div>\s*<h2 class="[^"]*">).*?(</h2>)', "later"),
+                 (r'(<div class="eyebrow">The honest chain</div>\s*<h2 class="[^"]*">).*?(</h2>)', "howTheyHelp")):
+    ref = "{{ pageContent.projects.%s.h2 | safe }}" % key
+    patch("website/src/projects/index.njk", sel, r"\1" + ref + r"\2", f"X13 projects {key} headline reads pageContent", guard=ref)
+if '<span class="status status--planned">Draft</span>' in pathlib.Path("website/src/projects/index.njk").read_text(encoding="utf-8"):
+    patch("website/src/projects/index.njk", r'<span class="status status--planned">Draft</span>',
+          '<span class="status status--dev">Draft</span>', "X13 projects: one Draft chip style", expect=1)
+else:
+    print("  = X13 projects: one Draft chip style (already applied)")
+patch("website/src/index.njk", r'<span class="status status--dev">In build</span>',
+      '<span class="status status--dev">Draft</span>', "X13 homepage: Open projects chip reads Draft",
+      guard='<h3>{{ home.s4.a.title | safe }}</h3><span class="status status--dev">Draft</span>')
+
 print("done")

@@ -75,6 +75,13 @@ module.exports = {
     },
   },
 
+  // /projects/ — X13 (Batch X, 2026-09-27), founder-approved headlines.
+  projects: {
+    intro: { h2: 'From evidence to <span class="u-1">real cost reduction</span>.' },
+    later: { h2: '<span class="u-1">Gated</span> on funding and safety.' },
+    howTheyHelp: { h2: 'Every project has to <span class="u-1">earn</span> its cost claim.' },
+  },
+
   // /sectors/ — founder-approved (Batch X, 2026-09-27).
   sectors: {
     intro: {
