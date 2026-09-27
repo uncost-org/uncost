@@ -123,6 +123,13 @@ module.exports = {
     xref: 'For Uncost&rsquo;s own updates, see <a href="/news/">Uncost.org News</a>.',
   },
 
+  // /treasury/ — founder-approved (Batch X, 2026-09-27).
+  treasury: {
+    // W37 — standing rule 3 (was "No crypto treasury"). The policy drafts are
+    // not touched: POL-004 §7 still words it as a crypto prohibition.
+    rule3: { title: 'Segregated accounts only.', body: 'Funds sit in segregated accounts under a confirmed lawful structure.' },
+  },
+
   // /roadmap/ — founder-approved (Batch X, 2026-09-27).
   roadmap: {
     // W35 — the eyebrow V25 left empty on "How to read these dates".

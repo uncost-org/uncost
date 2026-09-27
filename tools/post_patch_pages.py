@@ -663,4 +663,12 @@ patch("website/src/roadmap.njk",
       r'\1  <div class="eyebrow">{{ pageContent.roadmap.dates.eyebrow }}</div>\n\2',
       "W35 roadmap dates band eyebrow", guard="{{ pageContent.roadmap.dates.eyebrow }}")
 
+# W37 (Batch X, 2026-09-27) — /treasury/ standing rule 3 from the content layer
+# (pageContent.treasury.rule3): "Segregated accounts only." No policy file is
+# touched. treasury.njk is re-derived.
+patch("website/src/treasury.njk",
+      r'(<div class="prin">\n(?:    <div>.*?</div>\n){2})    <div><h3><i></i>.*?</h3><p>.*?</p></div>',
+      r'\1    <div><h3><i></i>{{ pageContent.treasury.rule3.title }}</h3><p>{{ pageContent.treasury.rule3.body }}</p></div>',
+      "W37 treasury standing rule 3 reads pageContent", guard="{{ pageContent.treasury.rule3.title }}")
+
 print("done")
