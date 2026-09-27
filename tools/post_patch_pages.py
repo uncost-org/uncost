@@ -645,4 +645,12 @@ patch("website/src/about.njk", r'<h3>Uncost (?:<u>)?is(?:</u>)?</h3>',
       '<h3>{{ pageContent.about.isBox.h3 | safe }}</h3>',
       "W34 about is heading reads pageContent", guard="{{ pageContent.about.isBox.h3 | safe }}")
 
+# X3 (Batch X, 2026-09-27) — /about/ headlines from the content layer
+# (pageContent.about), whatever the export writes in them. about.njk is
+# re-derived.
+for sel, ref in ((r'(data-screen-label="Is / is not">.*?<h2 class="[^"]*">).*?(</h2>)', "{{ pageContent.about.isNot.h2 | safe }}"),
+                 (r'(data-screen-label="Accountability">.*?<h2 class="[^"]*">).*?(</h2>)', "{{ pageContent.about.accountability.h2 | safe }}"),
+                 (r'(data-screen-label="Your say">.*?<h2 class="[^"]*">).*?(</h2>)', "{{ pageContent.about.yourSayH2 | safe }}")):
+    patch("website/src/about.njk", sel, r"\1" + ref + r"\2", f"X3 about headline -> {ref}", guard=ref)
+
 print("done")

@@ -125,6 +125,12 @@ module.exports = {
 
   // /about/ — founder-approved (Batch X, 2026-09-27).
   about: {
+    // X3 — three headlines. "What [Uncost] is — and is not." is ink with only
+    // "Uncost" in the accent (item 126 restates the ink over the export's
+    // all-coral `.u-4`).
+    isNot: { h2: 'What <span class="u-1">Uncost</span> is &mdash; and is not.' },
+    accountability: { h2: 'What doesn&rsquo;t exist <span class="u-1">yet</span>.' },
+    yourSayH2: 'You get a <span class="u-1">genuine say</span>, not a spectator seat.',
     // W34 — the two box headings: accent + underline on "is" / "is not".
     isBox: { h3: 'What Uncost <u class="u-1">is</u>' },
     isNotBox: { h3: 'What Uncost <u class="u-1">is not</u>' },

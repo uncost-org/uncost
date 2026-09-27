@@ -2880,3 +2880,11 @@ body[data-page="about"] .isnot li::before {
   height: 11px;
   background: var(--coral);
 }
+
+/* 126. X3 — /about/ "What Uncost is — and is not." is INK with only "Uncost"
+ *      in the accent. The export paints the whole `h2.u-4` coral (!important)
+ *      and item 72 turns it --coral-deep on this #F5AB2E band; the heading is
+ *      restated ink here, and "Uncost" keeps the band's accent rule, which
+ *      is --coral-deep (3.35:1 against the large-text bar; --coral would be
+ *      2.2:1 on this ground). */
+body[data-page="about"] .u-7 h2.u-4.sec { color: var(--ink) !important; }
