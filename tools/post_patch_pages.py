@@ -689,4 +689,14 @@ patch("website/src/index.njk",
       r'      <p class="hero-slogan"><span class="u-50">{{ home.s1.slogan | safe }}</span></p>\n\2',
       "X5 hero lines 2 and 3 in the template", guard="{{ home.s1.aim | safe }}")
 
+# X15 (Batch X, 2026-09-27) — /assembly/ headlines from the content layer
+# (pageContent.assembly), whatever the export writes in them. assembly.njk is
+# re-derived. (The nav label lives in chrome.json, which is repo-owned.)
+patch("website/src/assembly.njk", r'(<h2 class="u-16 sec">).*?(</h2>)',
+      r'\1{{ pageContent.assembly.canCannot.h2 | safe }}\2',
+      "X15 assembly can/cannot headline reads pageContent", guard="{{ pageContent.assembly.canCannot.h2 | safe }}")
+patch("website/src/assembly.njk", r'(<h2 class="u-21 sec">).*?(</h2>)',
+      r'\1{{ pageContent.assembly.lookAhead.h2 | safe }}\2',
+      "X15 assembly look-ahead headline reads pageContent", guard="{{ pageContent.assembly.lookAhead.h2 | safe }}")
+
 print("done")

@@ -2931,3 +2931,9 @@ body[data-page="index"] .hero-grid .hero-slogan {
   margin: 30px 0 0;
 }
 body[data-page="index"] .hero-grid .hero-aim { margin-top: 30px; }
+
+/* 129. X15 — /assembly/ "What the Assembly can — and cannot — decide." is
+ *      ink with only "decide" in the accent. The export paints the whole
+ *      `h2.u-16` #D64A1F (!important); the heading is restated ink and the
+ *      accent keeps the light-band display coral. */
+body[data-page="assembly"] h2.u-16.sec { color: var(--ink) !important; }

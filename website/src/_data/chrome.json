@@ -72,7 +72,7 @@
       "robot": "robots/21_holding_globe_transparent.png",
       "links": [
         {
-          "label": "How the Assembly works",
+          "label": "How The Assembly works",
           "url": "/assembly/"
         },
         {

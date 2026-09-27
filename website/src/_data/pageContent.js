@@ -123,6 +123,12 @@ module.exports = {
     xref: 'For Uncost&rsquo;s own updates, see <a href="/news/">Uncost.org News</a>.',
   },
 
+  // /assembly/ — X15 (Batch X, 2026-09-27), founder-approved headlines.
+  assembly: {
+    canCannot: { h2: 'What the Assembly can &mdash; and cannot &mdash; <span class="u-1">decide</span>.' },
+    lookAhead: { h2: 'What <span class="u-1">The Assembly</span> could look like.' },
+  },
+
   // /treasury/ — founder-approved (Batch X, 2026-09-27).
   treasury: {
     // W37 — standing rule 3 (was "No crypto treasury"). The policy drafts are
