@@ -58,7 +58,8 @@ const CONTENT = {
     atAGlance: {
       // W29 — What it targets (Batch X, 2026-09-27), founder-approved.
       targets: "The price of every essential, by sector and region — sourced, dated, and kept as history.",
-      mechanism: "Official-statistics-first sourcing: national statistical agencies and regulators first, licensed commercial indices only where irreplaceable. Every source is logged with its licence, region coverage, and refresh cadence, and auto-flags “needs refresh” once it goes stale.",
+      // W30 — The mechanism (Batch X, 2026-09-27), founder-approved.
+      mechanism: "Collects prices from official and licensed sources on a published schedule, records each with its source, date, licence and confidence, and keeps the history.",
       costPath: "Removes the recurring cost of re-finding and re-verifying data. Done once, licensed properly, and published openly, so the rest of the movement — and outside researchers — can reuse it instead of re-scraping the same numbers.",
     },
     overview: "Without a disciplined tracker, the dashboard becomes screenshots of other people’s numbers — undated, unlicensed, unmaintainable. This project is not a scraper farm; official and licensed sources come first, and anything whose licence forbids republication is marked and linked out to rather than reproduced.",
