@@ -48,7 +48,9 @@ const CONTENT = {
     // P6-copy: founder-approved opener for the "At a glance" section.
     opener: {
       eyebrow: "What feeds it",
-      h2: "The data underneath.",
+      // X2 (Batch X, 2026-09-27): accent on "data". The eyebrows "What you'll
+      // see" / "What feeds it" stay ink on the wheat band (item 69).
+      h2: 'The <span class="u-1">data</span> underneath.',
       // W28 (Batch X, 2026-09-27): the intro's first sentence is replaced by the
       // approved two; the rest of the intro is unchanged.
       intro: "The Dashboard shows the current picture. The Tracker holds the numbers behind it. The Dashboard reads from it.",
