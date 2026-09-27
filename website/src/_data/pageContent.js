@@ -66,9 +66,9 @@ module.exports = {
     whatTakingPartMeans: {
       eyebrow: 'What taking part means',
       h2: 'You get a real part in something, <span class="hl">not a feed to follow</span>.',
+      // W2 (Batch X, 2026-09-27), founder-approved.
       body: [
-        'Joining Uncost isn&rsquo;t signing up to receive messages. Every pledge signed adds to a public count that gives the movement standing institutions can&rsquo;t wave away. Every hour someone spends verifying a figure, reviewing a source licence, or researching a sector strengthens evidence that anyone can use &mdash; including people who never join at all, because everything we publish is open, free, and reusable.',
-        'There&rsquo;s a structured voice waiting inside it, too. <strong>The Assembly</strong> is where supporters propose ideas, prioritise sectors and regions, and raise objections &mdash; one person, one vote, no extra weight for money. It&rsquo;s advisory today, honestly, because the governance rules that would make it binding haven&rsquo;t cleared review yet &mdash; we&rsquo;d rather say that plainly than pretend otherwise. <a href="/assembly/">Read how it works &rarr;</a>',
+        'Joining Uncost isn&rsquo;t about signing up for messages. Every signed pledge adds to a public count that institutions can&rsquo;t wave away. Every hour spent checking a figure or researching a sector strengthens evidence anyone can use &mdash; open, free, reusable. Plus there&rsquo;s a voice for everyone inside the Assembly where supporters propose, prioritise and object &mdash; one person, one vote. Coming soon.',
       ],
     },
     howToTakePart: {
