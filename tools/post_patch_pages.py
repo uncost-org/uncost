@@ -503,7 +503,9 @@ else:
     print("  = V11 receipts: Four honest labels retired into the drawer (already applied)")
 LABELS_DRAWER = '{% include "partials/labels-drawer.njk" %}\n'
 for path, anchor, where in (
-    ("website/src/receipts.njk", r'(<!-- SECTION: receipts\.Receipts CTA -->\n)', "before the CTA"),
+    # X8 (Batch X): on /receipts/ the drawer sits directly under the register
+    # band, between it and "The rule".
+    ("website/src/receipts.njk", r'(<!-- SECTION: receipts\.The rule -->\n)', "under the register"),
     ("website/src/projects/index.njk", r'(<!-- SECTION: projects\.Projects CTA -->\n)', "before the CTA"),
     ("website/src/sectors/index.njk", r'(<!-- SECTION: sectors\.Sectors CTA -->\n)', "before the CTA"),
     ("website/src/treasury.njk", r'(<!-- SECTION: treasury\.Treasury CTA -->\n)', "before the CTA"),
@@ -523,5 +525,22 @@ patch("website/src/case/index.njk",
       r'(<div class="introband">\s*<h2>.*?</h2>\s*)<p>.*?</p>',
       r'\1<p>{{ pageContent.case.intro.lead | safe }}</p>',
       "W6 case intro reads pageContent", guard="{{ pageContent.case.intro.lead | safe }}")
+
+# X8 (Batch X, 2026-09-27) — /receipts/ headlines from the content layer
+# (pageContent.receipts), and the register band loses its "Figures are
+# re-checked…" paragraph: its content is now the drawer's rules (X11).
+# receipts.njk is re-derived. The headlines are re-pointed whatever the export
+# writes in them; the paragraph removal is guarded by absence.
+for sel, key in ((r'(<div class="introband">\s*<h2>).*?(</h2>)', "intro"),
+                 (r'(<div class="eyebrow">The register</div>\s*<h2 class="[^"]*">).*?(</h2>)', "register"),
+                 (r'(<div class="eyebrow">The rule, three ways</div>\s*<h2 class="[^"]*">).*?(</h2>)', "rule"),
+                 (r'(<div class="eyebrow">Corrections &amp; changelog</div>\s*<h2 class="[^"]*">).*?(</h2>)', "corrections")):
+    ref = "{{ pageContent.receipts.%s.h2 | safe }}" % key
+    patch("website/src/receipts.njk", sel, r"\1" + ref + r"\2", f"X8 receipts {key} headline reads pageContent", guard=ref)
+if "Figures are re-checked on a published cadence" in pathlib.Path("website/src/receipts.njk").read_text(encoding="utf-8"):
+    patch("website/src/receipts.njk", r'\n  <p class="u-131">Figures are re-checked on a published cadence\..*?</p>', '',
+          "X8 receipts: re-check paragraph moves into the drawer rules")
+else:
+    print("  = X8 receipts: re-check paragraph moves into the drawer rules (already applied)")
 
 print("done")

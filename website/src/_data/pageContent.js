@@ -75,6 +75,15 @@ module.exports = {
     },
   },
 
+  // /receipts/ — X8 (Batch X, 2026-09-27), founder-approved headlines; the
+  // accent span carries the emphasis, the band's accent rule its colour.
+  receipts: {
+    intro: { h2: 'Every <span class="u-1">number</span>, out in the open.' },
+    register: { h2: 'Every figure we publish, with its <span class="u-1">receipt</span>.' },
+    rule: { h2: 'If we can&rsquo;t show where a number came from, <span class="u-1">we don&rsquo;t print it</span>.' },
+    corrections: { h2: 'We <span class="u-1">log</span> our mistakes.' },
+  },
+
   case: {
     // The introband. W6 (Batch X, 2026-09-27), founder-approved.
     intro: {
