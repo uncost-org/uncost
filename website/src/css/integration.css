@@ -2812,3 +2812,10 @@ body[data-page="sectors"] .sintro .lead { font-size: 20px; }
 /* Item 69 sends small bold text on wheat to ink at (0,2,0) !important; at
  * 20px these names are large text, so the accent is restated above it. */
 body[data-page="sectors"] .sintro .lead b { color: var(--coral-deep) !important; }
+
+/* 123. Batch X — the project "At a glance" opener headlines carry accent spans
+ *      (W15, W21, X2). `.u-124` is a wheat band, so the display accent takes
+ *      --coral-deep there (D4: 3.25:1 against the large-text 3:1 bar); the
+ *      generic `h2 .u-1` rule would paint --coral, 2.3:1 on wheat. The
+ *      eyebrows on this band are already ink (item 69, `.u-124 .eyebrow`). */
+.u-124 :is(h1, h2, h3) .u-1 { color: var(--coral-deep) !important; }

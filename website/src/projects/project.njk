@@ -50,7 +50,7 @@ eleventyComputed:
   <div class="eyebrow">{{ op.eyebrow }}</div>
 {%- endif %}
 {%- if headline %}
-  <h2 class="sec">{{ headline }}</h2>
+  <h2 class="sec">{{ headline | safe }}</h2>
 {%- endif %}
 {%- if op.intro %}
   <p class="u-11 lead">{{ op.intro }}</p>

@@ -54,9 +54,13 @@ const CONTENT = {
     cta: "Help keep the register honest.",
   },
   "PRJ-003": {
-    // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
-    // null renders nothing.
-    opener: { eyebrow: null, h2: null, intro: null },
+    // W15 (Batch X, 2026-09-27), founder-approved; checked against the dossier
+    // (components, stated assumptions, reproducibility are all in it).
+    opener: {
+      eyebrow: "What it models",
+      h2: 'The cost of a need, <span class="u-1">taken apart</span>.',
+      intro: "The Model breaks each essential into its real components and tests where a change would actually move the total \u2014 reproducible, with every assumption stated.",
+    },
     publicSummary: "The math behind every claim that automation could lower a specific cost — including when it can’t.",
     atAGlance: {
       targets: "Breaking a cost into its real components (labor, energy, land, materials, waste, market structure, financing, fees, policy) so a reduction claim can be checked, not just asserted.",
@@ -131,8 +135,10 @@ const CONTENT = {
 };
 
 // Build-time guard: the copy above is rendered unescaped, so it must contain no
-// raw markup beyond the reviewed <em>. Anything else is a build failure.
-const ALLOWED_TAG = /<\/?em>/g;
+// raw markup beyond the reviewed <em> and the accent span. Anything else is a
+// build failure.
+// Batch X adds the accent span the founder's headlines carry ("[…]").
+const ALLOWED_TAG = /<\/?em>|<span class="u-1">|<\/span>/g;
 (function guard(node, trail) {
   for (const [key, value] of Object.entries(node)) {
     const where = trail ? `${trail}.${key}` : key;
