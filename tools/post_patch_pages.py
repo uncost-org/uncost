@@ -560,4 +560,11 @@ patch("website/src/case/index.njk",
       '<div class="howlink" data-screen-label="How The Receipts work"><a href="{{ pageContent.case.receiptsLink.href }}">{{ pageContent.case.receiptsLink.text | safe }}</a></div>\n',
       "X7 case: drawer becomes the How The Receipts work link", guard='<div class="howlink"')
 
+# W5 (Batch X, 2026-09-27) — /news/ introband headline from the content layer
+# (pageContent.news.intro.h2). news/index.njk is re-derived.
+patch("website/src/news/index.njk",
+      r'(<div class="introband">\s*<h2>).*?(</h2>)',
+      r'\1{{ pageContent.news.intro.h2 | safe }}\2',
+      "W5 news intro headline reads pageContent", guard="{{ pageContent.news.intro.h2 | safe }}")
+
 print("done")

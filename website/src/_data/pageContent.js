@@ -75,6 +75,11 @@ module.exports = {
     },
   },
 
+  // /news/ — W5 (Batch X, 2026-09-27), founder-approved introband headline.
+  news: {
+    intro: { h2: 'What we&rsquo;ve done, and <span class="u-1">what&rsquo;s next</span>.' },
+  },
+
   // /receipts/ — X8 (Batch X, 2026-09-27), founder-approved headlines; the
   // accent span carries the emphasis, the band's accent rule its colour.
   receipts: {
