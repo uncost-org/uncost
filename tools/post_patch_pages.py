@@ -244,7 +244,7 @@ CASE_MECHANISM = '''<!-- SECTION: case.The mechanism -->
 <section class="blk blk--first blk--cream2" data-screen-label="The mechanism">
   <div class="eyebrow">{{ cm.eyebrow }}</div>
   <h2 class="sec">{{ cm.h2 | safe }}</h2>
-  <p class="u-11 lead">{{ cm.lead | safe }}</p>
+  <p class="u-11 lead" data-source="SRC-020">{{ cm.lead | safe }}</p>
   <div class="cards cards--2up">
     {{ fig.card(register.byId["SRC-020"]) }}
     {{ fig.card(register.byId["SRC-024"]) }}
