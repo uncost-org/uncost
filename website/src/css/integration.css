@@ -2481,23 +2481,19 @@ body[data-page="case"] .mdrawer summary { background: #FFF; }
  * 112, replaced that list with the /about/ format, whose labels are 24px h3s.) */
 
 /* 112. V12 — ONE "How a cost gets uncosted" BLOCK, IN THE /about/ FORMAT.
- *      partials/uncosted.njk renders the /about/ shape — metalabel + headline,
- *      then numbered step rows (numeral, label, text) — on /about/ and inside
- *      /movement/'s own band; _data/uncosted.js carries each page's own step
- *      text, unchanged until approved text arrives. /about/'s step rules are
- *      page-scoped in the export, so they are re-scoped to /movement/ here,
- *      declarations identical except horizontal padding: on /about/ the rows
- *      are bands of their own and pad themselves, on /movement/ the band
- *      already pads. Under this format /movement/'s step labels are the 24px
- *      h3s /about/ uses — larger than the 22.5px V15 asked of the old list. */
-body[data-page="movement"] .seqhd{padding:0 0 8px}
+ *      X1 (Batch X, 2026-09-27) supersedes V12's two variants: one block, one
+ *      set of words, rendered IDENTICALLY on both pages — on /movement/ the
+ *      heading block and the step list are now bands directly under <main>,
+ *      exactly as on /about/, so /about/'s export rules (page-scoped to about
+ *      by the export) are restated here for /movement/ with the SAME values,
+ *      horizontal padding included. (V12's movement-only padding:0 and the
+ *      item 117 frame for the inset list are gone with the inset.) */
+body[data-page="movement"] .seqhd{padding:32px clamp(24px,6vw,80px) 8px}
 body[data-page="movement"] .seqhd h2{font-family:var(--font-display);font-weight:700;font-size:clamp(32px,4.5vw,52px);letter-spacing:-.02em;margin:0}
-body[data-page="movement"] .step{display:grid;grid-template-columns:90px 1fr;gap:24px;align-items:start;padding:24px 0;border-top:2px solid var(--ink)}
+body[data-page="movement"] .step{display:grid;grid-template-columns:90px 1fr;gap:24px;align-items:start;padding:24px clamp(24px,6vw,80px);border-top:2px solid var(--ink)}
 body[data-page="movement"] .step .num{font-family:var(--font-display);font-weight:900;font-size:56px;color:var(--coral);letter-spacing:-.03em;line-height:.85;font-variant-numeric:tabular-nums}
 body[data-page="movement"] .step h3{font-family:var(--font-display);font-weight:700;font-size:24px;letter-spacing:-.01em;margin:0 0 6px}
 body[data-page="movement"] .step p{font-size:15px;line-height:1.6;color:var(--fg-2);margin:0;max-width:66ch}
-body[data-page="movement"] .uncosted-intro{margin:14px 0 22px}
-body[data-page="movement"] .uncosted-close{margin-top:22px}
 @media (max-width:640px){
   body[data-page="movement"] .step{grid-template-columns:56px 1fr;gap:14px}
 }
@@ -2690,18 +2686,31 @@ body[data-page="sectors"] .legend .lg-pair .u-138 { min-width: 0; }
 }
 .ldrawer-names li > * { margin: 0; }
 
-/* 117. V12 follow-up — /movement/'s step list takes its R2 frame.
- *      On /about/ the same list is a full-bleed band body and D3 keeps it
- *      unframed (frame_audit names it). On /movement/ V12 puts it INSIDE the
- *      page's padded cream-2 band, so it is an inset panel drawing 2px ink
- *      dividers — exactly the case C14 framed on the sector six-step list
- *      (.steps6, item 96). frame_audit caught it at Batch V verify: open on
- *      all four sides at 1440, 1290 and 390. Same treatment as .steps6: a 2px
- *      ink frame and 24px cell padding. The frame is now the list's top and
- *      bottom edge, so the first row gives up its top divider and the last
- *      gives up `.u-2`'s bottom rule (the export's, !important) — one line
- *      each, not two. */
-body[data-page="movement"] section > div:has(> .step) { border: 2px solid var(--ink); }
-body[data-page="movement"] section > div:has(> .step) > .step { padding-left: 24px; padding-right: 24px; }
-body[data-page="movement"] section > div:has(> .step) > .step:first-child { border-top: 0; }
-body[data-page="movement"] section > div:has(> .step) > .step.u-2 { border-bottom: 0 !important; }
+/* 117. (V12 follow-up: the frame on /movement/'s inset step list.) RETIRED by
+ *      X1 — the list is no longer inset; it renders exactly as /about/'s. */
+
+/* 118. X1 — the one "How a cost gets uncosted" block, both pages.
+ *      Headline: ink, with "uncosted" coral and underlined, the full stop in
+ *      ink. The export's `.u-4` paints the whole h2 #D64A1F with !important,
+ *      so the ink is restated at (0,3,2) !important; the <u class="u-1">
+ *      takes --coral from the one-accent rule (item 41 family) and keeps the
+ *      UA underline, drawn per V8.
+ *      Closing line: the last row of the step list, under the last step's
+ *      `.u-2` rule, padded like a step so it lines up with the step text
+ *      column's left edge at the band's own inset. */
+body:is([data-page="about"], [data-page="movement"]) .seqhd h2.u-4 { color: var(--ink) !important; }
+/* The line's TEXT column is the one wrap point (C4). Item 78 caps
+ * `.seqhd + * > p` at min(66vw, 960px) !important, but this paragraph carries
+ * the band inset as padding (border-box), so that cap would squeeze its text
+ * to 209px at 390; the cap is restated here with the padding added back. */
+body:is([data-page="about"], [data-page="movement"]) .seqhd + div > p.uncosted-close {
+  margin: 0;
+  padding: 24px clamp(24px, 6vw, 80px) 32px;
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: calc(min(66vw, 960px) + 2 * clamp(24px, 6vw, 80px)) !important;
+}
+/* On /movement/ the block follows the wheat "What we stand for" band (on
+ * /about/ it follows a cream band, so no rule is owed there): R1's boundary
+ * rule, 4px coral, drawn by the block's top edge. */
+body[data-page="movement"] .blk--wheat + .seqhd { border-top: 4px solid var(--coral); }

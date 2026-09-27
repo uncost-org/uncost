@@ -44,25 +44,9 @@ module.exports = {
         'We&rsquo;re nonpartisan by design, not by accident &mdash; cost-of-living arguments drift toward party politics easily, and we hold the line because a movement that picks a side stops being useful to everyone else. We&rsquo;re not a service provider either: we don&rsquo;t build housing, deliver care, or generate power ourselves. We make the case, do the math, publish the receipts, and stay alongside the people who build with them.',
       ],
     },
-    // H2 (2026-09-19): moved here from the /case/ Methodology drawer. It is a
-    // description of how the movement works, not a footnote about how the
-    // receipts are formatted, and it was doing nothing for anyone folded
-    // inside a collapsed <details> on a different page. The drawer keeps THE
-    // RULES and CONFIDENCE LABELS, which are genuinely methodology.
-    howACostGetsUncosted: {
-      eyebrow: 'How it works',
-      h2: 'How a cost gets <u>uncosted</u>',
-      intro: 'Six steps, applied the same way every time, in every sector:',
-      steps: [
-        '<b>Measure.</b> Establish what a household in a defined region actually spends on the thing in question, using public data, with the date and the region attached.',
-        '<b>Publish.</b> Put the sources and assumptions up before the conclusions, so anyone can check the starting point rather than being asked to accept it.',
-        '<b>Break down.</b> Separate the price into its real components &mdash; land, energy, labour, materials, finance, regulation, maintenance. A cost that can&rsquo;t be decomposed is a cost that can&rsquo;t be reduced.',
-        '<b>Match.</b> Identify which components a specific, named mechanism could plausibly move &mdash; and count what it adds as well as what it saves.',
-        '<b>Package.</b> Publish the model, the sources, the brief, and the playbook so a community group, co-operative, nonprofit, or public body can run it.',
-        '<b>Track.</b> Follow whether the total cost actually falls where the approach is applied, and publish the answer either way.',
-      ],
-      close: 'The sixth step is what makes the other five worth doing. Proposing that some technology would reduce a cost is easy. Going back afterwards to check honestly whether it did is rare &mdash; and it&rsquo;s usually the step that gets skipped.',
-    },
+    // howACostGetsUncosted: RETIRED 2026-09-27 by X1. The six steps are one
+    // block, in the /about/ format, rendered identically on /about/ and
+    // /movement/ from _data/uncosted.js.
     whatTakingPartMeans: {
       eyebrow: 'What taking part means',
       h2: 'You get a real part in something, <span class="hl">not a feed to follow</span>.',

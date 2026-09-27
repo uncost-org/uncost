@@ -423,30 +423,33 @@ patch("website/src/case/index.njk",
       "V17 case: question lead follows the headline",
       guard='Tools next.</span></h2>\n  <p class="u-39 lead">The question is no longer whether')
 
-# V15 (Batch V, 2026-09-26) — /movement/: the six-step "How it works" band and
-# "What taking part means" swap backgrounds (cream <-> cream-2), and the CTA's
-# "Get updates" goes to /join/#get-updates. movement.njk is re-derived.
+# V15 (Batch V, 2026-09-26) — /movement/: "What taking part means" moves to
+# cream (V15 swapped it with the six-step band, which X1 has since turned into
+# the /about/-format block with no band of its own), and the CTA's "Get
+# updates" goes to /join/#get-updates. movement.njk is re-derived.
 patch("website/src/movement.njk",
-      r'<section class="blk blk--cream" data-screen-label="How a cost gets uncosted">(.*?)<section class="blk blk--cream2" data-screen-label="What taking part means">',
-      r'<section class="blk blk--cream2" data-screen-label="How a cost gets uncosted">\1<section class="blk blk--cream" data-screen-label="What taking part means">',
-      "V15 movement: swap six-step and taking-part backgrounds",
-      guard='<section class="blk blk--cream2" data-screen-label="How a cost gets uncosted">')
+      r'<section class="blk blk--cream2" data-screen-label="What taking part means">',
+      '<section class="blk blk--cream" data-screen-label="What taking part means">',
+      "V15 movement: taking-part band is cream",
+      guard='<section class="blk blk--cream" data-screen-label="What taking part means">')
 patch("website/src/movement.njk",
       r'<a href="#updates" class="u-btn u-btn--ghost">Get updates</a>',
       '<a href="/join/#get-updates" class="u-btn u-btn--ghost">Get updates</a>',
       "V15 movement: Get updates -> /join/#get-updates", guard='href="/join/#get-updates"')
 
-# V12 (Batch V, 2026-09-26) — one "How a cost gets uncosted" partial in the
-# /about/ format, on /about/ and /movement/; words in _data/uncosted.js. Both
-# templates are re-derived from the export, so the call sites are restated.
+# V12 → X1 (Batch X, 2026-09-27) — ONE "How a cost gets uncosted" block,
+# rendered identically on /about/ and /movement/ from _data/uncosted.js. Both
+# templates are re-derived from the export, so both call sites are restated:
+# /about/'s hand-written step list, and /movement/'s whole six-step section
+# (whatever band class the export gives it), become the one partial call.
 patch("website/src/about.njk",
       r'<div class="seqhd" data-screen-label="Mechanism">.*?</h2></div>\n<div>\n(?:  <div class="[^"]*step">.*?</p></div></div>\n)+</div>\n',
-      '{% import "partials/uncosted.njk" as uc %}\n{{ uc.block(uncosted.about, "Mechanism") }}\n',
-      "V12 about: uncosted partial", guard='{{ uc.block(uncosted.about, "Mechanism") }}')
+      '{% import "partials/uncosted.njk" as uc %}\n{{ uc.block(uncosted, "Mechanism") }}\n',
+      "X1 about: uncosted partial", guard='{{ uc.block(uncosted, "Mechanism") }}')
 patch("website/src/movement.njk",
-      r'(<section class="blk blk--cream2" data-screen-label="How a cost gets uncosted">\n).*?(</section>)',
-      r'\1  {% import "partials/uncosted.njk" as uc %}\n  {{ uc.block(uncosted.movement) }}\n\2',
-      "V12 movement: uncosted partial", guard="{{ uc.block(uncosted.movement) }}")
+      r'<section class="blk[^"]*" data-screen-label="How a cost gets uncosted">.*?</section>',
+      '{% import "partials/uncosted.njk" as uc %}\n{{ uc.block(uncosted, "How a cost gets uncosted") }}',
+      "X1 movement: uncosted partial", guard='{{ uc.block(uncosted, "How a cost gets uncosted") }}')
 
 # V16 (Batch V, 2026-09-26) — /news/ loads /js/read-more.js (three-line clamp,
 # "Read more"). news/index.njk is re-derived from the export, so the include is

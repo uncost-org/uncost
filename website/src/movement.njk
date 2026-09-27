@@ -39,10 +39,8 @@ description: "A nonprofit, nonpartisan movement that treats the cost of living a
 </section>
 
 <!-- SECTION: movement.How a cost gets uncosted -->
-<section class="blk blk--cream2" data-screen-label="How a cost gets uncosted">
-  {% import "partials/uncosted.njk" as uc %}
-  {{ uc.block(uncosted.movement) }}
-</section>
+{% import "partials/uncosted.njk" as uc %}
+{{ uc.block(uncosted, "How a cost gets uncosted") }}
 
 <!-- SECTION: movement.What taking part means -->
 <section class="blk blk--cream" data-screen-label="What taking part means">
