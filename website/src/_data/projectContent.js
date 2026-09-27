@@ -56,7 +56,8 @@ const CONTENT = {
     // W27 — the subline (Batch X, 2026-09-27), founder-approved.
     publicSummary: "The data showing how each sector’s costs have moved over time.",
     atAGlance: {
-      targets: "A disciplined register of prices and their sources. It has no public page of its own — its product is trustworthy data, not a dashboard.",
+      // W29 — What it targets (Batch X, 2026-09-27), founder-approved.
+      targets: "The price of every essential, by sector and region — sourced, dated, and kept as history.",
       mechanism: "Official-statistics-first sourcing: national statistical agencies and regulators first, licensed commercial indices only where irreplaceable. Every source is logged with its licence, region coverage, and refresh cadence, and auto-flags “needs refresh” once it goes stale.",
       costPath: "Removes the recurring cost of re-finding and re-verifying data. Done once, licensed properly, and published openly, so the rest of the movement — and outside researchers — can reuse it instead of re-scraping the same numbers.",
     },
