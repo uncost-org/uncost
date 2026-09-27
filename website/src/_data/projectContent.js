@@ -28,7 +28,8 @@ const CONTENT = {
     // W20 — the subline (Batch X, 2026-09-27), founder-approved.
     publicSummary: "What one person needs, region by region — and what it costs.",
     atAGlance: {
-      targets: "The essentials basket for one adult, region by region, honestly mapped to the fifteen sectors — with three of them (Environment, Safety, Materials) treated as cost <em>drivers</em> layered across the basket, not basket line-items themselves.",
+      // W22 — What it targets (Batch X, 2026-09-27), founder-approved.
+      targets: "What one adult’s essentials cost, region by region, across all fifteen sectors.",
       mechanism: "Presents the Cost-of-Living Tracker’s sourced price data and the Basic Needs Cost Model’s scenarios in one public view, with a plain coverage banner (“data available for N of M regions” — N is whatever is real) instead of a false single national number.",
       costPath: "It doesn’t lower a cost by itself. It’s the presentation layer: it shows a reader exactly where money goes and which of the other two projects’ reduction paths look real, so the movement’s public case rests on the same evidence it publishes.",
     },
