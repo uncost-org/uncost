@@ -2460,7 +2460,9 @@ body[data-page="pledge"] .titleband + .pwrap { border-top: 0 !important; }
  *      from the per-band accent rules (C1/C2): --coral on cream, cream-2 and
  *      ink. No new colour rule. */
 
-/* 110. V17 — /case/: the Methodology drawer's header band is white (was the
+/* 110. RETIRED by X7 (Batch X): /case/ no longer has a Methodology drawer, so
+ *      the rule below matches nothing; kept as the record of V17.
+ *      V17 — /case/: the Methodology drawer's header band is white (was the
  *      export's wheat). Its chevron stays --coral-deep: 5.99:1 on white for a
  *      3:1 non-text bar. The drawer body keeps its cream-2. */
 body[data-page="case"] .mdrawer summary { background: #FFF; }
@@ -2767,3 +2769,18 @@ body[data-page="movement"] .blk--wheat + .seqhd { border-top: 4px solid var(--co
 .search-ov .so-scope:hover { background: var(--wheat); }
 .search-ov .so-scope[aria-pressed="true"] { background: var(--ink); color: var(--cream); }
 .search-ov .so-scope:focus-visible { outline: 3px solid var(--coral-deep); outline-offset: 2px; }
+
+/* 120. X7 — /case/: the Methodology drawer is gone; in its place one line,
+ *      "How The Receipts work →", to the drawer that now explains them on
+ *      /receipts/ (#how-it-works). It keeps the drawer's own row shape — the
+ *      display face 700 17px of a drawer header, the same band inset — so the
+ *      page's rhythm between "What living costs" and the closing CTA does not
+ *      change. Link colour is the light-ground link colour (--coral-deep). */
+body[data-page="case"] .howlink {
+  border-top: 4px solid var(--coral);   /* R1: wheat above, cream here */
+  padding: 18px clamp(24px, 6vw, 80px);
+  background: var(--cream);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+}

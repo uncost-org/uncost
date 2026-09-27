@@ -87,6 +87,8 @@ module.exports = {
   case: {
     // The introband. W6 (Batch X, 2026-09-27), founder-approved.
     intro: {
+      // X7 (Batch X, 2026-09-27), founder-approved.
+      h2: 'The <span class="u-1">receipts</span> behind every claim we make.',
       lead: 'The Case is Uncost&rsquo;s evidence layer. What humans need, what it costs by region, where technology could help, and the receipts behind every claim.',
     },
     mechanism: {
@@ -103,5 +105,9 @@ module.exports = {
       // deliberately do not live here.
       close: 'Nobody is doing the deliberate work of routing automation&rsquo;s gains back toward the price of rent, groceries, and electricity instead of the value of assets. It&rsquo;s why Uncost exists: to measure where a specific technology could plausibly lower a specific cost, publish the method, and hand it to the people who can act on it.',
     },
+    // X7 (Batch X, 2026-09-27), founder-approved: the "What living costs"
+    // headline, and the one-line link that replaces the Methodology drawer.
+    livingCosts: { h2: 'The numbers, with their <span class="u-1">receipts</span>.' },
+    receiptsLink: { text: 'How The Receipts work &rarr;', href: '/receipts/#how-it-works' },
   },
 };

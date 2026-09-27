@@ -543,4 +543,21 @@ if "Figures are re-checked on a published cadence" in pathlib.Path("website/src/
 else:
     print("  = X8 receipts: re-check paragraph moves into the drawer rules (already applied)")
 
+# X7 (Batch X, 2026-09-27) — /case/: both headlines from the content layer
+# (pageContent.case.intro.h2, .livingCosts.h2), and the Methodology drawer is
+# replaced by one line linking /receipts/#how-it-works. case/index.njk is
+# re-derived.
+patch("website/src/case/index.njk",
+      r'(<div class="introband">\s*<h2>).*?(</h2>)',
+      r'\1{{ pageContent.case.intro.h2 | safe }}\2',
+      "X7 case intro headline reads pageContent", guard="{{ pageContent.case.intro.h2 | safe }}")
+patch("website/src/case/index.njk",
+      r'(<div class="eyebrow">What living costs</div>\s*<h2 class="[^"]*">).*?(</h2>)',
+      r'\1{{ pageContent.case.livingCosts.h2 | safe }}\2',
+      "X7 case living-costs headline reads pageContent", guard="{{ pageContent.case.livingCosts.h2 | safe }}")
+patch("website/src/case/index.njk",
+      r'<details class="mdrawer"[^>]*>.*?</details>\n',
+      '<div class="howlink" data-screen-label="How The Receipts work"><a href="{{ pageContent.case.receiptsLink.href }}">{{ pageContent.case.receiptsLink.text | safe }}</a></div>\n',
+      "X7 case: drawer becomes the How The Receipts work link", guard='<div class="howlink"')
+
 print("done")
