@@ -9,7 +9,9 @@ onto the flag-gated partials.
 """
 import os, re, sys, pathlib, json
 
-EXPORT = pathlib.Path(os.environ.get("UNCOST_DESIGN_SOURCE", "../uncost-private/design-source"))
+if not os.environ.get("UNCOST_DESIGN_SOURCE"):
+    raise SystemExit("Set UNCOST_DESIGN_SOURCE to the approved design export.")
+EXPORT = pathlib.Path(os.environ["UNCOST_DESIGN_SOURCE"])
 
 ROUTES = {
     "/later/case-dashboard/": "/case/dashboard/",
