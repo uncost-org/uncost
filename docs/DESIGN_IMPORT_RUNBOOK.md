@@ -128,7 +128,7 @@ review proceeds group by group.
 
 ## Step 2 — clean in the staging repository, never in public
 
-1. In `uncost-org/uncost-design-staging`, create a working branch.
+1. In the designated private staging repository, create a working branch.
 2. Bring the export content in and reconcile it against control:
    - copy derives from the final Movement Plan and reviewed repo documents
      (`docs/CONTROL.md` authority chain); legacy site copy does not ship;
@@ -273,7 +273,7 @@ Do not merge staging history into public. Move the **result**, not the history:
 ## Step 5 — retire staging
 
 Once the public pull request is merged, the founder deletes
-`uncost-org/uncost-design-staging`. The private cleaning history is not needed
+the designated private staging repository. The private cleaning history is not needed
 and should not persist.
 
 ## Why this shape
