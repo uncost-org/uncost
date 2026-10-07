@@ -44,7 +44,7 @@ eleventyComputed:
 <!-- SECTION: sectors/food.Scope -->
 <section id="scope" class="u-15 block block--ink" data-screen-label="Scope">
   <div class="eyebrow">01 · Scope, opportunity, guardrail</div>
-  <h2>Where automation could <span class="u-1">bite</span> — and what stays visible.</h2>
+  <h2>{{ pageContent.sector.scope.h2 | safe }}</h2>
   <div class="scope">
     <div><h3><i></i>What it includes</h3><p>{% if sector.includes %}{{ sector.includes }}{% else %}{{ gapInline("sector-includes") }}{% endif %}</p></div>
     <div><h3><i></i>The opportunity</h3><p>{% if sector.opportunity %}{{ sector.opportunity }}{% else %}{{ gapInline("sector-opportunity") }}{% endif %}</p></div>
@@ -58,8 +58,10 @@ eleventyComputed:
   <div class="eyebrow">02 · Evidence status</div>
   <h2>No number ships without a <span class="u-1">receipt</span>.</h2>
   <div class="evd-empty">
-    {% if sector.evidence %}<h3>{{ sector.evidence }}</h3>{% else %}{{ gap("sector-evidence") }}{% endif %}
-    <p>Reviewed source records come before figures. When the first {{ sector.name }} figures publish, each line will carry: value, unit, region, date observed, a source ID from the public register, a confidence label, and the collection method.</p>
+{%- set secFigs = sectorContent[sector.slug].figures if sectorContent[sector.slug] else none %}
+{%- if not secFigs %}
+    <p>{{ pageContent.sector.evidenceEmpty | safe }}</p>
+{%- endif %}
 {#- R3 figure slot. Renders the shared figure card for any registered figures
     this sector carries. `figures` is not yet set on any sector, so this is
     template only today — when the first sector figures land, they render in the
@@ -88,7 +90,7 @@ eleventyComputed:
 <section id="worked" class="block" data-screen-label="Worked example">
 {%- if wx.measurement %}
   <div class="eyebrow">03 · Where the method stops</div>
-  <h2>How far the method goes in {{ sector.name }} — and where it stops.</h2>
+  <h2>{{ pageContent.sector.measurementH2 | replace("{name}", sector.name) | safe }}</h2>
 {%- else %}
   <div class="eyebrow">03 · How {{ sector.name | lower }} gets uncosted</div>
 {#- V19: the scenario phrase — the words after "A worked example:" — takes

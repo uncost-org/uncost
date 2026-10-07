@@ -33,6 +33,9 @@ CONTENT_CEILING_PCT = float(os.environ.get("RENDER_CONTENT_CEILING", "35.0"))
 # Exemptions are per-section, never per-page: everything else on an exempted page
 # is still measured, and every exemption actually exercised is listed in the run
 # output, so none of this can rot unnoticed.
+# X14 — the restyled sections of the four project pages the export left unstyled.
+X14_SECTIONS = ("Project head",)
+
 SECTION_EXEMPTIONS = [
     # ── Batch N ───────────────────────────────────────────────────────────
     ("news.html", "div.newswrap",
@@ -290,15 +293,23 @@ SECTION_EXEMPTIONS = [
      "V25: \"How to read these dates\" becomes a standard prose band — the "
      "export's eyebrow text is now the band's section headline at the one "
      "headline size; eyebrow slot empty; body unchanged. CANVAS-SYNC item 112."),
+    # ── Batch X ─────────────────────────────────────────────────────────────
+    # X14: the export's own renders of these four project pages are UNSTYLED —
+    # it scopes every project rule to the three pages it styled (PRJ-001..003)
+    # — so once the site applies PRJ-001's rules to them (item 124), each
+    # restyled section differs from the broken reference by design. Geometry
+    # (x, width) is still checked. CANVAS-SYNC 133.
+    *[(page, section,
+       "X14: the export ships no page-scoped CSS for this project page, so its "
+       "own render is unstyled; the site now applies PRJ-001's rules (item 124). "
+       "CANVAS-SYNC 133.")
+      for page in ("projects/community-resource-simulator.html", "projects/library-of-things-kit.html",
+                   "projects/automation-dividend-study.html", "projects/basic-needs-planner.html")
+      for section in X14_SECTIONS],
     ("movement", "How a cost gets uncosted",
      "V15: the six-step band moves to --cream-2 (swapped with \"What taking "
      "part means\"), its headline underlines \"uncosted\" and its step labels "
      "are 25% larger. CANVAS-SYNC item 115."),
-    ("case.html", "Methodology drawer",
-     "V17: the drawer's header band is white (was the export's wheat). Closed, "
-     "the drawer IS its header, so recolouring the band is a near-total pixel "
-     "change — 99.5% at 1440. Text, chevron, x and width unchanged, so the "
-     "geometry check still runs. CANVAS-SYNC item 114."),
 ]
 
 

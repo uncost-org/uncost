@@ -37,6 +37,19 @@
   The Receipts destination is one of the same .so-links blocks rather than a
   standalone u-btn, so the overlay presents one consistent row of destinations.
 
+  X17 (Batch X, 2026-09-27) — SCOPE FILTERS. With script on, the destination
+  buttons become scope filters over the compile-time index: "All of this site"
+  (the default, re-selected every time the overlay opens), then The Receipts,
+  The Sectors, The Projects, The Policies, The Case, Uncost News, Cost Watch (X.1: eight) — labels from
+  _data/searchScopes.json. They live inside `.so-search`, which ships `hidden`,
+  so with script off not one of them renders. js/site-search.js reveals the box
+  and hides the destination row by setting `hidden` on its WRAPPER
+  (`[data-search-links]`), which carries no class and so no `display` rule that
+  could outrank [hidden] — the cascade trap documented in js/show-more.js.
+  With script off that wrapper is never touched and the link blocks render
+  exactly as before. The group is labelled by the search box's own label, so
+  it adds no new words.
+
   js/ui.js still owns open/close; site-search.js takes focus from the `open`
   class ui.js sets, after ui.js's own focus() for that tick.
 
@@ -46,12 +59,17 @@
   <div class="so-top">{% image "logos/logo-tight-light.png", "", "8rem", [160, 320], "lazy", "logo-44" %}<button class="drawer-x" type="button" aria-label="Close search" data-search-close>&#10005;</button></div>
   {% if features.searchEnabled %}
   <div class="so-search" data-search-box hidden>
-    <label for="site-search">Search uncost.org</label>
+    <label for="site-search" id="site-search-label">Search uncost.org</label>
     <input id="site-search" type="search" placeholder="Try &ldquo;shelter&rdquo; or &ldquo;pledge&rdquo;&hellip;" autocomplete="off" aria-describedby="site-search-status">
+    <div class="so-scopes" role="group" aria-labelledby="site-search-label">
+      {%- for sc in searchScopes %}
+      <button type="button" class="so-scope" data-search-scope="{{ sc.key }}" aria-pressed="{{ 'true' if loop.first else 'false' }}">{{ sc.label }}</button>
+      {%- endfor %}
+    </div>
     <p class="so-status" id="site-search-status" role="status" data-search-status></p>
     <ul class="so-results" data-search-results></ul>
   </div>
   {% endif %}
-  <div class="so-links"><a href="/receipts/">Search the Receipts</a>{% for link in chrome.searchShortcuts %}<a href="{{ link.url }}">{{ link.label }}</a>{% endfor %}</div>
+  <div data-search-links><div class="so-links"><a href="/receipts/">Search the Receipts</a>{% for link in chrome.searchShortcuts %}<a href="{{ link.url }}">{{ link.label }}</a>{% endfor %}</div></div>
 </div>
 <script src="/js/site-search.js" defer></script>

@@ -21,42 +21,65 @@ const CONTENT = {
     // P6-copy: founder-approved opener for the "At a glance" section.
     opener: {
       eyebrow: "What you\u2019ll see",
-      h2: "The picture, region by region.",
+      // W21 (Batch X, 2026-09-27), founder-approved.
+      h2: 'The cost of living, per person, <span class="u-1">region by region</span>.',
       intro: "The Dashboard is the presentation layer: what one adult needs, what it costs where you live, and whether that cost is moving \u2014 every figure with its receipt.",
     },
-    publicSummary: "The public, regional picture of what one human needs and what those needs cost — the flagship of The Case.",
+    // W20 — the subline (Batch X, 2026-09-27), founder-approved.
+    publicSummary: "What one person needs, region by region — and what it costs.",
     atAGlance: {
-      targets: "The essentials basket for one adult, region by region, honestly mapped to the fifteen sectors — with three of them (Environment, Safety, Materials) treated as cost <em>drivers</em> layered across the basket, not basket line-items themselves.",
-      mechanism: "Presents the Cost-of-Living Tracker’s sourced price data and the Basic Needs Cost Model’s scenarios in one public view, with a plain coverage banner (“data available for N of M regions” — N is whatever is real) instead of a false single national number.",
-      costPath: "It doesn’t lower a cost by itself. It’s the presentation layer: it shows a reader exactly where money goes and which of the other two projects’ reduction paths look real, so the movement’s public case rests on the same evidence it publishes.",
+      // W22 — What it targets (Batch X, 2026-09-27), founder-approved.
+      targets: "What one adult’s essentials cost, region by region, across all fifteen sectors.",
+      // W23 — The mechanism (Batch X, 2026-09-27), founder-approved.
+      mechanism: "Presents our research and analysis in one place — sourced prices, cost scenarios, and an honest note on coverage.",
+      // W24 — How it lowers costs (Batch X, 2026-09-27), founder-approved.
+      costPath: "It doesn’t cut costs itself. It shows where the money goes — and which of our projects could help to bring it down.",
     },
-    overview: "The dashboard exists because arguing about the cost of living with vibes and headlines gets nobody anywhere. It replaces that with sourced, dated, regional numbers, tracked over time so anyone can see whether a gap is actually closing. Early versions cover only a handful of launch regions and say so plainly, expanding from there — never faking national coverage to look more finished than it is.",
+    // W25 — What this brief covers (Batch X, 2026-09-27), founder-approved.
+    overview: "The dashboard turns the cost of living into sourced, dated, regional numbers, tracked over time so anyone can see whether a gap is closing. Early versions cover a handful of launch regions and expand from there.",
     relatedSectors: "Shelter, Food, Energy (primary — the year-one focus). Water, Transportation, Communication, Healthcare next (Healthcare appears only as a measured cost line, not as a claim about the sector itself).",
     support: "engineering, data methodology, and source-review volunteers; in-kind compute or model access.",
+    // W26 (Batch X, 2026-09-27), founder-approved. Shown as "Resourcing:" in
+    // place of the dossier's resource posture (the dossier is not edited).
+    resourcing: "No budget is allocated yet. Resourcing follows fiscal sponsorship and the early donations, and is planned region by region once the methodology and policy gates are met.",
     cta: "Help build the first regional view.",
   },
   "PRJ-002": {
     // P6-copy: founder-approved opener for the "At a glance" section.
     opener: {
       eyebrow: "What feeds it",
-      h2: "The data underneath.",
-      intro: "The Tracker is the data layer: sourced, dated, licensed prices, refreshed on a published schedule. The Dashboard reads from it.",
+      // X2 (Batch X, 2026-09-27): accent on "data". The eyebrows "What you'll
+      // see" / "What feeds it" stay ink on the wheat band (item 69).
+      h2: 'The <span class="u-1">data</span> underneath.',
+      // W28 (Batch X, 2026-09-27): the intro's first sentence is replaced by the
+      // approved two; the rest of the intro is unchanged.
+      intro: "The Dashboard shows the current picture. The Tracker holds the numbers behind it. The Dashboard reads from it.",
     },
-    publicSummary: "The sourced, dated price data that everything else in The Case stands on.",
+    // W27 — the subline (Batch X, 2026-09-27), founder-approved.
+    publicSummary: "The data showing how each sector’s costs have moved over time.",
     atAGlance: {
-      targets: "A disciplined register of prices and their sources. It has no public page of its own — its product is trustworthy data, not a dashboard.",
-      mechanism: "Official-statistics-first sourcing: national statistical agencies and regulators first, licensed commercial indices only where irreplaceable. Every source is logged with its licence, region coverage, and refresh cadence, and auto-flags “needs refresh” once it goes stale.",
-      costPath: "Removes the recurring cost of re-finding and re-verifying data. Done once, licensed properly, and published openly, so the rest of the movement — and outside researchers — can reuse it instead of re-scraping the same numbers.",
+      // W29 — What it targets (Batch X, 2026-09-27), founder-approved.
+      targets: "The price of every essential, by sector and region — sourced, dated, and kept as history.",
+      // W30 — The mechanism (Batch X, 2026-09-27), founder-approved.
+      mechanism: "Collects prices from official and licensed sources on a published schedule, records each with its source, date, licence and confidence, and keeps the history.",
+      // W31 — How it lowers costs (Batch X, 2026-09-27), founder-approved.
+      costPath: "It doesn’t cut costs. It’s the evidence layer — the numbers everything else stands on.",
     },
     overview: "Without a disciplined tracker, the dashboard becomes screenshots of other people’s numbers — undated, unlicensed, unmaintainable. This project is not a scraper farm; official and licensed sources come first, and anything whose licence forbids republication is marked and linked out to rather than reproduced.",
     relatedSectors: "Shelter, Food, Energy (primary). Water, Transportation, Communication, Healthcare (secondary — cost lines only).",
     support: "data engineering, source and licence review, and public-data partnerships.",
+    // W32 (Batch X, 2026-09-27), founder-approved: same line as PRJ-001 (W26).
+    resourcing: "No budget is allocated yet. Resourcing follows fiscal sponsorship and the early donations, and is planned region by region once the methodology and policy gates are met.",
     cta: "Help keep the register honest.",
   },
   "PRJ-003": {
-    // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
-    // null renders nothing.
-    opener: { eyebrow: null, h2: null, intro: null },
+    // W15 (Batch X, 2026-09-27), founder-approved; checked against the dossier
+    // (components, stated assumptions, reproducibility are all in it).
+    opener: {
+      eyebrow: "What it models",
+      h2: 'The cost of a need, <span class="u-1">taken apart</span>.',
+      intro: "The Model breaks each essential into its real components and tests where a change would actually move the total \u2014 reproducible, with every assumption stated.",
+    },
     publicSummary: "The math behind every claim that automation could lower a specific cost — including when it can’t.",
     atAGlance: {
       targets: "Breaking a cost into its real components (labor, energy, land, materials, waste, market structure, financing, fees, policy) so a reduction claim can be checked, not just asserted.",
@@ -71,6 +94,14 @@ const CONTENT = {
   "PRJ-004": {
     // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
     // null renders nothing.
+    // W16 (Batch X) proposed "What it simulates" / "What a community could [run
+    // for itself]." / "…test shared resources — a greenhouse, a tool library, a
+    // microgrid — against its own costs before anyone spends a dollar." LEFT
+    // EMPTY: it names a greenhouse and a microgrid, which the dossier does not
+    // (its summary names shared solar, a tool library and community growing;
+    // "greenhouse" and "microgrid" appear nowhere in it), and the dossier frames
+    // the Simulator as decision support that compares options, not as something a
+    // community runs.
     opener: { eyebrow: null, h2: null, intro: null },
     publicSummary: "A decision-support comparison for a community that already exists, weighing real intervention options side by side.",
     atAGlance: {
@@ -86,6 +117,11 @@ const CONTENT = {
   "PRJ-005": {
     // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
     // null renders nothing.
+    // W17 (Batch X) proposed "What it packages" / "Own less, [borrow more]." / "A
+    // ready-to-run kit … — the inventory, the rules, the software — …" LEFT EMPTY:
+    // the dossier says the kit "is not inventory" and lists "custom software
+    // builds" as explicitly cut; its summary names liability, insurance, safety
+    // checklists, governance and economics.
     opener: { eyebrow: null, h2: null, intro: null },
     publicSummary: "Documentation and templates for launching a shared-tool library — liability and safety first, because that’s where these projects usually die.",
     atAGlance: {
@@ -101,6 +137,12 @@ const CONTENT = {
   "PRJ-006": {
     // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
     // null renders nothing.
+    // W18 (Batch X) proposed "What it studies" / "Where the savings [actually
+    // go]." / "…who captures the gains when automation cuts a cost — and where
+    // those gains could be routed back to the cost of living." LEFT EMPTY: "routed
+    // back" is a redistribution claim; the dossier says the study "is not advocacy
+    // for any redistribution policy" and cuts policy recommendations from report
+    // one.
     opener: { eyebrow: null, h2: null, intro: null },
     publicSummary: "A nonpartisan, pre-registered study of where automation’s gains actually go — and the conditions under which they’ve reached consumer prices.",
     atAGlance: {
@@ -116,6 +158,12 @@ const CONTENT = {
   "PRJ-007": {
     // V20: the opener slots (PRJ-001's structure), awaiting approved copy.
     // null renders nothing.
+    // W19 (Batch X) proposed "What it plans" / "A plan for one household, [one
+    // region]." / "The Planner turns the Model and the Tracker into a practical
+    // plan for a household or a community …" LEFT EMPTY: the dossier is about a
+    // group planning a community site or initiative, never a household, does not
+    // name the Model or the Tracker as inputs, and produces a draft for
+    // professional review ("It drafts; it never certifies"), not a practical plan.
     opener: { eyebrow: null, h2: null, intro: null },
     publicSummary: "A requirements-drafting assistant for a proposed site or initiative that doesn’t exist yet — every output a draft for professional review, never an approval.",
     atAGlance: {
@@ -131,8 +179,10 @@ const CONTENT = {
 };
 
 // Build-time guard: the copy above is rendered unescaped, so it must contain no
-// raw markup beyond the reviewed <em>. Anything else is a build failure.
-const ALLOWED_TAG = /<\/?em>/g;
+// raw markup beyond the reviewed <em> and the accent span. Anything else is a
+// build failure.
+// Batch X adds the accent span the founder's headlines carry ("[…]").
+const ALLOWED_TAG = /<\/?em>|<span class="u-1">|<\/span>/g;
 (function guard(node, trail) {
   for (const [key, value] of Object.entries(node)) {
     const where = trail ? `${trail}.${key}` : key;

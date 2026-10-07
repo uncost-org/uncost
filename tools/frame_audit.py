@@ -120,6 +120,11 @@ NAMED_EXEMPTIONS = [
     ("/about/", "html > body > main > div",
      "D3 (founder decision 2026-09-25): the Mechanism step list is a full-bleed "
      "band body, not a component panel, and stays unframed. CANVAS-SYNC 84."),
+    ("/movement/", "html > body > main > div",
+     "D3 via X1 (founder brief, Batch X 2026-09-27): the six steps are ONE "
+     "block rendered identically on /about/ and /movement/, so /movement/'s "
+     "step list is the same full-bleed band body D3 keeps unframed on /about/. "
+     "CANVAS-SYNC 123."),
     ("/roadmap/", "html > body > main > section",
      "D3 (founder decision 2026-09-25): the Year one phase list is a full-bleed "
      "band body and stays unframed. CANVAS-SYNC 84."),

@@ -25,17 +25,13 @@ description: "Prices in the news, with the publisher and the date attached. Not 
 <!-- SECTION: news-cost-watch.Cost Watch — title -->
 <div class="titleband" data-screen-label="Cost Watch — title"><h1>Cost <span class="u-1">Watch</span></h1></div>
 <div class="introband">
-  <h2>Cost Watch</h2>
-  <p>Prices in the news, with the publisher and the date attached. Not receipts &mdash; verified figures live in <a href="/receipts/">The Receipts</a>.</p>
+  <h2>{{ pageContent.costWatch.intro.h2 | safe }}</h2>
+  <p>{{ pageContent.costWatch.intro.lead | safe }}</p>
 </div>
 
 <div class="newswrap newswrap--solo">
   <!-- SECTION: news-cost-watch.Cost Watch -->
   <div class="costwatch" data-screen-label="Cost Watch">
-    <div class="newsxref">
-      <p>For Uncost&rsquo;s own updates, see <a href="/news/">the news</a>.</p>
-      <p class="newsxref-def"><b>Reported</b> &mdash; a price or cost figure as published by the linked source, with its date. Cost Watch is a watch list, not a receipt; verified figures live in <a href="/receipts/">The Receipts</a>.</p>
-    </div>
 {#- N5 keyword filter, same progressive-enhancement pattern as /receipts/: the
     bar ships hidden and only /js/keyword-filter.js reveals it, so with JS off
     every item renders and no dead control is shown. -#}
@@ -43,6 +39,11 @@ description: "Prices in the news, with the publisher and the date attached. Not 
       <label for="cfilter-q">Filter these items</label>
       <input id="cfilter-q" type="search" autocomplete="off" placeholder="Try &ldquo;gasoline&rdquo; or &ldquo;BLS&rdquo;&hellip;">
       <span class="rfilter-count" data-filter-count></span>
+    </div>
+{#- X10 (Batch X): below the filter, in the cream-2 band, only this line. The
+    Reported definition that sat here now lives in the drawer. -#}
+    <div class="newsxref">
+      <p>{{ pageContent.costWatch.xref | safe }}</p>
     </div>
     <div id="news-costwatch" class="cwlist">
 {% for row in register.newsFeed %}

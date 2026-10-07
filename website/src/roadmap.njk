@@ -43,7 +43,7 @@ description: "The road ahead, one milestone at a time. Dates are targets; eviden
 <!-- SECTION: roadmap.Longer horizon -->
 <section class="blk blk--ink u-block--ink" data-screen-label="Longer horizon">
   <div class="u-5 eyebrow">The longer horizon</div>
-  <h2 class="u-6 sec">Only when the evidence and safety are <span class="u-1">ready</span>.</h2>
+  <h2 class="u-6 sec">{{ pageContent.roadmap.horizon.h2 | safe }}</h2>
   <div class="gates">
     <div><h3><i></i>Year 2</h3><p>More regions and sectors, the Community Resource Simulator and Library of Things Kit, a wider contributor network, and grant applications.</p></div>
     <div><h3><i></i>Year 3</h3><p>Partner-led, low-risk physical prototypes where funding, safety review, legal capacity, and local operators exist.</p></div>
@@ -53,8 +53,8 @@ description: "The road ahead, one milestone at a time. Dates are targets; eviden
 
 <!-- SECTION: roadmap.Disclaimer -->
 <section class="blk blk--wheat" data-screen-label="Disclaimer">
-  {#- V25: a standard prose band. The eyebrow slot stays empty until approved
-      copy arrives; the band's existing heading is its headline. -#}
+  {#- V25: a standard prose band; W35 fills its eyebrow slot. -#}
+  <div class="eyebrow">{{ pageContent.roadmap.dates.eyebrow }}</div>
   <h2 class="sec">How to read these dates</h2>
   <p class="u-137 lead">Every date on this page is a movable target anchored to Day 1, not a promise. Targets shift as evidence and capacity change; the order of the stages and the gates that protect each one — funding, safety review, legal capacity, and local operators — do not.</p>
 </section>
