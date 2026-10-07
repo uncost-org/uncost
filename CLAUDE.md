@@ -1,6 +1,6 @@
 # Claude / AI contributor instructions
 
-Updated: 2026-07-16
+Updated: 2026-10-08
 
 ## Authority order
 
@@ -21,6 +21,11 @@ If sources conflict, preserve the conflict and stop the affected conclusion. Nev
 - Public facts require source/date/method/confidence; derived figures list all contributing sources.
 - Healthcare, care, child-facing education, safety-sensitive work, vulnerable-person work, and physical pilots remain gated.
 - Donation launch waits for confirmed fiscal sponsorship.
+
+## Commit messages
+
+- Commit messages in uncost-org/uncost carry no Claude-Session links.
+- The `Co-Authored-By:` trailer stays: this repository requires AI disclosure.
 
 ## Independent review protocol
 
