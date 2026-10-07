@@ -10,18 +10,15 @@ description: "Fifteen sectors, one plan each. Every essential of a decent life â
 <!-- SECTION: sectors.Sectors â€” title -->
 <div class="titleband" data-screen-label="Sectors â€” title"><h1>The <span class="u-1">Sectors</span></h1></div>
 <div class="introband">
-  <h2>Basic human needs break into <span class="u-1">fifteen sectors</span> &mdash; and we have a plan to reduce the cost of each.</h2>
-  <p>Living isn&rsquo;t one bill &mdash; it&rsquo;s fifteen: <b>Food</b>, <b>Water</b>, <b>Shelter</b>, <b>Energy</b>, <b>Healthcare</b>, <b>Care</b>, <b>Education</b>, <b>Transportation</b>, <b>Clothing</b>, <b>Goods</b>, <b>Materials</b>, <b>Communication</b>, <b>Safety</b>, <b>Environment</b>, and <b>Leisure</b>. Each sector gets its own dossier &mdash; what it covers, where automation or shared infrastructure could plausibly cut its cost, the guardrail that keeps any intervention honest, and where the evidence currently stands.</p>
-  <p>All fifteen stay visible, on purpose: dropping a sector from view would just be hiding a cost, not lowering one. Year one goes deep on three &mdash; Shelter, Food, and Energy &mdash; with Water next in line. The status on each card shows sequencing, not importance: a &ldquo;Dossier&rdquo; badge means research groundwork, not that the cost doesn&rsquo;t matter.</p>
+  <h2>{{ pageContent.sectors.intro.h2 | safe }}</h2>
 </div>
-<!-- SECTION: sectors.Legend -->
-<div class="legend" data-screen-label="Legend">
-  <span>Status:</span>
-  <span class="lg-pair"><span class="status status--focus">Focus</span><span class="lg-colon">:</span><span class="u-138">building now</span></span>
-  <span class="lg-pair"><span class="status s-next">Next</span><span class="lg-colon">:</span><span class="u-138">next wave</span></span>
-  <span class="lg-pair"><span class="status s-future">Future study</span><span class="lg-colon">:</span><span class="u-138">high-safety, studied cautiously</span></span>
-  <span class="lg-pair"><span class="status s-dossier">Dossier</span><span class="lg-colon">:</span><span class="u-138">research scaffold</span></span>
-</div>
+<!-- SECTION: sectors.Intro -->
+{#- X9 (Batch X): the intro sits in the wheat band directly above the fifteen
+    cards, where the status key strip was; the key is now the drawer below the
+    grid. -#}
+<section class="blk blk--wheat sintro" data-screen-label="Intro">
+  <p class="lead">{{ pageContent.sectors.intro.lead | safe }}</p>
+</section>
 
 <!-- SECTION: sectors.15 sectors -->
 <div class="sgrid" data-screen-label="15 sectors">
@@ -50,6 +47,6 @@ description: "Fifteen sectors, one plan each. Every essential of a decent life â
   <p class="u-44 lead">Supporters help set what comes next through the advisory Assembly. The first step is free.</p>
   <div class="u-40">
     <a href="/pledge/" class="u-btn u-btn--ink">Sign the Pledge</a>
-    <a href="/assembly/" class="u-btn u-btn--ghost">How the Assembly works</a>
+    <a href="/assembly/" class="u-btn u-btn--ghost">{{ pageContent.assembly.howItWorks }}</a>
   </div>
 </section>

@@ -2433,7 +2433,8 @@ body[data-page^="projects-"] .grid3 p{font-size:15px;line-height:1.6;color:var(-
 }
 body[data-page="roadmap"] .gates h3{display:flex;gap:10px;align-items:center}
 body[data-page="roadmap"] .gates h3 i{width:11px;height:11px;background:var(--coral);flex:0 0 auto}
-body[data-page="about"] .isnot h3::before{content:"";display:inline-block;width:11px;height:11px;margin-right:10px;vertical-align:middle;background:var(--coral)}
+/* (V9's square before each box heading is retired by W34: the squares now
+ *  mark each LINE, item 125, and a heading square as well would double them.) */
 
 /* 107. V24 — /contribute/ "Useful roles, right now." ends in a "Volunteer now"
  *      button to /contact/ (the page's own ink button style for that route). */
@@ -2460,7 +2461,9 @@ body[data-page="pledge"] .titleband + .pwrap { border-top: 0 !important; }
  *      from the per-band accent rules (C1/C2): --coral on cream, cream-2 and
  *      ink. No new colour rule. */
 
-/* 110. V17 — /case/: the Methodology drawer's header band is white (was the
+/* 110. RETIRED by X7 (Batch X): /case/ no longer has a Methodology drawer, so
+ *      the rule below matches nothing; kept as the record of V17.
+ *      V17 — /case/: the Methodology drawer's header band is white (was the
  *      export's wheat). Its chevron stays --coral-deep: 5.99:1 on white for a
  *      3:1 non-text bar. The drawer body keeps its cream-2. */
 body[data-page="case"] .mdrawer summary { background: #FFF; }
@@ -2481,23 +2484,19 @@ body[data-page="case"] .mdrawer summary { background: #FFF; }
  * 112, replaced that list with the /about/ format, whose labels are 24px h3s.) */
 
 /* 112. V12 — ONE "How a cost gets uncosted" BLOCK, IN THE /about/ FORMAT.
- *      partials/uncosted.njk renders the /about/ shape — metalabel + headline,
- *      then numbered step rows (numeral, label, text) — on /about/ and inside
- *      /movement/'s own band; _data/uncosted.js carries each page's own step
- *      text, unchanged until approved text arrives. /about/'s step rules are
- *      page-scoped in the export, so they are re-scoped to /movement/ here,
- *      declarations identical except horizontal padding: on /about/ the rows
- *      are bands of their own and pad themselves, on /movement/ the band
- *      already pads. Under this format /movement/'s step labels are the 24px
- *      h3s /about/ uses — larger than the 22.5px V15 asked of the old list. */
-body[data-page="movement"] .seqhd{padding:0 0 8px}
+ *      X1 (Batch X, 2026-09-27) supersedes V12's two variants: one block, one
+ *      set of words, rendered IDENTICALLY on both pages — on /movement/ the
+ *      heading block and the step list are now bands directly under <main>,
+ *      exactly as on /about/, so /about/'s export rules (page-scoped to about
+ *      by the export) are restated here for /movement/ with the SAME values,
+ *      horizontal padding included. (V12's movement-only padding:0 and the
+ *      item 117 frame for the inset list are gone with the inset.) */
+body[data-page="movement"] .seqhd{padding:32px clamp(24px,6vw,80px) 8px}
 body[data-page="movement"] .seqhd h2{font-family:var(--font-display);font-weight:700;font-size:clamp(32px,4.5vw,52px);letter-spacing:-.02em;margin:0}
-body[data-page="movement"] .step{display:grid;grid-template-columns:90px 1fr;gap:24px;align-items:start;padding:24px 0;border-top:2px solid var(--ink)}
+body[data-page="movement"] .step{display:grid;grid-template-columns:90px 1fr;gap:24px;align-items:start;padding:24px clamp(24px,6vw,80px);border-top:2px solid var(--ink)}
 body[data-page="movement"] .step .num{font-family:var(--font-display);font-weight:900;font-size:56px;color:var(--coral);letter-spacing:-.03em;line-height:.85;font-variant-numeric:tabular-nums}
 body[data-page="movement"] .step h3{font-family:var(--font-display);font-weight:700;font-size:24px;letter-spacing:-.01em;margin:0 0 6px}
 body[data-page="movement"] .step p{font-size:15px;line-height:1.6;color:var(--fg-2);margin:0;max-width:66ch}
-body[data-page="movement"] .uncosted-intro{margin:14px 0 22px}
-body[data-page="movement"] .uncosted-close{margin-top:22px}
 @media (max-width:640px){
   body[data-page="movement"] .step{grid-template-columns:56px 1fr;gap:14px}
 }
@@ -2514,7 +2513,8 @@ body[data-page="movement"] .uncosted-close{margin-top:22px}
  *      line exactly half the headline at every width: 38.9px at 1440 (headline
  *      77.8px), 19px at 390 (headline 38px). The step between the two lines
  *      stays C5's .35em of the headline. */
-body[data-page="index"] .hero-grid h1 .u-49 { font-size: .5em; color: var(--ink); }
+/* (Retired by X5, Batch X: the h1 is again "Technology should make living
+ *  cheaper…" at full size; "We aim…" is now a body-intro paragraph.) */
 
 /* 114. V16 — /news/ and /news/cost-watch/: one cream-2 list band, white
  *      cards, cream hover, three-line "Read more".
@@ -2576,6 +2576,8 @@ body[data-page="news"] .cwlist > .cw:hover + .readmore { background: var(--wheat
 body[data-page="news"] .cwlist > .cw[hidden] + .readmore { display: none; }
 
 /* 115. V19 — sector pages (×15) and the /sectors/ status legend.
+ *      (The legend rules below match nothing since X9 retired the strip into
+ *      the drawer; kept as the record of V19.)
  *        01   "bite" takes the accent in "Where automation could bite — and
  *             what stays visible." (template; on ink, so the ink-band accent
  *             rule above paints it --coral).
@@ -2607,24 +2609,24 @@ body[data-page="sectors"] .legend .lg-pair .u-138 { min-width: 0; }
   body[data-page="sectors"] .legend { flex-direction: column; align-items: flex-start; gap: 10px; }
 }
 
-/* 116. V11 — THE LABELS DRAWER (partials/labels-drawer.njk, _data/labels.js).
- *      Styled as the /case/ Methodology drawer, whose rules are all scoped to
- *      body[data-page="case"] by the export and so cannot simply be reused.
- *      These restate its RESOLVED values, read from the rendered /case/
- *      drawer at 1440, not from the source rules:
- *        header   white (V17), display face 700 17px, 18px × clamp(24px,6vw,
- *                 80px) padding, the FAQ chevron in --coral-deep (item 43)
- *                 turning -135deg when open
- *        body     --cream-2, 2px ink rule under the header, 28px × the same
- *                 side padding
- *        heading  body face 700 24px, uppercase, .06em, --fg-3 (items 34, 59)
- *        text     17.5px / 1.6, --fg-2 (item 59)
- *      The families stack in one column (the /case/ drawer's two columns are
- *      its rules/labels split; this drawer holds a full-width table on
- *      /receipts/). Label names sit in a wrapping row, chips at their own
- *      size, no margins of their own. */
-/* Its top edge is a band boundary, so R1 draws it: 4px, coral (no page
- * places it under a coral band) — as `.blk + .mdrawer` does on /case/. */
+/* 116. THE DRAWER — V11's labels drawer, rebuilt by X11 (Batch X) as ONE
+ *      template: header row, THE RULES (left column, bullets) and THE LABELS
+ *      (right column, chip | what it tells you). Shipped as VARIANT 1 of the
+ *      X12 decision renders:
+ *        header   --cream-2 (V11 had it white, as V17's /case/ drawer), and
+ *                 NO rule line between header and body — they read as one
+ *                 panel. Display face 700 17px, the /case/ drawer's padding,
+ *                 and the chevron as it was (item 43's --coral-deep, turning
+ *                 -135deg when open)
+ *        body     --cream-2, 28px × clamp(24px, 6vw, 80px), two columns from
+ *                 881px, one below; each column opens on the /case/
+ *                 drawer's heading style (body face 700 24px, uppercase)
+ *        rules    17.5px / 1.6 --fg-2 bullets (the /case/ drawer's text)
+ *        labels   the retired /receipts/ table's own style, restated here
+ *                 because the export scopes `.conftable` to /receipts/ and
+ *                 the drawer now serves seven pages
+ *      Its top edge is a band boundary, so R1 draws it: 4px coral (no page
+ *      places it under a coral band). */
 .ldrawer { border-top: 4px solid var(--coral); }
 .ldrawer summary {
   list-style: none;
@@ -2634,7 +2636,7 @@ body[data-page="sectors"] .legend .lg-pair .u-138 { min-width: 0; }
   align-items: center;
   justify-content: space-between;
   padding: 18px clamp(24px, 6vw, 80px);
-  background: #FFF;
+  background: var(--cream-2);
   color: var(--ink);
   font-family: var(--font-display);
   font-weight: 700;
@@ -2657,10 +2659,13 @@ body[data-page="sectors"] .legend .lg-pair .u-138 { min-width: 0; }
 .ldrawer[open] summary::after { transform: rotate(-135deg); }
 .ldrawer-body {
   display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 32px;
-  padding: 28px clamp(24px, 6vw, 80px);
+  padding: 10px clamp(24px, 6vw, 80px) 32px;
   background: var(--cream-2);
-  border-top: 2px solid var(--ink);
+}
+@media (max-width: 880px) {
+  .ldrawer-body { grid-template-columns: minmax(0, 1fr); }
 }
 .ldrawer-body h3 {
   font-family: var(--font-body);
@@ -2670,38 +2675,266 @@ body[data-page="sectors"] .legend .lg-pair .u-138 { min-width: 0; }
   letter-spacing: .06em;
   text-transform: uppercase;
   color: var(--fg-3);
-  margin: 0 0 10px;
+  margin: 0 0 14px;
 }
+.ldrawer-rules ul { margin: 0; padding-left: 1.2em; }
+.ldrawer-rules li,
 .ldrawer-body p {
   font-size: 17.5px;
   line-height: 1.6;
   color: var(--fg-2);
-  margin: 16px 0 0;
-  max-width: min(66vw, 960px);
 }
-.ldrawer-names {
-  list-style: none;
+.ldrawer-rules li + li { margin-top: 8px; }
+.ldrawer-body p { margin: 14px 0 0; }
+.ldrawer .conftable { width: 100%; border-collapse: collapse; border: 2px solid var(--ink); background: var(--cream); }
+.ldrawer .conftable th {
+  background: var(--ink);
+  color: var(--cream);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  text-align: left;
+  padding: 12px 16px;
+}
+.ldrawer .conftable td { border-top: 2px solid var(--ink); padding: 14px 16px; font-size: 15px; line-height: 1.5; vertical-align: top; }
+.ldrawer .conftable td:first-child:not(:only-child) { width: 180px; }
+.ldrawer .conftable td > * { margin: 0; }
+
+/* 117. (V12 follow-up: the frame on /movement/'s inset step list.) RETIRED by
+ *      X1 — the list is no longer inset; it renders exactly as /about/'s. */
+
+/* 118. X1 — the one "How a cost gets uncosted" block, both pages.
+ *      Headline: ink, with "uncosted" coral and underlined, the full stop in
+ *      ink. The export's `.u-4` paints the whole h2 #D64A1F with !important,
+ *      so the ink is restated at (0,3,2) !important; the <u class="u-1">
+ *      takes --coral from the one-accent rule (item 41 family) and keeps the
+ *      UA underline, drawn per V8.
+ *      Closing line: the last row of the step list, under the last step's
+ *      `.u-2` rule, padded like a step so it lines up with the step text
+ *      column's left edge at the band's own inset. */
+body:is([data-page="about"], [data-page="movement"]) .seqhd h2.u-4 { color: var(--ink) !important; }
+/* The line's TEXT column is the one wrap point (C4). Item 78 caps
+ * `.seqhd + * > p` at min(66vw, 960px) !important, but this paragraph carries
+ * the band inset as padding (border-box), so that cap would squeeze its text
+ * to 209px at 390; the cap is restated here with the padding added back. */
+body:is([data-page="about"], [data-page="movement"]) .seqhd + div > p.uncosted-close {
   margin: 0;
-  padding: 0;
+  padding: 24px clamp(24px, 6vw, 80px) 32px;
+  font-size: 18px;
+  line-height: 1.6;
+  max-width: calc(min(66vw, 960px) + 2 * clamp(24px, 6vw, 80px)) !important;
+}
+/* On /movement/ the block follows the wheat "What we stand for" band (on
+ * /about/ it follows a cream band, so no rule is owed there): R1's boundary
+ * rule, 4px coral, drawn by the block's top edge. */
+body[data-page="movement"] .blk--wheat + .seqhd { border-top: 4px solid var(--coral); }
+
+
+/* 119. X17 — SEARCH SCOPE FILTERS (partials/search.njk, js/site-search.js,
+ *     _data/searchScopes.json). With script on, the overlay's destination
+ *     buttons become scope filters over the compile-time index: "All of the
+ *     site" (default, pressed on every open), The Receipts, Sectors, Projects,
+ *     Policies, The Case, News & Cost Watch (X.1: eight — The Sectors, The
+ *     Projects, The Policies, Uncost News and Cost Watch). They are real <button>s with
+ *     aria-pressed inside `.so-search`, which ships `hidden`, so with script
+ *     off none renders and the destination row renders exactly as before;
+ *     with script on the row's class-less `[data-search-links]` wrapper is
+ *     hidden (the cascade trap in js/show-more.js — never `hidden` on
+ *     `.so-links`, whose class sets display:flex).
+ *       look     the destination row's own treatment (design-system/site.css
+ *                `.search-ov .so-links a`): 2px ink border, --cream ground,
+ *                display face 700 15px, 10px × 16px — the same device, now
+ *                filtering instead of navigating
+ *       pressed  reversed: ink ground, cream text (18.3:1)
+ *       hover    --wheat, as the links (ink on wheat 10.5:1)
+ *       focus    3px --coral-deep outline, as the result links (stream S),
+ *                offset outward here because the row does not scroll
+ *     Sits between the input and the status line; the status keeps its own
+ *     12px top margin. Without these rules the filters still work — they
+ *     render as default buttons. */
+.search-ov .so-scopes {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  gap: 10px 12px;
+  gap: 10px;
+  margin-top: 20px;
 }
-.ldrawer-names li > * { margin: 0; }
+.search-ov .so-scope {
+  border: 2px solid var(--ink);
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.2;
+  padding: 10px 16px;
+  cursor: pointer;
+}
+.search-ov .so-scope:hover { background: var(--wheat); }
+.search-ov .so-scope[aria-pressed="true"] { background: var(--ink); color: var(--cream); }
+.search-ov .so-scope:focus-visible { outline: 3px solid var(--coral-deep); outline-offset: 2px; }
 
-/* 117. V12 follow-up — /movement/'s step list takes its R2 frame.
- *      On /about/ the same list is a full-bleed band body and D3 keeps it
- *      unframed (frame_audit names it). On /movement/ V12 puts it INSIDE the
- *      page's padded cream-2 band, so it is an inset panel drawing 2px ink
- *      dividers — exactly the case C14 framed on the sector six-step list
- *      (.steps6, item 96). frame_audit caught it at Batch V verify: open on
- *      all four sides at 1440, 1290 and 390. Same treatment as .steps6: a 2px
- *      ink frame and 24px cell padding. The frame is now the list's top and
- *      bottom edge, so the first row gives up its top divider and the last
- *      gives up `.u-2`'s bottom rule (the export's, !important) — one line
- *      each, not two. */
-body[data-page="movement"] section > div:has(> .step) { border: 2px solid var(--ink); }
-body[data-page="movement"] section > div:has(> .step) > .step { padding-left: 24px; padding-right: 24px; }
-body[data-page="movement"] section > div:has(> .step) > .step:first-child { border-top: 0; }
-body[data-page="movement"] section > div:has(> .step) > .step.u-2 { border-bottom: 0 !important; }
+/* 120. X7 — /case/: the Methodology drawer is gone; in its place one line,
+ *      "How The Receipts work →", to the drawer that now explains them on
+ *      /receipts/ (#how-it-works). It keeps the drawer's own row shape — the
+ *      display face 700 17px of a drawer header, the same band inset — so the
+ *      page's rhythm between "What living costs" and the closing CTA does not
+ *      change. Link colour is the light-ground link colour (--coral-deep). */
+body[data-page="case"] .howlink {
+  border-top: 4px solid var(--coral);   /* R1: wheat above, cream here */
+  padding: 18px clamp(24px, 6vw, 80px);
+  background: var(--cream);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 17px;
+}
+
+/* 121. X6 / X10 — the news cross-reference line ("For current cost news … see
+ *      Cost Watch." / "For Uncost's own updates, see Uncost.org News.") moves
+ *      BELOW the keyword filter on both news routes, italic except its link,
+ *      and loses the 3px ink left bar (item 77). With no bar there is no box
+ *      to pad: the line starts at the list's own left edge. */
+body[data-page="news"] .newsxref {
+  border-left: 0;
+  padding: 0;
+  background: none;
+  margin: 0 0 22px;
+}
+body[data-page="news"] .newsxref p { font-style: italic; }
+body[data-page="news"] .newsxref a { font-style: normal; }
+
+/* 122. X9 — /sectors/: the introband keeps only the headline; the intro (W10)
+ *      moves into the WHEAT band directly above the fifteen cards, where the
+ *      status key strip was; the strip becomes the drawer below the grid.
+ *      The paragraph is the band's lead, set at 20px, which is what lets the
+ *      fifteen bold sector names keep their accent on wheat: bold at 20px is
+ *      large text (3:1), and --coral-deep on --wheat is 3.25:1. At the old
+ *      18px they would have needed 4.5:1. */
+body[data-page="sectors"] .sintro .lead { font-size: 20px; }
+/* Item 69 sends small bold text on wheat to ink at (0,2,0) !important; at
+ * 20px these names are large text, so the accent is restated above it. */
+body[data-page="sectors"] .sintro .lead b { color: var(--coral-deep) !important; }
+
+/* 123. Batch X — the project "At a glance" opener headlines carry accent spans
+ *      (W15, W21, X2). `.u-124` is a wheat band, so the display accent takes
+ *      --coral-deep there (D4: 3.25:1 against the large-text 3:1 bar); the
+ *      generic `h2 .u-1` rule would paint --coral, 2.3:1 on wheat. The
+ *      eyebrows on this band are already ink (item 69, `.u-124 .eyebrow`). */
+.u-124 :is(h1, h2, h3) .u-1 { color: var(--coral-deep) !important; }
+
+/* 124. X14 — ONE TEMPLATE, ONE LOOK: the seven project pages.
+ *      All seven render from projects/project.njk (one template since V20),
+ *      yet four rendered unstyled: no ink project head, a bare breadcrumb,
+ *      text flush to the page edge, an unframed funding box, plain sector
+ *      links. Cause: the design export scopes every project-page rule to a
+ *      single page — :where(body[data-page="projects-<slug>"]) — and it only
+ *      shipped three project pages (PRJ-001, -002, -003), so PRJ-004 to -007
+ *      (automation-dividend-study, basic-needs-planner,
+ *      community-resource-simulator, library-of-things-kit) matched none of
+ *      the 28 rules. The fix restates the export's own set ONCE for every
+ *      project page, with the same zero-specificity :where() wrapper, so it
+ *      sits exactly where the export's copies sit in the cascade and every
+ *      later override behaves as it does on PRJ-001. Declarations are
+ *      byte-identical to the export's (the three shipped copies are
+ *      identical, checked rule by rule). The five `.grid3` rules are omitted:
+ *      V9 (item 106) already restated them for every project page.
+ *      tools/template_structure.py found it: style differences in every
+ *      section of those four pages, and none after. */
+:where(body[data-page^="projects-"]) .p-head{background:var(--ink);color:var(--cream);padding:34px clamp(24px,5vw,56px) 40px}
+:where(body[data-page^="projects-"]) .breadcrumb{font-weight:500;font-size:13px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:28px;color:#C9C5BA}
+:where(body[data-page^="projects-"]) .breadcrumb a{color:inherit;text-decoration:none}
+:where(body[data-page^="projects-"]) .breadcrumb a:hover{color:var(--coral)}
+:where(body[data-page^="projects-"]) .p-meta{display:flex;flex-wrap:wrap;gap:10px 14px;margin-bottom:20px;align-items:center}
+:where(body[data-page^="projects-"]) .p-meta .pid{font-family:var(--font-display);font-weight:900;font-size:14px;letter-spacing:.04em;background:var(--coral);color:var(--ink);padding:5px 12px}
+:where(body[data-page^="projects-"]) .p-head h1{font-family:var(--font-display);font-weight:700;font-size:clamp(40px,6vw,80px);letter-spacing:-.03em;line-height:.92;margin:0;color:var(--cream);max-width:20ch}
+:where(body[data-page^="projects-"]) .p-head .tagline{font-size:clamp(18px,2.2vw,24px);line-height:1.4;color:#D9D5CB;margin:20px 0 0;max-width:60ch}
+:where(body[data-page^="projects-"]) .blk{padding:clamp(48px,7vw,84px) clamp(24px,5vw,56px);border-top:4px solid var(--coral)}
+:where(body[data-page^="projects-"]) .blk .eyebrow{margin-bottom:14px;opacity:1}
+:where(body[data-page^="projects-"]) .blk h2{font-family:var(--font-display);font-weight:700;font-size:clamp(32px,4.6vw,56px);letter-spacing:-.02em;line-height:1;margin:0 0 26px;text-wrap:balance}
+:where(body[data-page^="projects-"]) .blk--cream2{background:var(--cream-2)}
+:where(body[data-page^="projects-"]) .lead{font-size:18px;line-height:1.65;max-width:66ch;color:var(--fg-2);margin:0 0 16px}
+:where(body[data-page^="projects-"]) .fund{border:2px solid var(--ink);background:var(--cream);max-width:820px}
+:where(body[data-page^="projects-"]) .fund .fh{background:var(--ink);color:var(--cream);padding:16px 22px;font-family:var(--font-display);font-weight:700;font-size:16px;letter-spacing:.04em;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+:where(body[data-page^="projects-"]) .fund .fb{padding:22px 24px}
+:where(body[data-page^="projects-"]) .fund p{font-size:15px;line-height:1.6;color:var(--fg-2);margin:0 0 10px}
+:where(body[data-page^="projects-"]) .fund p:last-child{margin-bottom:0}
+:where(body[data-page^="projects-"]) .rel{display:flex;gap:16px;flex-wrap:wrap}
+:where(body[data-page^="projects-"]) .rel a{display:inline-flex;align-items:center;gap:10px;background:var(--cream);color:var(--ink);border:2px solid var(--ink);padding:12px 18px;text-decoration:none;font-family:var(--font-display);font-weight:700;font-size:18px}
+:where(body[data-page^="projects-"]) .rel a:hover{background:var(--ink);color:var(--cream)}
+:where(body[data-page^="projects-"]) .rel .sq{width:16px;height:16px;display:inline-block}
+
+/* 125. W34 — /about/ "What Uncost is / is not" boxes. Headings read "What
+ *      Uncost is" / "What Uncost is not" with the accent + underline on
+ *      "is" / "is not" (a <u class="u-1">, coral from the accent rule, the
+ *      underline per V8). Every line of both lists takes the orange square
+ *      bullet — the 11px --coral square of the house marker (V9) — in place
+ *      of the default disc, and V9's square before the heading is retired so
+ *      the marker is not doubled. */
+body[data-page="about"] .isnot ul { list-style: none; padding-left: 0; }
+body[data-page="about"] .isnot li { position: relative; padding-left: 23px; }
+body[data-page="about"] .isnot li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: .55em;
+  width: 11px;
+  height: 11px;
+  background: var(--coral);
+}
+
+/* 126. X3 — /about/ "What Uncost is — and is not." is INK with only "Uncost"
+ *      in the accent. The export paints the whole `h2.u-4` coral (!important)
+ *      and item 72 turns it --coral-deep on this #F5AB2E band; the heading is
+ *      restated ink here, and "Uncost" keeps the band's accent rule, which
+ *      is --coral-deep (3.35:1 against the large-text bar; --coral would be
+ *      2.2:1 on this ground). */
+body[data-page="about"] .u-7 h2.u-4.sec { color: var(--ink) !important; }
+
+/* 127. X4 — /treasury/: the three standing-rule box titles take the orange
+ *      square bullet. The markup already carries the marker (`<h3><i></i>…`,
+ *      as /about/'s principles do), but the export styles `.prin h3 i` for
+ *      /about/ only, so on /treasury/ the <i> rendered as nothing. Restated
+ *      with /about/'s own values: an 11px --coral square, 10px from the
+ *      title, centred on its first line. */
+/* These titles wrap to two lines at 1440 (/about/'s fit on one), so the
+ * square is set on the FIRST line — half the line box down, less half the
+ * square — rather than centred on the whole title. */
+body[data-page="treasury"] .prin h3 { display: flex; gap: 10px; align-items: flex-start; }
+body[data-page="treasury"] .prin h3 i { width: 11px; height: 11px; background: var(--coral); flex: 0 0 auto; margin-top: calc(.5lh - 5.5px); }
+
+/* 128. X5 — homepage hero, in the founder's order:
+ *        1  <h1> "Technology should make living cheaper, not billionaires
+ *           richer." — display face, ink, accent --coral (`.hl` in a heading
+ *           is a display accent, item 41 family). V14 had dropped it; see
+ *           CANVAS-SYNC 137.
+ *        2  "We aim to significantly reduce the cost of living…" — the SAME
+ *           style as the intro sentence below: it is `.u-52.lead` (Inter 500,
+ *           24px at 1440, ink), a second copy of that paragraph's own class.
+ *        3  "Uncost the cost of living." — unchanged: gold "Uncost" (.u-51),
+ *           coral rest (.u-50). It left the <h1> (a heading cannot hold the
+ *           body-style line 2 between its two lines), so it is its own line
+ *           here, restating the hero h1's own type — clamp(38px,5.4vw,82px),
+ *           700, .96 line height, -.02em, 15ch, balanced — so it renders at
+ *           exactly the <h1>'s size at every width.
+ *        4  The intro, broken before "living should not have a price tag.",
+ *           which is underlined and takes the accent. In the body face the
+ *           accent is --coral-deep (the house rule for accents set in running
+ *           text); at 24px either coral would pass. */
+body[data-page="index"] .hero-grid .hero-slogan {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(38px, 5.4vw, 82px);
+  line-height: .96;
+  letter-spacing: -.02em;
+  max-width: 15ch;
+  text-wrap: balance;
+  margin: 30px 0 0;
+}
+body[data-page="index"] .hero-grid .hero-aim { margin-top: 30px; }
+
+/* 129. X15 — /assembly/ "What the Assembly can — and cannot — decide." is
+ *      ink with only "decide" in the accent. The export paints the whole
+ *      `h2.u-16` #D64A1F (!important); the heading is restated ink and the
+ *      accent keeps the light-band display coral. */
+body[data-page="assembly"] h2.u-16.sec { color: var(--ink) !important; }

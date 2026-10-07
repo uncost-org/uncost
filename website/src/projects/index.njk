@@ -12,7 +12,7 @@ mainClass: "u-104"
 <!-- SECTION: projects.Projects — title -->
 <div class="titleband" data-screen-label="Projects — title"><h1>The <span class="u-1">Projects</span></h1></div>
 <div class="u-46 introband">
-  <h2>From evidence to real cost reduction.</h2>
+  <h2>{{ pageContent.projects.intro.h2 | safe }}</h2>
   <p>The Projects are how Uncost moves from evidence to action: open-source tools, data models, and automation playbooks that communities, co-ops, nonprofits, public agencies, and builders can run themselves. We don&rsquo;t own the farm — we publish the model, the sources, and the playbook so others can adopt and improve them.</p>
 </div>
 
@@ -33,21 +33,21 @@ mainClass: "u-104"
 <!-- SECTION: projects.Next -->
 <div class="plist" data-screen-label="Next">
 {% for p in catalog.projects.slice(3) %}
-  <a class="prow" href="/projects/{{ p.slug }}/"><span class="pid">{{ p.id }}</span><div><h4>{{ p.display }}</h4><p>{{ projectContent[p.id].publicSummary }}</p></div><div class="rt"><span class="status status--planned">Draft</span></div></a>
+  <a class="prow" href="/projects/{{ p.slug }}/"><span class="pid">{{ p.id }}</span><div><h4>{{ p.display }}</h4><p>{{ projectContent[p.id].publicSummary }}</p></div><div class="rt"><span class="status status--dev">Draft</span></div></a>
 {% endfor %}
 </div>
 
 <!-- SECTION: projects.Later -->
 <section class="blk blk--ink u-block--ink" data-screen-label="Later">
   <div class="u-111 eyebrow">Later — studies &amp; demonstrations</div>
-  <h2 class="u-112 sec">Gated on funding and safety.</h2>
+  <h2 class="u-112 sec">{{ pageContent.projects.later.h2 | safe }}</h2>
   <p class="u-113 lead">Longer-term studies and partner-led physical demonstrations — greenhouses, filtration, solar, storage, circular materials — are treated as research and design tracks until there is funding, a local operator, safety review, legal capacity, insurance, and site permissions. None involves Uncost directly providing healthcare, care, child-facing education, or safety services.</p>
 </section>
 
 <!-- SECTION: projects.How they help -->
 <section class="blk blk--cream" data-screen-label="How they help">
   <div class="eyebrow">The honest chain</div>
-  <h2 class="u-114 sec">Every project has to earn its cost claim.</h2>
+  <h2 class="u-114 sec">{{ pageContent.projects.howTheyHelp.h2 | safe }}</h2>
   <p class="u-108 lead">A project only counts as a cost-reduction path where energy, capital, maintenance, and local conditions make a net reduction plausible. Where the model shows it doesn&rsquo;t beat the status quo, we publish that negative result too. Where a cost driver is policy rather than technology, our role is open data and nonpartisan analysis — never partisan lobbying.</p>
 </section>
 

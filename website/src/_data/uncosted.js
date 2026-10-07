@@ -1,45 +1,27 @@
-// V12 (2026-09-26): ONE "How a cost gets uncosted" block, in the /about/
-// format, rendered on /about/ and /movement/ by partials/uncosted.njk.
+// X1 (Batch X, 2026-09-27): ONE "How a cost gets uncosted" block, rendered
+// identically on /about/ and /movement/ by partials/uncosted.njk.
 //
-// The two pages have carried DIFFERENT step text since UNP-82 v2 moved a
-// six-step block onto /movement/, and the founder's instruction is that the
-// step text stays unchanged until an approved version arrives. So the format
-// is shared now and the words are not: each page keeps its own, verbatim.
+// Founder-approved copy, verbatim (typography only: ' → &rsquo;, — → &mdash;).
+// The FORMAT is /about/'s — metalabel + headline, numbered step rows, and now
+// a closing line — and so is the step text for steps 1, 2 and 6. Steps 3, 4
+// and 5 and the closing line are the approved replacements. The /movement/
+// variant (its own eyebrow, intro and step text, from UNP-82 v2 via
+// pageContent.js) is retired entirely: V12 shared the format and kept two sets
+// of words; X1 makes it one set.
 //
-//   about     lifted verbatim from about.njk, where re-derivation from the
-//             export would otherwise overwrite it
-//   movement  derived from _data/pageContent.js (movement.howACostGetsUncosted)
-//             without changing a character: each "<b>Label.</b> text" step is
-//             split into its label and its text
-//
-// When the approved text arrives it replaces both sets at once, here.
-const pc = require("./pageContent.js");
-
-const mv = pc.movement.howACostGetsUncosted;
-const split = (s) => {
-  const m = /^<b>([\s\S]*?)<\/b>\s*([\s\S]*)$/.exec(s);
-  if (!m) throw new Error("uncosted.js: movement step is not '<b>Label</b> text': " + s.slice(0, 60));
-  return { label: m[1], text: m[2] };
-};
+// Headline: ink, with "uncosted" coral and underlined and the full stop in ink
+// (the <u> carries the accent; integration.css item 118 paints it).
 
 module.exports = {
-  about: {
-    label: "The mechanism",
-    heading: "How a cost gets uncosted.",
-    steps: [
-      { label: "Measure", text: "Measure the current cost and its context, starting from public data." },
-      { label: "Publish", text: "Publish the sources, dates, methods, and confidence labels — openly, so anyone can check the work." },
-      { label: "Break down", text: "Split the cost stack into its real components: labor, energy, land, materials, waste, market structure, financing, fees, and policy." },
-      { label: "Match", text: "Match plausible AI, robotics, sharing, infrastructure, or public-interest mechanisms to specific components." },
-      { label: "Package", text: "Package the result as open evidence, software, a brief, or a playbook local groups can use. Uncost publishes; local operators decide and act." },
-      { label: "Track", text: "Track whether total cost actually falls — and publish negative results with the same prominence as wins." },
-    ],
-  },
-  movement: {
-    label: mv.eyebrow,
-    heading: mv.h2,
-    intro: mv.intro,
-    steps: mv.steps.map(split),
-    close: mv.close,
-  },
+  label: "The mechanism",
+  heading: 'How a cost gets <u class="u-1">uncosted</u>.',
+  steps: [
+    { label: "Measure", text: "Measure the current cost and its context, starting from public data." },
+    { label: "Publish", text: "Publish the sources, dates, methods, and confidence labels &mdash; openly, so anyone can check the work." },
+    { label: "Break down", text: "Split the cost into its real parts &mdash; land, energy, labour, materials, maintenance, and so on." },
+    { label: "Match", text: "Work out where AI, robotics or automation can reduce costs, component by component." },
+    { label: "Package", text: "Turn the result into free, open-source tools or playbooks any community can review and implement." },
+    { label: "Track", text: "Track whether total cost actually falls &mdash; and publish negative results with the same prominence as wins." },
+  ],
+  close: "We do the research, run the analysis, give the resources away free, and track the results &mdash; with one aim: lower costs, in every sector, in every region.",
 };

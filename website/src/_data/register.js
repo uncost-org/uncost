@@ -129,15 +129,20 @@ module.exports = function () {
   // STRICTLY GREATER than the period. A monthly row checked 31 days ago is
   // still in date; on day 32 it flips.
   //
-  // Any other cadence — today `biennial` and `retired-final-edition` — has NO
-  // period in V4, and one is deliberately not invented here: those rows never
-  // flip by date, and are listed in `undefinedCadence` so the build surfaces
-  // them for a founder decision instead of silently passing them as fresh. An
-  // empty or misspelt cadence lands in the same list.
+  // W41 (Batch X, 2026-09-27, founder decision): biennial = 731 days (two
+  // years including a leap day, the same longest-run rule), and any cadence
+  // containing "final" — today `retired-final-edition` — never flips by date:
+  // a final edition will not be re-issued, so there is nothing to re-check.
+  //
+  // Any other cadence has NO period, and one is deliberately not invented
+  // here: those rows never flip by date, and are listed in `undefinedCadence`
+  // so the build surfaces them for a founder decision instead of silently
+  // passing them as fresh. An empty or misspelt cadence lands in the same list.
   //
   // A missing or malformed last_checked is not evidence of freshness: that row
   // is due whatever its cadence, and is listed in `uncheckable`.
-  const CADENCE_DAYS = { weekly: 7, monthly: 31, quarterly: 92, annual: 366, "on-change": null };
+  const CADENCE_DAYS = { weekly: 7, monthly: 31, quarterly: 92, annual: 366, biennial: 731, "on-change": null };
+  const isFinal = (cadence) => /final/i.test(cadence);
   const DAY_MS = 24 * 60 * 60 * 1000;
   // Strict YYYY-MM-DD -> UTC-midnight ms, or null. The round-trip rejects dates
   // JS would silently roll over (2026-02-30 would otherwise become March 2).
@@ -161,8 +166,8 @@ module.exports = function () {
   const uncheckable = [];
   for (const row of all) {
     const cadence = (row.refresh_cadence || "").trim();
-    const known = Object.prototype.hasOwnProperty.call(CADENCE_DAYS, cadence);
-    const period = known ? CADENCE_DAYS[cadence] : null;
+    const known = Object.prototype.hasOwnProperty.call(CADENCE_DAYS, cadence) || isFinal(cadence);
+    const period = isFinal(cadence) ? null : known ? CADENCE_DAYS[cadence] : null;
     const checkedMs = isoDay(row.last_checked);
     row.checkedDaysAgo = checkedMs === null ? null : Math.round((todayMs - checkedMs) / DAY_MS);
     if (!known) undefinedCadence.push({ source_id: row.source_id, refresh_cadence: cadence });

@@ -1,0 +1,29 @@
+<!doctype html><meta charset=utf-8><title>good scopes</title>
+<style>.search-ov{display:none;position:fixed;inset:0;background:#fff}
+.search-ov.open{display:block} .search-ov--nojs{position:static;display:block}
+.so-links{display:flex;gap:4px}</style>
+<body><a href="/x/" data-search>Search</a>
+<div class="search-ov search-ov--nojs">
+<div class=so-search data-search-box hidden><input id=site-search>
+<div class=so-scopes><button type=button data-search-scope="all" aria-pressed="true">All of this site</button><button type=button data-search-scope="receipts" aria-pressed="false">The Receipts</button><button type=button data-search-scope="sectors" aria-pressed="false">The Sectors</button><button type=button data-search-scope="projects" aria-pressed="false">The Projects</button><button type=button data-search-scope="policies" aria-pressed="false">The Policies</button><button type=button data-search-scope="case" aria-pressed="false">The Case</button><button type=button data-search-scope="news" aria-pressed="false">Uncost News</button><button type=button data-search-scope="costwatch" aria-pressed="false">Cost Watch</button></div><ul data-search-results></ul></div>
+
+<div data-search-links><div class=so-links><a href="/a/">A</a><a href="/b/">B</a></div></div>
+</div>
+<script>
+var ov=document.querySelector('.search-ov'); ov.classList.remove('search-ov--nojs');
+var box=ov.querySelector('[data-search-box]'), inp=ov.querySelector('#site-search'),
+    list=ov.querySelector('[data-search-results]'), scope='all', FILTERS=true;
+var DATA=[{t:'Food sector',s:'sectors'},{t:'Food project',s:'projects'},{t:'Food case',s:'case'}];
+function render(){ list.textContent=''; var q=inp.value.trim().toLowerCase(); if(!q) return;
+  DATA.forEach(function(d){ if(FILTERS && scope!=='all' && d.s!==scope) return;
+    if(d.t.toLowerCase().indexOf(q)<0) return;
+    var li=document.createElement('li'); li.setAttribute('data-section',d.s); li.textContent=d.t;
+    list.appendChild(li); }); }
+ov.querySelectorAll('[data-search-scope]').forEach(function(b){ b.addEventListener('click',function(){
+  scope=b.getAttribute('data-search-scope');
+  ov.querySelectorAll('[data-search-scope]').forEach(function(x){ x.setAttribute('aria-pressed', x===b?'true':'false'); });
+  render(); }); });
+inp.addEventListener('input',render);
+document.querySelector('[data-search]').addEventListener('click',function(e){ e.preventDefault(); ov.classList.add('open'); });
+box.hidden=false; ov.querySelector('[data-search-links]').hidden=true;
+</script></body>
