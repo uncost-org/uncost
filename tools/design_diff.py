@@ -9,7 +9,9 @@ attributes) and ignores text, which is the dynamic-slot layer.
 import os, re, sys, json, pathlib
 from collections import Counter
 
-EXPORT = pathlib.Path(os.environ.get("UNCOST_DESIGN_SOURCE", "../uncost-private/design-source"))
+if not os.environ.get("UNCOST_DESIGN_SOURCE"):
+    raise SystemExit("Set UNCOST_DESIGN_SOURCE to the approved design export.")
+EXPORT = pathlib.Path(os.environ["UNCOST_DESIGN_SOURCE"])
 if EXPORT.name != "pages":
     EXPORT = EXPORT / "pages"
 DIST = pathlib.Path("website/dist")

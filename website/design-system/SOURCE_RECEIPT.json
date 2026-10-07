@@ -3,10 +3,8 @@
   "version": "1.2.0",
   "generated_at": "2026-07-22T23:12:56+07:00",
   "issue": {
-    "id": "68cc2371-0764-4d85-b8b0-5eaf623346f8",
-    "identifier": "UNP-46",
-    "title": "Ingest final Claude Design handoff and publish safe review PR (no merge/deploy)",
-    "company_id": "17037973-1d3f-4514-bb16-6d51b30b443c"
+    "title": "Ingest final design handoff and publish safe review PR (no merge/deploy)",
+    "provenance": "Internal workflow identifiers retained privately."
   },
   "base": {
     "repository": "uncost-org/uncost",
@@ -77,7 +75,7 @@
     "archive_env": "UNCOST_DESIGN_HANDOFF_ARCHIVE",
     "extracted_env": "UNCOST_DESIGN_HANDOFF_EXTRACTED",
     "extracted_root_policy": "exact-wrapper-or-frozen-prefix-stripped",
-    "external_review": "CARLBOT_UNP46_REVIEW_2"
+    "external_review": "External review provenance retained privately."
   },
   "canonical_references": [
     {

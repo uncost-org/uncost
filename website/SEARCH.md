@@ -36,8 +36,7 @@ and the ten policy pages, `/privacy`, `/contact`.
   fonts, icons — nothing there is a page).
 - Draft, internal, gated, privacy-sensitive, or unpublished content of any
   kind: nothing enters the index that the site does not publish, and the
-  shipped search bundle must not embed excerpts of excluded pages
-  (Carlbot review point 3, 2026-07-19 decision record).
+  shipped search bundle must not embed excerpts of excluded pages.
 
 ## Verification obligations for the implementing pull request
 
