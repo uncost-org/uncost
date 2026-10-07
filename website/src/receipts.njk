@@ -21,14 +21,14 @@ description: "Our open methodology and source layer. Every number has a source, 
 <!-- SECTION: receipts.Receipts — title -->
 <div class="titleband" data-screen-label="Receipts — title"><h1>The <span class="u-1">Receipts</span></h1></div>
 <div class="introband">
-  <h2>Every number, out in the open.</h2>
+  <h2>{{ pageContent.receipts.intro.h2 | safe }}</h2>
   <p>The Receipts is the methodology and source layer under everything we publish. The rule is simple: every number has a source, every source has a date, and every model states its assumptions. If a claim can&rsquo;t be sourced, we label it — plainly — as an estimate, a scenario, or a hypothesis, not a fact.</p>
 </div>
 
 <!-- SECTION: receipts.The register -->
 <section class="blk blk--wheat" id="register" data-screen-label="The register">
   <div class="eyebrow">The register</div>
-  <h2 class="u-129 sec">Every figure we publish, with its receipt.</h2>
+  <h2 class="u-129 sec">{{ pageContent.receipts.register.h2 | safe }}</h2>
   <p class="u-130 lead">{{ register.stats | length }} sourced figures, each with the publisher, the exact title, the date we last checked it and the region it covers. Nothing here is illustrative — every number is traceable to a named public source.</p>
 {#- P6 keyword filter. Ships hidden and is revealed by /js/keyword-filter.js,
     so with JS off a reader never sees a control that does nothing and the full
@@ -57,13 +57,14 @@ description: "Our open methodology and source layer. Every number has a source, 
   <p class="u-75" data-show-more data-show-more-for="register-cards" data-show-more-step="12" hidden>
     <button type="button" class="u-btn u-btn--ghost" aria-controls="register-cards">Show more receipts</button>
   </p>
-  <p class="u-131">Figures are re-checked on a published cadence. A figure past its review date is relabelled <b>Needs refresh</b> rather than quietly left standing, and every change is recorded in the <a class="u-132" href="#corrections">corrections log</a>.</p>
 </section>
+
+{% include "partials/labels-drawer.njk" %}
 
 <!-- SECTION: receipts.The rule -->
 <section class="blk blk--white" data-screen-label="The rule">
   <div class="eyebrow">The rule, three ways</div>
-  <h2 class="sec">If we can&rsquo;t show where a number came from, we don&rsquo;t print it.</h2>
+  <h2 class="sec">{{ pageContent.receipts.rule.h2 | safe }}</h2>
   <div class="u-25 rule3">
     <div><div class="n">01</div><h3>Sourced</h3><p>Every figure carries a source and a license, so anyone can trace it back and reuse it lawfully.</p></div>
     <div><div class="n">02</div><h3>Dated</h3><p>Every source shows when it was captured and when it was last reviewed. Stale data is flagged, not hidden.</p></div>
@@ -81,7 +82,7 @@ description: "Our open methodology and source layer. Every number has a source, 
 <!-- SECTION: receipts.Corrections -->
 <section class="blk blk--cream" id="corrections" data-screen-label="Corrections">
   <div class="eyebrow">Corrections &amp; changelog</div>
-  <h2 class="u-129 sec">We log our mistakes.</h2>
+  <h2 class="u-129 sec">{{ pageContent.receipts.corrections.h2 | safe }}</h2>
   <p class="u-133 lead">Every correction is recorded publicly with a date and a plain description of what changed and why. Nothing is quietly edited. The full version-controlled history lives in the public records.</p>
   <div class="u-135">
     <span class="status status--planned">No corrections logged yet</span>
@@ -89,8 +90,6 @@ description: "Our open methodology and source layer. Every number has a source, 
   </div>
   <p class="u-75"><a href="https://github.com/uncost-org/uncost" target="_blank" rel="noopener" class="u-btn u-btn--ghost">View public records on GitHub</a></p>
 </section>
-
-{% include "partials/labels-drawer.njk" %}
 
 <!-- SECTION: receipts.Receipts CTA -->
 <section class="blk blk--coral" data-screen-label="Receipts CTA">

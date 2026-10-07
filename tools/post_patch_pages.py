@@ -244,7 +244,7 @@ CASE_MECHANISM = '''<!-- SECTION: case.The mechanism -->
 <section class="blk blk--first blk--cream2" data-screen-label="The mechanism">
   <div class="eyebrow">{{ cm.eyebrow }}</div>
   <h2 class="sec">{{ cm.h2 | safe }}</h2>
-  <p class="u-11 lead">{{ cm.lead | safe }}</p>
+  <p class="u-11 lead" data-source="SRC-020">{{ cm.lead | safe }}</p>
   <div class="cards cards--2up">
     {{ fig.card(register.byId["SRC-020"]) }}
     {{ fig.card(register.byId["SRC-024"]) }}
@@ -282,7 +282,7 @@ SECTOR_WORKED = '''{%- set wx = sc.workedExample if sc else none %}
 <section id="worked" class="block" data-screen-label="Worked example">
 {%- if wx.measurement %}
   <div class="eyebrow">03 \u00b7 Where the method stops</div>
-  <h2>How far the method goes in {{ sector.name }} \u2014 and where it stops.</h2>
+  <h2>{{ pageContent.sector.measurementH2 | replace("{name}", sector.name) | safe }}</h2>
 {%- else %}
   <div class="eyebrow">03 \u00b7 How {{ sector.name | lower }} gets uncosted</div>
   <h2>{{ wx.scenario }}</h2>
@@ -325,14 +325,7 @@ patch("website/src/sectors/sector.njk",
 # headline's size — CSS item 113) -> "Uncost the cost of living." -> the intro
 # cut to its first sentence. Every string already existed on the page; home.json
 # is re-extracted from the export on adoption, so both are restated.
-patch("website/src/_data/home.json",
-      r'("headline": "<span class=\\"u-49\\">).*?(</span><span class=\\"u-50\\">)',
-      r'\1We aim to significantly reduce the cost of living by putting AI and robotics to work for humanity.\2',
-      "V14 hero headline line one", guard="u-49\\\">We aim to significantly")
-patch("website/src/_data/home.json",
-      r'("subhead": "Uncost is a nonprofit, nonpartisan movement that believes <u>living should not have a price tag</u>\.)[^"]*(")',
-      r'\1\2',
-      "V14 hero intro is its first sentence", guard='price tag</u>."')
+# (The two V14 home.json patches are superseded by X5; see the end of this file.)
 
 # C12 (Batch U, 2026-09-25) — /receipts/ "The rule" band goes white. The band's
 # CLASS changes, not just its paint: kept as .blk--wheat, C1's wheat rules would
@@ -354,15 +347,14 @@ patch("website/src/news/index.njk",
       '<h1>Uncost.org <span class="u-1">News</span></h1>',
       "V10 /news/ title band reads Uncost.org News", guard='<h1>Uncost.org <span class="u-1">News</span></h1>')
 
-# V18 (Batch V, 2026-09-26) — the /sectors/ headline, exact founder string,
-# accent on "fifteen sectors". sectors/index.njk is re-derived by
-# tools/rederive_collections.py, which would restore the export's headline (and
-# with it would already have lost H5's), so the introband's headline is
-# restated here whatever the export wrote into it.
+# V18 → W9 (Batch X, 2026-09-27) — the /sectors/ headline, founder-approved,
+# now from the content layer (pageContent.sectors.intro.h2). sectors/index.njk
+# is re-derived by tools/rederive_collections.py, so the introband's headline
+# is re-pointed at the data whatever the export wrote into it.
 patch("website/src/sectors/index.njk",
       r'(<div class="[^"]*\bintroband\b[^"]*">\s*)<h2>.*?</h2>',
-      r'\1<h2>Basic human needs break into <span class="u-1">fifteen sectors</span> &mdash; and we have a plan to reduce the cost of each.</h2>',
-      "V18 sectors headline", guard="and we have a plan to reduce the cost of each.")
+      r'\1<h2>{{ pageContent.sectors.intro.h2 | safe }}</h2>',
+      "W9 sectors headline reads pageContent", guard="{{ pageContent.sectors.intro.h2 | safe }}")
 
 # V22 (Batch V, 2026-09-26) — /assembly/ "A look ahead": the PLANNED TOOL chip
 # goes, and the ink button reads "How the Assembly works", linking the page the
@@ -374,16 +366,18 @@ if "Planned tool</span>" in pathlib.Path("website/src/assembly.njk").read_text(e
           "V22 assembly look-ahead drops the Planned tool chip")
 else:
     print("  = V22 assembly look-ahead drops the Planned tool chip (already applied)")
+# X.1 item 3: the button's words come from the content layer
+# (pageContent.assembly.howItWorks, "How The Assembly works").
 patch("website/src/assembly.njk",
-      r'(<a href=")[^"]*(" class="u-btn u-btn--ink">)View the illustrative mock(</a>)',
-      r'\1/assembly/\2How the Assembly works\3',
-      "V22 assembly look-ahead button", guard="How the Assembly works</a>")
+      r'(<a href=")[^"]*(" class="u-btn u-btn--ink">)(?:View the illustrative mock|How the Assembly works)(</a>)',
+      r'\1/assembly/\2{{ pageContent.assembly.howItWorks }}\3',
+      "V22 assembly look-ahead button", guard="{{ pageContent.assembly.howItWorks }}</a>")
 
 # V24 (Batch V, 2026-09-26) — /contribute/ "Useful roles, right now." gains a
 # "Volunteer now" button to /contact/, after the section's closing note.
 # contribute.njk is re-derived from the export.
 patch("website/src/contribute.njk",
-      r'(<h2 class="[^"]*">Useful roles, right now\.</h2>.*?</p>)(\n</section>)',
+      r'(<h2 class="[^"]*">(?:Useful roles, right now\.|\{\{ pageContent\.contribute\.roles\.h2 \| safe \}\})</h2>.*?</p>)(\n</section>)',
       r'\1\n  <div class="roles-cta"><a href="/contact/" class="u-btn u-btn--ink">Volunteer now</a></div>\2',
       "V24 contribute roles: Volunteer now", guard='class="roles-cta"')
 
@@ -400,19 +394,21 @@ patch("website/src/roadmap.njk",
 
 # V21 (Batch V, 2026-09-26) — accent spans, copy unchanged. treasury.njk,
 # roadmap.njk and about.njk are re-derived from the export; project.njk is not.
-patch("website/src/treasury.njk", r'before a single dollar moves\.</h2>',
-      'before a <span class="u-1">single dollar moves</span>.</h2>',
-      "V21 treasury accent: single dollar moves", guard='<span class="u-1">single dollar moves</span>')
-patch("website/src/treasury.njk", r'Want to help before donations open\?</h2>',
-      'Want to <span class="u-1">help</span> before donations open?</h2>',
-      "V21 treasury accent: help", guard='Want to <span class="u-1">help</span>')
-patch("website/src/roadmap.njk", r'evidence and safety are ready\.</h2>',
-      'evidence and safety are <span class="u-1">ready</span>.</h2>',
-      "V21 roadmap accent: ready", guard='are <span class="u-1">ready</span>.')
-patch("website/src/about.njk", r'<h3>Uncost is</h3>', '<h3>Uncost <u>is</u></h3>',
-      "V21 about: underline is", guard='<h3>Uncost <u>is</u></h3>')
-patch("website/src/about.njk", r'<h3>Uncost is not</h3>', '<h3>Uncost <u>is not</u></h3>',
-      "V21 about: underline is not", guard='<h3>Uncost <u>is not</u></h3>')
+# W38 (Batch X) supersedes V21's treasury accents: both headlines read the
+# content layer (pageContent.treasury), whatever the export writes in them.
+patch("website/src/treasury.njk", r'(<div class="eyebrow">The standing rules</div>\s*<h2 class="[^"]*">).*?(</h2>)',
+      r'\1{{ pageContent.treasury.principles.h2 | safe }}\2',
+      "W38 treasury rules headline reads pageContent", guard="{{ pageContent.treasury.principles.h2 | safe }}")
+patch("website/src/treasury.njk", r'(data-screen-label="Treasury CTA">\s*<h2 class="[^"]*">).*?(</h2>)',
+      r'\1{{ pageContent.treasury.cta.h2 | safe }}\2',
+      "W38 treasury CTA headline reads pageContent", guard="{{ pageContent.treasury.cta.h2 | safe }}")
+# W36 (Batch X) supersedes V21's roadmap accent: the headline reads the content
+# layer (pageContent.roadmap.horizon.h2) whatever the export writes in it.
+patch("website/src/roadmap.njk", r'(<div class="[^"]*eyebrow">The longer horizon</div>\s*<h2 class="[^"]*">).*?(</h2>)',
+      r'\1{{ pageContent.roadmap.horizon.h2 | safe }}\2',
+      "W36 roadmap horizon headline reads pageContent", guard="{{ pageContent.roadmap.horizon.h2 | safe }}")
+# (V21's about underlines are superseded by W34: the box headings now read
+#  from the content layer, restated at the end of this file.)
 
 # V17 (Batch V, 2026-09-26) — /case/ closing band: "The question is no longer
 # whether…" moves from above "Evidence first. Tools next." to directly below
@@ -423,30 +419,33 @@ patch("website/src/case/index.njk",
       "V17 case: question lead follows the headline",
       guard='Tools next.</span></h2>\n  <p class="u-39 lead">The question is no longer whether')
 
-# V15 (Batch V, 2026-09-26) — /movement/: the six-step "How it works" band and
-# "What taking part means" swap backgrounds (cream <-> cream-2), and the CTA's
-# "Get updates" goes to /join/#get-updates. movement.njk is re-derived.
+# V15 (Batch V, 2026-09-26) — /movement/: "What taking part means" moves to
+# cream (V15 swapped it with the six-step band, which X1 has since turned into
+# the /about/-format block with no band of its own), and the CTA's "Get
+# updates" goes to /join/#get-updates. movement.njk is re-derived.
 patch("website/src/movement.njk",
-      r'<section class="blk blk--cream" data-screen-label="How a cost gets uncosted">(.*?)<section class="blk blk--cream2" data-screen-label="What taking part means">',
-      r'<section class="blk blk--cream2" data-screen-label="How a cost gets uncosted">\1<section class="blk blk--cream" data-screen-label="What taking part means">',
-      "V15 movement: swap six-step and taking-part backgrounds",
-      guard='<section class="blk blk--cream2" data-screen-label="How a cost gets uncosted">')
+      r'<section class="blk blk--cream2" data-screen-label="What taking part means">',
+      '<section class="blk blk--cream" data-screen-label="What taking part means">',
+      "V15 movement: taking-part band is cream",
+      guard='<section class="blk blk--cream" data-screen-label="What taking part means">')
 patch("website/src/movement.njk",
       r'<a href="#updates" class="u-btn u-btn--ghost">Get updates</a>',
       '<a href="/join/#get-updates" class="u-btn u-btn--ghost">Get updates</a>',
       "V15 movement: Get updates -> /join/#get-updates", guard='href="/join/#get-updates"')
 
-# V12 (Batch V, 2026-09-26) — one "How a cost gets uncosted" partial in the
-# /about/ format, on /about/ and /movement/; words in _data/uncosted.js. Both
-# templates are re-derived from the export, so the call sites are restated.
+# V12 → X1 (Batch X, 2026-09-27) — ONE "How a cost gets uncosted" block,
+# rendered identically on /about/ and /movement/ from _data/uncosted.js. Both
+# templates are re-derived from the export, so both call sites are restated:
+# /about/'s hand-written step list, and /movement/'s whole six-step section
+# (whatever band class the export gives it), become the one partial call.
 patch("website/src/about.njk",
       r'<div class="seqhd" data-screen-label="Mechanism">.*?</h2></div>\n<div>\n(?:  <div class="[^"]*step">.*?</p></div></div>\n)+</div>\n',
-      '{% import "partials/uncosted.njk" as uc %}\n{{ uc.block(uncosted.about, "Mechanism") }}\n',
-      "V12 about: uncosted partial", guard='{{ uc.block(uncosted.about, "Mechanism") }}')
+      '{% import "partials/uncosted.njk" as uc %}\n{{ uc.block(uncosted, "Mechanism") }}\n',
+      "X1 about: uncosted partial", guard='{{ uc.block(uncosted, "Mechanism") }}')
 patch("website/src/movement.njk",
-      r'(<section class="blk blk--cream2" data-screen-label="How a cost gets uncosted">\n).*?(</section>)',
-      r'\1  {% import "partials/uncosted.njk" as uc %}\n  {{ uc.block(uncosted.movement) }}\n\2',
-      "V12 movement: uncosted partial", guard="{{ uc.block(uncosted.movement) }}")
+      r'<section class="blk[^"]*" data-screen-label="How a cost gets uncosted">.*?</section>',
+      '{% import "partials/uncosted.njk" as uc %}\n{{ uc.block(uncosted, "How a cost gets uncosted") }}',
+      "X1 movement: uncosted partial", guard='{{ uc.block(uncosted, "How a cost gets uncosted") }}')
 
 # V16 (Batch V, 2026-09-26) — /news/ loads /js/read-more.js (three-line clamp,
 # "Read more"). news/index.njk is re-derived from the export, so the include is
@@ -469,21 +468,17 @@ V19_SCENARIO = """{#- V19: the scenario phrase — the words after "A worked exa
 # sector.njk and sectors/index.njk are both re-derived by
 # tools/rederive_collections.py, so the three template changes are restated.
 # The 03 headline is restated after C17 has put the per-sector heading back.
+# W12 (Batch X): the 01 headline is read from the content layer
+# (pageContent.sector.scope.h2), whatever the export writes into it.
 patch("website/src/sectors/sector.njk",
-      r'<h2>Where automation could bite — and what stays visible\.</h2>',
-      '<h2>Where automation could <span class="u-1">bite</span> — and what stays visible.</h2>',
-      "V19 sector 01 accent on bite", guard='<span class="u-1">bite</span>')
+      r'(<div class="eyebrow">01 · Scope, opportunity, guardrail</div>\s*)<h2>.*?</h2>',
+      r'\1<h2>{{ pageContent.sector.scope.h2 | safe }}</h2>',
+      "W12 sector 01 headline reads pageContent", guard="{{ pageContent.sector.scope.h2 | safe }}")
 patch("website/src/sectors/sector.njk",
       r'  <h2>\{\{ wx\.scenario \}\}</h2>\n',
       V19_SCENARIO,
       "V19 sector 03 scenario phrase accent", guard="{%- set sp = wx.scenario.split(\": \") %}")
-patch("website/src/sectors/index.njk",
-      r'(<div class="legend" data-screen-label="Legend">\n  <span>Status:</span>\n)'
-      r'((?:  <span class="status [^"]+">[^<]+</span> <span class="u-138">[^<]+</span>\n){4})',
-      lambda m: m.group(1) + re.sub(
-          r'  (<span class="status [^"]+">[^<]+</span>) (<span class="u-138">[^<]+</span>)\n',
-          r'  <span class="lg-pair">\1<span class="lg-colon">:</span>\2</span>\n', m.group(2)),
-      "V19 /sectors/ legend: chip, colon, meaning", guard='<span class="lg-pair">')
+# (The V19 /sectors/ legend patch is retired: X9 removes the strip; see below.)
 
 # V11 (Batch V, 2026-09-26) — the labels drawer. The standalone "Four honest
 # labels" section on /receipts/ is retired into it, and the drawer partial is
@@ -500,7 +495,9 @@ else:
     print("  = V11 receipts: Four honest labels retired into the drawer (already applied)")
 LABELS_DRAWER = '{% include "partials/labels-drawer.njk" %}\n'
 for path, anchor, where in (
-    ("website/src/receipts.njk", r'(<!-- SECTION: receipts\.Receipts CTA -->\n)', "before the CTA"),
+    # X8 (Batch X): on /receipts/ the drawer sits directly under the register
+    # band, between it and "The rule".
+    ("website/src/receipts.njk", r'(<!-- SECTION: receipts\.The rule -->\n)', "under the register"),
     ("website/src/projects/index.njk", r'(<!-- SECTION: projects\.Projects CTA -->\n)', "before the CTA"),
     ("website/src/sectors/index.njk", r'(<!-- SECTION: sectors\.Sectors CTA -->\n)', "before the CTA"),
     ("website/src/treasury.njk", r'(<!-- SECTION: treasury\.Treasury CTA -->\n)', "before the CTA"),
@@ -512,5 +509,217 @@ patch("website/src/policies/index.njk",
       r'(data-screen-label="How policies change">.*?</section>\n)',
       r"\1\n" + LABELS_DRAWER,
       "V11 policies/index.njk: labels drawer after the last section", guard=LABELS_DRAWER.strip())
+
+# W6 (Batch X, 2026-09-27) — /case/ intro paragraph, founder-approved, from the
+# content layer (_data/pageContent.js case.intro.lead). case/index.njk is
+# re-derived, so the introband's first paragraph is re-pointed at the data.
+patch("website/src/case/index.njk",
+      r'(<div class="introband">\s*<h2>.*?</h2>\s*)<p>.*?</p>',
+      r'\1<p>{{ pageContent.case.intro.lead | safe }}</p>',
+      "W6 case intro reads pageContent", guard="{{ pageContent.case.intro.lead | safe }}")
+
+# X8 (Batch X, 2026-09-27) — /receipts/ headlines from the content layer
+# (pageContent.receipts), and the register band loses its "Figures are
+# re-checked…" paragraph: its content is now the drawer's rules (X11).
+# receipts.njk is re-derived. The headlines are re-pointed whatever the export
+# writes in them; the paragraph removal is guarded by absence.
+for sel, key in ((r'(<div class="introband">\s*<h2>).*?(</h2>)', "intro"),
+                 (r'(<div class="eyebrow">The register</div>\s*<h2 class="[^"]*">).*?(</h2>)', "register"),
+                 (r'(<div class="eyebrow">The rule, three ways</div>\s*<h2 class="[^"]*">).*?(</h2>)', "rule"),
+                 (r'(<div class="eyebrow">Corrections &amp; changelog</div>\s*<h2 class="[^"]*">).*?(</h2>)', "corrections")):
+    ref = "{{ pageContent.receipts.%s.h2 | safe }}" % key
+    patch("website/src/receipts.njk", sel, r"\1" + ref + r"\2", f"X8 receipts {key} headline reads pageContent", guard=ref)
+if "Figures are re-checked on a published cadence" in pathlib.Path("website/src/receipts.njk").read_text(encoding="utf-8"):
+    patch("website/src/receipts.njk", r'\n  <p class="u-131">Figures are re-checked on a published cadence\..*?</p>', '',
+          "X8 receipts: re-check paragraph moves into the drawer rules")
+else:
+    print("  = X8 receipts: re-check paragraph moves into the drawer rules (already applied)")
+
+# X7 (Batch X, 2026-09-27) — /case/: both headlines from the content layer
+# (pageContent.case.intro.h2, .livingCosts.h2), and the Methodology drawer is
+# replaced by one line linking /receipts/#how-it-works. case/index.njk is
+# re-derived.
+patch("website/src/case/index.njk",
+      r'(<div class="introband">\s*<h2>).*?(</h2>)',
+      r'\1{{ pageContent.case.intro.h2 | safe }}\2',
+      "X7 case intro headline reads pageContent", guard="{{ pageContent.case.intro.h2 | safe }}")
+patch("website/src/case/index.njk",
+      r'(<div class="eyebrow">What living costs</div>\s*<h2 class="[^"]*">).*?(</h2>)',
+      r'\1{{ pageContent.case.livingCosts.h2 | safe }}\2',
+      "X7 case living-costs headline reads pageContent", guard="{{ pageContent.case.livingCosts.h2 | safe }}")
+patch("website/src/case/index.njk",
+      r'<details class="mdrawer"[^>]*>.*?</details>\n',
+      '<div class="howlink" data-screen-label="How The Receipts work"><a href="{{ pageContent.case.receiptsLink.href }}">{{ pageContent.case.receiptsLink.text | safe }}</a></div>\n',
+      "X7 case: drawer becomes the How The Receipts work link", guard='<div class="howlink"')
+
+# W5 (Batch X, 2026-09-27) — /news/ introband headline from the content layer
+# (pageContent.news.intro.h2). news/index.njk is re-derived.
+patch("website/src/news/index.njk",
+      r'(<div class="introband">\s*<h2>).*?(</h2>)',
+      r'\1{{ pageContent.news.intro.h2 | safe }}\2',
+      "W5 news intro headline reads pageContent", guard="{{ pageContent.news.intro.h2 | safe }}")
+
+# X6 (Batch X, 2026-09-27) — /news/: the cross-reference line moves below the
+# keyword filter. news/index.njk is re-derived; the move is made only while the
+# line still sits above the filter (a move has no text of its own to guard on).
+_news = pathlib.Path("website/src/news/index.njk").read_text(encoding="utf-8")
+if 'class="newsxref"' in _news and 'class="rfilter"' in _news and _news.index('class="newsxref"') < _news.index('class="rfilter"'):
+    patch("website/src/news/index.njk",
+          r'(\n    <div class="newsxref">\n.*?\n    </div>)(\n.*?\n    <div class="rfilter".*?\n    </div>)',
+          r'\2\1', "X6 news: cross-reference below the filter")
+else:
+    print("  = X6 news: cross-reference below the filter (already applied)")
+
+# W10 (Batch X, 2026-09-27) — /sectors/ intro paragraph, founder-approved, from
+# the content layer (pageContent.sectors.intro.lead). The export's first
+# introband paragraph is re-pointed at the data (X9 then moves it).
+patch("website/src/sectors/index.njk",
+      r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\s*)<p>.*?</p>',
+      r'\1<p>{{ pageContent.sectors.intro.lead | safe }}</p>',
+      "W10 sectors intro reads pageContent", guard="{{ pageContent.sectors.intro.lead | safe }}")
+
+# X9 (Batch X, 2026-09-27) — /sectors/: the introband keeps only its headline;
+# the intro moves into a wheat band directly above the cards, replacing the
+# status key strip (now the drawer below the grid). sectors/index.njk is
+# re-derived; both steps are guarded by absence.
+_sec = pathlib.Path("website/src/sectors/index.njk").read_text(encoding="utf-8")
+if 'class="sintro"' not in _sec and 'blk--wheat sintro' not in _sec:
+    patch("website/src/sectors/index.njk",
+          r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\n)(?:  <p>.*?</p>\n)+',
+          r'\1', "X9 sectors: introband keeps only the headline")
+    patch("website/src/sectors/index.njk",
+          r'(?:<!-- SECTION: sectors\.Legend -->\n)?<div class="legend"[^>]*>.*?\n</div>\n',
+          '<!-- SECTION: sectors.Intro -->\n<section class="blk blk--wheat sintro" data-screen-label="Intro">\n'
+          '  <p class="lead">{{ pageContent.sectors.intro.lead | safe }}</p>\n</section>\n',
+          "X9 sectors: the intro takes the wheat band above the cards")
+else:
+    print("  = X9 sectors: intro in the wheat band, key strip retired (already applied)")
+
+# W13 (Batch X, 2026-09-27) — sector "02 · Evidence status": inside the white
+# dotted box, the approved empty-state text (pageContent.sector.evidenceEmpty)
+# replaces the dossier's SRC-### line and the "Reviewed source records come
+# before figures…" paragraph, and shows only while the sector has no figures.
+# sector.njk is re-derived by tools/rederive_collections.py.
+patch("website/src/sectors/sector.njk",
+      r'  <div class="evd-empty">\n    (?:\{% if sector\.evidence %\}.*?|<h3>.*?</h3>)\n    <p>Reviewed source records come before figures\..*?</p>\n',
+      "  <div class=\"evd-empty\">\n{%- set secFigs = sectorContent[sector.slug].figures if sectorContent[sector.slug] else none %}\n"
+      "{%- if not secFigs %}\n    <p>{{ pageContent.sector.evidenceEmpty | safe }}</p>\n{%- endif %}\n",
+      "W13 sector evidence empty state reads pageContent", guard="{{ pageContent.sector.evidenceEmpty | safe }}")
+
+# X13 (Batch X, 2026-09-27) — /projects/: three headlines from the content
+# layer (pageContent.projects), and every project chip is one label, "Draft",
+# in one style (the Now/Next headings carry the sequence). The homepage's
+# "Open projects" chip reads "Draft" too. projects/index.njk and index.njk are
+# both re-derived.
+for sel, key in ((r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>).*?(</h2>)', "intro"),
+                 (r'(<div class="u-111 eyebrow">Later[^<]*</div>\s*<h2 class="[^"]*">).*?(</h2>)', "later"),
+                 (r'(<div class="eyebrow">The honest chain</div>\s*<h2 class="[^"]*">).*?(</h2>)', "howTheyHelp")):
+    ref = "{{ pageContent.projects.%s.h2 | safe }}" % key
+    patch("website/src/projects/index.njk", sel, r"\1" + ref + r"\2", f"X13 projects {key} headline reads pageContent", guard=ref)
+if '<span class="status status--planned">Draft</span>' in pathlib.Path("website/src/projects/index.njk").read_text(encoding="utf-8"):
+    patch("website/src/projects/index.njk", r'<span class="status status--planned">Draft</span>',
+          '<span class="status status--dev">Draft</span>', "X13 projects: one Draft chip style", expect=1)
+else:
+    print("  = X13 projects: one Draft chip style (already applied)")
+patch("website/src/index.njk", r'<span class="status status--dev">In build</span>',
+      '<span class="status status--dev">Draft</span>', "X13 homepage: Open projects chip reads Draft",
+      guard='<h3>{{ home.s4.a.title | safe }}</h3><span class="status status--dev">Draft</span>')
+
+# W33 (Batch X, 2026-09-27) — /about/ "Your say": the three Assembly /
+# privacy / principles paragraphs become the one approved paragraph, from the
+# content layer (pageContent.about.yourSay.lead). about.njk is re-derived.
+patch("website/src/about.njk",
+      r'(data-screen-label="Your say">.*?<h2 class="[^"]*">.*?</h2>\n)(?:  <p class="[^"]*lead">.*?</p>\n)+',
+      r'\1  <p class="u-10 lead">{{ pageContent.about.yourSay.lead | safe }}</p>\n',
+      "W33 about Your say reads pageContent", guard="{{ pageContent.about.yourSay.lead | safe }}")
+
+# W34 (Batch X, 2026-09-27) — /about/ box headings from the content layer
+# (pageContent.about.isBox / isNotBox), whatever the export writes in them.
+# about.njk is re-derived. The second box is matched first so "Uncost is" does
+# not also catch "Uncost is not".
+patch("website/src/about.njk", r'<h3>Uncost (?:<u>)?is not(?:</u>)?</h3>',
+      '<h3>{{ pageContent.about.isNotBox.h3 | safe }}</h3>',
+      "W34 about is-not heading reads pageContent", guard="{{ pageContent.about.isNotBox.h3 | safe }}")
+patch("website/src/about.njk", r'<h3>Uncost (?:<u>)?is(?:</u>)?</h3>',
+      '<h3>{{ pageContent.about.isBox.h3 | safe }}</h3>',
+      "W34 about is heading reads pageContent", guard="{{ pageContent.about.isBox.h3 | safe }}")
+
+# X3 (Batch X, 2026-09-27) — /about/ headlines from the content layer
+# (pageContent.about), whatever the export writes in them. about.njk is
+# re-derived.
+for sel, ref in ((r'(data-screen-label="Is / is not">.*?<h2 class="[^"]*">).*?(</h2>)', "{{ pageContent.about.isNot.h2 | safe }}"),
+                 (r'(data-screen-label="Accountability">.*?<h2 class="[^"]*">).*?(</h2>)', "{{ pageContent.about.accountability.h2 | safe }}"),
+                 (r'(data-screen-label="Your say">.*?<h2 class="[^"]*">).*?(</h2>)', "{{ pageContent.about.yourSayH2 | safe }}")):
+    patch("website/src/about.njk", sel, r"\1" + ref + r"\2", f"X3 about headline -> {ref}", guard=ref)
+
+# W35 (Batch X, 2026-09-27) — /roadmap/ "How to read these dates" takes its
+# eyebrow (pageContent.roadmap.dates.eyebrow) above V25's headline.
+# roadmap.njk is re-derived.
+patch("website/src/roadmap.njk",
+      r'(<section class="blk blk--wheat" data-screen-label="Disclaimer">\n(?:  \{#-.*?-#\}\n)?)(  <h2 class="sec">How to read these dates</h2>)',
+      r'\1  <div class="eyebrow">{{ pageContent.roadmap.dates.eyebrow }}</div>\n\2',
+      "W35 roadmap dates band eyebrow", guard="{{ pageContent.roadmap.dates.eyebrow }}")
+
+# W37 (Batch X, 2026-09-27) — /treasury/ standing rule 3 from the content layer
+# (pageContent.treasury.rule3): "Segregated accounts only." No policy file is
+# touched. treasury.njk is re-derived.
+patch("website/src/treasury.njk",
+      r'(<div class="prin">\n(?:    <div>.*?</div>\n){2})    <div><h3><i></i>.*?</h3><p>.*?</p></div>',
+      r'\1    <div><h3><i></i>{{ pageContent.treasury.rule3.title }}</h3><p>{{ pageContent.treasury.rule3.body }}</p></div>',
+      "W37 treasury standing rule 3 reads pageContent", guard="{{ pageContent.treasury.rule3.title }}")
+
+# X5 (Batch X, 2026-09-27) — homepage hero, founder's order: h1 "Technology
+# should make living cheaper, [not billionaires richer]." -> "We aim…" in the
+# intro's style -> "Uncost the cost of living." (its own line at the h1's size)
+# -> the intro broken before "[living should not have a price tag]."
+# home.json and index.njk are both re-derived (tools/rederive_home.py), so the
+# s1 strings and the template's hero block are restated.
+_home = pathlib.Path("website/src/_data/home.json").read_text(encoding="utf-8")
+if '"aim": ' not in _home:
+    patch("website/src/_data/home.json",
+          r'  "headline": "[^\n]*",\n  "subhead": "[^\n]*"',
+          '  "headline": "Technology should make living cheaper, <span class=\\\\"hl\\\\">not billionaires richer</span>.",\n'
+          '  "aim": "We aim to significantly reduce the cost of living by putting AI and robotics to work for humanity.",\n'
+          '  "slogan": "<span class=\\\\"u-51\\\\">Uncost</span> the cost of living.",\n'
+          '  "subhead": "Uncost is a nonprofit, nonpartisan movement that believes<br><u class=\\\\"u-1\\\\">living should not have a price tag</u>."',
+          "X5 hero strings in home.json")
+else:
+    print("  = X5 hero strings in home.json (already applied)")
+patch("website/src/index.njk",
+      r'(      <h1>\{\{ home\.s1\.headline \| safe \}\}</h1>\n)(      <p class="u-52 lead">\{\{ home\.s1\.subhead \| safe \}\}</p>)',
+      r'\1      <p class="u-52 lead hero-aim">{{ home.s1.aim | safe }}</p>\n'
+      r'      <p class="hero-slogan"><span class="u-50">{{ home.s1.slogan | safe }}</span></p>\n\2',
+      "X5 hero lines 2 and 3 in the template", guard="{{ home.s1.aim | safe }}")
+
+# X15 (Batch X, 2026-09-27) — /assembly/ headlines from the content layer
+# (pageContent.assembly), whatever the export writes in them. assembly.njk is
+# re-derived. (The nav label lives in chrome.json, which is repo-owned.)
+patch("website/src/assembly.njk", r'(<h2 class="u-16 sec">).*?(</h2>)',
+      r'\1{{ pageContent.assembly.canCannot.h2 | safe }}\2',
+      "X15 assembly can/cannot headline reads pageContent", guard="{{ pageContent.assembly.canCannot.h2 | safe }}")
+patch("website/src/assembly.njk", r'(<h2 class="u-21 sec">).*?(</h2>)',
+      r'\1{{ pageContent.assembly.lookAhead.h2 | safe }}\2',
+      "X15 assembly look-ahead headline reads pageContent", guard="{{ pageContent.assembly.lookAhead.h2 | safe }}")
+
+# X16 (Batch X, 2026-09-27) — /contribute/ and /contact/ headlines from the
+# content layer, whatever the export writes in them. Both are re-derived. (V24's
+# "Volunteer now" patch above anchors on either form of the roles headline.)
+patch("website/src/contribute.njk", r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>).*?(</h2>)',
+      r'\1{{ pageContent.contribute.intro.h2 | safe }}\2',
+      "X16 contribute intro headline reads pageContent", guard="{{ pageContent.contribute.intro.h2 | safe }}")
+patch("website/src/contribute.njk", r'(<h2 class="u-42 sec">).*?(</h2>)',
+      r'\1{{ pageContent.contribute.roles.h2 | safe }}\2',
+      "X16 contribute roles headline reads pageContent", guard="{{ pageContent.contribute.roles.h2 | safe }}")
+patch("website/src/contact.njk", r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>).*?(</h2>)',
+      r'\1{{ pageContent.contact.intro.h2 | safe }}\2',
+      "X16 contact intro headline reads pageContent", guard="{{ pageContent.contact.intro.h2 | safe }}")
+
+# X.1 item 3 (2026-09-28) — the /sectors/ CTA's Assembly button reads the same
+# content-layer string as the nav and the /assembly/ button. sectors/index.njk
+# is re-derived.
+patch("website/src/sectors/index.njk",
+      r'(<a href="/assembly/" class="u-btn u-btn--ghost">)How the Assembly works(</a>)',
+      r'\1{{ pageContent.assembly.howItWorks }}\2',
+      "X.1 sectors CTA: How The Assembly works", guard="{{ pageContent.assembly.howItWorks }}")
 
 print("done")

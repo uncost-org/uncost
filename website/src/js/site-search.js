@@ -20,6 +20,18 @@
  * file does not touch that. It watches `.search-ov` for the `open` class ui.js
  * sets and moves focus to the input afterwards — the observer callback runs
  * after ui.js's synchronous focus() call, so the two never fight.
+ *
+ * Scope filters (X17, Batch X). The overlay's destination buttons become scope
+ * filters over the same index: "All of this site" by default, or one section —
+ * The Receipts, The Sectors, The Projects, The Policies, The Case, Uncost News,
+ * Cost Watch (X.1: eight scopes; the two news scopes are separate). Each
+ * index record carries its section (`s`, tagged at build from its URL), and a
+ * scope keeps only records whose section matches; changing scope re-runs the
+ * current query. The controls are real <button>s with aria-pressed, inside the
+ * box this file reveals, so they exist for a reader only where they work. The
+ * destination row is hidden here — on its class-less wrapper, so [hidden]
+ * cannot be outranked — and only here, so with JS off it renders as before.
+ * Every open starts again from "All of this site".
  */
 (function () {
   "use strict";
@@ -37,6 +49,11 @@
   var resultsList = overlay.querySelector("[data-search-results]");
   var status = overlay.querySelector("[data-search-status]");
   if (!box || !input || !resultsList || !status) return;
+
+  var scopeButtons = Array.prototype.slice.call(box.querySelectorAll("[data-search-scope]"));
+  var linksWrap = overlay.querySelector("[data-search-links]");
+  var ALL = "all";
+  var scope = ALL;
 
   /* ---- index -------------------------------------------------------- */
 
@@ -73,6 +90,7 @@
       out.push({
         title: title,
         route: doc.r,
+        section: doc.s || "other",
         body: body,
         titleLow: title.toLowerCase(),
         headLow: heads.toLowerCase(),
@@ -88,6 +106,7 @@
       out.push({
         title: title,
         route: fig.r,
+        section: fig.s || "receipts",
         body: body,
         titleLow: title.toLowerCase(),
         headLow: "",
@@ -152,6 +171,8 @@
     var hits = [];
     if (!terms.length || !records) return hits;
     for (var i = 0; i < records.length; i++) {
+      // Scope first: a record outside the selected section is never scored.
+      if (scope !== ALL && records[i].section !== scope) continue;
       var s = score(records[i], terms);
       if (s > 0) hits.push({ rec: records[i], score: s });
     }
@@ -221,6 +242,7 @@
   function row(hit, terms) {
     var li = document.createElement("li");
     li.className = "so-result";
+    li.setAttribute("data-section", hit.rec.section);
 
     var link = document.createElement("a");
     link.className = "so-result-link";
@@ -279,6 +301,23 @@
     });
   }
 
+  /* ---- scope --------------------------------------------------------- */
+
+  function setScope(key) {
+    scope = key;
+    scopeButtons.forEach(function (btn) {
+      btn.setAttribute("aria-pressed", btn.getAttribute("data-search-scope") === key ? "true" : "false");
+    });
+  }
+
+  // Changing scope re-runs the current query against the new section.
+  scopeButtons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      setScope(btn.getAttribute("data-search-scope"));
+      update();
+    });
+  });
+
   /* ---- wiring -------------------------------------------------------- */
 
   input.addEventListener("input", update);
@@ -300,10 +339,17 @@
       if (isOpen === wasOpen) return;
       wasOpen = isOpen;
       if (!isOpen) return;
+      // Every open starts from "All of this site"; a query left in the box
+      // from last time is re-run against it so results and scope agree.
+      setScope(ALL);
+      update();
       load().catch(function () { /* reported on the next keystroke */ });
       input.focus();
     }).observe(overlay, { attributes: true, attributeFilter: ["class"] });
   }
 
   box.hidden = false;   // reveal only once the behaviour exists
+  // The scope filters replace the destination row. Its wrapper carries no
+  // class, so the UA's [hidden] rule is not outranked by any display rule.
+  if (linksWrap && scopeButtons.length) linksWrap.hidden = true;
 })();

@@ -1,0 +1,32 @@
+{
+  "title": "X12 — drawer layout renders (Batch X, 2026-09-27)",
+  "intro": "Variant 1 is SHIPPED (X11): header and body cream-2, no rule between them, THE RULES left, THE LABELS right in the confidence-table style. Variants 2–4 are renders only, for a founder decision; none is shipped. /receipts/ and /sectors/ at 1440 and 390.",
+  "routes": ["/receipts/", "/sectors/"],
+  "widths": [1440, 390],
+  "selector": ".ldrawer",
+  "variants": [
+    {
+      "name": "v2",
+      "label": "labels as a plain chip + definition list, no table frame",
+      "state": "open",
+      "note": "Compared with variant 1, open. The table's frame, header row and row rules go; each label is its chip, then its definition, as a plain list.",
+      "css": ".ldrawer .conftable{border:0 !important;background:none !important}\n.ldrawer .conftable thead{display:none !important}\n.ldrawer .conftable tr{display:grid;grid-template-columns:180px minmax(0,1fr);gap:16px;align-items:start}\n.ldrawer .conftable td{border-top:0 !important;padding:8px 0 !important}"
+    },
+    {
+      "name": "v3",
+      "label": "rules stacked above a two-column label grid",
+      "state": "open",
+      "note": "Compared with variant 1, open. One column: THE RULES, then THE LABELS below them as a two-column grid of chip + definition cells.",
+      "css": ".ldrawer-body{grid-template-columns:minmax(0,1fr) !important}\n.ldrawer .conftable{display:block;border:0 !important;background:none !important}\n.ldrawer .conftable thead{display:none !important}\n.ldrawer .conftable tbody{display:grid !important;grid-template-columns:repeat(2,minmax(0,1fr));gap:2px;background:var(--ink);border:2px solid var(--ink)}\n.ldrawer .conftable tr{display:grid;grid-template-columns:auto minmax(0,1fr);gap:12px;align-items:start;background:var(--cream);padding:12px 16px}\n.ldrawer .conftable td{border-top:0 !important;padding:0 !important;width:auto !important}"
+    },
+    {
+      "name": "v4",
+      "label": "variant 1, open by default on desktop",
+      "state": "closed",
+      "openAtLeast": { "selector": ".ldrawer", "minWidth": 1024 },
+      "applies_at": [1440],
+      "note": "Compared with variant 1 as it loads (closed). On desktop (here: viewport ≥ 1024px) the drawer is open on load; on a phone it stays closed, so at 390 the render must be identical to variant 1.",
+      "css": ""
+    }
+  ]
+}

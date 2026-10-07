@@ -50,7 +50,7 @@ eleventyComputed:
   <div class="eyebrow">{{ op.eyebrow }}</div>
 {%- endif %}
 {%- if headline %}
-  <h2 class="sec">{{ headline }}</h2>
+  <h2 class="sec">{{ headline | safe }}</h2>
 {%- endif %}
 {%- if op.intro %}
   <p class="u-11 lead">{{ op.intro }}</p>
@@ -74,7 +74,7 @@ eleventyComputed:
   <div class="fund">
     <div class="fh"><span>{{ project.id }} &mdash; {{ project.display }}</span><span class="u-115 status status--dev">Draft</span></div>
     <div class="fb">
-      <p><b>Resourcing:</b> {{ project.resourcePosture }}</p>
+      <p><b>Resourcing:</b> {{ pc.resourcing or project.resourcePosture }}</p>
       <p><b>Most useful support now:</b> {{ pc.support }}</p>
       <p><b>Reporting:</b> once funds move, spending on this project will be reported in <a href="/treasury/">The Treasury</a>, with an internal receipt and approval trail.</p>
     </div>

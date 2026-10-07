@@ -20,8 +20,8 @@ description: "The Case is Uncost's evidence layer: what humans need, what those 
 <!-- SECTION: case.The Case — title -->
 <div class="titleband" data-screen-label="The Case — title"><h1>The <span class="u-1">Case</span></h1></div>
 <div class="introband">
-  <h2>The receipts behind <span class="u-1">every claim</span> we make.</h2>
-  <p>The Case is Uncost&rsquo;s evidence layer — built to be useful to supporters, journalists, researchers, urban planners, funders, and skeptics alike. It covers what humans need, what those needs cost by region, where automation and shared infrastructure can plausibly help, and the open methodology behind every claim.</p>
+  <h2>{{ pageContent.case.intro.h2 | safe }}</h2>
+  <p>{{ pageContent.case.intro.lead | safe }}</p>
   <p class="u-11"><b>Want the whole argument in one document?</b> Download <em>The Case for Uncost</em> &mdash; the fourteen-page paper this page distills, with every figure&rsquo;s exact reference. <a href="/downloads/the-case-for-uncost.pdf">Download the Case for Uncost (PDF)</a></p>
 </div>
 
@@ -30,7 +30,7 @@ description: "The Case is Uncost's evidence layer: what humans need, what those 
 <section class="blk blk--first blk--cream2" data-screen-label="The mechanism">
   <div class="eyebrow">{{ cm.eyebrow }}</div>
   <h2 class="sec">{{ cm.h2 | safe }}</h2>
-  <p class="u-11 lead">{{ cm.lead | safe }}</p>
+  <p class="u-11 lead" data-source="SRC-020">{{ cm.lead | safe }}</p>
   <div class="cards cards--2up">
     {{ fig.card(register.byId["SRC-020"]) }}
     {{ fig.card(register.byId["SRC-024"]) }}
@@ -41,7 +41,7 @@ description: "The Case is Uncost's evidence layer: what humans need, what those 
 <!-- SECTION: case.What living costs -->
 <section class="blk blk--wheat" data-screen-label="What living costs">
   <div class="eyebrow">What living costs</div>
-  <h2 class="sec">The numbers, with their receipts.</h2>
+  <h2 class="sec">{{ pageContent.case.livingCosts.h2 | safe }}</h2>
   <p class="u-11 lead">We go deep on Shelter, Food, and Energy first &mdash; the three that hit hardest &mdash; and keep all fifteen sectors visible. Every figure here traces to a public source.</p>
   <div class="cards">
     {{ fig.card(register.byId["SRC-004"]) }}
@@ -52,32 +52,7 @@ description: "The Case is Uncost's evidence layer: what humans need, what those 
   <p class="u-11"><a href="/sectors/">Every sector, with its evidence &rarr;</a></p>
 </section>
 
-<details class="mdrawer" data-screen-label="Methodology drawer">
-  <summary>Methodology — how The Receipts work <span class="plus">+</span></summary>
-  <div class="mdrawer-body">
-    <div>
-      <h3>The rules</h3>
-      <p>Every number has a source. Every source has a date. Every model states its assumptions. Where a claim cannot be sourced, it is labeled an estimate, scenario, or hypothesis — never presented as fact.</p>
-      <ul>
-        <li>Sources carry license, reuse status, and region coverage.</li>
-        <li>Figures show visible &ldquo;last updated&rdquo; dates and a refresh cadence.</li>
-        <li>Every correction is logged publicly.</li>
-        <li>Negative results are published with the same prominence as wins.</li>
-      </ul>
-    </div>
-    <div>
-      <h3>Confidence labels</h3>
-      <div class="u-37">
-        <span class="rcpt-conf rcpt-conf--confirmed">Confirmed</span>
-        <span class="rcpt-conf rcpt-conf--estimate">Estimate</span>
-        <span class="rcpt-conf rcpt-conf--scenario">Scenario</span>
-        <span class="rcpt-conf rcpt-conf--needs-refresh">Needs refresh</span>
-      </div>
-      <p>Derived figures — calculated from two or more sources — display every contributing source, never a single badge.</p>
-      <p>Full methodology, the source register, and the corrections log: <a class="u-1" href="/receipts/">The Receipts</a></p>
-    </div>
-  </div>
-</details>
+<div class="howlink" data-screen-label="How The Receipts work"><a href="{{ pageContent.case.receiptsLink.href }}">{{ pageContent.case.receiptsLink.text | safe }}</a></div>
 
 <!-- SECTION: case.Case CTA -->
 <section class="blk blk--ink u-block--ink" data-screen-label="Case CTA">

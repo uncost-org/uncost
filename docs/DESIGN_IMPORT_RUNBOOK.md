@@ -13,9 +13,9 @@ Do not push the raw export, or any intermediate cleaning state, to
 
 ## Roles and repositories
 
-- **Private staging:** `uncost-org/uncost-design-staging` — private, no
-  Cloudflare Pages, no Actions secrets. Founder creates it when the export is
-  ready. Iteration and cleaning happen here.
+- **Private staging:** a founder-designated private staging repository, with
+  no public hosting or automation secrets. Iteration and cleaning happen there;
+  private repository and workspace locations are not published here.
 - **Public target:** `uncost-org/uncost` — the clean tree lands here as one
   audited commit on a feature branch, then a normal reviewed pull request.
 
@@ -31,10 +31,9 @@ Do not push the raw export, or any intermediate cleaning state, to
 
 ## Step 1 — receive and unpack the export in isolation
 
-1. Founder places the export archive on the build machine at a path **outside**
-   any public repository working tree (for example under
-   `~/Projects/uncost-private/design-export/`). Never unpack it inside
-   `uncost-org/uncost`.
+1. Founder supplies the export archive in an isolated private workspace
+   **outside** any public repository working tree. Never unpack it inside
+   `uncost-org/uncost`; workspace locations remain private.
 2. Record the archive's SHA-256 and byte count before unpacking; note them in
    the staging pull request so the exact source is pinned (the same discipline
    the design-system `SOURCE_RECEIPT.json` already uses).
@@ -129,7 +128,7 @@ review proceeds group by group.
 
 ## Step 2 — clean in the staging repository, never in public
 
-1. In `uncost-org/uncost-design-staging`, create a working branch.
+1. In the designated private staging repository, create a working branch.
 2. Bring the export content in and reconcile it against control:
    - copy derives from the final Movement Plan and reviewed repo documents
      (`docs/CONTROL.md` authority chain); legacy site copy does not ship;
@@ -274,7 +273,7 @@ Do not merge staging history into public. Move the **result**, not the history:
 ## Step 5 — retire staging
 
 Once the public pull request is merged, the founder deletes
-`uncost-org/uncost-design-staging`. The private cleaning history is not needed
+the designated private staging repository. The private cleaning history is not needed
 and should not persist.
 
 ## Why this shape
