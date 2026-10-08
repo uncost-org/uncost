@@ -54,7 +54,7 @@ Reject forecasts presented as actual change, bare years treated as values, undat
 
 Use links and short original summaries; no wholesale article/chart republication or copied imagery. Public access is not a licence. PMMS is dropped and is not an eligible source under this workflow.
 
-**REPORTED** is the exact Cost Watch editorial label, only under **`/news/`**. It means attributed reporting, not independently confirmed Register data. It must never be written into `sources/register.csv` or used to promote a Register row, sector headline or durable thesis page. Register approval uses its own source/method/confidence evidence and Matt's explicit confirmation under the existing UNP-83 rule.
+**REPORTED** is the exact Cost Watch editorial label, only under **`/news/`**. It means attributed reporting, not independently confirmed Register data. It must never be written into `sources/register.csv` or used to promote a Register row, sector headline or durable thesis page. Register approval uses its own source/method/confidence evidence and Matt's explicit confirmation under the existing founder-confirmation rule.
 
 ## 4. Card contract
 
