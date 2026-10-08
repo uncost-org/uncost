@@ -1,19 +1,29 @@
 version: 2
 updates:
+  # GitHub Actions: monthly, every update in ONE grouped PR. Actions are few,
+  # and the workflows pin most of them by SHA, so one reviewed PR a month is
+  # enough.
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
   - package-ecosystem: npm
     directory: /website
     schedule:
       interval: monthly
-    # Dev-dependency bumps (html-validate, pa11y, lhci, and their trees) arrive
-    # as ONE grouped PR per month, not a drip of individual PRs — a stream of
-    # low-signal PRs trains merge-without-review, which is the habit these gates
-    # exist to prevent. Runtime deps (eleventy, eleventy-img, markdown-it) stay
-    # individual: they are few and high-impact, and warrant per-PR review.
+    # Minor and patch bumps (runtime and dev, direct and transitive) arrive as
+    # ONE grouped PR per month: a drip of low-signal PRs trains
+    # merge-without-review, which is the habit these gates exist to prevent.
+    # Majors stay OUT of the group, so Dependabot opens one PR per major. A
+    # major can change the built site or the audit tools themselves (pa11y
+    # brings the puppeteer the audits run on), so each needs its own verify.
     groups:
-      dev-dependencies:
-        dependency-type: development
+      minor-and-patch:
+        update-types:
+          - minor
+          - patch
