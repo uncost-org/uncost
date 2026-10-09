@@ -1,7 +1,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const markdownIt = require("markdown-it");
-const Image = require("@11ty/eleventy-img");
+const Image = require("@11ty/eleventy-img").default;
 
 const BRAND_ROOT = path.resolve(__dirname, "assets", "brand");
 
