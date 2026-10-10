@@ -179,7 +179,8 @@ SECTION_EXEMPTIONS = [
      "R3: the homepage's three statistics move from the retired `.fact` ink "
      "cards to the shared figure card. Not in the brief's \"Apply to\" list, but "
      "they used `.fact`, so retiring it required converting them. "
-     "CANVAS-SYNC item 55."),
+     "CANVAS-SYNC item 55. Sweep 2026-10-10 (A4): the three cards are now "
+     "SRC-020, SRC-023 and SRC-022. CANVAS-SYNC item 145."),
     ("receipts", "Keeping current",
      "P2 + R4: \"current\" is accented with --coral-on-ink, and the headline "
      "takes the shared prose scale. As with the CTA, a headline resize on a flat "
@@ -244,7 +245,11 @@ SECTION_EXEMPTIONS = [
      "amounts plus one intro line. CANVAS-SYNC item 85. V14 (Batch V): the first "
      "line is now \"We aim to significantly reduce the cost of living…\" at half "
      "the headline size in ink, and the intro is its first sentence only. "
-     "CANVAS-SYNC item 117."),
+     "CANVAS-SYNC item 117. Sweep 2026-10-10: A1 widens the text column above "
+     "1000px (grid 2fr/1fr, the 15ch cap lifted from the headline and slogan), "
+     "so the headline sets in fewer, longer lines and the robot narrows at 1440; "
+     "A2 sets \"living should not have a price tag.\" in plain ink. "
+     "CANVAS-SYNC items 143 and 144."),
     ("join", "div.privacyline",
      "C9: the \"We won't sell your data…\" strip moves from the export's --wheat "
      "to --cream-2, matching the tier cards above it. Same box, fill only. "

@@ -681,7 +681,7 @@ if '"aim": ' not in _home:
           '  "headline": "Technology should make living cheaper, <span class=\\\\"hl\\\\">not billionaires richer</span>.",\n'
           '  "aim": "We aim to significantly reduce the cost of living by putting AI and robotics to work for humanity.",\n'
           '  "slogan": "<span class=\\\\"u-51\\\\">Uncost</span> the cost of living.",\n'
-          '  "subhead": "Uncost is a nonprofit, nonpartisan movement that believes<br><u class=\\\\"u-1\\\\">living should not have a price tag</u>."',
+          '  "subhead": "Uncost is a nonprofit, nonpartisan movement that believes<br>living should not have a price tag."',
           "X5 hero strings in home.json")
 else:
     print("  = X5 hero strings in home.json (already applied)")
@@ -721,5 +721,46 @@ patch("website/src/sectors/index.njk",
       r'(<a href="/assembly/" class="u-btn u-btn--ghost">)How the Assembly works(</a>)',
       r'\1{{ pageContent.assembly.howItWorks }}\2',
       "X.1 sectors CTA: How The Assembly works", guard="{{ pageContent.assembly.howItWorks }}")
+
+# ---------------------------------------------------------------------------
+# Site sweep 2026-10-10 (founder brief). Each edit to a re-derived template or
+# data file is restated here; tools/restatement_check.py proves each one
+# reproduces the edited file from the pre-change one.
+# ---------------------------------------------------------------------------
+print("Site sweep 2026-10-10:")
+
+# A2 — the intro's second line, "living should not have a price tag.", is plain
+# ink: the accent and its underline go (ink text with an underline reads as a
+# link). X5 above now writes it that way; this covers a home.json that already
+# carries X5's underlined form. A removal is guarded by absence.
+if '<u class=\\"u-1\\">living should not have a price tag</u>' in pathlib.Path("website/src/_data/home.json").read_text(encoding="utf-8"):
+    patch("website/src/_data/home.json",
+          r'<br><u class=\\"u-1\\">living should not have a price tag</u>\.',
+          r'<br>living should not have a price tag.',
+          "A2 hero intro line is plain ink")
+else:
+    print("  = A2 hero intro line is plain ink (already applied)")
+
+# A4 — the homepage's three stat cards, in the founder's order: SRC-020
+# (ownership), SRC-023 (ground beef), SRC-022 (rent vs income). The export
+# writes three .fact calls (tools/rederive_home.py); R3 made them figure
+# cards. Whatever three the template holds, they become these three.
+patch("website/src/index.njk",
+      r'<div class="(?:cards|facts)">\n(?:    \{\{ fig\.(?:card|fact)\(register\.byId\["SRC-\d+"\]\) \}\}\n){3}  </div>',
+      '<div class="cards">\n'
+      '    {{ fig.card(register.byId["SRC-020"]) }}\n'
+      '    {{ fig.card(register.byId["SRC-023"]) }}\n'
+      '    {{ fig.card(register.byId["SRC-022"]) }}\n'
+      '  </div>',
+      "A4 homepage stat cards: SRC-020, SRC-023, SRC-022",
+      guard='{{ fig.card(register.byId["SRC-020"]) }}\n    {{ fig.card(register.byId["SRC-023"]) }}')
+# The export's three S2 caption slots (stat1..stat3) are read by nothing — the
+# cards render the register's own captions — so they are dropped from home.json.
+if '"stat1": {' in pathlib.Path("website/src/_data/home.json").read_text(encoding="utf-8"):
+    patch("website/src/_data/home.json",
+          r'(?:\n\s*"stat[123]": \{\n\s*"caption": "[^\n]*"\n\s*\},)+', '',
+          "A4 home.json: unused stat1-3 captions dropped")
+else:
+    print("  = A4 home.json: unused stat1-3 captions dropped (already applied)")
 
 print("done")

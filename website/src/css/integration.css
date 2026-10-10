@@ -2917,10 +2917,15 @@ body[data-page="treasury"] .prin h3 i { width: 11px; height: 11px; background: v
  *           here, restating the hero h1's own type — clamp(38px,5.4vw,82px),
  *           700, .96 line height, -.02em, 15ch, balanced — so it renders at
  *           exactly the <h1>'s size at every width.
- *        4  The intro, broken before "living should not have a price tag.",
- *           which is underlined and takes the accent. In the body face the
- *           accent is --coral-deep (the house rule for accents set in running
- *           text); at 24px either coral would pass. */
+ *        4  The intro, broken before "living should not have a price tag."
+ *           That line is plain ink at the intro's own weight and size (A2,
+ *           2026-10-10: the accent and its underline went; ink text with an
+ *           underline reads as a link).
+ *      Lines 2 and 4 MUST stay identical in computed style — the aim line is
+ *      the intro's own `.u-52.lead`, so they can only drift if one of them
+ *      gains a rule of its own. A3 (2026-10-10) measured both at Inter
+ *      24px / 500, ink, at 390, 1024, 1440 and 1865 (style_probe `same_as`,
+ *      tools/probes/site-sweep-2026-10-10.json). */
 body[data-page="index"] .hero-grid .hero-slogan {
   font-family: var(--font-display);
   font-weight: 700;
@@ -2938,3 +2943,18 @@ body[data-page="index"] .hero-grid .hero-aim { margin-top: 30px; }
  *      `h2.u-16` #D64A1F (!important); the heading is restated ink and the
  *      accent keeps the light-band display coral. */
 body[data-page="assembly"] h2.u-16.sec { color: var(--ink) !important; }
+
+/* 130. A1 (2026-10-10) — homepage hero: the headline fills its column.
+ *      The export caps `.hero-grid h1` at 15ch inside a 1.35fr/1fr grid, so
+ *      "Technology should make living cheaper, not billionaires richer."
+ *      wrapped at about a third of the screen. Above the export's own
+ *      single-column breakpoint (1000px) the grid becomes 2fr/1fr and the
+ *      15ch cap is lifted from the h1 and from the slogan line that restates
+ *      its type (item 128). The slogan's other cap is C4's band-paragraph
+ *      measure, which is !important, hence !important here. At 1000px and
+ *      below nothing changes: one column, robot 300px. */
+@media (min-width: 1001px) {
+  body[data-page="index"] .hero-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+  body[data-page="index"] .hero-grid h1,
+  body[data-page="index"] .hero-grid .hero-slogan { max-width: none !important; }
+}
