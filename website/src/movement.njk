@@ -3,7 +3,7 @@ layout: layouts/base.njk
 permalink: "/movement/"
 pageId: "movement"
 title: "The Movement"
-description: "A nonprofit, nonpartisan movement that treats the cost of living as a problem to be measured and solved — not endured."
+description: "Uncost is a nonprofit, nonpartisan movement that treats the cost of living as a problem to be measured and solved — not endured."
 ---
 {#- Markup from design-source/pages/movement.html; the BODY COPY is the UNP-82 v2
     (a) rewrite, founder-approved, wired verbatim.
@@ -17,7 +17,7 @@ description: "A nonprofit, nonpartisan movement that treats the cost of living a
     CTA directly below, which already renders exactly those two — so the ink
     block's own button row is dropped rather than duplicating them. -#}
 <!-- SECTION: movement.Movement — title -->
-<div class="titleband" data-screen-label="Movement — title"><h1>Measure it. Publish it. <span class="u-1">Bring it down.</span></h1></div>
+<div class="titleband" data-screen-label="Movement — title"><h1>The <span class="u-1">Movement</span></h1></div>
 <!-- SECTION: movement.What this is -->
 {%- set mc = pageContent.movement %}
 <section class="blk blk--first" data-screen-label="What this is">
@@ -43,7 +43,7 @@ description: "A nonprofit, nonpartisan movement that treats the cost of living a
 {{ uc.block(uncosted, "How a cost gets uncosted") }}
 
 <!-- SECTION: movement.What taking part means -->
-<section class="blk blk--cream" data-screen-label="What taking part means">
+<section class="blk blk--white" data-screen-label="What taking part means">
   <div class="eyebrow">{{ mc.whatTakingPartMeans.eyebrow }}</div>
   <h2 class="u-6 sec">{{ mc.whatTakingPartMeans.h2 | safe }}</h2>
 {% for para in mc.whatTakingPartMeans.body %}

@@ -49,7 +49,9 @@ SECTION_EXEMPTIONS = [
      "have to match the export and do, so the gate's geometry check is "
      "unaffected. CANVAS-SYNC items 72 and 73. " "C10 (Batch U): the list runs the container's full width (the 840px "
      "column cap is gone), cards are #FFF and the filter bar is a --cream-2 band. "
-     "CANVAS-SYNC item 92."),
+     "CANVAS-SYNC item 92. Sweep 2026-10-10 (C3): every update card carries its "
+     "news label (Update / Perspective) on the date row, and the open letter's "
+     "title drops \"Perspectives: \". CANVAS-SYNC item 151."),
     ("projects/", "At a glance",
      "The dossier's reviewed prose is the content authority and runs far longer "
      "than the export's designed one-liner placeholder; structure is identical."),
@@ -108,14 +110,18 @@ SECTION_EXEMPTIONS = [
     ("movement", "What this is",
      "Approved rewrite (v2 (a) block 1): replaces the export's introband. The h1 "
      "stays in the titleband, so this block is eyebrow-less lead + body in the "
-     "export's own .blk--first. CANVAS-SYNC item 24."),
+     "export's own .blk--first. CANVAS-SYNC item 24. Sweep 2026-10-10 (B2-B4): "
+     "headline \"Measure it. Publish it. Bring it down.\", new lead and body. "
+     "CANVAS-SYNC item 146."),
     ("movement", "What we stand for",
      "Approved rewrite (v2 (a) block 2): replaces the export's 'How it reaches "
      "people' distribution-mechanics section. CANVAS-SYNC item 24."),
     ("movement", "What taking part means",
      "Approved rewrite (v2 (a) block 3): replaces the export's three "
      "Pledge/quiz/share-a-stat cards with the community and Assembly argument. "
-     "CANVAS-SYNC item 24."),
+     "CANVAS-SYNC item 24. Sweep 2026-10-10 (B6): the band is white "
+     "(.blk--white), so it no longer reads as one band with the cream six-step "
+     "list above it. CANVAS-SYNC item 148."),
     ("movement", "How to take part",
      "Approved rewrite (v2 (a) block 4): the export's .path grid with v2's three "
      "ways in; the button row is dropped because the coral CTA below already "
@@ -123,7 +129,9 @@ SECTION_EXEMPTIONS = [
     ("case", "The mechanism",
      "Approved new section (v2 (b1)): the ownership-concentration argument, "
      "SRC-020 and SRC-024 through the register macro. No export counterpart. "
-     "CANVAS-SYNC item 25."),
+     "CANVAS-SYNC item 25. Sweep 2026-10-10 (D1-D4): one-sentence lead, both "
+     "paragraphs above the two cards, and a receipts link under them. "
+     "CANVAS-SYNC item 153."),
     ("case", "What living costs",
      "Content restoration, not a design change: the v4.3 re-derivation dropped "
      "this register-backed section when it swapped the essay page for the export's "
@@ -179,7 +187,8 @@ SECTION_EXEMPTIONS = [
      "R3: the homepage's three statistics move from the retired `.fact` ink "
      "cards to the shared figure card. Not in the brief's \"Apply to\" list, but "
      "they used `.fact`, so retiring it required converting them. "
-     "CANVAS-SYNC item 55."),
+     "CANVAS-SYNC item 55. Sweep 2026-10-10 (A4): the three cards are now "
+     "SRC-020, SRC-023 and SRC-022. CANVAS-SYNC item 145."),
     ("receipts", "Keeping current",
      "P2 + R4: \"current\" is accented with --coral-on-ink, and the headline "
      "takes the shared prose scale. As with the CTA, a headline resize on a flat "
@@ -202,7 +211,9 @@ SECTION_EXEMPTIONS = [
      "nearly every pixel by definition, hence ~99.7%. Measured at 1440: the "
      "section box is 1440x447 in the export and 1440x451 built — same x, same "
      "width, +4px tall — so this is fill, not reflow and not a layout break. "
-     "Sweep 3, batch H."),
+     "Sweep 3, batch H. Sweep 2026-10-10 (G1): the first question, \"What is "
+     "Uncost, in one sentence?\", now starts collapsed like the rest. "
+     "CANVAS-SYNC item 156."),
     ("treasury", "Principles",
      "G1 + G2: the band takes the one headline scale and the 728px measure. "
      "Measured at 1440 the fill is unchanged (cream-2 dominant on both sides) "
@@ -244,7 +255,11 @@ SECTION_EXEMPTIONS = [
      "amounts plus one intro line. CANVAS-SYNC item 85. V14 (Batch V): the first "
      "line is now \"We aim to significantly reduce the cost of living…\" at half "
      "the headline size in ink, and the intro is its first sentence only. "
-     "CANVAS-SYNC item 117."),
+     "CANVAS-SYNC item 117. Sweep 2026-10-10: A1 widens the text column above "
+     "1000px (grid 2fr/1fr, the 15ch cap lifted from the headline and slogan), "
+     "so the headline sets in fewer, longer lines and the robot narrows at 1440; "
+     "A2 sets \"living should not have a price tag.\" in plain ink. "
+     "CANVAS-SYNC items 143 and 144."),
     ("join", "div.privacyline",
      "C9: the \"We won't sell your data…\" strip moves from the export's --wheat "
      "to --cream-2, matching the tier cards above it. Same box, fill only. "
@@ -284,7 +299,10 @@ SECTION_EXEMPTIONS = [
     ("assembly", "Preview + interest",
      "V22: the PLANNED TOOL chip is removed from the \"A look ahead\" header "
      "row and the ink button reads \"How the Assembly works\". F2 had already "
-     "let the headline column fill the row. CANVAS-SYNC item 109."),
+     "let the headline column fill the row. CANVAS-SYNC item 109. Sweep "
+     "2026-10-10 (G2): that button, which linked the page it sits on, is "
+     "removed, and the sentence says the mock will be published later. "
+     "CANVAS-SYNC item 157."),
     ("contribute", "Volunteer roles",
      "V24: \"Useful roles, right now.\" gains a \"Volunteer now\" ink button to "
      "/contact/ after its closing note — one button row taller than the export. "
@@ -309,7 +327,53 @@ SECTION_EXEMPTIONS = [
     ("movement", "How a cost gets uncosted",
      "V15: the six-step band moves to --cream-2 (swapped with \"What taking "
      "part means\"), its headline underlines \"uncosted\" and its step labels "
-     "are 25% larger. CANVAS-SYNC item 115."),
+     "are 25% larger. CANVAS-SYNC item 115. Sweep 2026-10-10 (B5): \"uncosted\" "
+     "is a coral span, no longer underlined. CANVAS-SYNC item 147."),
+    # ── Site sweep 2026-10-10 ───────────────────────────────────────────────
+    ("movement", "Movement — title",
+     "B1: the title band reads \"The Movement\" (accent on \"Movement\"), the "
+     "pattern of The Case, The Sectors and The Projects; the export's line "
+     "\"Measure it. Publish it. Bring it down.\" is now the first band's "
+     "headline. CANVAS-SYNC item 146."),
+    # C1: the labels drawer is an always-open white section with a real h2 on
+    # all seven drawer pages. The export has no "Drawer" section on any page,
+    # so the gate has nothing to compare it with and these entries cannot fire
+    # today; they are named so that a canvas re-export carrying a drawer is
+    # not measured against this one by accident. /news/cost-watch/ has no
+    # export page at all. CANVAS-SYNC items 149 and 150.
+    *[(page, "Drawer",
+       "C1/C2: the labels drawer is an always-open section (white, 4px coral "
+       "top rule, h2 title at the footer heading's 24px); /news/ carries its "
+       "own rules and Update/Perspective/Correction labels. CANVAS-SYNC 149, 150.")
+      for page in ("receipts.html", "sectors.html", "projects.html", "policies.html",
+                   "news.html", "treasury.html")],
+    ("sectors.html", "Intro",
+     "E1: the wheat intro band above the fifteen cards (X9's) splits into a "
+     "section headline (\"Living isn't one bill — it's fifteen.\"), the fifteen "
+     "sector names as underlined links to their dossiers, and the closing "
+     "sentence. The export has no such band (X9 replaced its legend strip), so "
+     "this entry is named for the record. CANVAS-SYNC item 154."),
+    # H1: the coral primary button inside an ink band takes a --coral border
+    # (it was the house 2px ink border, invisible on ink). Every route was
+    # enumerated at 1440 and 390; these are the three ink bands that hold one.
+    ("case", "Case CTA",
+     "H1: \"See The Receipts\" (coral primary on ink) has a --coral border "
+     "instead of the invisible ink one. CANVAS-SYNC item 160."),
+    ("treasury", "Treasury CTA",
+     "H1: \"Contribute\" (coral primary on ink) has a --coral border instead "
+     "of the invisible ink one. CANVAS-SYNC item 160."),
+    ("sectors/", "Sector CTA",
+     "H1: \"Take part\" (coral primary on ink, all fifteen sector pages) has a "
+     "--coral border instead of the invisible ink one. CANVAS-SYNC item 160."),
+    ("about", "About — title",
+     "G3: the title band reads \"About us\" (accent on \"us\"), the pattern "
+     "of the other pages' title bands. CANVAS-SYNC item 158."),
+    ("about", "div.introband",
+     "G3: the introband paragraph ends after \"…open tools.\"; the \"very new\" "
+     "sentence is removed. CANVAS-SYNC item 158."),
+    ("about", "Mechanism",
+     "B5: the shared \"How a cost gets uncosted.\" heading's \"uncosted\" is a "
+     "coral span, no longer underlined (X1's <u>). CANVAS-SYNC item 147."),
 ]
 
 

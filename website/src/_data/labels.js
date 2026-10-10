@@ -1,7 +1,9 @@
 // The drawer (X11, Batch X, 2026-09-27; first shipped as V11's labels drawer).
 // ONE partial, partials/labels-drawer.njk, driven by this file: for each page
-// a header, THE RULES (a bullet list) and THE LABELS (chip | what it tells
-// you). Every string here is founder-approved verbatim from the Batch X brief,
+// a title, THE RULES (a bullet list) and THE LABELS (chip | what it tells
+// you). Since C1 (sweep 2026-10-10) it is an always-open section with the
+// title as a real heading; nothing collapses, and `summary` below is simply
+// that heading's text. Every string here is founder-approved verbatim from the Batch X brief,
 // except the four confidence definitions, which read exactly as they always
 // have (the brief: "confidence definitions unchanged").
 //
@@ -11,8 +13,11 @@
 // cell (in the brief it followed "Label:"). They replace the two interim
 // definitions X10 and X9 had moved in from on-site text.
 //
-// The news-label guard (eleventy.config.js) still holds: the confidence
-// labels appear on no page under /news/, and Reported on none outside it.
+// The news-label guard (eleventy.config.js) still holds, now over the two
+// vocabularies under /news/ (C4, sweep 2026-10-10): the confidence labels
+// appear on no page under /news/; Reported (Cost Watch items) on none outside
+// it; and the news labels Update / Perspective / Correction (Uncost's own
+// updates, C2) on none outside it either.
 
 // Every label a drawer shows: its chip (the class string the page itself uses
 // for it) and its definition, or null.
@@ -44,6 +49,16 @@ const LABELS = {
   // News / Cost Watch (W40).
   "Reported": { chip: "lbl lbl--reported",
     definition: "A price or cost figure as published by the linked source, with its date. Verified figures live in The Receipts." },
+  // News (C2, sweep 2026-10-10), founder-approved: the labels on Uncost's own
+  // updates. "Perspective", not "Opinion": Cost Watch's rules already say
+  // "Opinion pieces aren't included". _data/news.js gives every item exactly
+  // one of these three and fails the build otherwise.
+  "Update": { chip: "lbl lbl--update",
+    definition: "News from the movement itself: what we’ve published, changed or started." },
+  "Perspective": { chip: "lbl lbl--perspective",
+    definition: "An argument or point of view from Uncost, not a reported fact." },
+  "Correction": { chip: "lbl lbl--correction",
+    definition: "A fix to something we published before, saying what changed and why." },
   // Treasury (W40).
   "Not yet active": { chip: "status status--planned", definition: "No funds received; reporting begins when donations lawfully open." },
 };
@@ -54,8 +69,8 @@ const LABELS = {
 //   rules     THE RULES, in order
 //   labels    THE LABELS, in order — exactly the brief's list for the page
 //   elsewhere a label the drawer explains although this page does not carry
-//             it, and where it is used (the brief: Reported on /news/,
-//             "noted as used on Cost Watch")
+//             it, and where it is used (none today: /news/ lost its Reported
+//             note when it got its own labels, C2)
 //   unlisted  chips the page renders that the brief's list leaves out, named
 //             so the build guard can tell a known gap from a new one (both are
 //             reported to the founder)
@@ -113,18 +128,18 @@ const PAGES = {
     unlisted: ["Not yet drafted"],
   },
   "/news/": {
+    // C2 (sweep 2026-10-10): /news/ gets its own rules and labels instead of
+    // Cost Watch's. Cost Watch's own entry below is unchanged.
     id: "how-we-publish-news",
     summary: "How we publish news",
     rules: [
-      // W40: the News / Cost Watch rule line, first.
-      "Cost Watch is a watch list, not a receipt.",
-      "Every update is dated.",
+      "Every update is dated and carries one label.",
       "Updates that aren’t good news are published too.",
+      "Perspectives are labelled as perspectives, never dressed up as fact.",
       "Corrections are logged, never edited silently.",
       "Prices in the news live on Cost Watch.",
     ],
-    labels: ["Reported"],
-    elsewhere: { "Reported": { name: "Cost Watch", href: "/news/cost-watch/" } },
+    labels: ["Update", "Perspective", "Correction"],
   },
   "/news/cost-watch/": {
     id: "how-cost-watch-works",

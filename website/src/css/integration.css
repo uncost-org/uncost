@@ -458,8 +458,8 @@ body[data-page^="sectors-"] .sector-illus-slot { margin-top: 0; }
 
 /* 48 — Sector "02 · Evidence status" moved off ink onto cream2. It sat on the
  *      same ink as "01 · Scope" directly above it, so the two read as one
- *      undifferentiated slab. `--white` does not exist as a token, so cream2 is
- *      the choice. The four confidence chips carry their own backgrounds
+ *      undifferentiated slab. `--white` did not exist as a token then (item 131
+ *      adds it, 2026-10-10), so cream2 is the choice. The four confidence chips carry their own backgrounds
  *      (sage / wheat / ink-blue / coral) and set their own text colour, so
  *      their contrast pairs are untouched; only the dashed empty-state card was
  *      ink-specific — its border was --cream and its body text #C9C5BA, both
@@ -1337,18 +1337,19 @@ h2.sec, .blk h2.sec, h2.u-146, h2.u-38 {
   color: var(--coral) !important;
 }
 
-/* 79a. The one title band that is NOT ink. /accessibility/ is a repo-only
- *      route (CANVAS-SYNC 14) and the export defines no .titleband background
- *      for it, so it renders on cream. It carries no accent today — its h1 is
- *      plain text — so the rule above matches nothing there, and this guard
- *      matches nothing either. It is here because the selector above is scoped
- *      by COMPONENT, not by ground: the moment an accent is added to a non-ink
- *      title band it would ship --coral at 4.04:1 on cream, which is under the
- *      4.5 bar for anything but display type. --coral-deep is 5.59:1 there and
- *      is safe whatever size the accent turns out to be. */
-body[data-page="accessibility"] .titleband h1 :is(.u-1, .hl, em) {
-  color: var(--coral-deep) !important;
-}
+/* 79a. /accessibility/'s title band — REPLACED by G4 (sweep 2026-10-10).
+ *      It was the one title band that was not ink: a repo-only route
+ *      (CANVAS-SYNC 14) for which the export defines no .titleband, so it
+ *      rendered on cream, and this item guarded a future accent there with
+ *      --coral-deep. G4 gives it the band every other page has, so it now
+ *      restates the export's own title band for it — the values of
+ *      design-system/sections.css:40-41 (the /about/ band, identical on all
+ *      23 export pages that define one) — and the accent takes --coral from
+ *      the title-band rule above, like every other title band (4.58:1 on
+ *      ink). The 4px coral rule under the band is item 40(b)'s
+ *      `.titleband + *`. */
+body[data-page="accessibility"] .titleband { background: var(--ink); text-align: center; padding: 26px 28px; }
+body[data-page="accessibility"] .titleband h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(40px, 5vw, 72px); letter-spacing: -.03em; line-height: .9; margin: 0; color: var(--cream); }
 
 /* 80. H4 — the donations sentence on /movement/ takes the size of the three
  *     column bodies directly above it. It was set smaller, which read as a
@@ -2111,15 +2112,16 @@ body[data-page="faq"] .faqsec--wheat + .blk--coral { margin-top: 0 !important; }
 
 /* 94. C12 — /receipts/ "If we can't show where a number came from, we don't
  *     print it." band -> #FFF, its three cards -> --cream-2.
- *     `.blk--white` is repo-owned: the export has no white band class, and
- *     `--white` is not a token (item 48), so the value is written here once.
+ *     `.blk--white` is repo-owned: the export has no white band class. Its
+ *     value is the repo-owned `--white` token (item 131, 2026-10-10; it was
+ *     a #FFF literal until then — same value).
  *     The template changes the band's CLASS from .blk--wheat (restated in
  *     tools/post_patch_pages.py), because C1's wheat rules key on that class
  *     and would otherwise keep the eyebrow and 01/02/03 numerals in ink. On
  *     white they take the light-ground default, --coral-deep: eyebrow 5.99 on
  *     white, numerals 5.12 on the cream-2 cards. `.rule3`'s ink container
  *     still paints the 2px gaps between the cards. */
-.blk--white { background: #FFF; color: var(--ink); }
+.blk--white { background: var(--white); color: var(--ink); }
 body[data-page="receipts"] .blk--white .rule3 > div { background: var(--cream-2); }
 
 /* 95. C10 — /news/ and /news/cost-watch/: full-width list, cream-2 filter
@@ -2610,59 +2612,42 @@ body[data-page="sectors"] .legend .lg-pair .u-138 { min-width: 0; }
 }
 
 /* 116. THE DRAWER — V11's labels drawer, rebuilt by X11 (Batch X) as ONE
- *      template: header row, THE RULES (left column, bullets) and THE LABELS
- *      (right column, chip | what it tells you). Shipped as VARIANT 1 of the
- *      X12 decision renders:
- *        header   --cream-2 (V11 had it white, as V17's /case/ drawer), and
- *                 NO rule line between header and body — they read as one
- *                 panel. Display face 700 17px, the /case/ drawer's padding,
- *                 and the chevron as it was (item 43's --coral-deep, turning
- *                 -135deg when open)
- *        body     --cream-2, 28px × clamp(24px, 6vw, 80px), two columns from
- *                 881px, one below; each column opens on the /case/
- *                 drawer's heading style (body face 700 24px, uppercase)
- *        rules    17.5px / 1.6 --fg-2 bullets (the /case/ drawer's text)
+ *      template: a title, THE RULES (left column, bullets) and THE LABELS
+ *      (right column, chip | what it tells you).
+ *      C1 (sweep 2026-10-10): an ALWAYS-OPEN SECTION, not a collapsible
+ *      <details> — no toggle, no chevron, nothing that opens or closes, on
+ *      all seven pages.
+ *        section  --white (item 131), title and body alike, with R1's 4px
+ *                 coral rule on its top edge (no page places it under a
+ *                 coral band)
+ *        title    h2.ldrawer-title at the footer "Get updates" heading's
+ *                 type (.ft-updates h2: display face, 700, 24px) — a named
+ *                 exemption in tools/type_audit.py, because it sits below
+ *                 the section-headline step on purpose
+ *        body     28px × clamp(24px, 6vw, 80px), two columns from 881px, one
+ *                 below; each column opens on an h3 ("The rules" / "The
+ *                 labels") under the title: body face 700 15px, uppercase,
+ *                 .1em tracking, --fg-3, 12px below. Stepped down from 24px
+ *                 (founder, 2026-10-10) so the 24px title is the largest
+ *                 thing in the section
+ *        rules    17.5px / 1.6 --fg-2 bullets
  *        labels   the retired /receipts/ table's own style, restated here
  *                 because the export scopes `.conftable` to /receipts/ and
- *                 the drawer now serves seven pages
- *      Its top edge is a band boundary, so R1 draws it: 4px coral (no page
- *      places it under a coral band). */
-.ldrawer { border-top: 4px solid var(--coral); }
-.ldrawer summary {
-  list-style: none;
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px clamp(24px, 6vw, 80px);
-  background: var(--cream-2);
+ *                 the drawer serves seven pages */
+.ldrawer { border-top: 4px solid var(--coral); background: var(--white); }
+.ldrawer .ldrawer-title {
+  margin: 0;
+  padding: 28px clamp(24px, 6vw, 80px) 0;
   color: var(--ink);
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 17px;
+  font-size: 24px;
 }
-.ldrawer summary::-webkit-details-marker { display: none; }
-.ldrawer summary::after {
-  content: "";
-  position: absolute;
-  right: clamp(24px, 6vw, 80px);
-  top: 50%;
-  width: 12px;
-  height: 12px;
-  margin-top: -9px;
-  border-right: 2.5px solid var(--coral-deep);
-  border-bottom: 2.5px solid var(--coral-deep);
-  transform: rotate(45deg);
-  transition: transform 120ms linear;
-}
-.ldrawer[open] summary::after { transform: rotate(-135deg); }
 .ldrawer-body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 32px;
-  padding: 10px clamp(24px, 6vw, 80px) 32px;
-  background: var(--cream-2);
+  padding: 18px clamp(24px, 6vw, 80px) 32px;
 }
 @media (max-width: 880px) {
   .ldrawer-body { grid-template-columns: minmax(0, 1fr); }
@@ -2670,12 +2655,12 @@ body[data-page="sectors"] .legend .lg-pair .u-138 { min-width: 0; }
 .ldrawer-body h3 {
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 24px;
+  font-size: 15px;
   line-height: 1.1;
-  letter-spacing: .06em;
+  letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--fg-3);
-  margin: 0 0 14px;
+  margin: 0 0 12px;
 }
 .ldrawer-rules ul { margin: 0; padding-left: 1.2em; }
 .ldrawer-rules li,
@@ -2706,11 +2691,12 @@ body[data-page="sectors"] .legend .lg-pair .u-138 { min-width: 0; }
  *      X1 — the list is no longer inset; it renders exactly as /about/'s. */
 
 /* 118. X1 — the one "How a cost gets uncosted" block, both pages.
- *      Headline: ink, with "uncosted" coral and underlined, the full stop in
- *      ink. The export's `.u-4` paints the whole h2 #D64A1F with !important,
- *      so the ink is restated at (0,3,2) !important; the <u class="u-1">
- *      takes --coral from the one-accent rule (item 41 family) and keeps the
- *      UA underline, drawn per V8.
+ *      Headline: ink, with "uncosted" coral and the full stop in ink. The
+ *      export's `.u-4` paints the whole h2 #D64A1F with !important, so the
+ *      ink is restated at (0,3,2) !important; the <span class="u-1"> takes
+ *      --coral from the one-accent rule (item 41 family). B5 (sweep
+ *      2026-10-10): it was a <u> carrying the UA underline; it is a span now,
+ *      so nothing in this heading is underlined and no rule here adds one.
  *      Closing line: the last row of the step list, under the last step's
  *      `.u-2` rule, padded like a step so it lines up with the step text
  *      column's left edge at the band's own inset. */
@@ -2807,14 +2793,15 @@ body[data-page="news"] .newsxref a { font-style: normal; }
 /* 122. X9 — /sectors/: the introband keeps only the headline; the intro (W10)
  *      moves into the WHEAT band directly above the fifteen cards, where the
  *      status key strip was; the strip becomes the drawer below the grid.
- *      The paragraph is the band's lead, set at 20px, which is what lets the
- *      fifteen bold sector names keep their accent on wheat: bold at 20px is
- *      large text (3:1), and --coral-deep on --wheat is 3.25:1. At the old
- *      18px they would have needed 4.5:1. */
+ *      The band's paragraphs are leads, set at 20px.
+ *      E1 (sweep 2026-10-10) split the one paragraph into a headline, the
+ *      fifteen sector names as LINKS to their dossiers, and the closing
+ *      sentence. The names were bold --coral-deep (large text at 20px, 3.25:1
+ *      on wheat); as links on wheat they take item 68's ink (10.48:1) and
+ *      keep an underline, so they read as links without relying on colour.
+ *      The bold-accent rule that lived here is retired with the <b>s. */
 body[data-page="sectors"] .sintro .lead { font-size: 20px; }
-/* Item 69 sends small bold text on wheat to ink at (0,2,0) !important; at
- * 20px these names are large text, so the accent is restated above it. */
-body[data-page="sectors"] .sintro .lead b { color: var(--coral-deep) !important; }
+body[data-page="sectors"] .sintro .sintro-list a { text-decoration: underline; text-underline-offset: 3px; }
 
 /* 123. Batch X — the project "At a glance" opener headlines carry accent spans
  *      (W15, W21, X2). `.u-124` is a wheat band, so the display accent takes
@@ -2917,10 +2904,15 @@ body[data-page="treasury"] .prin h3 i { width: 11px; height: 11px; background: v
  *           here, restating the hero h1's own type — clamp(38px,5.4vw,82px),
  *           700, .96 line height, -.02em, 15ch, balanced — so it renders at
  *           exactly the <h1>'s size at every width.
- *        4  The intro, broken before "living should not have a price tag.",
- *           which is underlined and takes the accent. In the body face the
- *           accent is --coral-deep (the house rule for accents set in running
- *           text); at 24px either coral would pass. */
+ *        4  The intro, broken before "living should not have a price tag."
+ *           That line is plain ink at the intro's own weight and size (A2,
+ *           2026-10-10: the accent and its underline went; ink text with an
+ *           underline reads as a link).
+ *      Lines 2 and 4 MUST stay identical in computed style — the aim line is
+ *      the intro's own `.u-52.lead`, so they can only drift if one of them
+ *      gains a rule of its own. A3 (2026-10-10) measured both at Inter
+ *      24px / 500, ink, at 390, 1024, 1440 and 1865 (style_probe `same_as`,
+ *      tools/probes/site-sweep-2026-10-10.json). */
 body[data-page="index"] .hero-grid .hero-slogan {
   font-family: var(--font-display);
   font-weight: 700;
@@ -2938,3 +2930,56 @@ body[data-page="index"] .hero-grid .hero-aim { margin-top: 30px; }
  *      `h2.u-16` #D64A1F (!important); the heading is restated ink and the
  *      accent keeps the light-band display coral. */
 body[data-page="assembly"] h2.u-16.sec { color: var(--ink) !important; }
+
+/* 130. A1 (2026-10-10) — homepage hero: the headline fills its column.
+ *      The export caps `.hero-grid h1` at 15ch inside a 1.35fr/1fr grid, so
+ *      "Technology should make living cheaper, not billionaires richer."
+ *      wrapped at about a third of the screen. Above the export's own
+ *      single-column breakpoint (1000px) the grid becomes 2fr/1fr and the
+ *      15ch cap is lifted from the h1 and from the slogan line that restates
+ *      its type (item 128). The slogan's other cap is C4's band-paragraph
+ *      measure, which is !important, hence !important here. At 1000px and
+ *      below nothing changes: one column, robot 300px. */
+@media (min-width: 1001px) {
+  body[data-page="index"] .hero-grid { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); }
+  body[data-page="index"] .hero-grid h1,
+  body[data-page="index"] .hero-grid .hero-slogan { max-width: none !important; }
+}
+
+/* 131. B6 / C1 (2026-10-10) — `--white`, a repo-owned token. The export has
+ *      none (items 48 and 94 worked around that), so the value lives here
+ *      once. Used by `.blk--white` (item 94: /receipts/ "The rule" and, from
+ *      B6, /movement/ "What taking part means", which sat on cream directly
+ *      under the cream six-step list and read as one band with it) and by
+ *      the drawer section (item 116, C1). */
+:root { --white: #FFFFFF; }
+
+/* 132. C3 (sweep 2026-10-10) — every Uncost update carries one news label
+ *      (Update / Perspective / Correction) on its date row. The chips are
+ *      `.lbl` (item 72): same shape, and like Reported no colour of their
+ *      own — ink on --cream-2, all three alike — because colour means
+ *      confidence everywhere else on this site and the word is the meaning.
+ *      The date row becomes a flex row (date, then chip) and takes over the
+ *      date's own 8px bottom margin. */
+.lbl--update, .lbl--perspective, .lbl--correction { color: var(--ink); background: var(--cream-2); }
+body[data-page="news"] .up-item .up-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-bottom: 8px;
+}
+body[data-page="news"] .up-item .up-meta .date { margin-bottom: 0; }
+
+/* 133. H1 (sweep 2026-10-10) — the coral primary button on an ink band. The
+ *      house button rule gives every button a 2px ink border so it stays
+ *      visible across hover states; on an ink band that border is invisible,
+ *      so the coral button read 4px smaller than the cream-outlined button
+ *      beside it. Inside the three ink band classes its border is the fill's
+ *      own --coral: full size at rest, and its edge stays visible as the fill
+ *      darkens to --coral-deep on hover. Enumerated by tools/style_probe.py
+ *      (tools/probes/primary-buttons.json, every route at 1440 and 390): 17
+ *      primary buttons sit on ink — /case/ "See The Receipts", /treasury/
+ *      "Contribute", and "Take part" on the fifteen sector pages — all inside
+ *      these three classes. */
+:is(.blk--ink, .u-block--ink, .block--ink) .u-btn--primary { border-color: var(--coral); }

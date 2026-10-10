@@ -28,11 +28,13 @@
 module.exports = {
   movement: {
     whatThisIs: {
-      h2: 'Technology should make living cheaper, <span class="hl">not billionaires richer</span>.',
-      lead: 'A nonprofit, nonpartisan movement that treats the cost of living as a problem to be measured and solved &mdash; not endured.',
-      // W1 (Batch X, 2026-09-27), founder-approved — "Why we exist".
+      // B2-B4 (sweep 2026-10-10), founder-approved. The h1 is now "The
+      // Movement" (B1, in the template); this band's headline takes the line the
+      // h1 used to carry.
+      h2: 'Measure it. Publish it. <span class="hl">Bring it down.</span>',
+      lead: 'Uncost is a nonprofit, nonpartisan movement that treats the cost of living as a problem to be measured and solved &mdash; not endured.',
       body: [
-        'Life keeps getting more expensive. Technology that can lower costs keeps getting better. We&rsquo;re working to close that gap: AI- and robotics-based projects and research aimed at real costs, with all our findings published free.',
+        'Life keeps getting more expensive while the technology that can lower costs keeps getting better. We&rsquo;re working to close that gap: AI and robotics-based projects and research aimed at reducing living costs, with all our findings published free.',
       ],
     },
     whatWeStandFor: {
@@ -87,8 +89,14 @@ module.exports = {
     intro: {
       // W9 — the headline (V18's string, now in the content layer).
       h2: 'Basic human needs break into <span class="u-1">fifteen sectors</span> &mdash; and we have a plan to reduce the cost of each.',
-      // W10 — the intro; sector names bold, coloured by the band's accent rule.
-      lead: 'Living isn&rsquo;t one bill &mdash; it&rsquo;s fifteen: <b>Food</b>, <b>Water</b>, <b>Shelter</b>, <b>Energy</b>, <b>Healthcare</b>, <b>Care</b>, <b>Education</b>, <b>Transportation</b>, <b>Clothing</b>, <b>Goods</b>, <b>Materials</b>, <b>Communication</b>, <b>Safety</b>, <b>Environment</b> and <b>Leisure</b>. Each of these fifteen sectors gets a dossier: what it covers, where technology could cut its cost, the guardrail that keeps us honest, and where the evidence stands.',
+      // W10's single intro paragraph is split by E1 (sweep 2026-10-10) into the
+      // wheat band's headline, a list of the fifteen sectors as links (built
+      // by the template from catalog.sectors, in catalog order) and this
+      // closing sentence, verbatim from W10.
+      band: {
+        h2: 'Living isn&rsquo;t one bill &mdash; it&rsquo;s fifteen.',
+        close: 'Each of these fifteen sectors gets a dossier: what it covers, where technology could cut its cost, the guardrail that keeps us honest, and where the evidence stands.',
+      },
     },
   },
 
@@ -125,11 +133,17 @@ module.exports = {
 
   // /assembly/ — X15 (Batch X, 2026-09-27), founder-approved headlines.
   assembly: {
-    // X.1 item 3 (founder, 28 Sep): X15's wording everywhere — the nav, the
-    // /assembly/ button (V22) and the /sectors/ CTA all read this.
+    // X.1 item 3 (founder, 28 Sep): X15's wording everywhere. Read by the
+    // /sectors/ CTA; the nav carries the same words in chrome.json. The
+    // /assembly/ look-ahead button that read it is gone (G2, sweep 2026-10-10):
+    // it linked the page it sat on.
     howItWorks: 'How The Assembly works',
     canCannot: { h2: 'What the Assembly can &mdash; and cannot &mdash; <span class="u-1">decide</span>.' },
-    lookAhead: { h2: 'What <span class="u-1">The Assembly</span> could look like.' },
+    lookAhead: {
+      h2: 'What <span class="u-1">The Assembly</span> could look like.',
+      // G2 (sweep 2026-10-10), founder-approved: no mock page is published yet.
+      lead: 'We&rsquo;ve designed a working mock of the Assembly dashboard. We&rsquo;ll publish it when the Assembly is closer to running, with every placeholder figure clearly marked as illustrative.',
+    },
   },
 
   // /contribute/ and /contact/ — X16 (Batch X, 2026-09-27), founder-approved.
@@ -196,15 +210,18 @@ module.exports = {
       eyebrow: 'The mechanism',
       // W7 (Batch X, 2026-09-27), founder-approved.
       h2: 'Technology that could cut the cost of living for all is <span class="hl">making its owners wealthier instead</span>.',
-      // W8 (Batch X, 2026-09-27), founder-approved. Both figures are SRC-020's
-      // (Fed DFA, equities and funds outside retirement accounts); the template
-      // wraps this paragraph in data-source="SRC-020" so the built audit counts
-      // them as cited.
-      lead: 'When a company automates to cut costs, its value rises, and that value goes to whoever owns the company. Ownership itself is concentrated: the bottom half of American households hold about 1% of stocks and funds outside retirement accounts; the top 1% hold about half.',
-      // The two figures between lead and close are rendered FROM the register
-      // by the template (SRC-020, SRC-024). They are citations, not copy, and
-      // deliberately do not live here.
+      // W8 (Batch X, 2026-09-27), founder-approved; D1 (sweep 2026-10-10)
+      // drops its second sentence ("Ownership itself is concentrated: … the
+      // top 1% hold about half."), which repeated the SRC-020 card below it.
+      // With no figure left in it, the paragraph no longer carries
+      // data-source="SRC-020" (D4).
+      lead: 'When a company automates to cut costs, its value rises, and that value goes to whoever owns the company.',
+      // D2: the close is the section's second paragraph, above the cards.
       close: 'Nobody is doing the deliberate work of routing automation&rsquo;s gains back toward the price of rent, groceries, and electricity instead of the value of assets. It&rsquo;s why Uncost exists: to measure where a specific technology could plausibly lower a specific cost, publish the method, and hand it to the people who can act on it.',
+      // The two figures after the paragraphs are rendered FROM the register by
+      // the template (SRC-020, SRC-024). They are citations, not copy, and
+      // deliberately do not live here. D3: the link under them, founder-approved.
+      receiptsLink: { text: 'Every figure, with its receipt &rarr;', href: '/receipts/' },
     },
     // X7 (Batch X, 2026-09-27), founder-approved: the "What living costs"
     // headline, and the one-line link that replaces the Methodology drawer.
