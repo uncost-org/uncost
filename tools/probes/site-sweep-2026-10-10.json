@@ -667,6 +667,38 @@
         390,
         1440
       ]
+    },
+    {
+      "name": "drawer-before",
+      "routes": [
+        "/receipts/",
+        "/sectors/",
+        "/projects/",
+        "/policies/",
+        "/news/",
+        "/news/cost-watch/",
+        "/treasury/"
+      ],
+      "selector": "main > details.ldrawer",
+      "optional": true,
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "a11y-titleband-before",
+      "routes": [
+        "/accessibility/"
+      ],
+      "selector": "main > header.titleband",
+      "optional": true,
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
     }
   ]
 }
