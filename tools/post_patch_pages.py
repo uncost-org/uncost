@@ -239,17 +239,22 @@ patch("website/src/movement.njk",
       MOVEMENT_BODY,
       "/movement/ body reads pageContent.movement", guard="pageContent.movement")
 
+# D1-D4 (sweep 2026-10-10): both paragraphs sit above the two cards, the lead no
+# longer carries data-source (it has no figure left), and a receipts link from
+# the content layer follows the cards. The guard is the D3 link, so a template
+# with the earlier shape (paragraph, cards, paragraph) is rewritten too.
 CASE_MECHANISM = '''<!-- SECTION: case.The mechanism -->
 {%- set cm = pageContent.case.mechanism %}
 <section class="blk blk--first blk--cream2" data-screen-label="The mechanism">
   <div class="eyebrow">{{ cm.eyebrow }}</div>
   <h2 class="sec">{{ cm.h2 | safe }}</h2>
-  <p class="u-11 lead" data-source="SRC-020">{{ cm.lead | safe }}</p>
+  <p class="u-11 lead">{{ cm.lead | safe }}</p>
+  <p class="u-11">{{ cm.close | safe }}</p>
   <div class="cards cards--2up">
     {{ fig.card(register.byId["SRC-020"]) }}
     {{ fig.card(register.byId["SRC-024"]) }}
   </div>
-  <p class="u-11">{{ cm.close | safe }}</p>
+  <p class="u-11"><a href="{{ cm.receiptsLink.href }}">{{ cm.receiptsLink.text | safe }}</a></p>
 </section>
 
 '''
@@ -257,7 +262,7 @@ CASE_MECHANISM = '''<!-- SECTION: case.The mechanism -->
 patch("website/src/case/index.njk",
       r'<!-- SECTION: case\.The mechanism -->.*?(?=<!-- SECTION: case\.What living costs -->)',
       CASE_MECHANISM,
-      "/case/ mechanism reads pageContent.case", guard="pageContent.case")
+      "/case/ mechanism reads pageContent.case (D1-D4 shape)", guard="{{ cm.receiptsLink.text | safe }}")
 
 print("2026-09-12 sweep — remaining page fixes:")
 patch("website/src/contribute.njk",

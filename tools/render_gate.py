@@ -129,7 +129,9 @@ SECTION_EXEMPTIONS = [
     ("case", "The mechanism",
      "Approved new section (v2 (b1)): the ownership-concentration argument, "
      "SRC-020 and SRC-024 through the register macro. No export counterpart. "
-     "CANVAS-SYNC item 25."),
+     "CANVAS-SYNC item 25. Sweep 2026-10-10 (D1-D4): one-sentence lead, both "
+     "paragraphs above the two cards, and a receipts link under them. "
+     "CANVAS-SYNC item 153."),
     ("case", "What living costs",
      "Content restoration, not a design change: the v4.3 re-derivation dropped "
      "this register-backed section when it swapped the essay page for the export's "

@@ -198,15 +198,18 @@ module.exports = {
       eyebrow: 'The mechanism',
       // W7 (Batch X, 2026-09-27), founder-approved.
       h2: 'Technology that could cut the cost of living for all is <span class="hl">making its owners wealthier instead</span>.',
-      // W8 (Batch X, 2026-09-27), founder-approved. Both figures are SRC-020's
-      // (Fed DFA, equities and funds outside retirement accounts); the template
-      // wraps this paragraph in data-source="SRC-020" so the built audit counts
-      // them as cited.
-      lead: 'When a company automates to cut costs, its value rises, and that value goes to whoever owns the company. Ownership itself is concentrated: the bottom half of American households hold about 1% of stocks and funds outside retirement accounts; the top 1% hold about half.',
-      // The two figures between lead and close are rendered FROM the register
-      // by the template (SRC-020, SRC-024). They are citations, not copy, and
-      // deliberately do not live here.
+      // W8 (Batch X, 2026-09-27), founder-approved; D1 (sweep 2026-10-10)
+      // drops its second sentence ("Ownership itself is concentrated: … the
+      // top 1% hold about half."), which repeated the SRC-020 card below it.
+      // With no figure left in it, the paragraph no longer carries
+      // data-source="SRC-020" (D4).
+      lead: 'When a company automates to cut costs, its value rises, and that value goes to whoever owns the company.',
+      // D2: the close is the section's second paragraph, above the cards.
       close: 'Nobody is doing the deliberate work of routing automation&rsquo;s gains back toward the price of rent, groceries, and electricity instead of the value of assets. It&rsquo;s why Uncost exists: to measure where a specific technology could plausibly lower a specific cost, publish the method, and hand it to the people who can act on it.',
+      // The two figures after the paragraphs are rendered FROM the register by
+      // the template (SRC-020, SRC-024). They are citations, not copy, and
+      // deliberately do not live here. D3: the link under them, founder-approved.
+      receiptsLink: { text: 'Every figure, with its receipt &rarr;', href: '/receipts/' },
     },
     // X7 (Batch X, 2026-09-27), founder-approved: the "What living costs"
     // headline, and the one-line link that replaces the Methodology drawer.
