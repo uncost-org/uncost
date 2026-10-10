@@ -502,11 +502,21 @@ if 'data-screen-label="Confidence labels"' in pathlib.Path("website/src/receipts
 else:
     print("  = V11 receipts: Four honest labels retired into the drawer (already applied)")
 LABELS_DRAWER = '{% include "partials/labels-drawer.njk" %}\n'
+# F1 (sweep 2026-10-10): on /projects/ the drawer moves from before the CTA to
+# directly after the "Next" list, before the ink "Later" band. A template that
+# still has it anywhere else gives it up here, and the loop below puts it back
+# in its new place.
+_proj = pathlib.Path("website/src/projects/index.njk").read_text(encoding="utf-8")
+if LABELS_DRAWER in _proj and LABELS_DRAWER + "\n<!-- SECTION: projects.Later -->" not in _proj:
+    patch("website/src/projects/index.njk", r'\{% include "partials/labels-drawer\.njk" %\}\n\n', '',
+          "F1 projects: the drawer leaves its old place")
+else:
+    print("  = F1 projects: the drawer leaves its old place (already applied)")
 for path, anchor, where in (
     # X8 (Batch X): on /receipts/ the drawer sits directly under the register
     # band, between it and "The rule".
     ("website/src/receipts.njk", r'(<!-- SECTION: receipts\.The rule -->\n)', "under the register"),
-    ("website/src/projects/index.njk", r'(<!-- SECTION: projects\.Projects CTA -->\n)', "before the CTA"),
+    ("website/src/projects/index.njk", r'(<!-- SECTION: projects\.Later -->\n)', "after Next, before Later (F1)"),
     ("website/src/sectors/index.njk", r'(<!-- SECTION: sectors\.Sectors CTA -->\n)', "before the CTA"),
     ("website/src/treasury.njk", r'(<!-- SECTION: treasury\.Treasury CTA -->\n)', "before the CTA"),
     ("website/src/news/index.njk", r'(<script src="/js/keyword-filter\.js" defer></script>\n)', "after the list"),
