@@ -23,7 +23,8 @@ A spec:
         "shot": true}
      ]}
 
-Options per probe: "all" (every match, not just the first), "box", "lines",
+Options per probe: "same_as" (+ "same_as_route" to compare with that probe on
+another route), "all" (every match, not just the first), "box", "lines",
 "ground" (the background the element actually sits on: the first ancestor,
 self excluded, with a non-transparent background-color, and that ancestor's
 classes), "optional" (zero matches is not an error — for enumerations across
@@ -241,7 +242,7 @@ def judge(spec, rows):
                                            "width": w, "text": it.get("text")})
                 other = p.get("same_as")
                 if other and r["count"]:
-                    o = by.get((route, w, other))
+                    o = by.get((p.get("same_as_route") or route, w, other))
                     if not o or not o["count"]:
                         errors.append({"kind": "same_as-missing", "probe": p["name"], "other": other,
                                        "route": route, "width": w})
