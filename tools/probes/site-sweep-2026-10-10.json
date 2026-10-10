@@ -514,6 +514,14 @@
         "border-top-width",
         "border-top-color"
       ]
+    },
+    {
+      "name": "footer",
+      "routes": [
+        "/"
+      ],
+      "selector": "footer.ft",
+      "shot": true
     }
   ]
 }
