@@ -2611,59 +2611,39 @@ body[data-page="sectors"] .legend .lg-pair .u-138 { min-width: 0; }
 }
 
 /* 116. THE DRAWER — V11's labels drawer, rebuilt by X11 (Batch X) as ONE
- *      template: header row, THE RULES (left column, bullets) and THE LABELS
- *      (right column, chip | what it tells you). Shipped as VARIANT 1 of the
- *      X12 decision renders:
- *        header   --cream-2 (V11 had it white, as V17's /case/ drawer), and
- *                 NO rule line between header and body — they read as one
- *                 panel. Display face 700 17px, the /case/ drawer's padding,
- *                 and the chevron as it was (item 43's --coral-deep, turning
- *                 -135deg when open)
- *        body     --cream-2, 28px × clamp(24px, 6vw, 80px), two columns from
- *                 881px, one below; each column opens on the /case/
- *                 drawer's heading style (body face 700 24px, uppercase)
- *        rules    17.5px / 1.6 --fg-2 bullets (the /case/ drawer's text)
+ *      template: a title, THE RULES (left column, bullets) and THE LABELS
+ *      (right column, chip | what it tells you).
+ *      C1 (sweep 2026-10-10): an ALWAYS-OPEN SECTION, not a collapsible
+ *      <details> — no toggle, no chevron, nothing that opens or closes, on
+ *      all seven pages.
+ *        section  --white (item 131), title and body alike, with R1's 4px
+ *                 coral rule on its top edge (no page places it under a
+ *                 coral band)
+ *        title    h2.ldrawer-title at the footer "Get updates" heading's
+ *                 type (.ft-updates h2: display face, 700, 24px) — a named
+ *                 exemption in tools/type_audit.py, because it sits below
+ *                 the section-headline step on purpose
+ *        body     28px × clamp(24px, 6vw, 80px), two columns from 881px, one
+ *                 below; each column opens on an h3 (body face 700 24px,
+ *                 uppercase) under the title
+ *        rules    17.5px / 1.6 --fg-2 bullets
  *        labels   the retired /receipts/ table's own style, restated here
  *                 because the export scopes `.conftable` to /receipts/ and
- *                 the drawer now serves seven pages
- *      Its top edge is a band boundary, so R1 draws it: 4px coral (no page
- *      places it under a coral band). */
-.ldrawer { border-top: 4px solid var(--coral); }
-.ldrawer summary {
-  list-style: none;
-  cursor: pointer;
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 18px clamp(24px, 6vw, 80px);
-  background: var(--cream-2);
+ *                 the drawer serves seven pages */
+.ldrawer { border-top: 4px solid var(--coral); background: var(--white); }
+.ldrawer .ldrawer-title {
+  margin: 0;
+  padding: 28px clamp(24px, 6vw, 80px) 0;
   color: var(--ink);
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 17px;
+  font-size: 24px;
 }
-.ldrawer summary::-webkit-details-marker { display: none; }
-.ldrawer summary::after {
-  content: "";
-  position: absolute;
-  right: clamp(24px, 6vw, 80px);
-  top: 50%;
-  width: 12px;
-  height: 12px;
-  margin-top: -9px;
-  border-right: 2.5px solid var(--coral-deep);
-  border-bottom: 2.5px solid var(--coral-deep);
-  transform: rotate(45deg);
-  transition: transform 120ms linear;
-}
-.ldrawer[open] summary::after { transform: rotate(-135deg); }
 .ldrawer-body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 32px;
-  padding: 10px clamp(24px, 6vw, 80px) 32px;
-  background: var(--cream-2);
+  padding: 18px clamp(24px, 6vw, 80px) 32px;
 }
 @media (max-width: 880px) {
   .ldrawer-body { grid-template-columns: minmax(0, 1fr); }
@@ -2968,3 +2948,20 @@ body[data-page="assembly"] h2.u-16.sec { color: var(--ink) !important; }
  *      under the cream six-step list and read as one band with it) and by
  *      the drawer section (item 116, C1). */
 :root { --white: #FFFFFF; }
+
+/* 132. C3 (sweep 2026-10-10) — every Uncost update carries one news label
+ *      (Update / Perspective / Correction) on its date row. The chips are
+ *      `.lbl` (item 72): same shape, and like Reported no colour of their
+ *      own — ink on --cream-2, all three alike — because colour means
+ *      confidence everywhere else on this site and the word is the meaning.
+ *      The date row becomes a flex row (date, then chip) and takes over the
+ *      date's own 8px bottom margin. */
+.lbl--update, .lbl--perspective, .lbl--correction { color: var(--ink); background: var(--cream-2); }
+body[data-page="news"] .up-item .up-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-bottom: 8px;
+}
+body[data-page="news"] .up-item .up-meta .date { margin-bottom: 0; }

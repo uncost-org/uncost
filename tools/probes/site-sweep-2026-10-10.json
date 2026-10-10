@@ -169,6 +169,106 @@
       "props": [
         "background-color"
       ]
+    },
+    {
+      "name": "footer-updates-h2",
+      "routes": [
+        "/receipts/",
+        "/sectors/",
+        "/projects/",
+        "/policies/",
+        "/news/",
+        "/news/cost-watch/",
+        "/treasury/"
+      ],
+      "selector": ".ft-updates h2",
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "color"
+      ]
+    },
+    {
+      "name": "drawer-title",
+      "routes": [
+        "/receipts/",
+        "/sectors/",
+        "/projects/",
+        "/policies/",
+        "/news/",
+        "/news/cost-watch/",
+        "/treasury/"
+      ],
+      "selector": "main > section.ldrawer > h2.ldrawer-title",
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "color"
+      ],
+      "same_as": "footer-updates-h2",
+      "lines": true
+    },
+    {
+      "name": "drawer",
+      "routes": [
+        "/receipts/",
+        "/sectors/",
+        "/projects/",
+        "/policies/",
+        "/news/",
+        "/news/cost-watch/",
+        "/treasury/"
+      ],
+      "selector": "main > section.ldrawer",
+      "props": [
+        "background-color",
+        "border-top-width",
+        "border-top-style",
+        "border-top-color"
+      ],
+      "box": true,
+      "shot": true
+    },
+    {
+      "name": "drawer-no-details",
+      "routes": [
+        "/receipts/",
+        "/sectors/",
+        "/projects/",
+        "/policies/",
+        "/news/",
+        "/news/cost-watch/",
+        "/treasury/"
+      ],
+      "selector": "details.ldrawer, .ldrawer summary",
+      "expect_count": 0
+    },
+    {
+      "name": "news-chip",
+      "routes": [
+        "/news/"
+      ],
+      "selector": ".up-item .up-meta .lbl",
+      "props": [
+        "color",
+        "background-color",
+        "border-top-color"
+      ],
+      "all": true
+    },
+    {
+      "name": "news-updates",
+      "routes": [
+        "/news/"
+      ],
+      "selector": "[data-screen-label=\"Updates\"], .newswrap",
+      "shot": true
     }
   ]
 }

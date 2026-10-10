@@ -150,14 +150,19 @@ module.exports = function (eleventyConfig) {
   //     on /receipts/, /case/ and the sector pages, and they are never applied
   //     to anything under /news/.
   //
-  //   Reported — the only label used anywhere under /news/. It says a price
-  //     was published by the linked source on a date. Cost Watch is a watch
-  //     list, not a receipt, so "Reported" must never appear on /receipts/,
-  //     /case/, a sector page, or in sources/register.csv.
+  //   Two vocabularies live under /news/ (C4, sweep 2026-10-10):
+  //   Reported — Cost Watch items. It says a price was published by the
+  //     linked source on a date. Cost Watch is a watch list, not a receipt,
+  //     so "Reported" must never appear on /receipts/, /case/, a sector page,
+  //     or in sources/register.csv.
+  //   Update / Perspective / Correction — Uncost's own updates (C2/C3). They
+  //     say what kind of update an item is, and mean nothing outside /news/.
   //
-  // Either leak is a build failure, not a lint warning: a Cost Watch item
-  // wearing a confidence label would claim verification the register never
-  // did, and a receipt wearing "Reported" would understate one that it did.
+  // Three directions, each a build failure, not a lint warning: no confidence
+  // label under /news/ (a Cost Watch item wearing one would claim
+  // verification the register never did); no Reported outside /news/ (a
+  // receipt wearing it would understate one that it did); and no news label
+  // outside /news/.
   // The check is on the class markers, not on prose — the plain English words
   // "reported" and "confirmed" are free to appear in body copy.
   eleventyConfig.on("eleventy.after", async ({ dir, results }) => {
@@ -184,6 +189,7 @@ module.exports = function (eleventyConfig) {
     }
     const REPORTED = /class="[^"]*\blbl--reported\b/;
     const CONFIDENCE = /class="[^"]*\brcpt-conf\b/;
+    const NEWS_LABEL = /class="[^"]*\blbl--(?:update|perspective|correction)\b/;
     const leaks = [];
 
     const walk = (d) => {
@@ -195,10 +201,13 @@ module.exports = function (eleventyConfig) {
         const html = fs.readFileSync(full, "utf8");
         const underNews = rel === "/news/index.html" || rel.startsWith("/news/");
         if (underNews && CONFIDENCE.test(html)) {
-          leaks.push(`${rel} carries a confidence label (.rcpt-conf); only "Reported" is allowed under /news/.`);
+          leaks.push(`${rel} carries a confidence label (.rcpt-conf); under /news/ only Reported and the news labels are allowed.`);
         }
         if (!underNews && REPORTED.test(html)) {
           leaks.push(`${rel} carries the Reported label (.lbl--reported); it is allowed only under /news/.`);
+        }
+        if (!underNews && NEWS_LABEL.test(html)) {
+          leaks.push(`${rel} carries a news label (.lbl--update/.lbl--perspective/.lbl--correction); they are allowed only under /news/.`);
         }
       }
     };
@@ -232,13 +241,15 @@ module.exports = function (eleventyConfig) {
   });
 
   // ── Drawer guard (V11, reworked by X11) ────────────────────────────────
-  // Each page's drawer (partials/labels-drawer.njk) must show exactly the
-  // labels _data/labels.js lists for it — the founder's list, in order — and
-  // that list must match the page:
+  // Each page's drawer (partials/labels-drawer.njk; since C1, sweep
+  // 2026-10-10, an always-open <section class="ldrawer">, no longer a
+  // <details>) must show exactly the labels _data/labels.js lists for it —
+  // the founder's list, in order — and that list must match the page:
   //   - the drawer explains labels this page actually carries: at least one
   //     listed label is rendered outside the drawer, or declared `elsewhere`
-  //     (a label the drawer explains for a page that does not carry it:
-  //     Reported on /news/). A list may name a whole vocabulary — /receipts/
+  //     (a label the drawer explains for a page that does not carry it; none
+  //     today — /news/ did this for Reported until C2 gave it its own labels).
+  //     A list may name a whole vocabulary — /receipts/
   //     explains all four confidence labels though no register row is an
   //     Estimate or a Scenario today — so each listed label is not required;
   //   - every label chip in <main> outside the drawer is either in the list
@@ -264,7 +275,9 @@ module.exports = function (eleventyConfig) {
       }
       const html = fs.readFileSync(out, "utf8");
       const main = (html.match(/<main[\s\S]*?<\/main>/) || [""])[0];
-      const drawer = (main.match(/<details class="ldrawer"[\s\S]*?<\/details>/) || [""])[0];
+      // C1 (sweep 2026-10-10): the drawer is an always-open <section>, not a
+      // <details>. It holds no nested <section>, so the first close ends it.
+      const drawer = (main.match(/<section class="ldrawer"[\s\S]*?<\/section>/) || [""])[0];
       if (!drawer) { problems.push(`${url}: labels.js lists a drawer but the page renders none`); continue; }
       if (!drawer.includes(`id="${page.id}"`)) problems.push(`${url}: drawer does not carry id="${page.id}"`);
       const shown = [...drawer.matchAll(/data-label="([^"]+)"/g)].map((m) => m[1].replace(/&amp;/g, "&"));
@@ -284,7 +297,7 @@ module.exports = function (eleventyConfig) {
     for (const [url] of written) {
       if (labels.pages[url]) continue;
       const out = written.get(url);
-      if (out && out.endsWith(".html") && fs.existsSync(out) && /<details class="ldrawer"/.test(fs.readFileSync(out, "utf8"))) {
+      if (out && out.endsWith(".html") && fs.existsSync(out) && /<section class="ldrawer"/.test(fs.readFileSync(out, "utf8"))) {
         problems.push(`${url}: renders a drawer but has no entry in _data/labels.js`);
       }
     }

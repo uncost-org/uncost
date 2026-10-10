@@ -49,7 +49,9 @@ SECTION_EXEMPTIONS = [
      "have to match the export and do, so the gate's geometry check is "
      "unaffected. CANVAS-SYNC items 72 and 73. " "C10 (Batch U): the list runs the container's full width (the 840px "
      "column cap is gone), cards are #FFF and the filter bar is a --cream-2 band. "
-     "CANVAS-SYNC item 92."),
+     "CANVAS-SYNC item 92. Sweep 2026-10-10 (C3): every update card carries its "
+     "news label (Update / Perspective) on the date row, and the open letter's "
+     "title drops \"Perspectives: \". CANVAS-SYNC item 151."),
     ("projects/", "At a glance",
      "The dossier's reviewed prose is the content authority and runs far longer "
      "than the export's designed one-liner placeholder; structure is identical."),
@@ -326,6 +328,18 @@ SECTION_EXEMPTIONS = [
      "pattern of The Case, The Sectors and The Projects; the export's line "
      "\"Measure it. Publish it. Bring it down.\" is now the first band's "
      "headline. CANVAS-SYNC item 146."),
+    # C1: the labels drawer is an always-open white section with a real h2 on
+    # all seven drawer pages. The export has no "Drawer" section on any page,
+    # so the gate has nothing to compare it with and these entries cannot fire
+    # today; they are named so that a canvas re-export carrying a drawer is
+    # not measured against this one by accident. /news/cost-watch/ has no
+    # export page at all. CANVAS-SYNC items 149 and 150.
+    *[(page, "Drawer",
+       "C1/C2: the labels drawer is an always-open section (white, 4px coral "
+       "top rule, h2 title at the footer heading's 24px); /news/ carries its "
+       "own rules and Update/Perspective/Correction labels. CANVAS-SYNC 149, 150.")
+      for page in ("receipts.html", "sectors.html", "projects.html", "policies.html",
+                   "news.html", "treasury.html")],
     ("about", "Mechanism",
      "B5: the shared \"How a cost gets uncosted.\" heading's \"uncosted\" is a "
      "coral span, no longer underlined (X1's <u>). CANVAS-SYNC item 147."),
