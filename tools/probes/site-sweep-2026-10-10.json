@@ -1,0 +1,11 @@
+{
+  "widths": [390, 1024, 1440, 1865],
+  "probes": [
+    {"name": "hero-h1", "routes": ["/"], "selector": ".hero-grid h1", "props": ["max-width", "font-size"], "lines": true, "box": true},
+    {"name": "hero-slogan", "routes": ["/"], "selector": ".hero-grid .hero-slogan", "props": ["max-width", "font-size"], "lines": true, "box": true},
+    {"name": "hero-robot", "routes": ["/"], "selector": ".hero-grid img.robot", "box": true},
+    {"name": "hero-subhead", "routes": ["/"], "selector": ".hero-grid p.u-52.lead:not(.hero-aim)", "props": ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "color"], "lines": true},
+    {"name": "hero-aim", "routes": ["/"], "selector": ".hero-grid p.hero-aim", "props": ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "color"], "same_as": "hero-subhead"},
+    {"name": "page-scroll-width", "routes": ["/"], "selector": "html", "props": ["width"], "box": true}
+  ]
+}
