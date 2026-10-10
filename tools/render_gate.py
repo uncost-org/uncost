@@ -108,14 +108,18 @@ SECTION_EXEMPTIONS = [
     ("movement", "What this is",
      "Approved rewrite (v2 (a) block 1): replaces the export's introband. The h1 "
      "stays in the titleband, so this block is eyebrow-less lead + body in the "
-     "export's own .blk--first. CANVAS-SYNC item 24."),
+     "export's own .blk--first. CANVAS-SYNC item 24. Sweep 2026-10-10 (B2-B4): "
+     "headline \"Measure it. Publish it. Bring it down.\", new lead and body. "
+     "CANVAS-SYNC item 146."),
     ("movement", "What we stand for",
      "Approved rewrite (v2 (a) block 2): replaces the export's 'How it reaches "
      "people' distribution-mechanics section. CANVAS-SYNC item 24."),
     ("movement", "What taking part means",
      "Approved rewrite (v2 (a) block 3): replaces the export's three "
      "Pledge/quiz/share-a-stat cards with the community and Assembly argument. "
-     "CANVAS-SYNC item 24."),
+     "CANVAS-SYNC item 24. Sweep 2026-10-10 (B6): the band is white "
+     "(.blk--white), so it no longer reads as one band with the cream six-step "
+     "list above it. CANVAS-SYNC item 148."),
     ("movement", "How to take part",
      "Approved rewrite (v2 (a) block 4): the export's .path grid with v2's three "
      "ways in; the button row is dropped because the coral CTA below already "
@@ -314,7 +318,17 @@ SECTION_EXEMPTIONS = [
     ("movement", "How a cost gets uncosted",
      "V15: the six-step band moves to --cream-2 (swapped with \"What taking "
      "part means\"), its headline underlines \"uncosted\" and its step labels "
-     "are 25% larger. CANVAS-SYNC item 115."),
+     "are 25% larger. CANVAS-SYNC item 115. Sweep 2026-10-10 (B5): \"uncosted\" "
+     "is a coral span, no longer underlined. CANVAS-SYNC item 147."),
+    # ── Site sweep 2026-10-10 ───────────────────────────────────────────────
+    ("movement", "Movement — title",
+     "B1: the title band reads \"The Movement\" (accent on \"Movement\"), the "
+     "pattern of The Case, The Sectors and The Projects; the export's line "
+     "\"Measure it. Publish it. Bring it down.\" is now the first band's "
+     "headline. CANVAS-SYNC item 146."),
+    ("about", "Mechanism",
+     "B5: the shared \"How a cost gets uncosted.\" heading's \"uncosted\" is a "
+     "coral span, no longer underlined (X1's <u>). CANVAS-SYNC item 147."),
 ]
 
 

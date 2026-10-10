@@ -1,11 +1,174 @@
 {
-  "widths": [390, 1024, 1440, 1865],
+  "widths": [
+    390,
+    1024,
+    1440,
+    1865
+  ],
   "probes": [
-    {"name": "hero-h1", "routes": ["/"], "selector": ".hero-grid h1", "props": ["max-width", "font-size"], "lines": true, "box": true},
-    {"name": "hero-slogan", "routes": ["/"], "selector": ".hero-grid .hero-slogan", "props": ["max-width", "font-size"], "lines": true, "box": true},
-    {"name": "hero-robot", "routes": ["/"], "selector": ".hero-grid img.robot", "box": true},
-    {"name": "hero-subhead", "routes": ["/"], "selector": ".hero-grid p.u-52.lead:not(.hero-aim)", "props": ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "color"], "lines": true},
-    {"name": "hero-aim", "routes": ["/"], "selector": ".hero-grid p.hero-aim", "props": ["font-family", "font-size", "font-weight", "line-height", "letter-spacing", "color"], "same_as": "hero-subhead"},
-    {"name": "page-scroll-width", "routes": ["/"], "selector": "html", "props": ["width"], "box": true}
+    {
+      "name": "hero-h1",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid h1",
+      "props": [
+        "max-width",
+        "font-size"
+      ],
+      "lines": true,
+      "box": true
+    },
+    {
+      "name": "hero-slogan",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid .hero-slogan",
+      "props": [
+        "max-width",
+        "font-size"
+      ],
+      "lines": true,
+      "box": true
+    },
+    {
+      "name": "hero-robot",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid img.robot",
+      "box": true
+    },
+    {
+      "name": "hero-subhead",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid p.u-52.lead:not(.hero-aim)",
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "color"
+      ],
+      "lines": true
+    },
+    {
+      "name": "hero-aim",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid p.hero-aim",
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "color"
+      ],
+      "same_as": "hero-subhead"
+    },
+    {
+      "name": "page-scroll-width",
+      "routes": [
+        "/"
+      ],
+      "selector": "html",
+      "props": [
+        "width"
+      ],
+      "box": true
+    },
+    {
+      "name": "movement-h1",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": ".titleband h1",
+      "props": [
+        "color"
+      ]
+    },
+    {
+      "name": "movement-what-h2",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": "[data-screen-label=\"What this is\"] h2",
+      "props": [
+        "font-size",
+        "color"
+      ]
+    },
+    {
+      "name": "movement-what-accent",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": "[data-screen-label=\"What this is\"] h2 .hl",
+      "props": [
+        "color"
+      ]
+    },
+    {
+      "name": "uncosted-accent",
+      "routes": [
+        "/about/",
+        "/movement/"
+      ],
+      "selector": ".seqhd h2 .u-1",
+      "props": [
+        "color",
+        "text-decoration-line"
+      ]
+    },
+    {
+      "name": "uncosted-heading",
+      "routes": [
+        "/about/",
+        "/movement/"
+      ],
+      "selector": ".seqhd h2",
+      "props": [
+        "color",
+        "text-decoration-line"
+      ]
+    },
+    {
+      "name": "uncosted-no-u",
+      "routes": [
+        "/about/",
+        "/movement/"
+      ],
+      "selector": ".seqhd h2 u",
+      "expect_count": 0
+    },
+    {
+      "name": "movement-taking-part",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": "[data-screen-label=\"What taking part means\"]",
+      "props": [
+        "background-color",
+        "border-top-width",
+        "border-top-color"
+      ],
+      "box": true
+    },
+    {
+      "name": "movement-steps",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": ".seqhd + div",
+      "props": [
+        "background-color"
+      ]
+    }
   ]
 }

@@ -28,11 +28,13 @@
 module.exports = {
   movement: {
     whatThisIs: {
-      h2: 'Technology should make living cheaper, <span class="hl">not billionaires richer</span>.',
-      lead: 'A nonprofit, nonpartisan movement that treats the cost of living as a problem to be measured and solved &mdash; not endured.',
-      // W1 (Batch X, 2026-09-27), founder-approved — "Why we exist".
+      // B2-B4 (sweep 2026-10-10), founder-approved. The h1 is now "The
+      // Movement" (B1, in the template); this band's headline takes the line the
+      // h1 used to carry.
+      h2: 'Measure it. Publish it. <span class="hl">Bring it down.</span>',
+      lead: 'Uncost is a nonprofit, nonpartisan movement that treats the cost of living as a problem to be measured and solved &mdash; not endured.',
       body: [
-        'Life keeps getting more expensive. Technology that can lower costs keeps getting better. We&rsquo;re working to close that gap: AI- and robotics-based projects and research aimed at real costs, with all our findings published free.',
+        'Life keeps getting more expensive while the technology that can lower costs keeps getting better. We&rsquo;re working to close that gap: AI and robotics-based projects and research aimed at reducing living costs, with all our findings published free.',
       ],
     },
     whatWeStandFor: {

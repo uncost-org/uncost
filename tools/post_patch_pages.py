@@ -423,11 +423,14 @@ patch("website/src/case/index.njk",
 # cream (V15 swapped it with the six-step band, which X1 has since turned into
 # the /about/-format block with no band of its own), and the CTA's "Get
 # updates" goes to /join/#get-updates. movement.njk is re-derived.
+# B6 (sweep 2026-10-10) moves the band again, cream -> white (.blk--white), so
+# it stops reading as one band with the cream six-step list above it. Whatever
+# band class the export or V15 gave it, it becomes white.
 patch("website/src/movement.njk",
-      r'<section class="blk blk--cream2" data-screen-label="What taking part means">',
-      '<section class="blk blk--cream" data-screen-label="What taking part means">',
-      "V15 movement: taking-part band is cream",
-      guard='<section class="blk blk--cream" data-screen-label="What taking part means">')
+      r'<section class="blk[^"]*" data-screen-label="What taking part means">',
+      '<section class="blk blk--white" data-screen-label="What taking part means">',
+      "V15/B6 movement: taking-part band is white",
+      guard='<section class="blk blk--white" data-screen-label="What taking part means">')
 patch("website/src/movement.njk",
       r'<a href="#updates" class="u-btn u-btn--ghost">Get updates</a>',
       '<a href="/join/#get-updates" class="u-btn u-btn--ghost">Get updates</a>',
@@ -762,5 +765,20 @@ if '"stat1": {' in pathlib.Path("website/src/_data/home.json").read_text(encodin
           "A4 home.json: unused stat1-3 captions dropped")
 else:
     print("  = A4 home.json: unused stat1-3 captions dropped (already applied)")
+
+# B1 (sweep 2026-10-10) — /movement/ title band reads "The Movement", the same
+# pattern as The Case, The Sectors and The Projects; the line it carried
+# ("Measure it. Publish it. Bring it down.") is the first band's headline now,
+# from pageContent (B2). B3: the page description is the new lead sentence.
+# movement.njk is re-derived from the export.
+patch("website/src/movement.njk",
+      r'(<div class="titleband" data-screen-label="Movement — title"><h1>).*?(</h1></div>)',
+      r'\1The <span class="u-1">Movement</span>\2',
+      "B1 movement title band: The Movement", guard='<h1>The <span class="u-1">Movement</span></h1>')
+patch("website/src/movement.njk",
+      r'^description: "[^"\n]*"$',
+      'description: "Uncost is a nonprofit, nonpartisan movement that treats the cost of living as a problem to be measured and solved — not endured."',
+      "B3 movement description", flags=re.M,
+      guard='description: "Uncost is a nonprofit, nonpartisan movement that treats the cost of living')
 
 print("done")
