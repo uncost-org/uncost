@@ -76,11 +76,28 @@ const IN_PAGE = (probe) => {
     for (const p of probe.props || []) out.props[p] = cs.getPropertyValue(p);
     if (probe.box) out.box = [r.x, r.y + window.scrollY, r.width, r.height].map((v) => Math.round(v * 100) / 100);
     if (probe.lines) {
-      const range = document.createRange();
-      range.selectNodeContents(el);
-      const tops = new Set();
-      for (const rc of range.getClientRects()) if (rc.width > 0 && rc.height > 0) tops.add(Math.round(rc.top));
-      out.lines = tops.size;
+      // One rect per text fragment. Fragments on one line share a vertical
+      // centre (to within a pixel or two, whatever inline box holds them);
+      // the next line's centre sits a full line-height lower. Counting
+      // distinct tops would count an inline span a pixel off its neighbours
+      // as a line, and counting non-overlapping boxes merges lines set
+      // tighter than their glyph boxes (the hero's .96), so centres it is:
+      // a new line starts more than half a fragment's height below the last.
+      const rects = [];
+      const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      for (let n = walk.nextNode(); n; n = walk.nextNode()) {
+        if (!n.textContent.trim()) continue;
+        const range = document.createRange();
+        range.selectNodeContents(n);
+        for (const rc of range.getClientRects()) if (rc.width > 0 && rc.height > 0) rects.push(rc);
+      }
+      const mid = (rc) => rc.top + rc.height / 2;
+      rects.sort((p, q) => mid(p) - mid(q));
+      let lines = 0, last = -Infinity;
+      for (const rc of rects) {
+        if (mid(rc) - last > rc.height / 2) { lines += 1; last = mid(rc); }
+      }
+      out.lines = lines;
     }
     return out;
   };
@@ -91,6 +108,7 @@ const IN_PAGE = (probe) => {
 (async () => {
   const browser = await puppeteer.launch({ args: ["--no-sandbox", "--force-device-scale-factor=1"] });
   const page = await browser.newPage();
+  await page.setCacheEnabled(false);  // a cached revisit answers 304, which is not a load
   await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "reduce" }]);
   const results = [];
   const routes = [...new Set(spec.probes.flatMap((p) => p.routes))];
@@ -206,7 +224,9 @@ def selftest(port: int) -> int:
             "<!doctype html><html><head><style>body{margin:0;font:16px/20px sans-serif}"
             ".a,.b{font-size:20px}.c{font-size:21px}.w{width:100px}</style></head><body>"
             "<p class='a'>alpha</p><p class='b'>beta</p><p class='c'>gamma</p>"
-            "<p class='w'>one two three four five six seven eight</p></body></html>", encoding="utf-8")
+            "<p class='w'>one two three four five six seven eight</p>"
+            "<p class='s' style='width:600px'>one <span style='padding:3px'>two</span> three</p>"
+            "<p class='t' style='width:120px;font-size:40px;line-height:.96'>one <span>two</span> three four</p></body></html>", encoding="utf-8")
         spec = {"widths": [400], "probes": [
             {"name": "a", "routes": ["/"], "selector": ".a", "props": ["font-size"]},
             {"name": "b", "routes": ["/"], "selector": ".b", "props": ["font-size"], "same_as": "a"},
@@ -215,6 +235,8 @@ def selftest(port: int) -> int:
             {"name": "absent-ok", "routes": ["/"], "selector": ".nothing", "expect_count": 0},
             {"name": "two", "routes": ["/"], "selector": "p", "expect_count": 2},
             {"name": "wrap", "routes": ["/"], "selector": ".w", "lines": True, "box": True},
+            {"name": "span", "routes": ["/"], "selector": ".s", "lines": True},
+            {"name": "tight", "routes": ["/"], "selector": ".t", "lines": True, "box": True},
         ]}
         sp = tmp / "spec.json"
         sp.write_text(json.dumps(spec), encoding="utf-8")
@@ -228,6 +250,9 @@ def selftest(port: int) -> int:
             ("expect_count 0 accepts no match", not any(p == "absent-ok" for _, p in kinds)),
             ("a wrong count is an error", ("count", "two") in kinds),
             ("lines counts rendered line boxes", wrap["lines"] and wrap["lines"] >= 3 and wrap["box"][2] == 100),
+            ("an inline span does not add a line", next(r for r in rows if r["probe"] == "span")["items"][0]["lines"] == 1),
+            ("lines set tighter than their glyphs still count apart",
+             (lambda t: t["lines"] == round(t["box"][3] / 38.4))(next(r for r in rows if r["probe"] == "tight")["items"][0])),
         ]
         failures = [n for n, ok in cases if not ok]
         print(json.dumps({"ok": not failures, "selftest_cases": len(cases), "failures": failures}, indent=2))
