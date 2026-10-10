@@ -699,6 +699,30 @@
         390,
         1440
       ]
+    },
+    {
+      "name": "drawer-col-heading",
+      "routes": [
+        "/receipts/",
+        "/sectors/",
+        "/projects/",
+        "/policies/",
+        "/news/",
+        "/news/cost-watch/",
+        "/treasury/"
+      ],
+      "selector": "main > section.ldrawer .ldrawer-body h3",
+      "all": true,
+      "expect_count": 2,
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "text-transform",
+        "letter-spacing",
+        "margin-bottom",
+        "color"
+      ]
     }
   ]
 }

@@ -2625,8 +2625,11 @@ body[data-page="sectors"] .legend .lg-pair .u-138 { min-width: 0; }
  *                 exemption in tools/type_audit.py, because it sits below
  *                 the section-headline step on purpose
  *        body     28px × clamp(24px, 6vw, 80px), two columns from 881px, one
- *                 below; each column opens on an h3 (body face 700 24px,
- *                 uppercase) under the title
+ *                 below; each column opens on an h3 ("The rules" / "The
+ *                 labels") under the title: body face 700 15px, uppercase,
+ *                 .1em tracking, --fg-3, 12px below. Stepped down from 24px
+ *                 (founder, 2026-10-10) so the 24px title is the largest
+ *                 thing in the section
  *        rules    17.5px / 1.6 --fg-2 bullets
  *        labels   the retired /receipts/ table's own style, restated here
  *                 because the export scopes `.conftable` to /receipts/ and
@@ -2652,12 +2655,12 @@ body[data-page="sectors"] .legend .lg-pair .u-138 { min-width: 0; }
 .ldrawer-body h3 {
   font-family: var(--font-body);
   font-weight: 700;
-  font-size: 24px;
+  font-size: 15px;
   line-height: 1.1;
-  letter-spacing: .06em;
+  letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--fg-3);
-  margin: 0 0 14px;
+  margin: 0 0 12px;
 }
 .ldrawer-rules ul { margin: 0; padding-left: 1.2em; }
 .ldrawer-rules li,
