@@ -851,4 +851,12 @@ if "so here is the honest state of it." in pathlib.Path("website/src/about.njk")
 else:
     print("  = G3 about intro: the 'very new' sentence goes (already applied)")
 
+# J (sweep 2026-10-10) — the six "on the way" placeholder pages stay unlinked
+# and carry noindex until each has real content, so they also drop out of
+# sitemap.xml and the search index. Not deleted. gen_static_pages.py writes
+# their front matter, so the flag is restated in it.
+for f in ("press", "quiz", "share", "community", "case/dashboard", "case/tracker"):
+    patch(f"website/src/{f}.njk", r'\A(---\n(?:[^\n]*\n)*?)(---\n)', r'\1noindex: true\n\2',
+          f"J {f}: noindex until it has real content", guard="\nnoindex: true\n")
+
 print("done")
