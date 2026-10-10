@@ -2967,3 +2967,16 @@ body[data-page="news"] .up-item .up-meta {
   margin-bottom: 8px;
 }
 body[data-page="news"] .up-item .up-meta .date { margin-bottom: 0; }
+
+/* 133. H1 (sweep 2026-10-10) — the coral primary button on an ink band. The
+ *      house button rule gives every button a 2px ink border so it stays
+ *      visible across hover states; on an ink band that border is invisible,
+ *      so the coral button read 4px smaller than the cream-outlined button
+ *      beside it. Inside the three ink band classes its border is the fill's
+ *      own --coral: full size at rest, and its edge stays visible as the fill
+ *      darkens to --coral-deep on hover. Enumerated by tools/style_probe.py
+ *      (tools/probes/primary-buttons.json, every route at 1440 and 390): 17
+ *      primary buttons sit on ink — /case/ "See The Receipts", /treasury/
+ *      "Contribute", and "Take part" on the fifteen sector pages — all inside
+ *      these three classes. */
+:is(.blk--ink, .u-block--ink, .block--ink) .u-btn--primary { border-color: var(--coral); }

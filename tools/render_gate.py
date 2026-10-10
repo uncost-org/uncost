@@ -353,6 +353,18 @@ SECTION_EXEMPTIONS = [
      "sector names as underlined links to their dossiers, and the closing "
      "sentence. The export has no such band (X9 replaced its legend strip), so "
      "this entry is named for the record. CANVAS-SYNC item 154."),
+    # H1: the coral primary button inside an ink band takes a --coral border
+    # (it was the house 2px ink border, invisible on ink). Every route was
+    # enumerated at 1440 and 390; these are the three ink bands that hold one.
+    ("case", "Case CTA",
+     "H1: \"See The Receipts\" (coral primary on ink) has a --coral border "
+     "instead of the invisible ink one. CANVAS-SYNC item 160."),
+    ("treasury", "Treasury CTA",
+     "H1: \"Contribute\" (coral primary on ink) has a --coral border instead "
+     "of the invisible ink one. CANVAS-SYNC item 160."),
+    ("sectors/", "Sector CTA",
+     "H1: \"Take part\" (coral primary on ink, all fifteen sector pages) has a "
+     "--coral border instead of the invisible ink one. CANVAS-SYNC item 160."),
     ("about", "About — title",
      "G3: the title band reads \"About us\" (accent on \"us\"), the pattern "
      "of the other pages' title bands. CANVAS-SYNC item 158."),
