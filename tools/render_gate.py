@@ -342,6 +342,12 @@ SECTION_EXEMPTIONS = [
        "own rules and Update/Perspective/Correction labels. CANVAS-SYNC 149, 150.")
       for page in ("receipts.html", "sectors.html", "projects.html", "policies.html",
                    "news.html", "treasury.html")],
+    ("sectors.html", "Intro",
+     "E1: the wheat intro band above the fifteen cards (X9's) splits into a "
+     "section headline (\"Living isn't one bill — it's fifteen.\"), the fifteen "
+     "sector names as underlined links to their dossiers, and the closing "
+     "sentence. The export has no such band (X9 replaced its legend strip), so "
+     "this entry is named for the record. CANVAS-SYNC item 154."),
     ("about", "Mechanism",
      "B5: the shared \"How a cost gets uncosted.\" heading's \"uncosted\" is a "
      "coral span, no longer underlined (X1's <u>). CANVAS-SYNC item 147."),

@@ -581,10 +581,15 @@ else:
 # W10 (Batch X, 2026-09-27) — /sectors/ intro paragraph, founder-approved, from
 # the content layer (pageContent.sectors.intro.lead). The export's first
 # introband paragraph is re-pointed at the data (X9 then moves it).
-patch("website/src/sectors/index.njk",
-      r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\s*)<p>.*?</p>',
-      r'\1<p>{{ pageContent.sectors.intro.lead | safe }}</p>',
-      "W10 sectors intro reads pageContent", guard="{{ pageContent.sectors.intro.lead | safe }}")
+# (E1, sweep 2026-10-10, splits this intro in the wheat band; once that shape
+#  is in place W10 and X9 have nothing left to do, so W10 stands down too.)
+if "{{ pageContent.sectors.intro.band.h2 | safe }}" not in pathlib.Path("website/src/sectors/index.njk").read_text(encoding="utf-8"):
+    patch("website/src/sectors/index.njk",
+          r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\s*)<p>.*?</p>',
+          r'\1<p>{{ pageContent.sectors.intro.lead | safe }}</p>',
+          "W10 sectors intro reads pageContent", guard="{{ pageContent.sectors.intro.lead | safe }}")
+else:
+    print("  = W10 sectors intro reads pageContent (superseded by E1)")
 
 # X9 (Batch X, 2026-09-27) — /sectors/: the introband keeps only its headline;
 # the intro moves into a wheat band directly above the cards, replacing the
@@ -785,5 +790,21 @@ patch("website/src/movement.njk",
       'description: "Uncost is a nonprofit, nonpartisan movement that treats the cost of living as a problem to be measured and solved — not endured."',
       "B3 movement description", flags=re.M,
       guard='description: "Uncost is a nonprofit, nonpartisan movement that treats the cost of living')
+
+# E1 (sweep 2026-10-10) — /sectors/ wheat intro band: headline "Living isn't
+# one bill — it's fifteen.", the fifteen sectors as links built from
+# catalog.sectors, and W10's closing sentence. X9 above puts W10's one
+# paragraph in this band; this splits it. sectors/index.njk is re-derived.
+patch("website/src/sectors/index.njk",
+      r'(<section class="blk blk--wheat sintro" data-screen-label="Intro">\n)  <p class="lead">\{\{ pageContent\.sectors\.intro\.lead \| safe \}\}</p>\n',
+      '\\1  {#- E1 (sweep 2026-10-10): headline, the fifteen sectors as links to their\n'
+      '      dossiers (catalog order), then the closing sentence. -#}\n'
+      '  <h2 class="sec">{{ pageContent.sectors.intro.band.h2 | safe }}</h2>\n'
+      '  {%- set lastSector = catalog.sectors | last %}\n'
+      '  <p class="lead sintro-list">{% for s in catalog.sectors %}{% if s == lastSector %} and {% elif not loop.first %}, {% endif %}'
+      '<a href="/sectors/{{ s.slug }}/">{{ s.name }}</a>{% endfor %}.</p>\n'
+      '  <p class="lead">{{ pageContent.sectors.intro.band.close | safe }}</p>\n',
+      "E1 sectors intro band: headline, linked sector list, close",
+      guard="{{ pageContent.sectors.intro.band.h2 | safe }}")
 
 print("done")

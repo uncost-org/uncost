@@ -89,8 +89,14 @@ module.exports = {
     intro: {
       // W9 — the headline (V18's string, now in the content layer).
       h2: 'Basic human needs break into <span class="u-1">fifteen sectors</span> &mdash; and we have a plan to reduce the cost of each.',
-      // W10 — the intro; sector names bold, coloured by the band's accent rule.
-      lead: 'Living isn&rsquo;t one bill &mdash; it&rsquo;s fifteen: <b>Food</b>, <b>Water</b>, <b>Shelter</b>, <b>Energy</b>, <b>Healthcare</b>, <b>Care</b>, <b>Education</b>, <b>Transportation</b>, <b>Clothing</b>, <b>Goods</b>, <b>Materials</b>, <b>Communication</b>, <b>Safety</b>, <b>Environment</b> and <b>Leisure</b>. Each of these fifteen sectors gets a dossier: what it covers, where technology could cut its cost, the guardrail that keeps us honest, and where the evidence stands.',
+      // W10's single intro paragraph is split by E1 (sweep 2026-10-10) into the
+      // wheat band's headline, a list of the fifteen sectors as links (built
+      // by the template from catalog.sectors, in catalog order) and this
+      // closing sentence, verbatim from W10.
+      band: {
+        h2: 'Living isn&rsquo;t one bill &mdash; it&rsquo;s fifteen.',
+        close: 'Each of these fifteen sectors gets a dossier: what it covers, where technology could cut its cost, the guardrail that keeps us honest, and where the evidence stands.',
+      },
     },
   },
 

@@ -269,6 +269,52 @@
       ],
       "selector": "[data-screen-label=\"Updates\"], .newswrap",
       "shot": true
+    },
+    {
+      "name": "sectors-intro-h2",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": ".introband > h2",
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight"
+      ]
+    },
+    {
+      "name": "sectors-band-h2",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": ".sintro > h2",
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight"
+      ],
+      "same_as": "sectors-intro-h2"
+    },
+    {
+      "name": "sectors-band-links",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": ".sintro .sintro-list a",
+      "props": [
+        "color",
+        "text-decoration-line"
+      ],
+      "all": true,
+      "expect_count": 15
+    },
+    {
+      "name": "sectors-band",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": ".sintro",
+      "shot": true
     }
   ]
 }
