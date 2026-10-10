@@ -522,6 +522,151 @@
       ],
       "selector": "footer.ft",
       "shot": true
+    },
+    {
+      "name": "shot-hero",
+      "routes": [
+        "/"
+      ],
+      "selector": "main > [data-screen-label=\"S1 Hero\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-stats",
+      "routes": [
+        "/"
+      ],
+      "selector": "main > [data-screen-label=\"S2 The problem\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-movement-title",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": "main > [data-screen-label=\"Movement — title\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-movement-what",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": "main > [data-screen-label=\"What this is\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-uncosted",
+      "routes": [
+        "/movement/",
+        "/about/"
+      ],
+      "selector": "main > .seqhd",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-taking-part",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": "main > [data-screen-label=\"What taking part means\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-case-mechanism",
+      "routes": [
+        "/case/"
+      ],
+      "selector": "main > [data-screen-label=\"The mechanism\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-faq-basics",
+      "routes": [
+        "/faq/"
+      ],
+      "selector": "main > [data-screen-label=\"The basics\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-case-cta",
+      "routes": [
+        "/case/"
+      ],
+      "selector": "main > [data-screen-label=\"Case CTA\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-treasury-cta",
+      "routes": [
+        "/treasury/"
+      ],
+      "selector": "main > [data-screen-label=\"Treasury CTA\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-sector-cta",
+      "routes": [
+        "/sectors/food/"
+      ],
+      "selector": "main > [data-screen-label=\"Sector CTA\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-news-cw-drawer",
+      "routes": [
+        "/news/cost-watch/"
+      ],
+      "selector": "main > section.ldrawer",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
     }
   ]
 }
