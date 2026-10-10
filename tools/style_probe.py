@@ -23,6 +23,13 @@ A spec:
         "shot": true}
      ]}
 
+Options per probe: "all" (every match, not just the first), "box", "lines",
+"ground" (the background the element actually sits on: the first ancestor,
+self excluded, with a non-transparent background-color, and that ancestor's
+classes), "optional" (zero matches is not an error — for enumerations across
+many routes), "widths" (a subset of the spec's widths) and "routes": "*" (every
+HTML route in the built site).
+
 For each route x width x probe it records how many elements match and, for the
 first match (every match with "all": true), the requested computed properties,
 the border box (x, y, width, height) and, with "lines", the number of rendered
@@ -74,6 +81,15 @@ const IN_PAGE = (probe) => {
     const out = { props: {}, box: null, lines: null,
                   text: (el.textContent || "").replace(/\s+/g, " ").trim().slice(0, 90) };
     for (const p of probe.props || []) out.props[p] = cs.getPropertyValue(p);
+    if (probe.ground) {
+      let n = el.parentElement, bg = null;
+      while (n) {
+        const c = getComputedStyle(n).backgroundColor;
+        if (c && c !== "transparent" && !/rgba\([^)]*,\s*0\)$/.test(c)) { bg = c; break; }
+        n = n.parentElement;
+      }
+      out.ground = { color: bg || "unresolved", owner: n ? (n.tagName.toLowerCase() + (n.className ? "." + String(n.className).trim().split(/\s+/).join(".") : "")) : null };
+    }
     if (probe.box) out.box = [r.x, r.y + window.scrollY, r.width, r.height].map((v) => Math.round(v * 100) / 100);
     if (probe.lines) {
       // One rect per text fragment. Fragments on one line share a vertical
@@ -126,7 +142,7 @@ const IN_PAGE = (probe) => {
           .map((i) => new Promise((r) => { i.onload = i.onerror = r; })));
       });
       await new Promise((r) => setTimeout(r, 150));
-      for (const probe of spec.probes.filter((p) => p.routes.includes(route))) {
+      for (const probe of spec.probes.filter((p) => p.routes.includes(route) && (!p.widths || p.widths.includes(w)))) {
         const got = await page.evaluate(IN_PAGE, probe);
         const row = { route, width: w, probe: probe.name, ...got };
         if (shots && probe.shot && got.count) {
@@ -184,6 +200,22 @@ def run(spec_path: pathlib.Path, built: pathlib.Path, port: int, shots: str = ""
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def routes_in(built: pathlib.Path):
+    out = []
+    for p in sorted(built.rglob("*.html")):
+        rel = p.relative_to(built).as_posix()
+        out.append("/" + rel[: -len("index.html")] if rel.endswith("index.html") else "/" + rel)
+    return out
+
+
+def expand(spec, built: pathlib.Path):
+    """Resolve "routes": "*" to every built route."""
+    for p in spec["probes"]:
+        if p.get("routes") == "*":
+            p["routes"] = routes_in(built)
+    return spec
+
+
 def judge(spec, rows):
     errors = []
     by = {(r.get("route"), r.get("width"), r.get("probe")): r for r in rows}
@@ -192,16 +224,21 @@ def judge(spec, rows):
             errors.append({"kind": "route", "route": r["route"], "width": r["width"], "detail": r["error"]})
     for p in spec["probes"]:
         for route in p["routes"]:
-            for w in spec["widths"]:
+            for w in p.get("widths") or spec["widths"]:
                 r = by.get((route, w, p["name"]))
                 if r is None:
                     continue  # the route itself failed; reported above
                 want = p.get("expect_count")
-                if want is None and r["count"] == 0:
+                if want is None and r["count"] == 0 and not p.get("optional"):
                     errors.append({"kind": "no-match", "probe": p["name"], "route": route, "width": w})
                 elif want is not None and r["count"] != want:
                     errors.append({"kind": "count", "probe": p["name"], "route": route, "width": w,
                                    "expected": want, "got": r["count"]})
+                if p.get("ground"):
+                    for it in r.get("items") or []:
+                        if (it.get("ground") or {}).get("color") == "unresolved":
+                            errors.append({"kind": "ground-unresolved", "probe": p["name"], "route": route,
+                                           "width": w, "text": it.get("text")})
                 other = p.get("same_as")
                 if other and r["count"]:
                     o = by.get((route, w, other))
@@ -226,7 +263,8 @@ def selftest(port: int) -> int:
             "<p class='a'>alpha</p><p class='b'>beta</p><p class='c'>gamma</p>"
             "<p class='w'>one two three four five six seven eight</p>"
             "<p class='s' style='width:600px'>one <span style='padding:3px'>two</span> three</p>"
-            "<p class='t' style='width:120px;font-size:40px;line-height:.96'>one <span>two</span> three four</p></body></html>", encoding="utf-8")
+            "<p class='t' style='width:120px;font-size:40px;line-height:.96'>one <span>two</span> three four</p>"
+            "<div class='ink' style='background:#0A0A0A'><div><a class='btn'>go</a></div></div></body></html>", encoding="utf-8")
         spec = {"widths": [400], "probes": [
             {"name": "a", "routes": ["/"], "selector": ".a", "props": ["font-size"]},
             {"name": "b", "routes": ["/"], "selector": ".b", "props": ["font-size"], "same_as": "a"},
@@ -237,6 +275,9 @@ def selftest(port: int) -> int:
             {"name": "wrap", "routes": ["/"], "selector": ".w", "lines": True, "box": True},
             {"name": "span", "routes": ["/"], "selector": ".s", "lines": True},
             {"name": "tight", "routes": ["/"], "selector": ".t", "lines": True, "box": True},
+            {"name": "ground", "routes": ["/"], "selector": ".btn", "ground": True},
+            {"name": "maybe", "routes": ["/"], "selector": ".nothing", "optional": True},
+            {"name": "narrow-only", "routes": ["/"], "selector": ".nothing", "widths": [300]},
         ]}
         sp = tmp / "spec.json"
         sp.write_text(json.dumps(spec), encoding="utf-8")
@@ -251,6 +292,10 @@ def selftest(port: int) -> int:
             ("a wrong count is an error", ("count", "two") in kinds),
             ("lines counts rendered line boxes", wrap["lines"] and wrap["lines"] >= 3 and wrap["box"][2] == 100),
             ("an inline span does not add a line", next(r for r in rows if r["probe"] == "span")["items"][0]["lines"] == 1),
+            ("ground is the first painted ancestor",
+             next(r for r in rows if r["probe"] == "ground")["items"][0]["ground"]["color"] == "rgb(10, 10, 10)"),
+            ("optional accepts no match", not any(p == "maybe" for _, p in kinds)),
+            ("a probe limited to other widths is not run", not any(p == "narrow-only" for _, p in kinds)),
             ("lines set tighter than their glyphs still count apart",
              (lambda t: t["lines"] == round(t["box"][3] / 38.4))(next(r for r in rows if r["probe"] == "tight")["items"][0])),
         ]
@@ -273,8 +318,13 @@ def main() -> int:
         return selftest(a.port)
     if not a.spec:
         ap.error("a spec file is required")
-    spec = json.loads(pathlib.Path(a.spec).read_text(encoding="utf-8"))
-    rows = run(pathlib.Path(a.spec).resolve(), pathlib.Path(a.built), a.port, str(pathlib.Path(a.shots).resolve()) if a.shots else "")
+    spec = expand(json.loads(pathlib.Path(a.spec).read_text(encoding="utf-8")), pathlib.Path(a.built))
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8") as f:
+        json.dump(spec, f)
+    try:
+        rows = run(pathlib.Path(f.name), pathlib.Path(a.built), a.port, str(pathlib.Path(a.shots).resolve()) if a.shots else "")
+    finally:
+        pathlib.Path(f.name).unlink(missing_ok=True)
     errors = judge(spec, rows)
     print(json.dumps({"ok": not errors, "errors": errors, "rows": rows}, indent=1))
     return 0 if not errors else 1
