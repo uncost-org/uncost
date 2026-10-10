@@ -1337,18 +1337,19 @@ h2.sec, .blk h2.sec, h2.u-146, h2.u-38 {
   color: var(--coral) !important;
 }
 
-/* 79a. The one title band that is NOT ink. /accessibility/ is a repo-only
- *      route (CANVAS-SYNC 14) and the export defines no .titleband background
- *      for it, so it renders on cream. It carries no accent today — its h1 is
- *      plain text — so the rule above matches nothing there, and this guard
- *      matches nothing either. It is here because the selector above is scoped
- *      by COMPONENT, not by ground: the moment an accent is added to a non-ink
- *      title band it would ship --coral at 4.04:1 on cream, which is under the
- *      4.5 bar for anything but display type. --coral-deep is 5.59:1 there and
- *      is safe whatever size the accent turns out to be. */
-body[data-page="accessibility"] .titleband h1 :is(.u-1, .hl, em) {
-  color: var(--coral-deep) !important;
-}
+/* 79a. /accessibility/'s title band — REPLACED by G4 (sweep 2026-10-10).
+ *      It was the one title band that was not ink: a repo-only route
+ *      (CANVAS-SYNC 14) for which the export defines no .titleband, so it
+ *      rendered on cream, and this item guarded a future accent there with
+ *      --coral-deep. G4 gives it the band every other page has, so it now
+ *      restates the export's own title band for it — the values of
+ *      design-system/sections.css:40-41 (the /about/ band, identical on all
+ *      23 export pages that define one) — and the accent takes --coral from
+ *      the title-band rule above, like every other title band (4.58:1 on
+ *      ink). The 4px coral rule under the band is item 40(b)'s
+ *      `.titleband + *`. */
+body[data-page="accessibility"] .titleband { background: var(--ink); text-align: center; padding: 26px 28px; }
+body[data-page="accessibility"] .titleband h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(40px, 5vw, 72px); letter-spacing: -.03em; line-height: .9; margin: 0; color: var(--cream); }
 
 /* 80. H4 — the donations sentence on /movement/ takes the size of the three
  *     column bodies directly above it. It was set smaller, which read as a

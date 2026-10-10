@@ -211,7 +211,9 @@ SECTION_EXEMPTIONS = [
      "nearly every pixel by definition, hence ~99.7%. Measured at 1440: the "
      "section box is 1440x447 in the export and 1440x451 built — same x, same "
      "width, +4px tall — so this is fill, not reflow and not a layout break. "
-     "Sweep 3, batch H."),
+     "Sweep 3, batch H. Sweep 2026-10-10 (G1): the first question, \"What is "
+     "Uncost, in one sentence?\", now starts collapsed like the rest. "
+     "CANVAS-SYNC item 156."),
     ("treasury", "Principles",
      "G1 + G2: the band takes the one headline scale and the 728px measure. "
      "Measured at 1440 the fill is unchanged (cream-2 dominant on both sides) "
@@ -297,7 +299,10 @@ SECTION_EXEMPTIONS = [
     ("assembly", "Preview + interest",
      "V22: the PLANNED TOOL chip is removed from the \"A look ahead\" header "
      "row and the ink button reads \"How the Assembly works\". F2 had already "
-     "let the headline column fill the row. CANVAS-SYNC item 109."),
+     "let the headline column fill the row. CANVAS-SYNC item 109. Sweep "
+     "2026-10-10 (G2): that button, which linked the page it sits on, is "
+     "removed, and the sentence says the mock will be published later. "
+     "CANVAS-SYNC item 157."),
     ("contribute", "Volunteer roles",
      "V24: \"Useful roles, right now.\" gains a \"Volunteer now\" ink button to "
      "/contact/ after its closing note — one button row taller than the export. "
@@ -348,6 +353,12 @@ SECTION_EXEMPTIONS = [
      "sector names as underlined links to their dossiers, and the closing "
      "sentence. The export has no such band (X9 replaced its legend strip), so "
      "this entry is named for the record. CANVAS-SYNC item 154."),
+    ("about", "About — title",
+     "G3: the title band reads \"About us\" (accent on \"us\"), the pattern "
+     "of the other pages' title bands. CANVAS-SYNC item 158."),
+    ("about", "div.introband",
+     "G3: the introband paragraph ends after \"…open tools.\"; the \"very new\" "
+     "sentence is removed. CANVAS-SYNC item 158."),
     ("about", "Mechanism",
      "B5: the shared \"How a cost gets uncosted.\" heading's \"uncosted\" is a "
      "coral span, no longer underlined (X1's <u>). CANVAS-SYNC item 147."),

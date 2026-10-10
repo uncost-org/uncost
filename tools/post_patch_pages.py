@@ -371,12 +371,8 @@ if "Planned tool</span>" in pathlib.Path("website/src/assembly.njk").read_text(e
           "V22 assembly look-ahead drops the Planned tool chip")
 else:
     print("  = V22 assembly look-ahead drops the Planned tool chip (already applied)")
-# X.1 item 3: the button's words come from the content layer
-# (pageContent.assembly.howItWorks, "How The Assembly works").
-patch("website/src/assembly.njk",
-      r'(<a href=")[^"]*(" class="u-btn u-btn--ink">)(?:View the illustrative mock|How the Assembly works)(</a>)',
-      r'\1/assembly/\2{{ pageContent.assembly.howItWorks }}\3',
-      "V22 assembly look-ahead button", guard="{{ pageContent.assembly.howItWorks }}</a>")
+# (X.1 item 3 had the button read pageContent.assembly.howItWorks. G2, sweep
+#  2026-10-10, removes it — see the end of this file.)
 
 # V24 (Batch V, 2026-09-26) — /contribute/ "Useful roles, right now." gains a
 # "Volunteer now" button to /contact/, after the section's closing note.
@@ -816,5 +812,43 @@ patch("website/src/sectors/index.njk",
       '  <p class="lead">{{ pageContent.sectors.intro.band.close | safe }}</p>\n',
       "E1 sectors intro band: headline, linked sector list, close",
       guard="{{ pageContent.sectors.intro.band.h2 | safe }}")
+
+# G1 (sweep 2026-10-10) — /faq/: every question starts collapsed; the first
+# loses the export's `open`. faq.njk is re-derived. Guarded by absence.
+if '<details class="qa" open>' in pathlib.Path("website/src/faq.njk").read_text(encoding="utf-8"):
+    patch("website/src/faq.njk", r'<details class="qa" open>', '<details class="qa">',
+          "G1 faq: first question starts collapsed", flags=0, guard='\x00')
+else:
+    print("  = G1 faq: first question starts collapsed (already applied)")
+
+# G2 (sweep 2026-10-10) — /assembly/ "A look ahead": the sentence reads the
+# content layer (pageContent.assembly.lookAhead.lead), and the ink button that
+# linked the page it sits on is removed; "Register interest — sign the Pledge"
+# stays. assembly.njk is re-derived. The removal is guarded by absence.
+patch("website/src/assembly.njk",
+      r'(<p class="u-22 lead">).*?(</p>)',
+      r'\1{{ pageContent.assembly.lookAhead.lead | safe }}\2',
+      "G2 assembly look-ahead sentence reads pageContent",
+      guard="{{ pageContent.assembly.lookAhead.lead | safe }}")
+_asm = pathlib.Path("website/src/assembly.njk").read_text(encoding="utf-8")
+if re.search(r'<a href="[^"]*" class="u-btn u-btn--ink">(?:View the illustrative mock|How the Assembly works|\{\{ pageContent\.assembly\.howItWorks \}\})</a>', _asm):
+    patch("website/src/assembly.njk",
+          r'\n\s*<a href="[^"]*" class="u-btn u-btn--ink">(?:View the illustrative mock|How the Assembly works|\{\{ pageContent\.assembly\.howItWorks \}\})</a>',
+          '', "G2 assembly look-ahead: the self-linking button is removed")
+else:
+    print("  = G2 assembly look-ahead: the self-linking button is removed (already applied)")
+
+# G3 (sweep 2026-10-10) — /about/ title band "About us" (accent on "us"), and
+# the introband paragraph ends after "…open tools." about.njk is re-derived.
+patch("website/src/about.njk",
+      r'(<div class="titleband" data-screen-label="About — title"><h1>).*?(</h1></div>)',
+      r'\1About <span class="u-1">us</span>\2',
+      "G3 about title band: About us", guard='<h1>About <span class="u-1">us</span></h1>')
+if "so here is the honest state of it." in pathlib.Path("website/src/about.njk").read_text(encoding="utf-8"):
+    patch("website/src/about.njk",
+          r' It is also, right now, very new &mdash; so here is the honest state of it\.', '',
+          "G3 about intro: the 'very new' sentence goes")
+else:
+    print("  = G3 about intro: the 'very new' sentence goes (already applied)")
 
 print("done")

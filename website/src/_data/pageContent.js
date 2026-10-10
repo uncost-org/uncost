@@ -133,11 +133,17 @@ module.exports = {
 
   // /assembly/ — X15 (Batch X, 2026-09-27), founder-approved headlines.
   assembly: {
-    // X.1 item 3 (founder, 28 Sep): X15's wording everywhere — the nav, the
-    // /assembly/ button (V22) and the /sectors/ CTA all read this.
+    // X.1 item 3 (founder, 28 Sep): X15's wording everywhere. Read by the
+    // /sectors/ CTA; the nav carries the same words in chrome.json. The
+    // /assembly/ look-ahead button that read it is gone (G2, sweep 2026-10-10):
+    // it linked the page it sat on.
     howItWorks: 'How The Assembly works',
     canCannot: { h2: 'What the Assembly can &mdash; and cannot &mdash; <span class="u-1">decide</span>.' },
-    lookAhead: { h2: 'What <span class="u-1">The Assembly</span> could look like.' },
+    lookAhead: {
+      h2: 'What <span class="u-1">The Assembly</span> could look like.',
+      // G2 (sweep 2026-10-10), founder-approved: no mock page is published yet.
+      lead: 'We&rsquo;ve designed a working mock of the Assembly dashboard. We&rsquo;ll publish it when the Assembly is closer to running, with every placeholder figure clearly marked as illustrative.',
+    },
   },
 
   // /contribute/ and /contact/ — X16 (Batch X, 2026-09-27), founder-approved.
