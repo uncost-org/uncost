@@ -387,6 +387,88 @@
         "border-bottom-width"
       ],
       "box": true
+    },
+    {
+      "name": "shot-hero",
+      "routes": [
+        "/"
+      ],
+      "selector": "main > [data-screen-label=\"S1 Hero\"]",
+      "shot": true
+    },
+    {
+      "name": "shot-stats",
+      "routes": [
+        "/"
+      ],
+      "selector": "main > [data-screen-label=\"S2 The problem\"]",
+      "shot": true
+    },
+    {
+      "name": "shot-case-living",
+      "routes": [
+        "/case/"
+      ],
+      "selector": "main > [data-screen-label=\"What living costs\"]",
+      "shot": true
+    },
+    {
+      "name": "shot-case-cta",
+      "routes": [
+        "/case/"
+      ],
+      "selector": "main > [data-screen-label=\"Case CTA\"]",
+      "shot": true
+    },
+    {
+      "name": "shot-case-howlink",
+      "routes": [
+        "/case/"
+      ],
+      "selector": "main > .howlink",
+      "optional": true,
+      "shot": true
+    },
+    {
+      "name": "shot-receipts-card",
+      "routes": [
+        "/receipts/"
+      ],
+      "selector": ".cards .card",
+      "shot": true
+    },
+    {
+      "name": "shot-sectors-band",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": "main > .sintro",
+      "optional": true,
+      "shot": true
+    },
+    {
+      "name": "shot-sectors-grid",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": "main > [data-screen-label=\"15 sectors\"]",
+      "shot": true
+    },
+    {
+      "name": "shot-policies-drawer",
+      "routes": [
+        "/policies/"
+      ],
+      "selector": "main > section.ldrawer, main > details.ldrawer",
+      "shot": true
+    },
+    {
+      "name": "shot-policies-how",
+      "routes": [
+        "/policies/"
+      ],
+      "selector": "main > [data-screen-label=\"How policies change\"]",
+      "shot": true
     }
   ]
 }
