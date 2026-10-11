@@ -25,11 +25,14 @@ A spec:
 
 Options per probe: "same_as" (+ "same_as_route" to compare with that probe on
 another route), "all" (every match, not just the first), "box", "lines",
-"ground" (the background the element actually sits on: the first ancestor,
+"final_char" (the last visible character, the colour it renders in and the
+element's own colour), "ground" (the background the element actually sits on: the first ancestor,
 self excluded, with a non-transparent background-color, and that ancestor's
 classes), "optional" (zero matches is not an error — for enumerations across
-many routes), "widths" (a subset of the spec's widths) and "routes": "*" (every
-HTML route in the built site).
+many routes), "widths" (a subset of the spec's widths), "routes": "*" (every
+HTML route in the built site) and "state" ({"action": "hover" | "focus",
+"target": selector}: measure with the target hovered, or focused from the
+keyboard so :focus-visible applies).
 
 For each route x width x probe it records how many elements match and, for the
 first match (every match with "all": true), the requested computed properties,
@@ -82,6 +85,20 @@ const IN_PAGE = (probe) => {
     const out = { props: {}, box: null, lines: null,
                   text: (el.textContent || "").replace(/\s+/g, " ").trim().slice(0, 90) };
     for (const p of probe.props || []) out.props[p] = cs.getPropertyValue(p);
+    if (probe.final_char) {
+      // The element's last visible character, the colour it actually renders
+      // in (its own text node's parent), and the element's own colour — so a
+      // full stop caught inside an accent span reads as a colour mismatch.
+      let last = null;
+      const walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+      for (let n = walk.nextNode(); n; n = walk.nextNode()) if (n.textContent.trim()) last = n;
+      if (last) {
+        const holder = last.parentElement;
+        out.final = { char: last.textContent.trimEnd().slice(-1), color: getComputedStyle(holder).color,
+                      own: getComputedStyle(el).color, inner: holder !== el,
+                      holder: holder.tagName.toLowerCase() + (holder.className ? "." + String(holder.className).trim().split(/\s+/).join(".") : "") };
+      }
+    }
     if (probe.ground) {
       let n = el.parentElement, bg = null;
       while (n) {
@@ -144,7 +161,34 @@ const IN_PAGE = (probe) => {
       });
       await new Promise((r) => setTimeout(r, 150));
       for (const probe of spec.probes.filter((p) => p.routes.includes(route) && (!p.widths || p.widths.includes(w)))) {
+        // "state": {"action": "hover" | "focus", "target": selector} puts the
+        // first match of target into that state before measuring. Focus goes
+        // through the keyboard (Tab until the target holds focus), so
+        // :focus-visible matches as it would for a keyboard user.
+        let stateNote = null;
+        if (probe.state) {
+          const target = await page.$(probe.state.target);
+          if (!target) stateNote = "state target not found";
+          else if (probe.state.action === "hover") {
+            try {
+              await target.evaluate((el) => el.scrollIntoView({ block: "center" }));
+              await target.hover();
+            } catch (e) { stateNote = "hover failed: " + e.message; }
+          }
+          else if (probe.state.action === "focus") {
+            await page.evaluate(() => { document.activeElement && document.activeElement.blur(); window.scrollTo(0, 0); });
+            await page.evaluate((el) => { el.setAttribute("data-probe-focus", "1"); }, target);
+            let hit = false;
+            for (let i = 0; i < 400 && !hit; i++) {
+              await page.keyboard.press("Tab");
+              hit = await page.evaluate(() => !!(document.activeElement && document.activeElement.hasAttribute("data-probe-focus")));
+            }
+            if (!hit) stateNote = "focus target never received keyboard focus";
+          }
+          await new Promise((r) => setTimeout(r, 120));
+        }
         const got = await page.evaluate(IN_PAGE, probe);
+        if (stateNote) got.stateError = stateNote;
         const row = { route, width: w, probe: probe.name, ...got };
         if (shots && probe.shot && got.count) {
           const handle = await page.$(probe.selector);
@@ -155,6 +199,11 @@ const IN_PAGE = (probe) => {
           row.shot = file;
         }
         results.push(row);
+        if (probe.state) {
+          await page.mouse.move(0, 0);
+          await page.evaluate(() => { document.activeElement && document.activeElement.blur();
+            for (const el of document.querySelectorAll("[data-probe-focus]")) el.removeAttribute("data-probe-focus"); });
+        }
       }
     }
   }
@@ -235,6 +284,9 @@ def judge(spec, rows):
                 elif want is not None and r["count"] != want:
                     errors.append({"kind": "count", "probe": p["name"], "route": route, "width": w,
                                    "expected": want, "got": r["count"]})
+                if r.get("stateError"):
+                    errors.append({"kind": "state", "probe": p["name"], "route": route, "width": w,
+                                   "detail": r["stateError"]})
                 if p.get("ground"):
                     for it in r.get("items") or []:
                         if (it.get("ground") or {}).get("color") == "unresolved":
@@ -265,7 +317,11 @@ def selftest(port: int) -> int:
             "<p class='w'>one two three four five six seven eight</p>"
             "<p class='s' style='width:600px'>one <span style='padding:3px'>two</span> three</p>"
             "<p class='t' style='width:120px;font-size:40px;line-height:.96'>one <span>two</span> three four</p>"
-            "<div class='ink' style='background:#0A0A0A'><div><a class='btn'>go</a></div></div></body></html>", encoding="utf-8")
+            "<div class='ink' style='background:#0A0A0A'><div><a class='btn'>go</a></div></div>"
+            "<h2 class='acc' style='color:#000'>One <span style='color:#D64A1E'>two.</span></h2>"
+            "<h2 class='ok' style='color:#000'>One <span style='color:#D64A1E'>two</span>.</h2>"
+            "<style>a.st{text-decoration:none}a.st:hover .v,a.st:focus-visible .v{text-decoration:underline}"
+            "a.st:focus-visible{outline:2px solid #000}</style><p><a class='st' href='#x'><span class='v'>go</span></a></p></body></html>", encoding="utf-8")
         spec = {"widths": [400], "probes": [
             {"name": "a", "routes": ["/"], "selector": ".a", "props": ["font-size"]},
             {"name": "b", "routes": ["/"], "selector": ".b", "props": ["font-size"], "same_as": "a"},
@@ -277,6 +333,13 @@ def selftest(port: int) -> int:
             {"name": "span", "routes": ["/"], "selector": ".s", "lines": True},
             {"name": "tight", "routes": ["/"], "selector": ".t", "lines": True, "box": True},
             {"name": "ground", "routes": ["/"], "selector": ".btn", "ground": True},
+            {"name": "stop-in-accent", "routes": ["/"], "selector": "h2.acc", "final_char": True},
+            {"name": "rest", "routes": ["/"], "selector": "a.st .v", "props": ["text-decoration-line"]},
+            {"name": "hovered", "routes": ["/"], "selector": "a.st .v", "props": ["text-decoration-line"],
+             "state": {"action": "hover", "target": "a.st"}},
+            {"name": "focused", "routes": ["/"], "selector": "a.st", "props": ["outline-style", "outline-width"],
+             "state": {"action": "focus", "target": "a.st"}},
+            {"name": "stop-outside", "routes": ["/"], "selector": "h2.ok", "final_char": True},
             {"name": "maybe", "routes": ["/"], "selector": ".nothing", "optional": True},
             {"name": "narrow-only", "routes": ["/"], "selector": ".nothing", "widths": [300]},
         ]}
@@ -293,6 +356,17 @@ def selftest(port: int) -> int:
             ("a wrong count is an error", ("count", "two") in kinds),
             ("lines counts rendered line boxes", wrap["lines"] and wrap["lines"] >= 3 and wrap["box"][2] == 100),
             ("an inline span does not add a line", next(r for r in rows if r["probe"] == "span")["items"][0]["lines"] == 1),
+            ("a stop inside an accent span renders the accent colour",
+             (lambda f: f["char"] == "." and f["inner"] and f["color"] == "rgb(214, 74, 30)" and f["own"] == "rgb(0, 0, 0)")(
+                 next(r for r in rows if r["probe"] == "stop-in-accent")["items"][0]["final"])),
+            ("a stop outside the span renders the heading's own colour",
+             (lambda f: f["char"] == "." and not f["inner"] and f["color"] == f["own"])(
+                 next(r for r in rows if r["probe"] == "stop-outside")["items"][0]["final"])),
+            ("state: rest has no underline, hover does",
+             next(r for r in rows if r["probe"] == "rest")["items"][0]["props"]["text-decoration-line"] == "none"
+             and next(r for r in rows if r["probe"] == "hovered")["items"][0]["props"]["text-decoration-line"] == "underline"),
+            ("state: keyboard focus draws the focus-visible outline",
+             next(r for r in rows if r["probe"] == "focused")["items"][0]["props"]["outline-style"] == "solid"),
             ("ground is the first painted ancestor",
              next(r for r in rows if r["probe"] == "ground")["items"][0]["ground"]["color"] == "rgb(10, 10, 10)"),
             ("optional accepts no match", not any(p == "maybe" for _, p in kinds)),

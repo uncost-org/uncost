@@ -418,7 +418,8 @@ patch("website/src/case/index.njk",
       r'(  <p class="u-39 lead">The question is no longer whether.*?</p>\n)(  <h2 class="u-38 sec">Evidence first\..*?</h2>\n)',
       r'\2\1',
       "V17 case: question lead follows the headline",
-      guard='Tools next.</span></h2>\n  <p class="u-39 lead">The question is no longer whether')
+      # (guard covers both stop placements: R2-6 below moves the stop out of the accent)
+      guard='</h2>\n  <p class="u-39 lead">The question is no longer whether')
 
 # V15 (Batch V, 2026-09-26) — /movement/: "What taking part means" moves to
 # cream (V15 swapped it with the six-step band, which X1 has since turned into
@@ -519,10 +520,20 @@ for path, anchor, where in (
 ):
     patch(path, anchor, LABELS_DRAWER + ("\n" if "SECTION" in anchor else "") + r"\1",
           f"V11 {path.split('src/')[1]}: labels drawer {where}", guard=LABELS_DRAWER.strip())
+# Round 2 item 5 (2026-10-11): on /policies/ the drawer moves from the end of
+# the page to directly after the policy list (the gold `.u-106` band) and
+# before "How a policy changes" — the /projects/ order (F1). A template that
+# has it anywhere else gives it up first; then it goes in before that section.
+_pol = pathlib.Path("website/src/policies/index.njk").read_text(encoding="utf-8")
+if LABELS_DRAWER in _pol and LABELS_DRAWER + "\n<!-- SECTION: policies.How policies change -->" not in _pol:
+    patch("website/src/policies/index.njk", r'\n\{% include "partials/labels-drawer\.njk" %\}\n', '',
+          "R2-5 policies: the drawer leaves the end of the page")
+else:
+    print("  = R2-5 policies: the drawer leaves the end of the page (already applied)")
 patch("website/src/policies/index.njk",
-      r'(data-screen-label="How policies change">.*?</section>\n)',
-      r"\1\n" + LABELS_DRAWER,
-      "V11 policies/index.njk: labels drawer after the last section", guard=LABELS_DRAWER.strip())
+      r'(<!-- SECTION: policies\.How policies change -->\n)',
+      LABELS_DRAWER + "\n" + r"\1",
+      "V11/R2-5 policies/index.njk: labels drawer after the policy list", guard=LABELS_DRAWER.strip())
 
 # W6 (Batch X, 2026-09-27) — /case/ intro paragraph, founder-approved, from the
 # content layer (_data/pageContent.js case.intro.lead). case/index.njk is
@@ -551,8 +562,8 @@ else:
 
 # X7 (Batch X, 2026-09-27) — /case/: both headlines from the content layer
 # (pageContent.case.intro.h2, .livingCosts.h2), and the Methodology drawer is
-# replaced by one line linking /receipts/#how-it-works. case/index.njk is
-# re-derived.
+# removed (X7 put a one-line link to /receipts/#how-it-works in its place;
+# round 2 item 3 removed that too). case/index.njk is re-derived.
 patch("website/src/case/index.njk",
       r'(<div class="introband">\s*<h2>).*?(</h2>)',
       r'\1{{ pageContent.case.intro.h2 | safe }}\2',
@@ -561,10 +572,14 @@ patch("website/src/case/index.njk",
       r'(<div class="eyebrow">What living costs</div>\s*<h2 class="[^"]*">).*?(</h2>)',
       r'\1{{ pageContent.case.livingCosts.h2 | safe }}\2',
       "X7 case living-costs headline reads pageContent", guard="{{ pageContent.case.livingCosts.h2 | safe }}")
-patch("website/src/case/index.njk",
-      r'<details class="mdrawer"[^>]*>.*?</details>\n',
-      '<div class="howlink" data-screen-label="How The Receipts work"><a href="{{ pageContent.case.receiptsLink.href }}">{{ pageContent.case.receiptsLink.text | safe }}</a></div>\n',
-      "X7 case: drawer becomes the How The Receipts work link", guard='<div class="howlink"')
+# Round 2 item 3 (2026-10-11) removes the link X7 put in the drawer's place, so
+# the export's drawer is now simply removed, with the blank line after it.
+# Guarded by absence.
+if '<details class="mdrawer"' in pathlib.Path("website/src/case/index.njk").read_text(encoding="utf-8"):
+    patch("website/src/case/index.njk", r'<details class="mdrawer"[^>]*>.*?</details>\n\n', '',
+          "X7/R2-3 case: the Methodology drawer is removed")
+else:
+    print("  = X7/R2-3 case: the Methodology drawer is removed (already applied)")
 
 # W5 (Batch X, 2026-09-27) — /news/ introband headline from the content layer
 # (pageContent.news.intro.h2). news/index.njk is re-derived.
@@ -587,32 +602,14 @@ else:
 # W10 (Batch X, 2026-09-27) — /sectors/ intro paragraph, founder-approved, from
 # the content layer (pageContent.sectors.intro.lead). The export's first
 # introband paragraph is re-pointed at the data (X9 then moves it).
-# (E1, sweep 2026-10-10, splits this intro in the wheat band; once that shape
-#  is in place W10 and X9 have nothing left to do, so W10 stands down too.)
-if "{{ pageContent.sectors.intro.band.h2 | safe }}" not in pathlib.Path("website/src/sectors/index.njk").read_text(encoding="utf-8"):
-    patch("website/src/sectors/index.njk",
-          r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\s*)<p>.*?</p>',
-          r'\1<p>{{ pageContent.sectors.intro.lead | safe }}</p>',
-          "W10 sectors intro reads pageContent", guard="{{ pageContent.sectors.intro.lead | safe }}")
-else:
-    print("  = W10 sectors intro reads pageContent (superseded by E1)")
+# (RETIRED by round 2 item 4, 2026-10-11: the paragraph W10 re-pointed no
+#  longer exists — the introband now carries the sector list and the closing
+#  sentence, restated by R2-4 at the end of this file.)
 
-# X9 (Batch X, 2026-09-27) — /sectors/: the introband keeps only its headline;
-# the intro moves into a wheat band directly above the cards, replacing the
-# status key strip (now the drawer below the grid). sectors/index.njk is
-# re-derived; both steps are guarded by absence.
-_sec = pathlib.Path("website/src/sectors/index.njk").read_text(encoding="utf-8")
-if 'class="sintro"' not in _sec and 'blk--wheat sintro' not in _sec:
-    patch("website/src/sectors/index.njk",
-          r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\n)(?:  <p>.*?</p>\n)+',
-          r'\1', "X9 sectors: introband keeps only the headline")
-    patch("website/src/sectors/index.njk",
-          r'(?:<!-- SECTION: sectors\.Legend -->\n)?<div class="legend"[^>]*>.*?\n</div>\n',
-          '<!-- SECTION: sectors.Intro -->\n<section class="blk blk--wheat sintro" data-screen-label="Intro">\n'
-          '  <p class="lead">{{ pageContent.sectors.intro.lead | safe }}</p>\n</section>\n',
-          "X9 sectors: the intro takes the wheat band above the cards")
-else:
-    print("  = X9 sectors: intro in the wheat band, key strip retired (already applied)")
+# X9 (Batch X, 2026-09-27) moved the intro into a wheat band above the cards
+# in place of the status key strip. RETIRED by round 2 item 4 (2026-10-11):
+# the wheat band is gone and the intro is back in the introband; R2-4 at the
+# end of this file removes the key strip (or X9's band) and restates it.
 
 # W13 (Batch X, 2026-09-27) — sector "02 · Evidence status": inside the white
 # dotted box, the approved empty-state text (pageContent.sector.evidenceEmpty)
@@ -699,7 +696,7 @@ if '"aim": ' not in _home:
           r'  "headline": "[^\n]*",\n  "subhead": "[^\n]*"',
           '  "headline": "Technology should make living cheaper, <span class=\\\\"hl\\\\">not billionaires richer</span>.",\n'
           '  "aim": "We aim to significantly reduce the cost of living by putting AI and robotics to work for humanity.",\n'
-          '  "slogan": "<span class=\\\\"u-51\\\\">Uncost</span> the cost of living.",\n'
+          '  "slogan": "<span class=\\\\"u-51\\\\">Uncost</span> the cost of living<span class=\\\\"stop\\\\">.</span>",\n'
           '  "subhead": "Uncost is a nonprofit, nonpartisan movement that believes<br>living should not have a price tag."',
           "X5 hero strings in home.json")
 else:
@@ -797,21 +794,9 @@ patch("website/src/movement.njk",
       "B3 movement description", flags=re.M,
       guard='description: "Uncost is a nonprofit, nonpartisan movement that treats the cost of living')
 
-# E1 (sweep 2026-10-10) — /sectors/ wheat intro band: headline "Living isn't
-# one bill — it's fifteen.", the fifteen sectors as links built from
-# catalog.sectors, and W10's closing sentence. X9 above puts W10's one
-# paragraph in this band; this splits it. sectors/index.njk is re-derived.
-patch("website/src/sectors/index.njk",
-      r'(<section class="blk blk--wheat sintro" data-screen-label="Intro">\n)  <p class="lead">\{\{ pageContent\.sectors\.intro\.lead \| safe \}\}</p>\n',
-      '\\1  {#- E1 (sweep 2026-10-10): headline, the fifteen sectors as links to their\n'
-      '      dossiers (catalog order), then the closing sentence. -#}\n'
-      '  <h2 class="sec">{{ pageContent.sectors.intro.band.h2 | safe }}</h2>\n'
-      '  {%- set lastSector = catalog.sectors | last %}\n'
-      '  <p class="lead sintro-list">{% for s in catalog.sectors %}{% if s == lastSector %} and {% elif not loop.first %}, {% endif %}'
-      '<a href="/sectors/{{ s.slug }}/">{{ s.name }}</a>{% endfor %}.</p>\n'
-      '  <p class="lead">{{ pageContent.sectors.intro.band.close | safe }}</p>\n',
-      "E1 sectors intro band: headline, linked sector list, close",
-      guard="{{ pageContent.sectors.intro.band.h2 | safe }}")
+# E1 (sweep 2026-10-10) split X9's wheat band into a headline, a linked sector
+# list and a closing sentence. RETIRED by round 2 item 4 (2026-10-11), which
+# removes the band; R2-4 below restates the list and sentence in the introband.
 
 # G1 (sweep 2026-10-10) — /faq/: every question starts collapsed; the first
 # loses the export's `open`. faq.njk is re-derived. Guarded by absence.
@@ -858,5 +843,84 @@ else:
 for f in ("press", "quiz", "share", "community", "case/dashboard", "case/tracker"):
     patch(f"website/src/{f}.njk", r'\A(---\n(?:[^\n]*\n)*?)(---\n)', r'\1noindex: true\n\2',
           f"J {f}: noindex until it has real content", guard="\nnoindex: true\n")
+
+# ---------------------------------------------------------------------------
+# Site sweep 2026-10-11, round 2 (founder brief). Each edit to a re-derived
+# template or data file is restated here; tools/restatement_check.py proves it.
+# ---------------------------------------------------------------------------
+print("Site sweep 2026-10-11 (round 2):")
+
+# R2-1 — the slogan's full stop is ink, like the headline's and every other
+# accented headline's: the coral `.u-50` line ends on "living", and the stop
+# sits in its own span (integration.css item 134). home.json is re-extracted by
+# tools/rederive_home.py; X5 above now writes this form, and this converts X5's
+# earlier form.
+patch("website/src/_data/home.json",
+      r'("slogan": "[^\n]*the cost of living)\.(",\n)',
+      r'\1<span class=\\"stop\\">.</span>\2',
+      "R2-1 hero slogan: the full stop is its own (ink) span",
+      guard='the cost of living<span class=\\"stop\\">.</span>')
+
+# R2-3 — /case/: X7's "How The Receipts work →" strip is removed (and
+# pageContent.case.receiptsLink with it). case/index.njk is re-derived; the
+# removal is guarded by absence.
+if 'class="howlink"' in pathlib.Path("website/src/case/index.njk").read_text(encoding="utf-8"):
+    patch("website/src/case/index.njk", r'<div class="howlink"[^>]*>.*?</div>\n\n', '',
+          "R2-3 case: the How The Receipts work strip is removed")
+else:
+    print("  = R2-3 case: the How The Receipts work strip is removed (already applied)")
+
+# R2-4 — /sectors/: the wheat intro band (X9's, split by E1) is removed with
+# its "Living isn't one bill — it's fifteen." headline, and its two paragraphs
+# move into the introband directly under the existing h2: the fifteen sector
+# names as links (catalog order, from catalog.sectors), then the closing
+# sentence. The cards follow the introband. sectors/index.njk is re-derived
+# (tools/rederive_collections.py), so: an export-shaped page loses its key
+# strip, a page carrying the wheat band loses it, and either way the introband
+# gets the two paragraphs in place of whatever followed its headline.
+SECTORS_INTRO = (
+    '  {#- Round 2 item 4 (2026-10-11): the fifteen sectors as links to their\n'
+    '      dossiers (catalog order), then the closing sentence. -#}\n'
+    '  {%- set lastSector = catalog.sectors | last %}\n'
+    '  <p class="sintro-list">{% for s in catalog.sectors %}{% if s == lastSector %} and {% elif not loop.first %}, {% endif %}'
+    '<a href="/sectors/{{ s.slug }}/">{{ s.name }}</a>{% endfor %}.</p>\n'
+    '  <p>{{ pageContent.sectors.intro.close | safe }}</p>\n')
+_sec = pathlib.Path("website/src/sectors/index.njk").read_text(encoding="utf-8")
+if 'class="legend"' in _sec:
+    patch("website/src/sectors/index.njk",
+          r'(?:<!-- SECTION: sectors\.Legend -->\n)?<div class="legend"[^>]*>.*?\n</div>\n', '',
+          "R2-4 sectors: the export's status key strip is removed (the drawer explains the chips)")
+if 'blk--wheat sintro' in _sec:
+    patch("website/src/sectors/index.njk",
+          r'<!-- SECTION: sectors\.Intro -->\n(?:\{#-.*?-#\}\n)?<section class="blk blk--wheat sintro"[^>]*>.*?</section>\n\n',
+          '', "R2-4 sectors: the wheat intro band is removed")
+if 'blk--wheat sintro' not in _sec and 'class="legend"' not in _sec:
+    print("  = R2-4 sectors: key strip / wheat band removed (already applied)")
+patch("website/src/sectors/index.njk",
+      r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\n)(?:  <p>.*?</p>\n)*(</div>)',
+      '\\1' + SECTORS_INTRO.replace('\\', '\\\\') + '\\2',
+      "R2-4 sectors: the sector list and closing sentence sit in the introband",
+      guard="{{ pageContent.sectors.intro.close | safe }}")
+
+# R2-6 (founder decision, 2026-10-11) — every heading's full stop is the
+# heading's own colour, never the accent's: where an accent span wraps the
+# final stop, the stop moves outside it. These five templates are re-derived
+# from the export (about, case, join, treasury; sector.njk via
+# tools/rederive_collections.py), so each move is restated. The content-layer
+# headings (/movement/, /contribute/, /projects/) live in _data/pageContent.js.
+for path, words in (("website/src/about.njk", "movement"),
+                    ("website/src/case/index.njk", "Tools next"),
+                    ("website/src/join.njk", "Walk through it"),
+                    ("website/src/treasury.njk", "on the record"),
+                    ("website/src/sectors/sector.njk", "Sources before slogans")):
+    patch(path, r'(<span class="u-1">' + re.escape(words) + r')\.(</span>)(</h2>)',
+          r'\1\2.\3', f"R2-6 {path.split('src/')[1]}: the stop after \"{words}\" leaves the accent",
+          guard=f'<span class="u-1">{words}</span>.</h2>')
+# /pledge/thanks/: the hero h1 is ink on coral and its accent is the cream
+# `.em` span, which wrapped the stop too ("Your name is counted."). The scan
+# in round 2 classed cream as a base colour and missed it; it is an accent.
+patch("website/src/pledge/thanks.njk", r'(<span class="em">counted)\.(</span>)(</h1>)', r'\1\2.\3',
+      "R2-6 pledge/thanks.njk: the stop after \"counted\" leaves the accent",
+      guard='<span class="em">counted</span>.</h1>')
 
 print("done")

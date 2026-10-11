@@ -67,14 +67,14 @@ SECTION_EXEMPTIONS = [
      "aspect unchanged. CANVAS-SYNC item 7."),
     ("projects.html", "How they help",
      "Approved change: 'Every project has to earn its cost claim.' is matched to "
-     "the page's other section-heading size. CANVAS-SYNC item 8."),
+     "the page's other section-heading size. CANVAS-SYNC item 8. Round 2 (2026-10-11): the heading's final full stop leaves the accent and takes the heading's own colour. CANVAS-SYNC item 169."),
     ("sectors/", "Related projects",
      "Approved change: the canvas Ledger component (.lg) replaces the previous "
      "prj-table list — same rows and content, new table markup. CANVAS-SYNC item 5."),
     ("receipts", "The register",
      "Approved changes: the band is the whiter cream, each title links its "
      "registered source URL, and the lead's figure count is rendered from the "
-     "register instead of the export's stale 'Eleven'. CANVAS-SYNC items 10-12, 18."),
+     "register instead of the export's stale 'Eleven'. CANVAS-SYNC items 10-12, 18. Round 2 (2026-10-11): each figure card with a register sector gains a SECTOR chip after Region, linking that dossier. CANVAS-SYNC item 164."),
     ("receipts", "The rule",
      "Approved change: the ink headline the export omits below the eyebrow is "
      "added. CANVAS-SYNC item 9."),
@@ -112,7 +112,7 @@ SECTION_EXEMPTIONS = [
      "stays in the titleband, so this block is eyebrow-less lead + body in the "
      "export's own .blk--first. CANVAS-SYNC item 24. Sweep 2026-10-10 (B2-B4): "
      "headline \"Measure it. Publish it. Bring it down.\", new lead and body. "
-     "CANVAS-SYNC item 146."),
+     "CANVAS-SYNC item 146. Round 2 (2026-10-11): the heading's final full stop leaves the accent and takes the heading's own colour. CANVAS-SYNC item 169."),
     ("movement", "What we stand for",
      "Approved rewrite (v2 (a) block 2): replaces the export's 'How it reaches "
      "people' distribution-mechanics section. CANVAS-SYNC item 24."),
@@ -131,13 +131,13 @@ SECTION_EXEMPTIONS = [
      "SRC-020 and SRC-024 through the register macro. No export counterpart. "
      "CANVAS-SYNC item 25. Sweep 2026-10-10 (D1-D4): one-sentence lead, both "
      "paragraphs above the two cards, and a receipts link under them. "
-     "CANVAS-SYNC item 153."),
+     "CANVAS-SYNC item 153. Round 2 (2026-10-11): each figure card with a register sector gains a SECTOR chip after Region, linking that dossier. CANVAS-SYNC item 164."),
     ("case", "What living costs",
      "Content restoration, not a design change: the v4.3 re-derivation dropped "
      "this register-backed section when it swapped the essay page for the export's "
      "dashboard preview. Restored from origin/main @ 94d2481 with four figures "
      "(SRC-004, SRC-021, SRC-023, SRC-005). No export counterpart on this page. "
-     "CANVAS-SYNC item 26."),
+     "CANVAS-SYNC item 26. Round 2 (2026-10-11): each figure card with a register sector gains a SECTOR chip after Region, linking that dossier. CANVAS-SYNC item 164."),
     # The export ships nine policy pages under `data-page="policies-<slug>"`,
     # but sections.css contains ZERO rules for that scope — the whole policy
     # layout is scoped to `data-page="privacy"` instead. So the export's own
@@ -188,7 +188,7 @@ SECTION_EXEMPTIONS = [
      "cards to the shared figure card. Not in the brief's \"Apply to\" list, but "
      "they used `.fact`, so retiring it required converting them. "
      "CANVAS-SYNC item 55. Sweep 2026-10-10 (A4): the three cards are now "
-     "SRC-020, SRC-023 and SRC-022. CANVAS-SYNC item 145."),
+     "SRC-020, SRC-023 and SRC-022. CANVAS-SYNC item 145. Round 2 (2026-10-11): each figure card with a register sector gains a SECTOR chip after Region, linking that dossier. CANVAS-SYNC item 164."),
     ("receipts", "Keeping current",
      "P2 + R4: \"current\" is accented with --coral-on-ink, and the headline "
      "takes the shared prose scale. As with the CTA, a headline resize on a flat "
@@ -259,7 +259,8 @@ SECTION_EXEMPTIONS = [
      "1000px (grid 2fr/1fr, the 15ch cap lifted from the headline and slogan), "
      "so the headline sets in fewer, longer lines and the robot narrows at 1440; "
      "A2 sets \"living should not have a price tag.\" in plain ink. "
-     "CANVAS-SYNC items 143 and 144."),
+     "CANVAS-SYNC items 143 and 144. Round 2 (2026-10-11): the slogan's full "
+     "stop is ink. CANVAS-SYNC item 163."),
     ("join", "div.privacyline",
      "C9: the \"We won't sell your data…\" strip moves from the export's --wheat "
      "to --cream-2, matching the tier cards above it. Same box, fill only. "
@@ -306,7 +307,7 @@ SECTION_EXEMPTIONS = [
     ("contribute", "Volunteer roles",
      "V24: \"Useful roles, right now.\" gains a \"Volunteer now\" ink button to "
      "/contact/ after its closing note — one button row taller than the export. "
-     "CANVAS-SYNC item 110."),
+     "CANVAS-SYNC item 110. Round 2 (2026-10-11): the heading's final full stop leaves the accent and takes the heading's own colour. CANVAS-SYNC item 169."),
     ("roadmap", "Disclaimer",
      "V25: \"How to read these dates\" becomes a standard prose band — the "
      "export's eyebrow text is now the band's section headline at the one "
@@ -347,30 +348,40 @@ SECTION_EXEMPTIONS = [
        "own rules and Update/Perspective/Correction labels. CANVAS-SYNC 149, 150.")
       for page in ("receipts.html", "sectors.html", "projects.html", "policies.html",
                    "news.html", "treasury.html")],
-    ("sectors.html", "Intro",
-     "E1: the wheat intro band above the fifteen cards (X9's) splits into a "
-     "section headline (\"Living isn't one bill — it's fifteen.\"), the fifteen "
-     "sector names as underlined links to their dossiers, and the closing "
-     "sentence. The export has no such band (X9 replaced its legend strip), so "
-     "this entry is named for the record. CANVAS-SYNC item 154."),
+    ("sectors.html", "div.introband",
+     "Round 2 item 4 (2026-10-11): under the page headline the introband now "
+     "carries the fifteen sector names as --coral-deep underlined links and the "
+     "closing sentence (E1's wheat band, which held them, is removed). "
+     "CANVAS-SYNC item 166."),
     # H1: the coral primary button inside an ink band takes a --coral border
     # (it was the house 2px ink border, invisible on ink). Every route was
     # enumerated at 1440 and 390; these are the three ink bands that hold one.
     ("case", "Case CTA",
      "H1: \"See The Receipts\" (coral primary on ink) has a --coral border "
-     "instead of the invisible ink one. CANVAS-SYNC item 160."),
+     "instead of the invisible ink one. CANVAS-SYNC item 160. Round 2 (2026-10-11): the heading's final full stop leaves the accent and takes the heading's own colour. CANVAS-SYNC item 169."),
     ("treasury", "Treasury CTA",
      "H1: \"Contribute\" (coral primary on ink) has a --coral border instead "
      "of the invisible ink one. CANVAS-SYNC item 160."),
     ("sectors/", "Sector CTA",
      "H1: \"Take part\" (coral primary on ink, all fifteen sector pages) has a "
-     "--coral border instead of the invisible ink one. CANVAS-SYNC item 160."),
+     "--coral border instead of the invisible ink one. CANVAS-SYNC item 160. Round 2 (2026-10-11): the heading's final full stop leaves the accent and takes the heading's own colour. CANVAS-SYNC item 169."),
     ("about", "About — title",
      "G3: the title band reads \"About us\" (accent on \"us\"), the pattern "
      "of the other pages' title bands. CANVAS-SYNC item 158."),
     ("about", "div.introband",
      "G3: the introband paragraph ends after \"…open tools.\"; the \"very new\" "
-     "sentence is removed. CANVAS-SYNC item 158."),
+     "sentence is removed. CANVAS-SYNC item 158. Round 2 (2026-10-11): the heading's final full stop leaves the accent and takes the heading's own colour. CANVAS-SYNC item 169."),
+    # Round 2 founder decision (2026-10-11): every heading's full stop is the
+    # heading's own colour. These three sections had no entry yet.
+    ("join", "div.introband",
+     "Round 2: \"Pick a door. Walk through it.\" — the full stop leaves the "
+     "coral accent and is ink. CANVAS-SYNC item 169."),
+    ("treasury", "div.introband",
+     "Round 2: \"Every dollar, on the record.\" — the full stop leaves the "
+     "coral accent and is ink. CANVAS-SYNC item 169."),
+    ("pledge-thanks", "Thanks hero",
+     "Round 2: \"Your name is counted.\" — the full stop leaves the cream "
+     "accent and is the heading's ink. CANVAS-SYNC item 169."),
     ("about", "Mechanism",
      "B5: the shared \"How a cost gets uncosted.\" heading's \"uncosted\" is a "
      "coral span, no longer underlined (X1's <u>). CANVAS-SYNC item 147."),

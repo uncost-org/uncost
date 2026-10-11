@@ -11,20 +11,12 @@ description: "Fifteen sectors, one plan each. Every essential of a decent life �
 <div class="titleband" data-screen-label="Sectors — title"><h1>The <span class="u-1">Sectors</span></h1></div>
 <div class="introband">
   <h2>{{ pageContent.sectors.intro.h2 | safe }}</h2>
-</div>
-<!-- SECTION: sectors.Intro -->
-{#- X9 (Batch X): the intro sits in the wheat band directly above the fifteen
-    cards, where the status key strip was; the key is now the drawer below the
-    grid. -#}
-<section class="blk blk--wheat sintro" data-screen-label="Intro">
-  {#- E1 (sweep 2026-10-10): headline, the fifteen sectors as links to their
+  {#- Round 2 item 4 (2026-10-11): the fifteen sectors as links to their
       dossiers (catalog order), then the closing sentence. -#}
-  <h2 class="sec">{{ pageContent.sectors.intro.band.h2 | safe }}</h2>
   {%- set lastSector = catalog.sectors | last %}
-  <p class="lead sintro-list">{% for s in catalog.sectors %}{% if s == lastSector %} and {% elif not loop.first %}, {% endif %}<a href="/sectors/{{ s.slug }}/">{{ s.name }}</a>{% endfor %}.</p>
-  <p class="lead">{{ pageContent.sectors.intro.band.close | safe }}</p>
-</section>
-
+  <p class="sintro-list">{% for s in catalog.sectors %}{% if s == lastSector %} and {% elif not loop.first %}, {% endif %}<a href="/sectors/{{ s.slug }}/">{{ s.name }}</a>{% endfor %}.</p>
+  <p>{{ pageContent.sectors.intro.close | safe }}</p>
+</div>
 <!-- SECTION: sectors.15 sectors -->
 <div class="sgrid" data-screen-label="15 sectors">
   <a class="scard focus" href="/sectors/food/"><div class="top"><span class="idx">01</span><span class="status status--focus">Focus</span></div>{% image "sectors/sector-food.png", "Food" %}<h3>Food</h3><p>Nutrition, farming, storage, cooking, distribution.</p><span class="go">Read the dossier →</span></a>

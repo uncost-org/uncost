@@ -31,7 +31,9 @@ module.exports = {
       // B2-B4 (sweep 2026-10-10), founder-approved. The h1 is now "The
       // Movement" (B1, in the template); this band's headline takes the line the
       // h1 used to carry.
-      h2: 'Measure it. Publish it. <span class="hl">Bring it down.</span>',
+      // The full stop sits outside the accent (round 2, founder 2026-10-11):
+      // every heading's stop is the heading's own colour, never the accent's.
+      h2: 'Measure it. Publish it. <span class="hl">Bring it down</span>.',
       lead: 'Uncost is a nonprofit, nonpartisan movement that treats the cost of living as a problem to be measured and solved &mdash; not endured.',
       body: [
         'Life keeps getting more expensive while the technology that can lower costs keeps getting better. We&rsquo;re working to close that gap: AI and robotics-based projects and research aimed at reducing living costs, with all our findings published free.',
@@ -81,7 +83,9 @@ module.exports = {
   projects: {
     intro: { h2: 'From evidence to <span class="u-1">real cost reduction</span>.' },
     later: { h2: '<span class="u-1">Gated</span> on funding and safety.' },
-    howTheyHelp: { h2: 'Every project has to <span class="u-1">earn</span> its cost claim.' },
+    // The export paints this whole h2 coral (`.u-114`); only its full stop is
+    // ink, through the .stop span (integration.css item 137; founder 2026-10-11).
+    howTheyHelp: { h2: 'Every project has to <span class="u-1">earn</span> its cost claim<span class="stop">.</span>' },
   },
 
   // /sectors/ — founder-approved (Batch X, 2026-09-27).
@@ -89,14 +93,12 @@ module.exports = {
     intro: {
       // W9 — the headline (V18's string, now in the content layer).
       h2: 'Basic human needs break into <span class="u-1">fifteen sectors</span> &mdash; and we have a plan to reduce the cost of each.',
-      // W10's single intro paragraph is split by E1 (sweep 2026-10-10) into the
-      // wheat band's headline, a list of the fifteen sectors as links (built
-      // by the template from catalog.sectors, in catalog order) and this
-      // closing sentence, verbatim from W10.
-      band: {
-        h2: 'Living isn&rsquo;t one bill &mdash; it&rsquo;s fifteen.',
-        close: 'Each of these fifteen sectors gets a dossier: what it covers, where technology could cut its cost, the guardrail that keeps us honest, and where the evidence stands.',
-      },
+      // Under the h2, in the introband (round 2 item 4, 2026-10-11): the
+      // fifteen sectors as links (built by the template from catalog.sectors,
+      // in catalog order), then this closing sentence, verbatim from W10.
+      // E1's wheat band and its "Living isn't one bill — it's fifteen."
+      // headline are gone.
+      close: 'Each of these fifteen sectors gets a dossier: what it covers, where technology could cut its cost, the guardrail that keeps us honest, and where the evidence stands.',
     },
   },
 
@@ -149,7 +151,9 @@ module.exports = {
   // /contribute/ and /contact/ — X16 (Batch X, 2026-09-27), founder-approved.
   contribute: {
     intro: { h2: 'Back the work <span class="u-1">directly</span>.' },
-    roles: { h2: 'Useful roles, right <span class="u-1">now</span>.' },
+    // The export paints this whole h2 coral (`.u-42`); only its full stop is
+    // ink, through the .stop span (integration.css item 137; founder 2026-10-11).
+    roles: { h2: 'Useful roles, right <span class="u-1">now</span><span class="stop">.</span>' },
   },
   contact: {
     intro: { h2: 'Say <span class="u-1">hello</span> &mdash; a human replies.' },
@@ -224,8 +228,9 @@ module.exports = {
       receiptsLink: { text: 'Every figure, with its receipt &rarr;', href: '/receipts/' },
     },
     // X7 (Batch X, 2026-09-27), founder-approved: the "What living costs"
-    // headline, and the one-line link that replaces the Methodology drawer.
+    // headline. (X7's one-line "How The Receipts work →" link is removed by
+    // round 2 item 3, 2026-10-11; the mechanism section's "Every figure, with
+    // its receipt →" stays.)
     livingCosts: { h2: 'The numbers, with their <span class="u-1">receipts</span>.' },
-    receiptsLink: { text: 'How The Receipts work &rarr;', href: '/receipts/#how-it-works' },
   },
 };

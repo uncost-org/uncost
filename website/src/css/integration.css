@@ -2761,20 +2761,10 @@ body[data-page="movement"] .blk--wheat + .seqhd { border-top: 4px solid var(--co
 .search-ov .so-scope[aria-pressed="true"] { background: var(--ink); color: var(--cream); }
 .search-ov .so-scope:focus-visible { outline: 3px solid var(--coral-deep); outline-offset: 2px; }
 
-/* 120. X7 — /case/: the Methodology drawer is gone; in its place one line,
- *      "How The Receipts work →", to the drawer that now explains them on
- *      /receipts/ (#how-it-works). It keeps the drawer's own row shape — the
- *      display face 700 17px of a drawer header, the same band inset — so the
- *      page's rhythm between "What living costs" and the closing CTA does not
- *      change. Link colour is the light-ground link colour (--coral-deep). */
-body[data-page="case"] .howlink {
-  border-top: 4px solid var(--coral);   /* R1: wheat above, cream here */
-  padding: 18px clamp(24px, 6vw, 80px);
-  background: var(--cream);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 17px;
-}
+/* 120. RETIRED (round 2 item 3, 2026-10-11). X7's one-line "How The Receipts
+ *      work →" strip between "What living costs" and the closing CTA is
+ *      removed, so its styling goes with it. The wheat band now meets the ink
+ *      CTA directly; R1's 4px coral rule there is the CTA's own top edge. */
 
 /* 121. X6 / X10 — the news cross-reference line ("For current cost news … see
  *      Cost Watch." / "For Uncost's own updates, see Uncost.org News.") moves
@@ -2790,18 +2780,10 @@ body[data-page="news"] .newsxref {
 body[data-page="news"] .newsxref p { font-style: italic; }
 body[data-page="news"] .newsxref a { font-style: normal; }
 
-/* 122. X9 — /sectors/: the introband keeps only the headline; the intro (W10)
- *      moves into the WHEAT band directly above the fifteen cards, where the
- *      status key strip was; the strip becomes the drawer below the grid.
- *      The band's paragraphs are leads, set at 20px.
- *      E1 (sweep 2026-10-10) split the one paragraph into a headline, the
- *      fifteen sector names as LINKS to their dossiers, and the closing
- *      sentence. The names were bold --coral-deep (large text at 20px, 3.25:1
- *      on wheat); as links on wheat they take item 68's ink (10.48:1) and
- *      keep an underline, so they read as links without relying on colour.
- *      The bold-accent rule that lived here is retired with the <b>s. */
-body[data-page="sectors"] .sintro .lead { font-size: 20px; }
-body[data-page="sectors"] .sintro .sintro-list a { text-decoration: underline; text-underline-offset: 3px; }
+/* 122. RETIRED (round 2 item 4, 2026-10-11). X9's wheat intro band above the
+ *      fifteen cards (and E1's split of it) is removed; its two paragraphs
+ *      are back in the introband under the page headline (item 136). The
+ *      20px lead and the wheat-band link underline served only that band. */
 
 /* 123. Batch X — the project "At a glance" opener headlines carry accent spans
  *      (W15, W21, X2). `.u-124` is a wheat band, so the display accent takes
@@ -2983,3 +2965,71 @@ body[data-page="news"] .up-item .up-meta .date { margin-bottom: 0; }
  *      "Contribute", and "Take part" on the fifteen sector pages — all inside
  *      these three classes. */
 :is(.blk--ink, .u-block--ink, .block--ink) .u-btn--primary { border-color: var(--coral); }
+
+/* 134. Round 2, item 1 (2026-10-11) — the slogan's full stop is ink.
+ *      "…not billionaires richer." ends on an ink stop, as does every accented
+ *      headline on the site: the accent span wraps the words, never the
+ *      punctuation. "Uncost the cost of living." is one coral `.u-50` line
+ *      (item 79, !important), so its stop rendered coral. The stop is now its
+ *      own span in home.json; "Uncost" stays gold and "the cost of living"
+ *      coral. */
+body[data-page="index"] .hero-grid .hero-slogan .stop { color: var(--ink) !important; }
+
+/* 135. Round 2 item 2 (2026-10-11) — the SECTOR chip on the figure card.
+ *      Checked · Published · Period · Region · SECTOR · Confirmed. The chip
+ *      box is the same `span.m` as every other chip (items 85d, 86/C7), so it
+ *      inherits their border, fill, type and LABEL: value layout untouched.
+ *      It is the one chip that is a link, to /sectors/<slug>/; the <a> inside
+ *      takes over the chip's own 3px 8px padding so the whole chip is the
+ *      target, and it inherits the chip's ink rather than any band's link
+ *      colour — the ink band (`.blk--ink a`) and wheat band (`.blk--wheat a`)
+ *      rules are both !important, hence !important here. Hover and focus do
+ *      not rely on colour: the value gains an underline, and keyboard focus
+ *      draws a 2px ink ring outside the chip's border. Rows with no sector
+ *      render no chip (partials/figure.njk). */
+.cards .card .foot .row span.m.m--sector { padding: 0; }
+.cards .card .foot .row span.m--sector > a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 3px 8px;
+  color: inherit !important;
+  text-decoration: none;
+}
+.cards .card .foot .row span.m--sector > a:is(:hover, :focus-visible) .v {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.cards .card .foot .row span.m--sector > a:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
+/* 136. Round 2 item 4 (2026-10-11) — /sectors/ introband: under the headline,
+ *      the fifteen sector names as links, then the closing sentence. The
+ *      links are the light-ground body-link treatment — --coral-deep (5.59:1
+ *      on cream; --coral is 4.04 and fails at body size) with an underline in
+ *      the same colour — stated here so the list cannot drift from it. The
+ *      second paragraph sits one line-gap below the first. The cards follow
+ *      the introband; their own 2px ink frame top is the boundary (R2). */
+body[data-page="sectors"] .introband .sintro-list a {
+  color: var(--coral-deep);
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+body[data-page="sectors"] .introband p + p { margin-top: 14px; }
+
+/* 137. Round 2, founder decision (2026-10-11) — every heading's full stop is
+ *      the heading's own colour, never the accent's, as on the homepage
+ *      (item 134). Where an accent span wrapped the stop, the stop now sits
+ *      outside it (template or content-layer edits; no CSS). Where the export
+ *      colours the WHOLE heading coral — /contribute/ "Useful roles, right
+ *      now." (`.u-42`) and /projects/ "Every project has to earn its cost
+ *      claim." (`.u-114`), both !important — the words stay coral and only
+ *      the stop is ink, through this .stop span. Light grounds only: on an ink
+ *      band a heading's stop takes the band's text colour by sitting outside
+ *      the accent instead. */
+:is(h1, h2, h3) .stop { color: var(--ink) !important; }
+
