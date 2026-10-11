@@ -259,7 +259,8 @@ SECTION_EXEMPTIONS = [
      "1000px (grid 2fr/1fr, the 15ch cap lifted from the headline and slogan), "
      "so the headline sets in fewer, longer lines and the robot narrows at 1440; "
      "A2 sets \"living should not have a price tag.\" in plain ink. "
-     "CANVAS-SYNC items 143 and 144."),
+     "CANVAS-SYNC items 143 and 144. Round 2 (2026-10-11): the slogan's full "
+     "stop is ink. CANVAS-SYNC item 163."),
     ("join", "div.privacyline",
      "C9: the \"We won't sell your data…\" strip moves from the export's --wheat "
      "to --cream-2, matching the tier cards above it. Same box, fill only. "

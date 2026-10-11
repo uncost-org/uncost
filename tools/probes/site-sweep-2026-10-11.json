@@ -1,0 +1,10 @@
+{
+  "widths": [390, 1440],
+  "probes": [
+    {"name": "headline-stops", "routes": "*", "selector": "main h1, main h2, main h3, main .hero-slogan", "all": true, "optional": true, "final_char": true, "widths": [1440]},
+    {"name": "slogan-stop", "routes": ["/"], "selector": ".hero-grid .hero-slogan .stop", "props": ["color"], "expect_count": 1},
+    {"name": "slogan-words", "routes": ["/"], "selector": ".hero-grid .hero-slogan .u-50", "props": ["color"]},
+    {"name": "slogan-uncost", "routes": ["/"], "selector": ".hero-grid .hero-slogan .u-51", "props": ["color"]},
+    {"name": "headline-stop", "routes": ["/"], "selector": ".hero-grid h1", "final_char": true, "props": ["color"]}
+  ]
+}

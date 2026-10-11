@@ -699,7 +699,7 @@ if '"aim": ' not in _home:
           r'  "headline": "[^\n]*",\n  "subhead": "[^\n]*"',
           '  "headline": "Technology should make living cheaper, <span class=\\\\"hl\\\\">not billionaires richer</span>.",\n'
           '  "aim": "We aim to significantly reduce the cost of living by putting AI and robotics to work for humanity.",\n'
-          '  "slogan": "<span class=\\\\"u-51\\\\">Uncost</span> the cost of living.",\n'
+          '  "slogan": "<span class=\\\\"u-51\\\\">Uncost</span> the cost of living<span class=\\\\"stop\\\\">.</span>",\n'
           '  "subhead": "Uncost is a nonprofit, nonpartisan movement that believes<br>living should not have a price tag."',
           "X5 hero strings in home.json")
 else:
@@ -858,5 +858,22 @@ else:
 for f in ("press", "quiz", "share", "community", "case/dashboard", "case/tracker"):
     patch(f"website/src/{f}.njk", r'\A(---\n(?:[^\n]*\n)*?)(---\n)', r'\1noindex: true\n\2',
           f"J {f}: noindex until it has real content", guard="\nnoindex: true\n")
+
+# ---------------------------------------------------------------------------
+# Site sweep 2026-10-11, round 2 (founder brief). Each edit to a re-derived
+# template or data file is restated here; tools/restatement_check.py proves it.
+# ---------------------------------------------------------------------------
+print("Site sweep 2026-10-11 (round 2):")
+
+# R2-1 — the slogan's full stop is ink, like the headline's and every other
+# accented headline's: the coral `.u-50` line ends on "living", and the stop
+# sits in its own span (integration.css item 134). home.json is re-extracted by
+# tools/rederive_home.py; X5 above now writes this form, and this converts X5's
+# earlier form.
+patch("website/src/_data/home.json",
+      r'("slogan": "[^\n]*the cost of living)\.(",\n)',
+      r'\1<span class=\\"stop\\">.</span>\2',
+      "R2-1 hero slogan: the full stop is its own (ink) span",
+      guard='the cost of living<span class=\\"stop\\">.</span>')
 
 print("done")

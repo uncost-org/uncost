@@ -2983,3 +2983,13 @@ body[data-page="news"] .up-item .up-meta .date { margin-bottom: 0; }
  *      "Contribute", and "Take part" on the fifteen sector pages — all inside
  *      these three classes. */
 :is(.blk--ink, .u-block--ink, .block--ink) .u-btn--primary { border-color: var(--coral); }
+
+/* 134. Round 2, item 1 (2026-10-11) — the slogan's full stop is ink.
+ *      "…not billionaires richer." ends on an ink stop, as does every accented
+ *      headline on the site: the accent span wraps the words, never the
+ *      punctuation. "Uncost the cost of living." is one coral `.u-50` line
+ *      (item 79, !important), so its stop rendered coral. The stop is now its
+ *      own span in home.json; "Uncost" stays gold and "the cost of living"
+ *      coral. */
+body[data-page="index"] .hero-grid .hero-slogan .stop { color: var(--ink) !important; }
+
