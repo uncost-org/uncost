@@ -2,7 +2,8 @@
 
     Two card types, both deliberately NOT the R3 figure card:
 
-      update(item, level)  — an Uncost movement update: date, title, body.
+      update(item, level)  — an Uncost movement update: date and its one
+                             news label on the date row, title, body.
       costwatch(row)       — a Cost Watch item, built on the SAME card
                              structure: publisher and date on the eyebrow row,
                              the claim as the card body, "Read at <domain> →",
@@ -17,15 +18,24 @@
     their items directly under the introband h2, so both pass 3; the parameter
     stays because the level belongs to the page, not to the macro.
 
-    Reported is the ONLY label used anywhere under /news/. The receipts
-    vocabulary (Confirmed / Estimate / Scenario / Needs refresh) never appears
-    here, and Reported never appears on /receipts/, /case/, sector pages or in
-    sources/register.csv. Both directions are enforced at build time by the
-    news-label guard in eleventy.config.js. -#}
+    Two label vocabularies live under /news/ (C4, sweep 2026-10-10), one per
+    card type:
+      Reported                         — Cost Watch items: a price published
+                                         by the linked source, on a date.
+      Update / Perspective / Correction — Uncost's own updates (C2/C3); every
+                                         item in _data/news.js carries exactly
+                                         one, and the data file fails the build
+                                         otherwise.
+    The receipts vocabulary (Confirmed / Estimate / Scenario / Needs refresh)
+    never appears here; Reported never appears outside /news/ (nor in
+    sources/register.csv); and the news labels never appear outside /news/.
+    All three are enforced at build time by the news-label guard in
+    eleventy.config.js. Like Reported, the news labels carry no colour of their
+    own: the word is the meaning. -#}
 
 {% macro update(item, level) -%}
 <article class="up-item" data-news-item id="{{ item.slug }}">
-  <div class="date">{{ item.date }}</div>
+  <div class="up-meta"><div class="date">{{ item.date }}</div><span class="lbl lbl--{{ item.label | lower }}">{{ item.label }}</span></div>
   <h{{ level }}>{{ item.title }}</h{{ level }}>
   <p>{{ item.body }}</p>
 </article>

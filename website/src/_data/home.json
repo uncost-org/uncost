@@ -6,20 +6,11 @@
   "headline": "Technology should make living cheaper, <span class=\"hl\">not billionaires richer</span>.",
   "aim": "We aim to significantly reduce the cost of living by putting AI and robotics to work for humanity.",
   "slogan": "<span class=\"u-51\">Uncost</span> the cost of living.",
-  "subhead": "Uncost is a nonprofit, nonpartisan movement that believes<br><u class=\"u-1\">living should not have a price tag</u>."
+  "subhead": "Uncost is a nonprofit, nonpartisan movement that believes<br>living should not have a price tag."
  },
  "s2": {
   "eyebrow": "The problem, with receipts",
   "headline": "Working harder, still <span class=\"u-1\">falling behind</span>.",
-  "stat1": {
-   "caption": "The median American renter spent 31% of their income on rent and utilities in 2024 &mdash; up from 27% in 2001."
-  },
-  "stat2": {
-   "caption": "From 2001 to 2024, median rent rose 30% after inflation. The median renter&rsquo;s income rose just 9%."
-  },
-  "stat3": {
-   "caption": "Family health coverage through an employer cost $26,993 in 2025 &mdash; workers paid $6,850 of it."
-  },
   "body": "Every figure here is a receipt &mdash; a public source, a date, and a region. This is what living actually costs, and how fast it is moving."
  },
  "s3": {

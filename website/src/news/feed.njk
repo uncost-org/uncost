@@ -19,6 +19,7 @@ eleventyExcludeFromCollections: true
       <link>{{ site.origin }}/news/#{{ item.slug }}</link>
       <guid isPermaLink="false">uncost-news-{{ item.slug }}</guid>
       <pubDate>{{ item.pubDate }}</pubDate>
+      <category>{{ item.label }}</category>
       <description><![CDATA[{{ item.body }}]]></description>
     </item>
     {%- endfor %}

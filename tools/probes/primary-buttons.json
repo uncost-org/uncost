@@ -1,0 +1,7 @@
+{
+  "widths": [390, 1440],
+  "probes": [
+    {"name": "primary-buttons", "routes": "*", "selector": ".u-btn--primary", "all": true, "optional": true, "ground": true,
+     "props": ["border-top-color", "border-top-width", "background-color"], "box": true}
+  ]
+}

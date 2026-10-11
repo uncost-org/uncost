@@ -1,9 +1,14 @@
 {#- The drawer (X11, Batch X; first shipped as V11's labels drawer). ONE
-    partial, driven entirely by _data/labels.js: for this page, a header row,
+    partial, driven entirely by _data/labels.js: for this page, a title,
     THE RULES (left column, a bullet list) and THE LABELS (right column, the
-    confidence-table style: chip | what it tells you). Variant 1 of the X12
-    decision renders: header and body both --cream-2, no rule line between
-    them, the /case/ chevron (integration.css item 116).
+    confidence-table style: chip | what it tells you).
+
+    C1 (sweep 2026-10-10): it is an always-open section, not a collapsible
+    <details>. The title is a real heading (h2.ldrawer-title, at the footer
+    "Get updates" heading's size), the h3s "The rules" / "The labels" sit
+    under it, and the whole section is --white with the 4px coral rule on its
+    top edge (integration.css item 116). The name "drawer" is kept for the
+    class, the data-screen-label and the build guard; nothing opens or closes.
 
     A label with no approved definition yet renders its chip only. Where no
     label on the page has one, the table drops its second column rather than
@@ -13,8 +18,8 @@
 {%- set drawer = labels.pages[page.url] %}
 {%- if drawer %}
 {%- set lh = labels.headings %}
-<details class="ldrawer" id="{{ drawer.id }}" data-screen-label="Drawer">
-  <summary>{{ drawer.summary }}</summary>
+<section class="ldrawer" id="{{ drawer.id }}" data-screen-label="Drawer">
+  <h2 class="ldrawer-title">{{ drawer.summary }}</h2>
   <div class="ldrawer-body">
     <div class="ldrawer-rules">
       <h3>{{ lh.rules }}</h3>
@@ -42,5 +47,5 @@
 {%- endif %}
     </div>
   </div>
-</details>
+</section>
 {%- endif %}

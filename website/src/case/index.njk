@@ -30,12 +30,13 @@ description: "The Case is Uncost's evidence layer: what humans need, what those 
 <section class="blk blk--first blk--cream2" data-screen-label="The mechanism">
   <div class="eyebrow">{{ cm.eyebrow }}</div>
   <h2 class="sec">{{ cm.h2 | safe }}</h2>
-  <p class="u-11 lead" data-source="SRC-020">{{ cm.lead | safe }}</p>
+  <p class="u-11 lead">{{ cm.lead | safe }}</p>
+  <p class="u-11">{{ cm.close | safe }}</p>
   <div class="cards cards--2up">
     {{ fig.card(register.byId["SRC-020"]) }}
     {{ fig.card(register.byId["SRC-024"]) }}
   </div>
-  <p class="u-11">{{ cm.close | safe }}</p>
+  <p class="u-11"><a href="{{ cm.receiptsLink.href }}">{{ cm.receiptsLink.text | safe }}</a></p>
 </section>
 
 <!-- SECTION: case.What living costs -->

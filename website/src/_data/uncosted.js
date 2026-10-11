@@ -9,12 +9,13 @@
 // pageContent.js) is retired entirely: V12 shared the format and kept two sets
 // of words; X1 makes it one set.
 //
-// Headline: ink, with "uncosted" coral and underlined and the full stop in ink
-// (the <u> carries the accent; integration.css item 118 paints it).
+// Headline: ink, with "uncosted" coral and the full stop in ink (the span
+// carries the accent; integration.css item 118 paints it). B5 (sweep
+// 2026-10-10): no underline — the <u> became a <span>.
 
 module.exports = {
   label: "The mechanism",
-  heading: 'How a cost gets <u class="u-1">uncosted</u>.',
+  heading: 'How a cost gets <span class="u-1">uncosted</span>.',
   steps: [
     { label: "Measure", text: "Measure the current cost and its context, starting from public data." },
     { label: "Publish", text: "Publish the sources, dates, methods, and confidence labels &mdash; openly, so anyone can check the work." },

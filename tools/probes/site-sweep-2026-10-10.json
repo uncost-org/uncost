@@ -1,0 +1,728 @@
+{
+  "widths": [
+    390,
+    1024,
+    1440,
+    1865
+  ],
+  "probes": [
+    {
+      "name": "hero-h1",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid h1",
+      "props": [
+        "max-width",
+        "font-size"
+      ],
+      "lines": true,
+      "box": true
+    },
+    {
+      "name": "hero-slogan",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid .hero-slogan",
+      "props": [
+        "max-width",
+        "font-size"
+      ],
+      "lines": true,
+      "box": true
+    },
+    {
+      "name": "hero-robot",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid img.robot",
+      "box": true
+    },
+    {
+      "name": "hero-subhead",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid p.u-52.lead:not(.hero-aim)",
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "color"
+      ],
+      "lines": true
+    },
+    {
+      "name": "hero-aim",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid p.hero-aim",
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "color"
+      ],
+      "same_as": "hero-subhead"
+    },
+    {
+      "name": "page-scroll-width",
+      "routes": [
+        "/"
+      ],
+      "selector": "html",
+      "props": [
+        "width"
+      ],
+      "box": true
+    },
+    {
+      "name": "movement-h1",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": ".titleband h1",
+      "props": [
+        "color"
+      ]
+    },
+    {
+      "name": "movement-what-h2",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": "[data-screen-label=\"What this is\"] h2",
+      "props": [
+        "font-size",
+        "color"
+      ]
+    },
+    {
+      "name": "movement-what-accent",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": "[data-screen-label=\"What this is\"] h2 .hl",
+      "props": [
+        "color"
+      ]
+    },
+    {
+      "name": "uncosted-accent",
+      "routes": [
+        "/about/",
+        "/movement/"
+      ],
+      "selector": ".seqhd h2 .u-1",
+      "props": [
+        "color",
+        "text-decoration-line"
+      ]
+    },
+    {
+      "name": "uncosted-heading",
+      "routes": [
+        "/about/",
+        "/movement/"
+      ],
+      "selector": ".seqhd h2",
+      "props": [
+        "color",
+        "text-decoration-line"
+      ]
+    },
+    {
+      "name": "uncosted-no-u",
+      "routes": [
+        "/about/",
+        "/movement/"
+      ],
+      "selector": ".seqhd h2 u",
+      "expect_count": 0
+    },
+    {
+      "name": "movement-taking-part",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": "[data-screen-label=\"What taking part means\"]",
+      "props": [
+        "background-color",
+        "border-top-width",
+        "border-top-color"
+      ],
+      "box": true
+    },
+    {
+      "name": "movement-steps",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": ".seqhd + div",
+      "props": [
+        "background-color"
+      ]
+    },
+    {
+      "name": "footer-updates-h2",
+      "routes": [
+        "/receipts/",
+        "/sectors/",
+        "/projects/",
+        "/policies/",
+        "/news/",
+        "/news/cost-watch/",
+        "/treasury/"
+      ],
+      "selector": ".ft-updates h2",
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "color"
+      ]
+    },
+    {
+      "name": "drawer-title",
+      "routes": [
+        "/receipts/",
+        "/sectors/",
+        "/projects/",
+        "/policies/",
+        "/news/",
+        "/news/cost-watch/",
+        "/treasury/"
+      ],
+      "selector": "main > section.ldrawer > h2.ldrawer-title",
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "line-height",
+        "letter-spacing",
+        "color"
+      ],
+      "same_as": "footer-updates-h2",
+      "lines": true
+    },
+    {
+      "name": "drawer",
+      "routes": [
+        "/receipts/",
+        "/sectors/",
+        "/projects/",
+        "/policies/",
+        "/news/",
+        "/news/cost-watch/",
+        "/treasury/"
+      ],
+      "selector": "main > section.ldrawer",
+      "props": [
+        "background-color",
+        "border-top-width",
+        "border-top-style",
+        "border-top-color"
+      ],
+      "box": true,
+      "shot": true
+    },
+    {
+      "name": "drawer-no-details",
+      "routes": [
+        "/receipts/",
+        "/sectors/",
+        "/projects/",
+        "/policies/",
+        "/news/",
+        "/news/cost-watch/",
+        "/treasury/"
+      ],
+      "selector": "details.ldrawer, .ldrawer summary",
+      "expect_count": 0
+    },
+    {
+      "name": "news-chip",
+      "routes": [
+        "/news/"
+      ],
+      "selector": ".up-item .up-meta .lbl",
+      "props": [
+        "color",
+        "background-color",
+        "border-top-color"
+      ],
+      "all": true
+    },
+    {
+      "name": "news-updates",
+      "routes": [
+        "/news/"
+      ],
+      "selector": "[data-screen-label=\"Updates\"], .newswrap",
+      "shot": true
+    },
+    {
+      "name": "sectors-intro-h2",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": ".introband > h2",
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight"
+      ]
+    },
+    {
+      "name": "sectors-band-h2",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": ".sintro > h2",
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight"
+      ],
+      "same_as": "sectors-intro-h2"
+    },
+    {
+      "name": "sectors-band-links",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": ".sintro .sintro-list a",
+      "props": [
+        "color",
+        "text-decoration-line"
+      ],
+      "all": true,
+      "expect_count": 15
+    },
+    {
+      "name": "sectors-band",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": ".sintro",
+      "shot": true
+    },
+    {
+      "name": "faq-open",
+      "routes": [
+        "/faq/"
+      ],
+      "selector": "details.qa[open]",
+      "expect_count": 0
+    },
+    {
+      "name": "faq-questions",
+      "routes": [
+        "/faq/"
+      ],
+      "selector": "details.qa",
+      "all": false
+    },
+    {
+      "name": "assembly-lookahead-buttons",
+      "routes": [
+        "/assembly/"
+      ],
+      "selector": "[data-screen-label=\"Preview + interest\"] .u-btn",
+      "all": true,
+      "expect_count": 1,
+      "props": [
+        "background-color"
+      ]
+    },
+    {
+      "name": "assembly-lookahead",
+      "routes": [
+        "/assembly/"
+      ],
+      "selector": "[data-screen-label=\"Preview + interest\"]",
+      "shot": true
+    },
+    {
+      "name": "about-h1",
+      "routes": [
+        "/about/"
+      ],
+      "selector": ".titleband h1",
+      "props": [
+        "color"
+      ]
+    },
+    {
+      "name": "about-title",
+      "routes": [
+        "/about/"
+      ],
+      "selector": ".titleband",
+      "shot": true
+    },
+    {
+      "name": "about-intro",
+      "routes": [
+        "/about/"
+      ],
+      "selector": ".introband",
+      "shot": true
+    },
+    {
+      "name": "about-titleband",
+      "routes": [
+        "/about/"
+      ],
+      "selector": ".titleband",
+      "props": [
+        "background-color",
+        "text-align",
+        "padding-top",
+        "padding-left"
+      ]
+    },
+    {
+      "name": "a11y-titleband",
+      "routes": [
+        "/accessibility/"
+      ],
+      "selector": "main > div.titleband[data-screen-label=\"Accessibility — title\"]",
+      "props": [
+        "background-color",
+        "text-align",
+        "padding-top",
+        "padding-left"
+      ],
+      "same_as": "about-titleband",
+      "shot": true,
+      "same_as_route": "/about/"
+    },
+    {
+      "name": "a11y-h1",
+      "routes": [
+        "/accessibility/"
+      ],
+      "selector": ".titleband h1",
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "letter-spacing",
+        "line-height",
+        "color"
+      ],
+      "box": true
+    },
+    {
+      "name": "a11y-accent",
+      "routes": [
+        "/accessibility/"
+      ],
+      "selector": ".titleband h1 .u-1",
+      "props": [
+        "color"
+      ]
+    },
+    {
+      "name": "a11y-rule-under-band",
+      "routes": [
+        "/accessibility/"
+      ],
+      "selector": "main > .titleband + *",
+      "props": [
+        "border-top-width",
+        "border-top-style",
+        "border-top-color"
+      ]
+    },
+    {
+      "name": "a11y-no-breadcrumb",
+      "routes": [
+        "/accessibility/"
+      ],
+      "selector": ".breadcrumb, header.titleband",
+      "expect_count": 0
+    },
+    {
+      "name": "projects-next",
+      "routes": [
+        "/projects/"
+      ],
+      "selector": "main > [data-screen-label=\"Next\"]",
+      "props": [
+        "border-bottom-width",
+        "border-bottom-color",
+        "background-color"
+      ],
+      "box": true
+    },
+    {
+      "name": "projects-drawer",
+      "routes": [
+        "/projects/"
+      ],
+      "selector": "main > [data-screen-label=\"Next\"] + section.ldrawer",
+      "props": [
+        "border-top-width",
+        "border-top-color",
+        "background-color"
+      ],
+      "box": true,
+      "shot": true
+    },
+    {
+      "name": "projects-later",
+      "routes": [
+        "/projects/"
+      ],
+      "selector": "main > section.ldrawer + [data-screen-label=\"Later\"]",
+      "props": [
+        "border-top-width",
+        "border-top-color",
+        "background-color"
+      ],
+      "box": true
+    },
+    {
+      "name": "projects-now-head",
+      "routes": [
+        "/projects/"
+      ],
+      "selector": "main > .u-46 + .u-104",
+      "props": [
+        "border-top-width",
+        "border-top-color"
+      ]
+    },
+    {
+      "name": "projects-cta-top",
+      "routes": [
+        "/projects/"
+      ],
+      "selector": "main > [data-screen-label=\"How they help\"] + [data-screen-label=\"Projects CTA\"]",
+      "props": [
+        "border-top-width",
+        "border-top-color"
+      ]
+    },
+    {
+      "name": "footer",
+      "routes": [
+        "/"
+      ],
+      "selector": "footer.ft",
+      "shot": true
+    },
+    {
+      "name": "shot-hero",
+      "routes": [
+        "/"
+      ],
+      "selector": "main > [data-screen-label=\"S1 Hero\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-stats",
+      "routes": [
+        "/"
+      ],
+      "selector": "main > [data-screen-label=\"S2 The problem\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-movement-title",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": "main > [data-screen-label=\"Movement — title\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-movement-what",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": "main > [data-screen-label=\"What this is\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-uncosted",
+      "routes": [
+        "/movement/",
+        "/about/"
+      ],
+      "selector": "main > .seqhd",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-taking-part",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": "main > [data-screen-label=\"What taking part means\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-case-mechanism",
+      "routes": [
+        "/case/"
+      ],
+      "selector": "main > [data-screen-label=\"The mechanism\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-faq-basics",
+      "routes": [
+        "/faq/"
+      ],
+      "selector": "main > [data-screen-label=\"The basics\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-case-cta",
+      "routes": [
+        "/case/"
+      ],
+      "selector": "main > [data-screen-label=\"Case CTA\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-treasury-cta",
+      "routes": [
+        "/treasury/"
+      ],
+      "selector": "main > [data-screen-label=\"Treasury CTA\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-sector-cta",
+      "routes": [
+        "/sectors/food/"
+      ],
+      "selector": "main > [data-screen-label=\"Sector CTA\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "shot-news-cw-drawer",
+      "routes": [
+        "/news/cost-watch/"
+      ],
+      "selector": "main > section.ldrawer",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "drawer-before",
+      "routes": [
+        "/receipts/",
+        "/sectors/",
+        "/projects/",
+        "/policies/",
+        "/news/",
+        "/news/cost-watch/",
+        "/treasury/"
+      ],
+      "selector": "main > details.ldrawer",
+      "optional": true,
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "a11y-titleband-before",
+      "routes": [
+        "/accessibility/"
+      ],
+      "selector": "main > header.titleband",
+      "optional": true,
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "drawer-col-heading",
+      "routes": [
+        "/receipts/",
+        "/sectors/",
+        "/projects/",
+        "/policies/",
+        "/news/",
+        "/news/cost-watch/",
+        "/treasury/"
+      ],
+      "selector": "main > section.ldrawer .ldrawer-body h3",
+      "all": true,
+      "expect_count": 2,
+      "props": [
+        "font-family",
+        "font-size",
+        "font-weight",
+        "text-transform",
+        "letter-spacing",
+        "margin-bottom",
+        "color"
+      ]
+    }
+  ]
+}

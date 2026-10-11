@@ -17,7 +17,12 @@ description: "Fifteen sectors, one plan each. Every essential of a decent life â
     cards, where the status key strip was; the key is now the drawer below the
     grid. -#}
 <section class="blk blk--wheat sintro" data-screen-label="Intro">
-  <p class="lead">{{ pageContent.sectors.intro.lead | safe }}</p>
+  {#- E1 (sweep 2026-10-10): headline, the fifteen sectors as links to their
+      dossiers (catalog order), then the closing sentence. -#}
+  <h2 class="sec">{{ pageContent.sectors.intro.band.h2 | safe }}</h2>
+  {%- set lastSector = catalog.sectors | last %}
+  <p class="lead sintro-list">{% for s in catalog.sectors %}{% if s == lastSector %} and {% elif not loop.first %}, {% endif %}<a href="/sectors/{{ s.slug }}/">{{ s.name }}</a>{% endfor %}.</p>
+  <p class="lead">{{ pageContent.sectors.intro.band.close | safe }}</p>
 </section>
 
 <!-- SECTION: sectors.15 sectors -->

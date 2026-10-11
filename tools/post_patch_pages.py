@@ -239,17 +239,22 @@ patch("website/src/movement.njk",
       MOVEMENT_BODY,
       "/movement/ body reads pageContent.movement", guard="pageContent.movement")
 
+# D1-D4 (sweep 2026-10-10): both paragraphs sit above the two cards, the lead no
+# longer carries data-source (it has no figure left), and a receipts link from
+# the content layer follows the cards. The guard is the D3 link, so a template
+# with the earlier shape (paragraph, cards, paragraph) is rewritten too.
 CASE_MECHANISM = '''<!-- SECTION: case.The mechanism -->
 {%- set cm = pageContent.case.mechanism %}
 <section class="blk blk--first blk--cream2" data-screen-label="The mechanism">
   <div class="eyebrow">{{ cm.eyebrow }}</div>
   <h2 class="sec">{{ cm.h2 | safe }}</h2>
-  <p class="u-11 lead" data-source="SRC-020">{{ cm.lead | safe }}</p>
+  <p class="u-11 lead">{{ cm.lead | safe }}</p>
+  <p class="u-11">{{ cm.close | safe }}</p>
   <div class="cards cards--2up">
     {{ fig.card(register.byId["SRC-020"]) }}
     {{ fig.card(register.byId["SRC-024"]) }}
   </div>
-  <p class="u-11">{{ cm.close | safe }}</p>
+  <p class="u-11"><a href="{{ cm.receiptsLink.href }}">{{ cm.receiptsLink.text | safe }}</a></p>
 </section>
 
 '''
@@ -257,7 +262,7 @@ CASE_MECHANISM = '''<!-- SECTION: case.The mechanism -->
 patch("website/src/case/index.njk",
       r'<!-- SECTION: case\.The mechanism -->.*?(?=<!-- SECTION: case\.What living costs -->)',
       CASE_MECHANISM,
-      "/case/ mechanism reads pageContent.case", guard="pageContent.case")
+      "/case/ mechanism reads pageContent.case (D1-D4 shape)", guard="{{ cm.receiptsLink.text | safe }}")
 
 print("2026-09-12 sweep — remaining page fixes:")
 patch("website/src/contribute.njk",
@@ -366,12 +371,8 @@ if "Planned tool</span>" in pathlib.Path("website/src/assembly.njk").read_text(e
           "V22 assembly look-ahead drops the Planned tool chip")
 else:
     print("  = V22 assembly look-ahead drops the Planned tool chip (already applied)")
-# X.1 item 3: the button's words come from the content layer
-# (pageContent.assembly.howItWorks, "How The Assembly works").
-patch("website/src/assembly.njk",
-      r'(<a href=")[^"]*(" class="u-btn u-btn--ink">)(?:View the illustrative mock|How the Assembly works)(</a>)',
-      r'\1/assembly/\2{{ pageContent.assembly.howItWorks }}\3',
-      "V22 assembly look-ahead button", guard="{{ pageContent.assembly.howItWorks }}</a>")
+# (X.1 item 3 had the button read pageContent.assembly.howItWorks. G2, sweep
+#  2026-10-10, removes it — see the end of this file.)
 
 # V24 (Batch V, 2026-09-26) — /contribute/ "Useful roles, right now." gains a
 # "Volunteer now" button to /contact/, after the section's closing note.
@@ -423,11 +424,14 @@ patch("website/src/case/index.njk",
 # cream (V15 swapped it with the six-step band, which X1 has since turned into
 # the /about/-format block with no band of its own), and the CTA's "Get
 # updates" goes to /join/#get-updates. movement.njk is re-derived.
+# B6 (sweep 2026-10-10) moves the band again, cream -> white (.blk--white), so
+# it stops reading as one band with the cream six-step list above it. Whatever
+# band class the export or V15 gave it, it becomes white.
 patch("website/src/movement.njk",
-      r'<section class="blk blk--cream2" data-screen-label="What taking part means">',
-      '<section class="blk blk--cream" data-screen-label="What taking part means">',
-      "V15 movement: taking-part band is cream",
-      guard='<section class="blk blk--cream" data-screen-label="What taking part means">')
+      r'<section class="blk[^"]*" data-screen-label="What taking part means">',
+      '<section class="blk blk--white" data-screen-label="What taking part means">',
+      "V15/B6 movement: taking-part band is white",
+      guard='<section class="blk blk--white" data-screen-label="What taking part means">')
 patch("website/src/movement.njk",
       r'<a href="#updates" class="u-btn u-btn--ghost">Get updates</a>',
       '<a href="/join/#get-updates" class="u-btn u-btn--ghost">Get updates</a>',
@@ -494,11 +498,21 @@ if 'data-screen-label="Confidence labels"' in pathlib.Path("website/src/receipts
 else:
     print("  = V11 receipts: Four honest labels retired into the drawer (already applied)")
 LABELS_DRAWER = '{% include "partials/labels-drawer.njk" %}\n'
+# F1 (sweep 2026-10-10): on /projects/ the drawer moves from before the CTA to
+# directly after the "Next" list, before the ink "Later" band. A template that
+# still has it anywhere else gives it up here, and the loop below puts it back
+# in its new place.
+_proj = pathlib.Path("website/src/projects/index.njk").read_text(encoding="utf-8")
+if LABELS_DRAWER in _proj and LABELS_DRAWER + "\n<!-- SECTION: projects.Later -->" not in _proj:
+    patch("website/src/projects/index.njk", r'\{% include "partials/labels-drawer\.njk" %\}\n\n', '',
+          "F1 projects: the drawer leaves its old place")
+else:
+    print("  = F1 projects: the drawer leaves its old place (already applied)")
 for path, anchor, where in (
     # X8 (Batch X): on /receipts/ the drawer sits directly under the register
     # band, between it and "The rule".
     ("website/src/receipts.njk", r'(<!-- SECTION: receipts\.The rule -->\n)', "under the register"),
-    ("website/src/projects/index.njk", r'(<!-- SECTION: projects\.Projects CTA -->\n)', "before the CTA"),
+    ("website/src/projects/index.njk", r'(<!-- SECTION: projects\.Later -->\n)', "after Next, before Later (F1)"),
     ("website/src/sectors/index.njk", r'(<!-- SECTION: sectors\.Sectors CTA -->\n)', "before the CTA"),
     ("website/src/treasury.njk", r'(<!-- SECTION: treasury\.Treasury CTA -->\n)', "before the CTA"),
     ("website/src/news/index.njk", r'(<script src="/js/keyword-filter\.js" defer></script>\n)', "after the list"),
@@ -573,10 +587,15 @@ else:
 # W10 (Batch X, 2026-09-27) — /sectors/ intro paragraph, founder-approved, from
 # the content layer (pageContent.sectors.intro.lead). The export's first
 # introband paragraph is re-pointed at the data (X9 then moves it).
-patch("website/src/sectors/index.njk",
-      r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\s*)<p>.*?</p>',
-      r'\1<p>{{ pageContent.sectors.intro.lead | safe }}</p>',
-      "W10 sectors intro reads pageContent", guard="{{ pageContent.sectors.intro.lead | safe }}")
+# (E1, sweep 2026-10-10, splits this intro in the wheat band; once that shape
+#  is in place W10 and X9 have nothing left to do, so W10 stands down too.)
+if "{{ pageContent.sectors.intro.band.h2 | safe }}" not in pathlib.Path("website/src/sectors/index.njk").read_text(encoding="utf-8"):
+    patch("website/src/sectors/index.njk",
+          r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\s*)<p>.*?</p>',
+          r'\1<p>{{ pageContent.sectors.intro.lead | safe }}</p>',
+          "W10 sectors intro reads pageContent", guard="{{ pageContent.sectors.intro.lead | safe }}")
+else:
+    print("  = W10 sectors intro reads pageContent (superseded by E1)")
 
 # X9 (Batch X, 2026-09-27) — /sectors/: the introband keeps only its headline;
 # the intro moves into a wheat band directly above the cards, replacing the
@@ -681,7 +700,7 @@ if '"aim": ' not in _home:
           '  "headline": "Technology should make living cheaper, <span class=\\\\"hl\\\\">not billionaires richer</span>.",\n'
           '  "aim": "We aim to significantly reduce the cost of living by putting AI and robotics to work for humanity.",\n'
           '  "slogan": "<span class=\\\\"u-51\\\\">Uncost</span> the cost of living.",\n'
-          '  "subhead": "Uncost is a nonprofit, nonpartisan movement that believes<br><u class=\\\\"u-1\\\\">living should not have a price tag</u>."',
+          '  "subhead": "Uncost is a nonprofit, nonpartisan movement that believes<br>living should not have a price tag."',
           "X5 hero strings in home.json")
 else:
     print("  = X5 hero strings in home.json (already applied)")
@@ -721,5 +740,123 @@ patch("website/src/sectors/index.njk",
       r'(<a href="/assembly/" class="u-btn u-btn--ghost">)How the Assembly works(</a>)',
       r'\1{{ pageContent.assembly.howItWorks }}\2',
       "X.1 sectors CTA: How The Assembly works", guard="{{ pageContent.assembly.howItWorks }}")
+
+# ---------------------------------------------------------------------------
+# Site sweep 2026-10-10 (founder brief). Each edit to a re-derived template or
+# data file is restated here; tools/restatement_check.py proves each one
+# reproduces the edited file from the pre-change one.
+# ---------------------------------------------------------------------------
+print("Site sweep 2026-10-10:")
+
+# A2 — the intro's second line, "living should not have a price tag.", is plain
+# ink: the accent and its underline go (ink text with an underline reads as a
+# link). X5 above now writes it that way; this covers a home.json that already
+# carries X5's underlined form. A removal is guarded by absence.
+if '<u class=\\"u-1\\">living should not have a price tag</u>' in pathlib.Path("website/src/_data/home.json").read_text(encoding="utf-8"):
+    patch("website/src/_data/home.json",
+          r'<br><u class=\\"u-1\\">living should not have a price tag</u>\.',
+          r'<br>living should not have a price tag.',
+          "A2 hero intro line is plain ink")
+else:
+    print("  = A2 hero intro line is plain ink (already applied)")
+
+# A4 — the homepage's three stat cards, in the founder's order: SRC-020
+# (ownership), SRC-023 (ground beef), SRC-022 (rent vs income). The export
+# writes three .fact calls (tools/rederive_home.py); R3 made them figure
+# cards. Whatever three the template holds, they become these three.
+patch("website/src/index.njk",
+      r'<div class="(?:cards|facts)">\n(?:    \{\{ fig\.(?:card|fact)\(register\.byId\["SRC-\d+"\]\) \}\}\n){3}  </div>',
+      '<div class="cards">\n'
+      '    {{ fig.card(register.byId["SRC-020"]) }}\n'
+      '    {{ fig.card(register.byId["SRC-023"]) }}\n'
+      '    {{ fig.card(register.byId["SRC-022"]) }}\n'
+      '  </div>',
+      "A4 homepage stat cards: SRC-020, SRC-023, SRC-022",
+      guard='{{ fig.card(register.byId["SRC-020"]) }}\n    {{ fig.card(register.byId["SRC-023"]) }}')
+# The export's three S2 caption slots (stat1..stat3) are read by nothing — the
+# cards render the register's own captions — so they are dropped from home.json.
+if '"stat1": {' in pathlib.Path("website/src/_data/home.json").read_text(encoding="utf-8"):
+    patch("website/src/_data/home.json",
+          r'(?:\n\s*"stat[123]": \{\n\s*"caption": "[^\n]*"\n\s*\},)+', '',
+          "A4 home.json: unused stat1-3 captions dropped")
+else:
+    print("  = A4 home.json: unused stat1-3 captions dropped (already applied)")
+
+# B1 (sweep 2026-10-10) — /movement/ title band reads "The Movement", the same
+# pattern as The Case, The Sectors and The Projects; the line it carried
+# ("Measure it. Publish it. Bring it down.") is the first band's headline now,
+# from pageContent (B2). B3: the page description is the new lead sentence.
+# movement.njk is re-derived from the export.
+patch("website/src/movement.njk",
+      r'(<div class="titleband" data-screen-label="Movement — title"><h1>).*?(</h1></div>)',
+      r'\1The <span class="u-1">Movement</span>\2',
+      "B1 movement title band: The Movement", guard='<h1>The <span class="u-1">Movement</span></h1>')
+patch("website/src/movement.njk",
+      r'^description: "[^"\n]*"$',
+      'description: "Uncost is a nonprofit, nonpartisan movement that treats the cost of living as a problem to be measured and solved — not endured."',
+      "B3 movement description", flags=re.M,
+      guard='description: "Uncost is a nonprofit, nonpartisan movement that treats the cost of living')
+
+# E1 (sweep 2026-10-10) — /sectors/ wheat intro band: headline "Living isn't
+# one bill — it's fifteen.", the fifteen sectors as links built from
+# catalog.sectors, and W10's closing sentence. X9 above puts W10's one
+# paragraph in this band; this splits it. sectors/index.njk is re-derived.
+patch("website/src/sectors/index.njk",
+      r'(<section class="blk blk--wheat sintro" data-screen-label="Intro">\n)  <p class="lead">\{\{ pageContent\.sectors\.intro\.lead \| safe \}\}</p>\n',
+      '\\1  {#- E1 (sweep 2026-10-10): headline, the fifteen sectors as links to their\n'
+      '      dossiers (catalog order), then the closing sentence. -#}\n'
+      '  <h2 class="sec">{{ pageContent.sectors.intro.band.h2 | safe }}</h2>\n'
+      '  {%- set lastSector = catalog.sectors | last %}\n'
+      '  <p class="lead sintro-list">{% for s in catalog.sectors %}{% if s == lastSector %} and {% elif not loop.first %}, {% endif %}'
+      '<a href="/sectors/{{ s.slug }}/">{{ s.name }}</a>{% endfor %}.</p>\n'
+      '  <p class="lead">{{ pageContent.sectors.intro.band.close | safe }}</p>\n',
+      "E1 sectors intro band: headline, linked sector list, close",
+      guard="{{ pageContent.sectors.intro.band.h2 | safe }}")
+
+# G1 (sweep 2026-10-10) — /faq/: every question starts collapsed; the first
+# loses the export's `open`. faq.njk is re-derived. Guarded by absence.
+if '<details class="qa" open>' in pathlib.Path("website/src/faq.njk").read_text(encoding="utf-8"):
+    patch("website/src/faq.njk", r'<details class="qa" open>', '<details class="qa">',
+          "G1 faq: first question starts collapsed", flags=0, guard='\x00')
+else:
+    print("  = G1 faq: first question starts collapsed (already applied)")
+
+# G2 (sweep 2026-10-10) — /assembly/ "A look ahead": the sentence reads the
+# content layer (pageContent.assembly.lookAhead.lead), and the ink button that
+# linked the page it sits on is removed; "Register interest — sign the Pledge"
+# stays. assembly.njk is re-derived. The removal is guarded by absence.
+patch("website/src/assembly.njk",
+      r'(<p class="u-22 lead">).*?(</p>)',
+      r'\1{{ pageContent.assembly.lookAhead.lead | safe }}\2',
+      "G2 assembly look-ahead sentence reads pageContent",
+      guard="{{ pageContent.assembly.lookAhead.lead | safe }}")
+_asm = pathlib.Path("website/src/assembly.njk").read_text(encoding="utf-8")
+if re.search(r'<a href="[^"]*" class="u-btn u-btn--ink">(?:View the illustrative mock|How the Assembly works|\{\{ pageContent\.assembly\.howItWorks \}\})</a>', _asm):
+    patch("website/src/assembly.njk",
+          r'\n\s*<a href="[^"]*" class="u-btn u-btn--ink">(?:View the illustrative mock|How the Assembly works|\{\{ pageContent\.assembly\.howItWorks \}\})</a>',
+          '', "G2 assembly look-ahead: the self-linking button is removed")
+else:
+    print("  = G2 assembly look-ahead: the self-linking button is removed (already applied)")
+
+# G3 (sweep 2026-10-10) — /about/ title band "About us" (accent on "us"), and
+# the introband paragraph ends after "…open tools." about.njk is re-derived.
+patch("website/src/about.njk",
+      r'(<div class="titleband" data-screen-label="About — title"><h1>).*?(</h1></div>)',
+      r'\1About <span class="u-1">us</span>\2',
+      "G3 about title band: About us", guard='<h1>About <span class="u-1">us</span></h1>')
+if "so here is the honest state of it." in pathlib.Path("website/src/about.njk").read_text(encoding="utf-8"):
+    patch("website/src/about.njk",
+          r' It is also, right now, very new &mdash; so here is the honest state of it\.', '',
+          "G3 about intro: the 'very new' sentence goes")
+else:
+    print("  = G3 about intro: the 'very new' sentence goes (already applied)")
+
+# J (sweep 2026-10-10) — the six "on the way" placeholder pages stay unlinked
+# and carry noindex until each has real content, so they also drop out of
+# sitemap.xml and the search index. Not deleted. gen_static_pages.py writes
+# their front matter, so the flag is restated in it.
+for f in ("press", "quiz", "share", "community", "case/dashboard", "case/tracker"):
+    patch(f"website/src/{f}.njk", r'\A(---\n(?:[^\n]*\n)*?)(---\n)', r'\1noindex: true\n\2',
+          f"J {f}: noindex until it has real content", guard="\nnoindex: true\n")
 
 print("done")

@@ -104,6 +104,19 @@ MEASURE_TOL = 1.0
 # short of `.sys > .card > .bd > .actions > h2`.
 MAX_DEPTH = 3
 
+# Named headline exemptions: (selector, reason). A heading matching one is a
+# deliberate, founder-decided departure from C19.1's one section-headline size,
+# so it is taken out of the headline set — and reported with its measured size
+# in `counts.headline_exemptions`. On a full-site run an exemption that matches
+# nothing is a STALE-EXEMPTION error, so none can outlive its subject.
+HEADLINE_EXEMPTIONS = [
+    (".ldrawer-title",
+     "C1 (founder brief, 2026-10-10): the labels drawer is an always-open "
+     "section whose title is set at the footer \"Get updates\" heading's size "
+     "(display face, 700, 24px), deliberately below the section-headline step. "
+     "CANVAS-SYNC 149."),
+]
+
 
 # --------------------------------------------------------------------------
 # the browser side
@@ -114,8 +127,9 @@ const base = process.argv[3];
 const routes = JSON.parse(process.argv[4]);
 const widths = JSON.parse(process.argv[5]);
 const MAX_DEPTH = parseInt(process.argv[6], 10);
+const EXEMPT = JSON.parse(process.argv[7] || "[]");
 
-const IN_PAGE = (maxDepth) => {
+const IN_PAGE = (maxDepth, exempt) => {
   const NON_CONTENT = new Set(["NAV", "ASIDE", "HEADER", "FOOTER", "FORM", "DIALOG"]);
   const NON_RENDER = new Set(["SCRIPT", "STYLE", "TEMPLATE", "LINK", "META", "NOSCRIPT"]);
 
@@ -215,8 +229,16 @@ const IN_PAGE = (maxDepth) => {
       || band.classList.contains("hero");
 
     const allHeads = [...band.querySelectorAll("h1,h2")];
+    // A named exemption (HEADLINE_EXEMPTIONS) takes a heading out of the
+    // headline set by selector; it is recorded, never silently dropped.
+    const isExempt = (h) => exempt.find((x) => h.matches(x));
+    const exempted = allHeads.filter((h) => isExempt(h) && visible(h)).map((h) => ({
+      selector: isExempt(h), sel: sel(h),
+      text: (h.textContent || "").trim().replace(/\s+/g, " ").slice(0, 60),
+      px: parseFloat(getComputedStyle(h).fontSize),
+    }));
     const heads = allHeads.filter(
-      (h) => bandLevel(band, h) && visible(h) && (h.textContent || "").trim().length
+      (h) => !isExempt(h) && bandLevel(band, h) && visible(h) && (h.textContent || "").trim().length
     );
     const h = heads[0] || null;
 
@@ -236,6 +258,7 @@ const IN_PAGE = (maxDepth) => {
       sel: sel(band),
       hero: hero,
       headings_seen: allHeads.length,
+      exempted: exempted,
       headline: h ? {
         sel: sel(h),
         path: pathTo(band, h),
@@ -342,7 +365,7 @@ const IN_PAGE = (maxDepth) => {
         continue;
       }
       try { await page.evaluate(() => document.fonts && document.fonts.ready); } catch (e) {}
-      const got = await page.evaluate(IN_PAGE, MAX_DEPTH);
+      const got = await page.evaluate(IN_PAGE, MAX_DEPTH, EXEMPT);
       out.push(Object.assign({ route: route, width: w }, got));
     }
   }
@@ -374,7 +397,8 @@ def probe(directory: pathlib.Path, routes, widths, port: int):
         try:
             proc = subprocess.run(
                 ["node", str(js), str(WEBSITE), f"http://127.0.0.1:{port}",
-                 json.dumps(list(routes)), json.dumps(list(widths)), str(MAX_DEPTH)],
+                 json.dumps(list(routes)), json.dumps(list(widths)), str(MAX_DEPTH),
+                 json.dumps([sel for sel, _why in HEADLINE_EXEMPTIONS])],
                 capture_output=True, text=True, timeout=1800,
             )
         finally:
@@ -445,7 +469,7 @@ def evaluate(payload):
             for band in page["bands"]:
                 h = band.get("headline")
                 if band["hero"] or not h:
-                    if not band["hero"] and band.get("headings_seen"):
+                    if not band["hero"] and band.get("headings_seen") and not band.get("exempted"):
                         component_only += 1
                     continue
                 where = f"{page['route']}@{width} {band['sel']} > {h['path']}"
@@ -549,6 +573,18 @@ def evaluate(payload):
     counts["component_scale"] = component_expected
 
     # An audit that measured nothing has proved nothing.
+    exempt_hits = collections.Counter()
+    exempt_px = collections.defaultdict(set)
+    for pages in by_width.values():
+        for page in pages:
+            for band in page["bands"]:
+                for x in band.get("exempted") or []:
+                    exempt_hits[x["selector"]] += 1
+                    exempt_px[x["selector"]].add(f"{page['width']}:{x['px']:g}px")
+    counts["headline_exemptions"] = [
+        {"selector": sel_, "reason": why, "occurrences": exempt_hits[sel_],
+         "sizes": sorted(exempt_px[sel_])} for sel_, why in HEADLINE_EXEMPTIONS]
+
     if not load_failures and counts["headlines"] == 0:
         errors.append(
             "NO-HEADLINES: not one section headline resolved on any route — "
@@ -727,6 +763,21 @@ BAD_CARD_SECTION_SIZE = _cards_page("card at section size", ".card h3{font-size:
 BAD_CARD_TOO_SMALL = _cards_page("card too small", ".card h3{font-size:20px}")
 BAD_CARD_NO_SCALE = _cards_page("no-scale", ".card h3{font-size:32px}")
 
+# A named exemption (HEADLINE_EXEMPTIONS): the drawer's 24px title sits among
+# 60px section headlines and must not be judged against them. Its counterpart
+# is bad-headline-smaller.html — a smaller headline WITHOUT the exempt class
+# must still be caught, so the exemption is by name, not by size.
+GOOD_EXEMPT_HEADING = """<!doctype html><meta charset=utf-8><title>exempt heading</title>
+<style>%s
+.ldrawer-title{font-size:24px;max-width:none}
+</style>
+<body><main>
+<section class="blk blk--first"><h1>A page hero</h1><p>Hero standfirst.</p></section>
+<section class="blk"><h2>Working harder, still falling behind.</h2><p>Body copy on the same measure as the headline above it.</p></section>
+<section class="ldrawer"><h2 class="ldrawer-title">How The Receipts work</h2><ul><li>Every number has a source.</li></ul></section>
+<section class="blk"><h2>We start where the money actually goes.</h2><p>Body copy on the same measure as the headline above it.</p></section>
+</main></body>""" % _BASE_CSS
+
 # (name, markup or None, route, should_pass, expected error kinds)
 # A None markup writes no file: the route is deliberately absent, and a route
 # that will not load must be an ERROR rather than a quietly shorter run.
@@ -734,6 +785,7 @@ CASES = [
     ("good-consistent.html", GOOD_CONSISTENT, "/good-consistent.html", True, set()),
     ("good-hero-larger.html", GOOD_HERO_LARGER, "/good-hero-larger.html", True, set()),
     ("good-components.html", GOOD_COMPONENTS, "/good-components.html", True, set()),
+    ("good-exempt-heading.html", GOOD_EXEMPT_HEADING, "/good-exempt-heading.html", True, set()),
     ("bad-headline-smaller.html", BAD_HEADLINE_SMALLER, "/bad-headline-smaller.html",
      False, {"HEADLINE-SIZE"}),
     ("bad-headline-larger.html", BAD_HEADLINE_LARGER, "/bad-headline-larger.html",
@@ -768,6 +820,7 @@ incidental reason would otherwise look like a working audit.
 | `good-consistent.html` | PASS | baseline: one headline size, one wrap point per band |
 | `good-hero-larger.html` | PASS | the page hero is 96px against 60px section headlines, and its own headline and body wrap at different points. Heroes are excluded from both invariants, so this is clean. It is the counterpart to `bad-headline-larger.html`, which applies the same 96px step to a band that is not the hero and must be caught — together they prove the hero is *excluded* rather than size differences *ignored*. |
 | `good-components.html` | PASS | component headings that come FIRST in their band: a card grid whose two `<h2>` are 28px and is a band's entire content, and a `<nav>` table of contents whose `<h2>` is 12px, ahead of the band's real headline. That ordering is the point — "the first `<h2>` in the band" reports both as section headlines against a 60px modal. Neither is one. |
+| `good-exempt-heading.html` | PASS | a named exemption (`HEADLINE_EXEMPTIONS`): the labels drawer's `h2.ldrawer-title` at 24px among 60px section headlines (founder brief 2026-10-10, C1). Its counterpart is `bad-headline-smaller.html`: the same kind of smaller headline without the exempt class is still caught, so the exemption is by name, not by size. |
 | `bad-headline-smaller.html` | FAIL `HEADLINE-SIZE` | the real defect: "Working harder, still falling behind." renders smaller than its peers |
 | `bad-headline-larger.html` | FAIL `HEADLINE-SIZE` | one section headline renders larger than its peers |
 | `bad-measure-split.html` | FAIL `MEASURE` | a prose band whose headline keeps a narrower measure than its body |
@@ -880,6 +933,11 @@ def main() -> int:
         }, indent=2))
         return 1
     errors, counts = evaluate(probe(built, routes, WIDTHS, args.port))
+    if not args.routes:
+        for x in counts["headline_exemptions"]:
+            if not x["occurrences"]:
+                errors.append(f"STALE-EXEMPTION {x['selector']}: matches no heading on any "
+                              f"route — retire it, or it will excuse the next one silently")
     print(json.dumps({
         "ok": not errors,
         "errors": sample(errors, args.max_errors),
