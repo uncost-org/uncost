@@ -1,10 +1,204 @@
 {
-  "widths": [390, 1440],
+  "widths": [
+    390,
+    1440
+  ],
   "probes": [
-    {"name": "headline-stops", "routes": "*", "selector": "main h1, main h2, main h3, main .hero-slogan", "all": true, "optional": true, "final_char": true, "widths": [1440]},
-    {"name": "slogan-stop", "routes": ["/"], "selector": ".hero-grid .hero-slogan .stop", "props": ["color"], "expect_count": 1},
-    {"name": "slogan-words", "routes": ["/"], "selector": ".hero-grid .hero-slogan .u-50", "props": ["color"]},
-    {"name": "slogan-uncost", "routes": ["/"], "selector": ".hero-grid .hero-slogan .u-51", "props": ["color"]},
-    {"name": "headline-stop", "routes": ["/"], "selector": ".hero-grid h1", "final_char": true, "props": ["color"]}
+    {
+      "name": "headline-stops",
+      "routes": "*",
+      "selector": "main h1, main h2, main h3, main .hero-slogan",
+      "all": true,
+      "optional": true,
+      "final_char": true,
+      "widths": [
+        1440
+      ]
+    },
+    {
+      "name": "slogan-stop",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid .hero-slogan .stop",
+      "props": [
+        "color"
+      ],
+      "expect_count": 1
+    },
+    {
+      "name": "slogan-words",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid .hero-slogan .u-50",
+      "props": [
+        "color"
+      ]
+    },
+    {
+      "name": "slogan-uncost",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid .hero-slogan .u-51",
+      "props": [
+        "color"
+      ]
+    },
+    {
+      "name": "headline-stop",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid h1",
+      "final_char": true,
+      "props": [
+        "color"
+      ]
+    },
+    {
+      "name": "chip-region",
+      "routes": [
+        "/",
+        "/case/",
+        "/receipts/"
+      ],
+      "selector": ".cards .card .foot .row span.m--region",
+      "props": [
+        "padding-top",
+        "padding-left",
+        "border-top-width",
+        "border-top-color",
+        "background-color",
+        "font-size",
+        "text-transform",
+        "color"
+      ],
+      "box": true
+    },
+    {
+      "name": "chip-sector",
+      "routes": [
+        "/",
+        "/case/",
+        "/receipts/"
+      ],
+      "selector": ".cards .card .foot .row span.m--sector",
+      "props": [
+        "padding-top",
+        "padding-left",
+        "border-top-width",
+        "border-top-color",
+        "background-color",
+        "font-size",
+        "text-transform",
+        "color"
+      ],
+      "box": true,
+      "all": true
+    },
+    {
+      "name": "chip-sector-link",
+      "routes": [
+        "/",
+        "/case/",
+        "/receipts/"
+      ],
+      "selector": ".cards .card .foot .row span.m--sector > a",
+      "props": [
+        "color",
+        "text-decoration-line",
+        "padding-top",
+        "padding-left",
+        "display"
+      ],
+      "all": true
+    },
+    {
+      "name": "chip-sector-value",
+      "routes": [
+        "/",
+        "/case/",
+        "/receipts/"
+      ],
+      "selector": ".cards .card .foot .row span.m--sector .v",
+      "props": [
+        "color",
+        "text-transform",
+        "font-weight"
+      ]
+    },
+    {
+      "name": "card-rows",
+      "routes": [
+        "/receipts/"
+      ],
+      "selector": ".cards .card .foot .row",
+      "all": true,
+      "box": true,
+      "widths": [
+        390
+      ]
+    },
+    {
+      "name": "chip-sector-hover",
+      "routes": [
+        "/receipts/",
+        "/"
+      ],
+      "selector": ".cards .card span.m--sector .v",
+      "props": [
+        "text-decoration-line",
+        "color"
+      ],
+      "state": {
+        "action": "hover",
+        "target": ".cards .card span.m--sector > a"
+      }
+    },
+    {
+      "name": "chip-sector-focus",
+      "routes": [
+        "/receipts/",
+        "/"
+      ],
+      "selector": ".cards .card span.m--sector > a",
+      "props": [
+        "outline-style",
+        "outline-width",
+        "outline-color",
+        "outline-offset"
+      ],
+      "state": {
+        "action": "focus",
+        "target": ".cards .card span.m--sector > a"
+      }
+    },
+    {
+      "name": "chip-sector-focus-value",
+      "routes": [
+        "/receipts/"
+      ],
+      "selector": ".cards .card span.m--sector .v",
+      "props": [
+        "text-decoration-line"
+      ],
+      "state": {
+        "action": "focus",
+        "target": ".cards .card span.m--sector > a"
+      }
+    },
+    {
+      "name": "chip-sector-rest",
+      "routes": [
+        "/receipts/",
+        "/"
+      ],
+      "selector": ".cards .card span.m--sector .v",
+      "props": [
+        "text-decoration-line"
+      ]
+    }
   ]
 }

@@ -68,6 +68,31 @@ module.exports = function () {
       dash > -1 ? row.title.slice(dash + 3).trim() : row.title.trim();
   }
 
+  // Round 2 item 2 (2026-10-11): `sector` is the slug of the sector dossier a
+  // figure belongs to (catalog.sectors), or empty for a row that is not one
+  // sector's cost (governance, wealth/ownership, all-items CPI). The figure
+  // card shows a SECTOR chip linking that dossier only when it is set. The
+  // column is required, and a slug the catalog does not know fails the build
+  // rather than rendering a chip that links nowhere.
+  if (!header.includes("sector")) {
+    throw new Error("register: sources/register.csv has no `sector` column (round 2 item 2)");
+  }
+  const { sectorsBySlug } = require("./catalog.js")();
+  for (const row of all) {
+    const slug = (row.sector || "").trim();
+    row.sector = slug;
+    row.sectorName = "";
+    if (!slug) continue;
+    const sector = sectorsBySlug[slug];
+    if (!sector) {
+      throw new Error(
+        `register: ${row.source_id} sector "${slug}" is not a sector slug in catalog.sectors ` +
+        `(${Object.keys(sectorsBySlug).join(", ")})`
+      );
+    }
+    row.sectorName = sector.name;
+  }
+
   const byId = {};
   for (const row of all) byId[row.source_id] = row;
 

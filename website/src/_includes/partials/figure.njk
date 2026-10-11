@@ -29,8 +29,14 @@
     .claim  the caption, bold, echoing its own display value in the numeral's
             colour (register.js builds captionHtml and escapes it first)
     .foot   SOURCE eyebrow, publisher, linked title, then the chip row:
-            CHECKED · PUBLISHED (only when the register has a year) · region ·
-            confidence
+            CHECKED · PUBLISHED (only when the register has a year) · PERIOD ·
+            REGION · SECTOR (only when the row names one) · confidence
+
+  SECTOR (round 2 item 2, 2026-10-11) is the one chip that is a link: to the
+  sector's dossier, /sectors/<slug>/. The chip box stays the `span.m` every
+  other chip is, so it looks like them; the link inside fills it
+  (integration.css item 135). A row with no sector renders no chip at all —
+  never "All sectors", never an empty one.
 
   V4: the confidence chip reads "Needs refresh" (rcpt-conf--needs-refresh)
   whenever register.js marks the row due — last_checked older than its
@@ -62,6 +68,7 @@
       {% if row.publication_year %}<span class="m m--date" data-era="{{ row.publishedEra }}"><span class="k">Published</span><span class="v">{{ row.publication_year }}</span></span>{% endif %}
       <span class="m m--scope"><span class="k">Period</span><span class="v">{{ row.data_period | sentenceCase }}</span></span>
       <span class="m m--region" data-region="{{ row.regionCode }}"><span class="k">Region</span><span class="v">{{ row.region | sentenceCase }}</span></span>
+      {% if row.sector %}<span class="m m--sector"><a href="/sectors/{{ row.sector }}/"><span class="k">Sector</span> <span class="v">{{ row.sectorName }}</span></a></span>{% endif %}
       <span class="rcpt-conf rcpt-conf--{{ "needs-refresh" if row.needsRefresh else ("confirmed" if row.confidence.startsWith("confirmed") else "estimate") }}">{{ "Needs refresh" if row.needsRefresh else ("Confirmed" if row.confidence.startsWith("confirmed") else "Estimate") }}</span>
     </div>
   </div>

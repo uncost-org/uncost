@@ -74,7 +74,7 @@ SECTION_EXEMPTIONS = [
     ("receipts", "The register",
      "Approved changes: the band is the whiter cream, each title links its "
      "registered source URL, and the lead's figure count is rendered from the "
-     "register instead of the export's stale 'Eleven'. CANVAS-SYNC items 10-12, 18."),
+     "register instead of the export's stale 'Eleven'. CANVAS-SYNC items 10-12, 18. Round 2 (2026-10-11): each figure card with a register sector gains a SECTOR chip after Region, linking that dossier. CANVAS-SYNC item 164."),
     ("receipts", "The rule",
      "Approved change: the ink headline the export omits below the eyebrow is "
      "added. CANVAS-SYNC item 9."),
@@ -131,13 +131,13 @@ SECTION_EXEMPTIONS = [
      "SRC-020 and SRC-024 through the register macro. No export counterpart. "
      "CANVAS-SYNC item 25. Sweep 2026-10-10 (D1-D4): one-sentence lead, both "
      "paragraphs above the two cards, and a receipts link under them. "
-     "CANVAS-SYNC item 153."),
+     "CANVAS-SYNC item 153. Round 2 (2026-10-11): each figure card with a register sector gains a SECTOR chip after Region, linking that dossier. CANVAS-SYNC item 164."),
     ("case", "What living costs",
      "Content restoration, not a design change: the v4.3 re-derivation dropped "
      "this register-backed section when it swapped the essay page for the export's "
      "dashboard preview. Restored from origin/main @ 94d2481 with four figures "
      "(SRC-004, SRC-021, SRC-023, SRC-005). No export counterpart on this page. "
-     "CANVAS-SYNC item 26."),
+     "CANVAS-SYNC item 26. Round 2 (2026-10-11): each figure card with a register sector gains a SECTOR chip after Region, linking that dossier. CANVAS-SYNC item 164."),
     # The export ships nine policy pages under `data-page="policies-<slug>"`,
     # but sections.css contains ZERO rules for that scope — the whole policy
     # layout is scoped to `data-page="privacy"` instead. So the export's own
@@ -188,7 +188,7 @@ SECTION_EXEMPTIONS = [
      "cards to the shared figure card. Not in the brief's \"Apply to\" list, but "
      "they used `.fact`, so retiring it required converting them. "
      "CANVAS-SYNC item 55. Sweep 2026-10-10 (A4): the three cards are now "
-     "SRC-020, SRC-023 and SRC-022. CANVAS-SYNC item 145."),
+     "SRC-020, SRC-023 and SRC-022. CANVAS-SYNC item 145. Round 2 (2026-10-11): each figure card with a register sector gains a SECTOR chip after Region, linking that dossier. CANVAS-SYNC item 164."),
     ("receipts", "Keeping current",
      "P2 + R4: \"current\" is accented with --coral-on-ink, and the headline "
      "takes the shared prose scale. As with the CTA, a headline resize on a flat "

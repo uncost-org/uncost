@@ -2993,3 +2993,33 @@ body[data-page="news"] .up-item .up-meta .date { margin-bottom: 0; }
  *      coral. */
 body[data-page="index"] .hero-grid .hero-slogan .stop { color: var(--ink) !important; }
 
+/* 135. Round 2 item 2 (2026-10-11) — the SECTOR chip on the figure card.
+ *      Checked · Published · Period · Region · SECTOR · Confirmed. The chip
+ *      box is the same `span.m` as every other chip (items 85d, 86/C7), so it
+ *      inherits their border, fill, type and LABEL: value layout untouched.
+ *      It is the one chip that is a link, to /sectors/<slug>/; the <a> inside
+ *      takes over the chip's own 3px 8px padding so the whole chip is the
+ *      target, and it inherits the chip's ink rather than any band's link
+ *      colour — the ink band (`.blk--ink a`) and wheat band (`.blk--wheat a`)
+ *      rules are both !important, hence !important here. Hover and focus do
+ *      not rely on colour: the value gains an underline, and keyboard focus
+ *      draws a 2px ink ring outside the chip's border. Rows with no sector
+ *      render no chip (partials/figure.njk). */
+.cards .card .foot .row span.m.m--sector { padding: 0; }
+.cards .card .foot .row span.m--sector > a {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 5px;
+  padding: 3px 8px;
+  color: inherit !important;
+  text-decoration: none;
+}
+.cards .card .foot .row span.m--sector > a:is(:hover, :focus-visible) .v {
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.cards .card .foot .row span.m--sector > a:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+
