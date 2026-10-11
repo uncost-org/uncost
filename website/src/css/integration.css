@@ -3021,3 +3021,15 @@ body[data-page="sectors"] .introband .sintro-list a {
 }
 body[data-page="sectors"] .introband p + p { margin-top: 14px; }
 
+/* 137. Round 2, founder decision (2026-10-11) — every heading's full stop is
+ *      the heading's own colour, never the accent's, as on the homepage
+ *      (item 134). Where an accent span wrapped the stop, the stop now sits
+ *      outside it (template or content-layer edits; no CSS). Where the export
+ *      colours the WHOLE heading coral — /contribute/ "Useful roles, right
+ *      now." (`.u-42`) and /projects/ "Every project has to earn its cost
+ *      claim." (`.u-114`), both !important — the words stay coral and only
+ *      the stop is ink, through this .stop span. Light grounds only: on an ink
+ *      band a heading's stop takes the band's text colour by sitting outside
+ *      the accent instead. */
+:is(h1, h2, h3) .stop { color: var(--ink) !important; }
+

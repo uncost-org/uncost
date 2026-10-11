@@ -469,6 +469,50 @@
       ],
       "selector": "main > [data-screen-label=\"How policies change\"]",
       "shot": true
+    },
+    {
+      "name": "stop-contribute",
+      "routes": [
+        "/contribute/"
+      ],
+      "selector": "main h2 .stop",
+      "props": [
+        "color"
+      ],
+      "expect_count": 1
+    },
+    {
+      "name": "stop-contribute-words",
+      "routes": [
+        "/contribute/"
+      ],
+      "selector": "main h2.u-42",
+      "props": [
+        "color"
+      ],
+      "final_char": true
+    },
+    {
+      "name": "stop-projects",
+      "routes": [
+        "/projects/"
+      ],
+      "selector": "main h2 .stop",
+      "props": [
+        "color"
+      ],
+      "expect_count": 1
+    },
+    {
+      "name": "stop-projects-words",
+      "routes": [
+        "/projects/"
+      ],
+      "selector": "main h2.u-114",
+      "props": [
+        "color"
+      ],
+      "final_char": true
     }
   ]
 }

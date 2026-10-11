@@ -67,7 +67,7 @@ SECTION_EXEMPTIONS = [
      "aspect unchanged. CANVAS-SYNC item 7."),
     ("projects.html", "How they help",
      "Approved change: 'Every project has to earn its cost claim.' is matched to "
-     "the page's other section-heading size. CANVAS-SYNC item 8."),
+     "the page's other section-heading size. CANVAS-SYNC item 8. Round 2 (2026-10-11): the heading's final full stop leaves the accent and takes the heading's own colour. CANVAS-SYNC item 169."),
     ("sectors/", "Related projects",
      "Approved change: the canvas Ledger component (.lg) replaces the previous "
      "prj-table list — same rows and content, new table markup. CANVAS-SYNC item 5."),
@@ -112,7 +112,7 @@ SECTION_EXEMPTIONS = [
      "stays in the titleband, so this block is eyebrow-less lead + body in the "
      "export's own .blk--first. CANVAS-SYNC item 24. Sweep 2026-10-10 (B2-B4): "
      "headline \"Measure it. Publish it. Bring it down.\", new lead and body. "
-     "CANVAS-SYNC item 146."),
+     "CANVAS-SYNC item 146. Round 2 (2026-10-11): the heading's final full stop leaves the accent and takes the heading's own colour. CANVAS-SYNC item 169."),
     ("movement", "What we stand for",
      "Approved rewrite (v2 (a) block 2): replaces the export's 'How it reaches "
      "people' distribution-mechanics section. CANVAS-SYNC item 24."),
@@ -307,7 +307,7 @@ SECTION_EXEMPTIONS = [
     ("contribute", "Volunteer roles",
      "V24: \"Useful roles, right now.\" gains a \"Volunteer now\" ink button to "
      "/contact/ after its closing note — one button row taller than the export. "
-     "CANVAS-SYNC item 110."),
+     "CANVAS-SYNC item 110. Round 2 (2026-10-11): the heading's final full stop leaves the accent and takes the heading's own colour. CANVAS-SYNC item 169."),
     ("roadmap", "Disclaimer",
      "V25: \"How to read these dates\" becomes a standard prose band — the "
      "export's eyebrow text is now the band's section headline at the one "
@@ -358,19 +358,30 @@ SECTION_EXEMPTIONS = [
     # enumerated at 1440 and 390; these are the three ink bands that hold one.
     ("case", "Case CTA",
      "H1: \"See The Receipts\" (coral primary on ink) has a --coral border "
-     "instead of the invisible ink one. CANVAS-SYNC item 160."),
+     "instead of the invisible ink one. CANVAS-SYNC item 160. Round 2 (2026-10-11): the heading's final full stop leaves the accent and takes the heading's own colour. CANVAS-SYNC item 169."),
     ("treasury", "Treasury CTA",
      "H1: \"Contribute\" (coral primary on ink) has a --coral border instead "
      "of the invisible ink one. CANVAS-SYNC item 160."),
     ("sectors/", "Sector CTA",
      "H1: \"Take part\" (coral primary on ink, all fifteen sector pages) has a "
-     "--coral border instead of the invisible ink one. CANVAS-SYNC item 160."),
+     "--coral border instead of the invisible ink one. CANVAS-SYNC item 160. Round 2 (2026-10-11): the heading's final full stop leaves the accent and takes the heading's own colour. CANVAS-SYNC item 169."),
     ("about", "About — title",
      "G3: the title band reads \"About us\" (accent on \"us\"), the pattern "
      "of the other pages' title bands. CANVAS-SYNC item 158."),
     ("about", "div.introband",
      "G3: the introband paragraph ends after \"…open tools.\"; the \"very new\" "
-     "sentence is removed. CANVAS-SYNC item 158."),
+     "sentence is removed. CANVAS-SYNC item 158. Round 2 (2026-10-11): the heading's final full stop leaves the accent and takes the heading's own colour. CANVAS-SYNC item 169."),
+    # Round 2 founder decision (2026-10-11): every heading's full stop is the
+    # heading's own colour. These three sections had no entry yet.
+    ("join", "div.introband",
+     "Round 2: \"Pick a door. Walk through it.\" — the full stop leaves the "
+     "coral accent and is ink. CANVAS-SYNC item 169."),
+    ("treasury", "div.introband",
+     "Round 2: \"Every dollar, on the record.\" — the full stop leaves the "
+     "coral accent and is ink. CANVAS-SYNC item 169."),
+    ("pledge-thanks", "Thanks hero",
+     "Round 2: \"Your name is counted.\" — the full stop leaves the cream "
+     "accent and is the heading's ink. CANVAS-SYNC item 169."),
     ("about", "Mechanism",
      "B5: the shared \"How a cost gets uncosted.\" heading's \"uncosted\" is a "
      "coral span, no longer underlined (X1's <u>). CANVAS-SYNC item 147."),

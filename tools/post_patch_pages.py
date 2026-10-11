@@ -418,7 +418,8 @@ patch("website/src/case/index.njk",
       r'(  <p class="u-39 lead">The question is no longer whether.*?</p>\n)(  <h2 class="u-38 sec">Evidence first\..*?</h2>\n)',
       r'\2\1',
       "V17 case: question lead follows the headline",
-      guard='Tools next.</span></h2>\n  <p class="u-39 lead">The question is no longer whether')
+      # (guard covers both stop placements: R2-6 below moves the stop out of the accent)
+      guard='</h2>\n  <p class="u-39 lead">The question is no longer whether')
 
 # V15 (Batch V, 2026-09-26) — /movement/: "What taking part means" moves to
 # cream (V15 swapped it with the six-step band, which X1 has since turned into
@@ -900,5 +901,26 @@ patch("website/src/sectors/index.njk",
       '\\1' + SECTORS_INTRO.replace('\\', '\\\\') + '\\2',
       "R2-4 sectors: the sector list and closing sentence sit in the introband",
       guard="{{ pageContent.sectors.intro.close | safe }}")
+
+# R2-6 (founder decision, 2026-10-11) — every heading's full stop is the
+# heading's own colour, never the accent's: where an accent span wraps the
+# final stop, the stop moves outside it. These five templates are re-derived
+# from the export (about, case, join, treasury; sector.njk via
+# tools/rederive_collections.py), so each move is restated. The content-layer
+# headings (/movement/, /contribute/, /projects/) live in _data/pageContent.js.
+for path, words in (("website/src/about.njk", "movement"),
+                    ("website/src/case/index.njk", "Tools next"),
+                    ("website/src/join.njk", "Walk through it"),
+                    ("website/src/treasury.njk", "on the record"),
+                    ("website/src/sectors/sector.njk", "Sources before slogans")):
+    patch(path, r'(<span class="u-1">' + re.escape(words) + r')\.(</span>)(</h2>)',
+          r'\1\2.\3', f"R2-6 {path.split('src/')[1]}: the stop after \"{words}\" leaves the accent",
+          guard=f'<span class="u-1">{words}</span>.</h2>')
+# /pledge/thanks/: the hero h1 is ink on coral and its accent is the cream
+# `.em` span, which wrapped the stop too ("Your name is counted."). The scan
+# in round 2 classed cream as a base colour and missed it; it is an accent.
+patch("website/src/pledge/thanks.njk", r'(<span class="em">counted)\.(</span>)(</h1>)', r'\1\2.\3',
+      "R2-6 pledge/thanks.njk: the stop after \"counted\" leaves the accent",
+      guard='<span class="em">counted</span>.</h1>')
 
 print("done")
