@@ -224,8 +224,9 @@ module.exports = {
       receiptsLink: { text: 'Every figure, with its receipt &rarr;', href: '/receipts/' },
     },
     // X7 (Batch X, 2026-09-27), founder-approved: the "What living costs"
-    // headline, and the one-line link that replaces the Methodology drawer.
+    // headline. (X7's one-line "How The Receipts work →" link is removed by
+    // round 2 item 3, 2026-10-11; the mechanism section's "Every figure, with
+    // its receipt →" stays.)
     livingCosts: { h2: 'The numbers, with their <span class="u-1">receipts</span>.' },
-    receiptsLink: { text: 'How The Receipts work &rarr;', href: '/receipts/#how-it-works' },
   },
 };

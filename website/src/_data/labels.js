@@ -64,7 +64,9 @@ const LABELS = {
 };
 
 // Per page, keyed by URL (/news/ and /news/cost-watch/ share a pageId).
-//   id        the drawer's anchor (/receipts/#how-it-works is linked from /case/)
+//   id        the drawer's anchor; the build guard checks it is rendered.
+//             /receipts/#how-it-works stays although /case/ no longer links
+//             it (round 2 item 3, 2026-10-11): an anchor others may have shared
 //   summary   the header row
 //   rules     THE RULES, in order
 //   labels    THE LABELS, in order — exactly the brief's list for the page

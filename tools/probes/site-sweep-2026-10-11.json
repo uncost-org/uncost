@@ -199,6 +199,51 @@
       "props": [
         "text-decoration-line"
       ]
+    },
+    {
+      "name": "case-livingcosts",
+      "routes": [
+        "/case/"
+      ],
+      "selector": "main > [data-screen-label=\"What living costs\"]",
+      "props": [
+        "border-bottom-width",
+        "background-color"
+      ],
+      "box": true
+    },
+    {
+      "name": "case-cta-edge",
+      "routes": [
+        "/case/"
+      ],
+      "selector": "main > [data-screen-label=\"What living costs\"] + [data-screen-label=\"Case CTA\"]",
+      "props": [
+        "border-top-width",
+        "border-top-style",
+        "border-top-color",
+        "background-color"
+      ],
+      "box": true
+    },
+    {
+      "name": "case-no-howlink",
+      "routes": [
+        "/case/"
+      ],
+      "selector": ".howlink",
+      "expect_count": 0
+    },
+    {
+      "name": "case-mechanism-link",
+      "routes": [
+        "/case/"
+      ],
+      "selector": "main > [data-screen-label=\"The mechanism\"] p.u-11 a[href=\"/receipts/\"]",
+      "props": [
+        "color"
+      ],
+      "expect_count": 1
     }
   ]
 }

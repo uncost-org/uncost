@@ -2761,20 +2761,10 @@ body[data-page="movement"] .blk--wheat + .seqhd { border-top: 4px solid var(--co
 .search-ov .so-scope[aria-pressed="true"] { background: var(--ink); color: var(--cream); }
 .search-ov .so-scope:focus-visible { outline: 3px solid var(--coral-deep); outline-offset: 2px; }
 
-/* 120. X7 — /case/: the Methodology drawer is gone; in its place one line,
- *      "How The Receipts work →", to the drawer that now explains them on
- *      /receipts/ (#how-it-works). It keeps the drawer's own row shape — the
- *      display face 700 17px of a drawer header, the same band inset — so the
- *      page's rhythm between "What living costs" and the closing CTA does not
- *      change. Link colour is the light-ground link colour (--coral-deep). */
-body[data-page="case"] .howlink {
-  border-top: 4px solid var(--coral);   /* R1: wheat above, cream here */
-  padding: 18px clamp(24px, 6vw, 80px);
-  background: var(--cream);
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 17px;
-}
+/* 120. RETIRED (round 2 item 3, 2026-10-11). X7's one-line "How The Receipts
+ *      work →" strip between "What living costs" and the closing CTA is
+ *      removed, so its styling goes with it. The wheat band now meets the ink
+ *      CTA directly; R1's 4px coral rule there is the CTA's own top edge. */
 
 /* 121. X6 / X10 — the news cross-reference line ("For current cost news … see
  *      Cost Watch." / "For Uncost's own updates, see Uncost.org News.") moves

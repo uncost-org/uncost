@@ -551,8 +551,8 @@ else:
 
 # X7 (Batch X, 2026-09-27) — /case/: both headlines from the content layer
 # (pageContent.case.intro.h2, .livingCosts.h2), and the Methodology drawer is
-# replaced by one line linking /receipts/#how-it-works. case/index.njk is
-# re-derived.
+# removed (X7 put a one-line link to /receipts/#how-it-works in its place;
+# round 2 item 3 removed that too). case/index.njk is re-derived.
 patch("website/src/case/index.njk",
       r'(<div class="introband">\s*<h2>).*?(</h2>)',
       r'\1{{ pageContent.case.intro.h2 | safe }}\2',
@@ -561,10 +561,14 @@ patch("website/src/case/index.njk",
       r'(<div class="eyebrow">What living costs</div>\s*<h2 class="[^"]*">).*?(</h2>)',
       r'\1{{ pageContent.case.livingCosts.h2 | safe }}\2',
       "X7 case living-costs headline reads pageContent", guard="{{ pageContent.case.livingCosts.h2 | safe }}")
-patch("website/src/case/index.njk",
-      r'<details class="mdrawer"[^>]*>.*?</details>\n',
-      '<div class="howlink" data-screen-label="How The Receipts work"><a href="{{ pageContent.case.receiptsLink.href }}">{{ pageContent.case.receiptsLink.text | safe }}</a></div>\n',
-      "X7 case: drawer becomes the How The Receipts work link", guard='<div class="howlink"')
+# Round 2 item 3 (2026-10-11) removes the link X7 put in the drawer's place, so
+# the export's drawer is now simply removed, with the blank line after it.
+# Guarded by absence.
+if '<details class="mdrawer"' in pathlib.Path("website/src/case/index.njk").read_text(encoding="utf-8"):
+    patch("website/src/case/index.njk", r'<details class="mdrawer"[^>]*>.*?</details>\n\n', '',
+          "X7/R2-3 case: the Methodology drawer is removed")
+else:
+    print("  = X7/R2-3 case: the Methodology drawer is removed (already applied)")
 
 # W5 (Batch X, 2026-09-27) — /news/ introband headline from the content layer
 # (pageContent.news.intro.h2). news/index.njk is re-derived.
@@ -875,5 +879,14 @@ patch("website/src/_data/home.json",
       r'\1<span class=\\"stop\\">.</span>\2',
       "R2-1 hero slogan: the full stop is its own (ink) span",
       guard='the cost of living<span class=\\"stop\\">.</span>')
+
+# R2-3 — /case/: X7's "How The Receipts work →" strip is removed (and
+# pageContent.case.receiptsLink with it). case/index.njk is re-derived; the
+# removal is guarded by absence.
+if 'class="howlink"' in pathlib.Path("website/src/case/index.njk").read_text(encoding="utf-8"):
+    patch("website/src/case/index.njk", r'<div class="howlink"[^>]*>.*?</div>\n\n', '',
+          "R2-3 case: the How The Receipts work strip is removed")
+else:
+    print("  = R2-3 case: the How The Receipts work strip is removed (already applied)")
 
 print("done")
