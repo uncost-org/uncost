@@ -335,6 +335,58 @@
         "border-top-style"
       ],
       "box": true
+    },
+    {
+      "name": "policies-list-band",
+      "routes": [
+        "/policies/"
+      ],
+      "selector": "main > .u-106",
+      "props": [
+        "border-bottom-width",
+        "border-bottom-color",
+        "background-color"
+      ],
+      "box": true
+    },
+    {
+      "name": "policies-drawer",
+      "routes": [
+        "/policies/"
+      ],
+      "selector": "main > .u-106 + section.ldrawer",
+      "props": [
+        "border-top-width",
+        "border-top-color",
+        "border-bottom-width",
+        "background-color"
+      ],
+      "box": true,
+      "shot": true
+    },
+    {
+      "name": "policies-how-change",
+      "routes": [
+        "/policies/"
+      ],
+      "selector": "main > section.ldrawer + [data-screen-label=\"How policies change\"]",
+      "props": [
+        "border-top-width",
+        "border-top-color",
+        "background-color"
+      ],
+      "box": true
+    },
+    {
+      "name": "policies-last-band",
+      "routes": [
+        "/policies/"
+      ],
+      "selector": "main > [data-screen-label=\"How policies change\"]:last-child, main > [data-screen-label=\"How policies change\"]:nth-last-child(1 of :not(script))",
+      "props": [
+        "border-bottom-width"
+      ],
+      "box": true
     }
   ]
 }

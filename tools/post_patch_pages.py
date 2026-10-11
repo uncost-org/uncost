@@ -519,10 +519,20 @@ for path, anchor, where in (
 ):
     patch(path, anchor, LABELS_DRAWER + ("\n" if "SECTION" in anchor else "") + r"\1",
           f"V11 {path.split('src/')[1]}: labels drawer {where}", guard=LABELS_DRAWER.strip())
+# Round 2 item 5 (2026-10-11): on /policies/ the drawer moves from the end of
+# the page to directly after the policy list (the gold `.u-106` band) and
+# before "How a policy changes" — the /projects/ order (F1). A template that
+# has it anywhere else gives it up first; then it goes in before that section.
+_pol = pathlib.Path("website/src/policies/index.njk").read_text(encoding="utf-8")
+if LABELS_DRAWER in _pol and LABELS_DRAWER + "\n<!-- SECTION: policies.How policies change -->" not in _pol:
+    patch("website/src/policies/index.njk", r'\n\{% include "partials/labels-drawer\.njk" %\}\n', '',
+          "R2-5 policies: the drawer leaves the end of the page")
+else:
+    print("  = R2-5 policies: the drawer leaves the end of the page (already applied)")
 patch("website/src/policies/index.njk",
-      r'(data-screen-label="How policies change">.*?</section>\n)',
-      r"\1\n" + LABELS_DRAWER,
-      "V11 policies/index.njk: labels drawer after the last section", guard=LABELS_DRAWER.strip())
+      r'(<!-- SECTION: policies\.How policies change -->\n)',
+      LABELS_DRAWER + "\n" + r"\1",
+      "V11/R2-5 policies/index.njk: labels drawer after the policy list", guard=LABELS_DRAWER.strip())
 
 # W6 (Batch X, 2026-09-27) — /case/ intro paragraph, founder-approved, from the
 # content layer (_data/pageContent.js case.intro.lead). case/index.njk is
