@@ -513,6 +513,102 @@
         "color"
       ],
       "final_char": true
+    },
+    {
+      "name": "stopshot-about",
+      "routes": [
+        "/about/"
+      ],
+      "selector": "main > .introband",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "stopshot-join",
+      "routes": [
+        "/join/"
+      ],
+      "selector": "main > .introband",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "stopshot-treasury",
+      "routes": [
+        "/treasury/"
+      ],
+      "selector": "main > .introband",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "stopshot-movement",
+      "routes": [
+        "/movement/"
+      ],
+      "selector": "main > [data-screen-label=\"What this is\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "stopshot-sector-cta",
+      "routes": [
+        "/sectors/food/"
+      ],
+      "selector": "main > [data-screen-label=\"Sector CTA\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "stopshot-thanks",
+      "routes": [
+        "/pledge/thanks/"
+      ],
+      "selector": "main > [data-screen-label=\"Thanks hero\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "stopshot-contribute",
+      "routes": [
+        "/contribute/"
+      ],
+      "selector": "main > [data-screen-label=\"Volunteer roles\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
+    },
+    {
+      "name": "stopshot-projects",
+      "routes": [
+        "/projects/"
+      ],
+      "selector": "main > [data-screen-label=\"How they help\"]",
+      "shot": true,
+      "widths": [
+        390,
+        1440
+      ]
     }
   ]
 }
