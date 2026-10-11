@@ -591,32 +591,14 @@ else:
 # W10 (Batch X, 2026-09-27) — /sectors/ intro paragraph, founder-approved, from
 # the content layer (pageContent.sectors.intro.lead). The export's first
 # introband paragraph is re-pointed at the data (X9 then moves it).
-# (E1, sweep 2026-10-10, splits this intro in the wheat band; once that shape
-#  is in place W10 and X9 have nothing left to do, so W10 stands down too.)
-if "{{ pageContent.sectors.intro.band.h2 | safe }}" not in pathlib.Path("website/src/sectors/index.njk").read_text(encoding="utf-8"):
-    patch("website/src/sectors/index.njk",
-          r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\s*)<p>.*?</p>',
-          r'\1<p>{{ pageContent.sectors.intro.lead | safe }}</p>',
-          "W10 sectors intro reads pageContent", guard="{{ pageContent.sectors.intro.lead | safe }}")
-else:
-    print("  = W10 sectors intro reads pageContent (superseded by E1)")
+# (RETIRED by round 2 item 4, 2026-10-11: the paragraph W10 re-pointed no
+#  longer exists — the introband now carries the sector list and the closing
+#  sentence, restated by R2-4 at the end of this file.)
 
-# X9 (Batch X, 2026-09-27) — /sectors/: the introband keeps only its headline;
-# the intro moves into a wheat band directly above the cards, replacing the
-# status key strip (now the drawer below the grid). sectors/index.njk is
-# re-derived; both steps are guarded by absence.
-_sec = pathlib.Path("website/src/sectors/index.njk").read_text(encoding="utf-8")
-if 'class="sintro"' not in _sec and 'blk--wheat sintro' not in _sec:
-    patch("website/src/sectors/index.njk",
-          r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\n)(?:  <p>.*?</p>\n)+',
-          r'\1', "X9 sectors: introband keeps only the headline")
-    patch("website/src/sectors/index.njk",
-          r'(?:<!-- SECTION: sectors\.Legend -->\n)?<div class="legend"[^>]*>.*?\n</div>\n',
-          '<!-- SECTION: sectors.Intro -->\n<section class="blk blk--wheat sintro" data-screen-label="Intro">\n'
-          '  <p class="lead">{{ pageContent.sectors.intro.lead | safe }}</p>\n</section>\n',
-          "X9 sectors: the intro takes the wheat band above the cards")
-else:
-    print("  = X9 sectors: intro in the wheat band, key strip retired (already applied)")
+# X9 (Batch X, 2026-09-27) moved the intro into a wheat band above the cards
+# in place of the status key strip. RETIRED by round 2 item 4 (2026-10-11):
+# the wheat band is gone and the intro is back in the introband; R2-4 at the
+# end of this file removes the key strip (or X9's band) and restates it.
 
 # W13 (Batch X, 2026-09-27) — sector "02 · Evidence status": inside the white
 # dotted box, the approved empty-state text (pageContent.sector.evidenceEmpty)
@@ -801,21 +783,9 @@ patch("website/src/movement.njk",
       "B3 movement description", flags=re.M,
       guard='description: "Uncost is a nonprofit, nonpartisan movement that treats the cost of living')
 
-# E1 (sweep 2026-10-10) — /sectors/ wheat intro band: headline "Living isn't
-# one bill — it's fifteen.", the fifteen sectors as links built from
-# catalog.sectors, and W10's closing sentence. X9 above puts W10's one
-# paragraph in this band; this splits it. sectors/index.njk is re-derived.
-patch("website/src/sectors/index.njk",
-      r'(<section class="blk blk--wheat sintro" data-screen-label="Intro">\n)  <p class="lead">\{\{ pageContent\.sectors\.intro\.lead \| safe \}\}</p>\n',
-      '\\1  {#- E1 (sweep 2026-10-10): headline, the fifteen sectors as links to their\n'
-      '      dossiers (catalog order), then the closing sentence. -#}\n'
-      '  <h2 class="sec">{{ pageContent.sectors.intro.band.h2 | safe }}</h2>\n'
-      '  {%- set lastSector = catalog.sectors | last %}\n'
-      '  <p class="lead sintro-list">{% for s in catalog.sectors %}{% if s == lastSector %} and {% elif not loop.first %}, {% endif %}'
-      '<a href="/sectors/{{ s.slug }}/">{{ s.name }}</a>{% endfor %}.</p>\n'
-      '  <p class="lead">{{ pageContent.sectors.intro.band.close | safe }}</p>\n',
-      "E1 sectors intro band: headline, linked sector list, close",
-      guard="{{ pageContent.sectors.intro.band.h2 | safe }}")
+# E1 (sweep 2026-10-10) split X9's wheat band into a headline, a linked sector
+# list and a closing sentence. RETIRED by round 2 item 4 (2026-10-11), which
+# removes the band; R2-4 below restates the list and sentence in the introband.
 
 # G1 (sweep 2026-10-10) — /faq/: every question starts collapsed; the first
 # loses the export's `open`. faq.njk is re-derived. Guarded by absence.
@@ -888,5 +858,37 @@ if 'class="howlink"' in pathlib.Path("website/src/case/index.njk").read_text(enc
           "R2-3 case: the How The Receipts work strip is removed")
 else:
     print("  = R2-3 case: the How The Receipts work strip is removed (already applied)")
+
+# R2-4 — /sectors/: the wheat intro band (X9's, split by E1) is removed with
+# its "Living isn't one bill — it's fifteen." headline, and its two paragraphs
+# move into the introband directly under the existing h2: the fifteen sector
+# names as links (catalog order, from catalog.sectors), then the closing
+# sentence. The cards follow the introband. sectors/index.njk is re-derived
+# (tools/rederive_collections.py), so: an export-shaped page loses its key
+# strip, a page carrying the wheat band loses it, and either way the introband
+# gets the two paragraphs in place of whatever followed its headline.
+SECTORS_INTRO = (
+    '  {#- Round 2 item 4 (2026-10-11): the fifteen sectors as links to their\n'
+    '      dossiers (catalog order), then the closing sentence. -#}\n'
+    '  {%- set lastSector = catalog.sectors | last %}\n'
+    '  <p class="sintro-list">{% for s in catalog.sectors %}{% if s == lastSector %} and {% elif not loop.first %}, {% endif %}'
+    '<a href="/sectors/{{ s.slug }}/">{{ s.name }}</a>{% endfor %}.</p>\n'
+    '  <p>{{ pageContent.sectors.intro.close | safe }}</p>\n')
+_sec = pathlib.Path("website/src/sectors/index.njk").read_text(encoding="utf-8")
+if 'class="legend"' in _sec:
+    patch("website/src/sectors/index.njk",
+          r'(?:<!-- SECTION: sectors\.Legend -->\n)?<div class="legend"[^>]*>.*?\n</div>\n', '',
+          "R2-4 sectors: the export's status key strip is removed (the drawer explains the chips)")
+if 'blk--wheat sintro' in _sec:
+    patch("website/src/sectors/index.njk",
+          r'<!-- SECTION: sectors\.Intro -->\n(?:\{#-.*?-#\}\n)?<section class="blk blk--wheat sintro"[^>]*>.*?</section>\n\n',
+          '', "R2-4 sectors: the wheat intro band is removed")
+if 'blk--wheat sintro' not in _sec and 'class="legend"' not in _sec:
+    print("  = R2-4 sectors: key strip / wheat band removed (already applied)")
+patch("website/src/sectors/index.njk",
+      r'(<div class="[^"]*\bintroband\b[^"]*">\s*<h2>.*?</h2>\n)(?:  <p>.*?</p>\n)*(</div>)',
+      '\\1' + SECTORS_INTRO.replace('\\', '\\\\') + '\\2',
+      "R2-4 sectors: the sector list and closing sentence sit in the introband",
+      guard="{{ pageContent.sectors.intro.close | safe }}")
 
 print("done")

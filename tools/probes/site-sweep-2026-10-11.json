@@ -244,6 +244,97 @@
         "color"
       ],
       "expect_count": 1
+    },
+    {
+      "name": "sectors-no-wheat-band",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": ".sintro.blk--wheat, section.blk--wheat",
+      "expect_count": 0
+    },
+    {
+      "name": "sectors-intro-h2",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": "main > .introband > h2",
+      "props": [
+        "font-size"
+      ],
+      "lines": true
+    },
+    {
+      "name": "sectors-list-links",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": "main > .introband .sintro-list a",
+      "props": [
+        "color",
+        "text-decoration-line",
+        "text-decoration-color",
+        "text-decoration-thickness",
+        "text-underline-offset"
+      ],
+      "all": true,
+      "expect_count": 15
+    },
+    {
+      "name": "cream-body-link",
+      "routes": [
+        "/case/"
+      ],
+      "selector": "main > [data-screen-label=\"The mechanism\"] p.u-11 a",
+      "props": [
+        "color",
+        "text-decoration-line",
+        "text-decoration-color",
+        "text-decoration-thickness",
+        "text-underline-offset"
+      ]
+    },
+    {
+      "name": "sectors-list-link-first",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": "main > .introband .sintro-list a",
+      "props": [
+        "color",
+        "text-decoration-line",
+        "text-decoration-color",
+        "text-decoration-thickness",
+        "text-underline-offset"
+      ],
+      "same_as": "cream-body-link",
+      "same_as_route": "/case/"
+    },
+    {
+      "name": "sectors-introband",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": "main > .introband",
+      "props": [
+        "border-bottom-width",
+        "background-color"
+      ],
+      "box": true,
+      "shot": true
+    },
+    {
+      "name": "sectors-sgrid-edge",
+      "routes": [
+        "/sectors/"
+      ],
+      "selector": "main > .introband + .sgrid",
+      "props": [
+        "border-top-width",
+        "border-top-color",
+        "border-top-style"
+      ],
+      "box": true
     }
   ]
 }

@@ -2780,18 +2780,10 @@ body[data-page="news"] .newsxref {
 body[data-page="news"] .newsxref p { font-style: italic; }
 body[data-page="news"] .newsxref a { font-style: normal; }
 
-/* 122. X9 — /sectors/: the introband keeps only the headline; the intro (W10)
- *      moves into the WHEAT band directly above the fifteen cards, where the
- *      status key strip was; the strip becomes the drawer below the grid.
- *      The band's paragraphs are leads, set at 20px.
- *      E1 (sweep 2026-10-10) split the one paragraph into a headline, the
- *      fifteen sector names as LINKS to their dossiers, and the closing
- *      sentence. The names were bold --coral-deep (large text at 20px, 3.25:1
- *      on wheat); as links on wheat they take item 68's ink (10.48:1) and
- *      keep an underline, so they read as links without relying on colour.
- *      The bold-accent rule that lived here is retired with the <b>s. */
-body[data-page="sectors"] .sintro .lead { font-size: 20px; }
-body[data-page="sectors"] .sintro .sintro-list a { text-decoration: underline; text-underline-offset: 3px; }
+/* 122. RETIRED (round 2 item 4, 2026-10-11). X9's wheat intro band above the
+ *      fifteen cards (and E1's split of it) is removed; its two paragraphs
+ *      are back in the introband under the page headline (item 136). The
+ *      20px lead and the wheat-band link underline served only that band. */
 
 /* 123. Batch X — the project "At a glance" opener headlines carry accent spans
  *      (W15, W21, X2). `.u-124` is a wheat band, so the display accent takes
@@ -3012,4 +3004,20 @@ body[data-page="index"] .hero-grid .hero-slogan .stop { color: var(--ink) !impor
   outline: 2px solid var(--ink);
   outline-offset: 3px;
 }
+
+/* 136. Round 2 item 4 (2026-10-11) — /sectors/ introband: under the headline,
+ *      the fifteen sector names as links, then the closing sentence. The
+ *      links are the light-ground body-link treatment — --coral-deep (5.59:1
+ *      on cream; --coral is 4.04 and fails at body size) with an underline in
+ *      the same colour — stated here so the list cannot drift from it. The
+ *      second paragraph sits one line-gap below the first. The cards follow
+ *      the introband; their own 2px ink frame top is the boundary (R2). */
+body[data-page="sectors"] .introband .sintro-list a {
+  color: var(--coral-deep);
+  text-decoration: underline;
+  text-decoration-color: currentColor;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+body[data-page="sectors"] .introband p + p { margin-top: 14px; }
 

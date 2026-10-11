@@ -348,12 +348,11 @@ SECTION_EXEMPTIONS = [
        "own rules and Update/Perspective/Correction labels. CANVAS-SYNC 149, 150.")
       for page in ("receipts.html", "sectors.html", "projects.html", "policies.html",
                    "news.html", "treasury.html")],
-    ("sectors.html", "Intro",
-     "E1: the wheat intro band above the fifteen cards (X9's) splits into a "
-     "section headline (\"Living isn't one bill — it's fifteen.\"), the fifteen "
-     "sector names as underlined links to their dossiers, and the closing "
-     "sentence. The export has no such band (X9 replaced its legend strip), so "
-     "this entry is named for the record. CANVAS-SYNC item 154."),
+    ("sectors.html", "div.introband",
+     "Round 2 item 4 (2026-10-11): under the page headline the introband now "
+     "carries the fifteen sector names as --coral-deep underlined links and the "
+     "closing sentence (E1's wheat band, which held them, is removed). "
+     "CANVAS-SYNC item 166."),
     # H1: the coral primary button inside an ink band takes a --coral border
     # (it was the house 2px ink border, invisible on ink). Every route was
     # enumerated at 1440 and 390; these are the three ink bands that hold one.
