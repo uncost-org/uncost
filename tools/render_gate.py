@@ -168,7 +168,10 @@ SECTION_EXEMPTIONS = [
      "slab. Inverting a full band's background is a near-total pixel change by "
      "definition, hence ~98%; structure and copy are untouched. The dashed "
      "empty-state card's border and body colour moved with it (both were "
-     "ink-band-only). CANVAS-SYNC item 48."),
+     "ink-band-only). CANVAS-SYNC item 48. Also (register refresh 2026-10-17): "
+     "the register line's \"Checked\" date renders from the register's own "
+     "last_checked (register.lastChecked) instead of the export's hardcoded "
+     "\"Checked July 19, 2026\". CANVAS-SYNC item 172."),
     ("assembly", "What supporters can do",
      "Approved change: the four participation-loop box interiors are cream2. The "
      "export paints them --cream on a --cream band, so they were the same colour "
