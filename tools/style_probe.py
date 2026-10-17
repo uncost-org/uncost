@@ -8,9 +8,10 @@ result to be reported only when the script that produced it is committed, so
 the measurements behind those claims come from here, driven by a spec file
 committed beside it (tools/probes/*.json).
 
-A spec:
+A spec (optional "height" sets the viewport height for every width; default
+1000):
 
-    {"widths": [390, 1440],
+    {"widths": [390, 1440], "height": 844,
      "probes": [
        {"name": "hero-h1", "routes": ["/"], "selector": ".hero-grid h1",
         "props": ["font-size", "max-width"], "lines": true, "box": true},
@@ -148,7 +149,7 @@ const IN_PAGE = (probe) => {
   const routes = [...new Set(spec.probes.flatMap((p) => p.routes))];
   for (const route of routes) {
     for (const w of spec.widths) {
-      await page.setViewport({ width: w, height: 1000, deviceScaleFactor: 1 });
+      await page.setViewport({ width: w, height: spec.height || 1000, deviceScaleFactor: 1 });
       let res;
       try { res = await page.goto(base + route, { waitUntil: "networkidle0", timeout: 60000 }); }
       catch (e) { results.push({ route, width: w, error: "load: " + e.message }); continue; }
