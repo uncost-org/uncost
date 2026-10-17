@@ -1,0 +1,45 @@
+{
+  "widths": [
+    390
+  ],
+  "height": 844,
+  "probes": [
+    {
+      "name": "first-screen-robot",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid img.robot",
+      "props": [
+        "max-width"
+      ],
+      "box": true
+    },
+    {
+      "name": "first-screen-h1",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid h1",
+      "box": true,
+      "lines": true
+    },
+    {
+      "name": "first-screen-pledgebar",
+      "routes": [
+        "/"
+      ],
+      "selector": ".pledgebar",
+      "box": true
+    },
+    {
+      "name": "first-screen-aim",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid .hero-aim",
+      "box": true,
+      "lines": true
+    }
+  ]
+}

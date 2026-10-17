@@ -8,9 +8,10 @@ result to be reported only when the script that produced it is committed, so
 the measurements behind those claims come from here, driven by a spec file
 committed beside it (tools/probes/*.json).
 
-A spec:
+A spec (optional "height" sets the viewport height for every width; default
+1000):
 
-    {"widths": [390, 1440],
+    {"widths": [390, 1440], "height": 844,
      "probes": [
        {"name": "hero-h1", "routes": ["/"], "selector": ".hero-grid h1",
         "props": ["font-size", "max-width"], "lines": true, "box": true},
@@ -32,7 +33,9 @@ classes), "optional" (zero matches is not an error — for enumerations across
 many routes), "widths" (a subset of the spec's widths), "routes": "*" (every
 HTML route in the built site) and "state" ({"action": "hover" | "focus",
 "target": selector}: measure with the target hovered, or focused from the
-keyboard so :focus-visible applies).
+keyboard so :focus-visible applies; or a list of {"action": "click" |
+"hover", "target"} steps applied in order, after which the page is reloaded
+for the next probe).
 
 For each route x width x probe it records how many elements match and, for the
 first match (every match with "all": true), the requested computed properties,
@@ -148,7 +151,7 @@ const IN_PAGE = (probe) => {
   const routes = [...new Set(spec.probes.flatMap((p) => p.routes))];
   for (const route of routes) {
     for (const w of spec.widths) {
-      await page.setViewport({ width: w, height: 1000, deviceScaleFactor: 1 });
+      await page.setViewport({ width: w, height: spec.height || 1000, deviceScaleFactor: 1 });
       let res;
       try { res = await page.goto(base + route, { waitUntil: "networkidle0", timeout: 60000 }); }
       catch (e) { results.push({ route, width: w, error: "load: " + e.message }); continue; }
@@ -166,7 +169,20 @@ const IN_PAGE = (probe) => {
         // through the keyboard (Tab until the target holds focus), so
         // :focus-visible matches as it would for a keyboard user.
         let stateNote = null;
-        if (probe.state) {
+        // "state" may also be a LIST of steps, applied in order; "click"
+        // clicks the target (a real pointer click, after scrolling to it).
+        for (const st of (Array.isArray(probe.state) ? probe.state : [])) {
+          const t = await page.$(st.target);
+          if (!t) { stateNote = "state target not found: " + st.target; break; }
+          try {
+            await t.evaluate((el) => el.scrollIntoView({ block: "center" }));
+            if (st.action === "click") await t.click();
+            else if (st.action === "hover") await t.hover();
+            else { stateNote = "unknown state action " + st.action; break; }
+          } catch (e) { stateNote = st.action + " failed: " + e.message; break; }
+          await new Promise((r) => setTimeout(r, 200));
+        }
+        if (probe.state && !Array.isArray(probe.state)) {
           const target = await page.$(probe.state.target);
           if (!target) stateNote = "state target not found";
           else if (probe.state.action === "hover") {
@@ -199,7 +215,9 @@ const IN_PAGE = (probe) => {
           row.shot = file;
         }
         results.push(row);
-        if (probe.state) {
+        if (probe.state && Array.isArray(probe.state)) {
+          await page.goto(base + route, { waitUntil: "networkidle0", timeout: 60000 });  // fresh page for the next probe
+        } else if (probe.state) {
           await page.mouse.move(0, 0);
           await page.evaluate(() => { document.activeElement && document.activeElement.blur();
             for (const el of document.querySelectorAll("[data-probe-focus]")) el.removeAttribute("data-probe-focus"); });
@@ -320,6 +338,8 @@ def selftest(port: int) -> int:
             "<div class='ink' style='background:#0A0A0A'><div><a class='btn'>go</a></div></div>"
             "<h2 class='acc' style='color:#000'>One <span style='color:#D64A1E'>two.</span></h2>"
             "<h2 class='ok' style='color:#000'>One <span style='color:#D64A1E'>two</span>.</h2>"
+            "<button class='tg' onclick=\"document.querySelector('.box').classList.toggle('on')\">t</button>"
+            "<div class='box'></div><style>.box{width:10px;height:10px}.box.on{width:40px}</style>"
             "<style>a.st{text-decoration:none}a.st:hover .v,a.st:focus-visible .v{text-decoration:underline}"
             "a.st:focus-visible{outline:2px solid #000}</style><p><a class='st' href='#x'><span class='v'>go</span></a></p></body></html>", encoding="utf-8")
         spec = {"widths": [400], "probes": [
@@ -335,6 +355,9 @@ def selftest(port: int) -> int:
             {"name": "ground", "routes": ["/"], "selector": ".btn", "ground": True},
             {"name": "stop-in-accent", "routes": ["/"], "selector": "h2.acc", "final_char": True},
             {"name": "rest", "routes": ["/"], "selector": "a.st .v", "props": ["text-decoration-line"]},
+            {"name": "clicked", "routes": ["/"], "selector": ".box", "box": True,
+             "state": [{"action": "click", "target": "button.tg"}]},
+            {"name": "after-click", "routes": ["/"], "selector": ".box", "box": True},
             {"name": "hovered", "routes": ["/"], "selector": "a.st .v", "props": ["text-decoration-line"],
              "state": {"action": "hover", "target": "a.st"}},
             {"name": "focused", "routes": ["/"], "selector": "a.st", "props": ["outline-style", "outline-width"],
@@ -365,6 +388,9 @@ def selftest(port: int) -> int:
             ("state: rest has no underline, hover does",
              next(r for r in rows if r["probe"] == "rest")["items"][0]["props"]["text-decoration-line"] == "none"
              and next(r for r in rows if r["probe"] == "hovered")["items"][0]["props"]["text-decoration-line"] == "underline"),
+            ("state: a click step changes the page, and the next probe sees a fresh page",
+             next(r for r in rows if r["probe"] == "clicked")["items"][0]["box"][2] == 40
+             and next(r for r in rows if r["probe"] == "after-click")["items"][0]["box"][2] == 10),
             ("state: keyboard focus draws the focus-visible outline",
              next(r for r in rows if r["probe"] == "focused")["items"][0]["props"]["outline-style"] == "solid"),
             ("ground is the first painted ancestor",

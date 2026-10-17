@@ -308,6 +308,44 @@ module.exports = function (eleventyConfig) {
     }
   });
 
+  // ── Drawer landing-page guard (mobile fixes, 2026-10-17) ───────────────
+  // The mobile menu's sections no longer carry an "Overview" link; each
+  // section's FIRST link is its landing page (chrome.json nav[i].url), so the
+  // landing page stays one tap away. This reads the drawer as rendered on every
+  // built page and fails if a section is missing, out of order, or opens on any
+  // other link — so a reordered or trimmed chrome.json cannot quietly drop a
+  // landing page from the menu.
+  eleventyConfig.on("eleventy.after", async ({ results }) => {
+    delete require.cache[require.resolve("./src/_data/chrome.json")];
+    const chrome = require("./src/_data/chrome.json");
+    const problems = new Map();
+    const note = (msg) => problems.set(msg, (problems.get(msg) || 0) + 1);
+    let seen = 0;
+    for (const r of results || []) {
+      if (!r.outputPath || !r.outputPath.endsWith(".html") || !fs.existsSync(r.outputPath)) continue;
+      const drawer = (fs.readFileSync(r.outputPath, "utf8").match(/<div class="drawer"[\s\S]*?<div class="drawer-sub">/) || [""])[0];
+      if (!drawer) continue;
+      seen++;
+      const sections = drawer.split('<div class="drawer-acc">').slice(1);
+      if (sections.length !== chrome.nav.length) {
+        note(`the drawer has ${sections.length} sections but chrome.json nav has ${chrome.nav.length}`);
+      }
+      sections.forEach((sec, i) => {
+        const nav = chrome.nav[i];
+        if (!nav) return;
+        const first = (sec.match(/<div class="in">[\s\S]*?<a href="([^"]+)"/) || [])[1];
+        if (first !== nav.url) {
+          note(`drawer section "${nav.label}" opens on ${first || "(no link)"}, not its own url ${nav.url}`);
+        }
+      });
+    }
+    if (!seen) note("no built page carries the mobile drawer — a guard that cannot see its subject fails");
+    if (problems.size) {
+      throw new Error("Drawer landing-page guard failed:\n  - " +
+        [...problems].map(([m, n]) => `${m} (${n} page${n === 1 ? "" : "s"})`).join("\n  - "));
+    }
+  });
+
   eleventyConfig.on("eleventy.before", async () => {
     await Image(path.join(BRAND_ROOT, "logos", "mark-only-final-light.png"), {
       widths: [1200],
