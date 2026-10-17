@@ -382,6 +382,14 @@ SECTION_EXEMPTIONS = [
     ("pledge-thanks", "Thanks hero",
      "Round 2: \"Your name is counted.\" — the full stop leaves the cream "
      "accent and is the heading's ink. CANVAS-SYNC item 169."),
+    # Mobile fixes (2026-10-17): the drawer's "Overview" links are removed.
+    # The gate measures <main>'s children only and the drawer sits after
+    # </main>, closed, in every gate screenshot, so this entry cannot fire;
+    # it is named so the departure from the export is on the record here too.
+    ("", "div.drawer",
+     "Mobile fixes item 2: each mobile-menu section opens straight onto its "
+     "links (the first is its landing page); the export's Overview link, which "
+     "repeated that url, is removed. CANVAS-SYNC item 171."),
     ("about", "Mechanism",
      "B5: the shared \"How a cost gets uncosted.\" heading's \"uncosted\" is a "
      "coral span, no longer underlined (X1's <u>). CANVAS-SYNC item 147."),
