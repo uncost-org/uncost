@@ -17,13 +17,14 @@
       <div class="ft-tag">{{ site.tagline }}</div>
       {{ mail.email("", "ft-mail") }}
       <div class="soc">
-        {% for s in chrome.social %}
+        {#- Only the accounts with show: true in chrome.json (social[] order). -#}
+        {% for s in chrome.social %}{% if s.show %}
         {% if s.label == "Email" %}
         <a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;&#99;&#111;&#110;&#116;&#97;&#99;&#116;&#64;&#117;&#110;&#99;&#111;&#115;&#116;&#46;&#111;&#114;&#103;" aria-label="Email">{{ socialIcon.glyph(s.label) }}</a>
         {% else %}
         <a href="{{ s.url }}" aria-label="{{ s.label }}" target="_blank" rel="noopener">{{ socialIcon.glyph(s.label) }}</a>
         {% endif %}
-        {% endfor %}
+        {% endif %}{% endfor %}
       </div>
     </div>
     {% for col in chrome.footer %}

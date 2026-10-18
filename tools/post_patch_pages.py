@@ -953,4 +953,37 @@ patch("website/src/sectors/sector.njk",
       "RR-1 sector evidence status: the Checked date comes from the register",
       guard='<span class="rcpt-updated">Checked {{ register.lastChecked }}</span>')
 
+# ---------------------------------------------------------------------------
+# Social links 2026-10-17 (founder brief). Only the chrome.json social[]
+# entries with show: true render. index.njk and contact.njk are re-derived, so
+# both edits are restated here; the footer partial is repo-owned.
+# ---------------------------------------------------------------------------
+print("Social links 2026-10-17:")
+
+# SL-1 — homepage closing links (index.njk is re-derived by
+# tools/rederive_home.py, whose step 7 writes the unfiltered row).
+SOC_TXT = ('<div class="soc-txt">{% for s in chrome.social %}{% if s.show and s.label != "Email" %}'
+           '<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.label }}</a>{% endif %}{% endfor %}</div>')
+patch("website/src/index.njk", r'<div class="soc-txt">.*?</div>', SOC_TXT,
+      "SL-1 homepage closing links: show: true accounts only", guard=SOC_TXT)
+
+# SL-2 — /contact/ "Follow along": the export hard-codes all seven links and
+# their SVGs; the row becomes a loop over chrome.social with the footer's
+# glyph() macro, Email left out (the address is shown above it). Markup and
+# classes are the export's (.socrow, aria-label, target/rel).
+CONTACT_SOCROW = (
+    '    <h3 class="u-41">Follow along</h3>\n'
+    '    {#- The accounts with show: true in chrome.json (social[] order), drawn with\n'
+    '        the footer\'s glyphs. Email is left out: the address is shown above. -#}\n'
+    '    {%- import "partials/social-icons.njk" as socialIcon %}\n'
+    '    <div class="socrow">\n'
+    '      {%- for s in chrome.social %}{% if s.show and s.label != "Email" %}\n'
+    '      <a href="{{ s.url }}" target="_blank" rel="noopener" aria-label="{{ s.label }}">{{ socialIcon.glyph(s.label) }}</a>\n'
+    '      {%- endif %}{% endfor %}\n'
+    '    </div>\n')
+patch("website/src/contact.njk",
+      r'    <h3 class="u-41">Follow along</h3>\n    <div class="socrow">\n.*?\n    </div>\n',
+      CONTACT_SOCROW, "SL-2 contact Follow along row reads chrome.social",
+      guard='{%- for s in chrome.social %}{% if s.show and s.label != "Email" %}')
+
 print("done")

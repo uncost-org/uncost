@@ -247,6 +247,11 @@ SECTION_EXEMPTIONS = [
      "1006px at 390. The homepage's worst band is the one with the most running "
      "text, so it moves most when the headline scale and the measure change. "
      "Sweep 3, batch G."),
+    ("index", "S9 Closing ask",
+     "Social links (2026-10-18): the closing text links show only the accounts "
+     "marked show: true in chrome.json — Instagram, Threads, X, Bluesky, "
+     "TikTok — where the export lists seven; YouTube and Reddit are hidden "
+     "until they have posts. CANVAS-SYNC item 173."),
     # ── Batch U part 2 (2026-09-25) ───────────────────────────────────────
     ("index.html", "S1 Hero",
      "E2: the hero's second line, \"Uncost the cost of living.\", renders "
@@ -299,7 +304,10 @@ SECTION_EXEMPTIONS = [
      "partial — 'The contact form opens at launch… email works' — restated by "
      "tools/post_patch_pages.py. Measured 35.73% at 390 on the unchanged "
      "2e44290 build as well: it was the gate's one standing FAIL, not a change "
-     "from this batch. The email, social and GitHub blocks above it match."),
+     "from this batch. The email, social and GitHub blocks above it match. "
+     "Also (social links, 2026-10-18): the \"Follow along\" row renders from "
+     "chrome.json and shows five accounts, not the export's seven (YouTube and "
+     "Reddit hidden). CANVAS-SYNC item 173."),
     ("assembly", "Preview + interest",
      "V22: the PLANNED TOOL chip is removed from the \"A look ahead\" header "
      "row and the ink button reads \"How the Assembly works\". F2 had already "
