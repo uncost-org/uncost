@@ -1,0 +1,13 @@
+{
+  "widths": [390, 768],
+  "height": 844,
+  "probes": [
+    {"name": "hero", "routes": ["/"], "selector": "main > [data-screen-label=\"S1 Hero\"]", "shot": true},
+    {"name": "menu-open", "routes": ["/"], "selector": ".drawer", "shot": true, "widths": [390],
+     "state": [{"action": "click", "target": "[data-drawer-open]"},
+               {"action": "click", "target": ".drawer .drawer-acc [data-acc]"}]},
+    {"name": "menu-open-case", "routes": ["/"], "selector": ".drawer", "shot": true, "widths": [390],
+     "state": [{"action": "click", "target": "[data-drawer-open]"},
+               {"action": "click", "target": ".drawer .drawer-acc:nth-child(3) [data-acc]"}]}
+  ]
+}

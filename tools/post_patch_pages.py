@@ -924,6 +924,20 @@ patch("website/src/pledge/thanks.njk", r'(<span class="em">counted)\.(</span>)(<
       guard='<span class="em">counted</span>.</h1>')
 
 # ---------------------------------------------------------------------------
+# Mobile fixes 2026-10-17 (founder brief).
+# ---------------------------------------------------------------------------
+print("Mobile fixes 2026-10-17:")
+
+# M1 — the homepage robot is the first thing on the page on phones (CSS item
+# 138 puts it above the text when the hero stacks), so it loads eagerly, not
+# lazily. index.njk is re-derived (tools/rederive_home.py).
+patch("website/src/index.njk",
+      r'(\{% image "robots/40_arms_crossed_transparent\.png", [^%]*?)"lazy"(, "robot" %\})',
+      r'\1"eager"\2',
+      "M1 homepage robot loads eagerly",
+      guard='[320, 640, 960], "eager", "robot" %}')
+
+# ---------------------------------------------------------------------------
 # Register refresh 2026-10-17 (founder brief). sector.njk is re-derived by
 # tools/rederive_collections.py, so its edit is restated here.
 # ---------------------------------------------------------------------------
