@@ -420,8 +420,8 @@ SECTION_EXEMPTIONS = [
      "Pre-launch 2026-10: the Give card's first point says donations are not open and "
      "the opening will be announced on the site; its button reads \"Read the Pledge\" "
      "instead of \"Register intent — sign the Pledge\". CANVAS-SYNC item 175."),
-    ("privacy", "Policy body",
-     "Pre-launch 2026-10: \u00a72's \"Basic, privacy-respecting analytics\" bullet "
+    ("privacy", "div.pol-wrap",
+     "Pre-launch 2026-10 (the policy body inside this wrapper): \u00a72's \"Basic, privacy-respecting analytics\" bullet "
      "becomes a statement that the site uses no analytics today, and \u00a710 "
      "offers email only, not the contact form, which is off. CANVAS-SYNC item 175."),
 ]
