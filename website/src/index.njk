@@ -154,5 +154,5 @@ description: "The essentials keep getting more expensive while the automation th
     <a href="/pledge/" class="u-btn u-btn--ink">{{ home.s9.cta1 | safe }}</a>
     <a href="#updates" class="u-btn u-btn--ghost">{{ home.s9.cta2 | safe }}</a>
   </div>
-  <div class="soc-txt">{% for s in chrome.social %}{% if s.label != "Email" %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.label }}</a>{% endif %}{% endfor %}</div>
+  <div class="soc-txt">{% for s in chrome.social %}{% if s.show and s.label != "Email" %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.label }}</a>{% endif %}{% endfor %}</div>
 </section>

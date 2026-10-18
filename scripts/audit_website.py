@@ -37,6 +37,7 @@ ROOT = Path(__file__).resolve().parents[1]
 ALLOWLIST_PATH = ROOT / "scripts" / "audit-website-allowlist.json"
 QUEUE_PATH = ROOT / "scripts" / "audit-website-review-queue.json"
 REGISTER_PATH = ROOT / "sources" / "register.csv"
+CHROME_PATH = ROOT / "website" / "src" / "_data" / "chrome.json"
 
 SOURCE_SCOPE = ("website", "sectors", "policies", "projects")
 
@@ -125,14 +126,17 @@ ALLOWED_URL_HOSTS = {"uncost.org", "github.com"}
 # where it sends people, so adding one is a content decision that shows up in
 # review. These are the movement's own verified profiles, exactly as listed in
 # website/src/_data/chrome.json (social[]). They load nothing — see the
-# asset/navigation split below.
+# asset/navigation split below. An account listed here but marked show: false
+# in chrome.json is NOT allowed: the built scan fails any URL on its host
+# (hidden_social_hosts below), so a hidden account cannot come back by being
+# hard-coded somewhere else.
 ALLOWED_NAV_HOSTS = {
     "instagram.com",
     "threads.net",
     "x.com",
     "bsky.app",
     "youtube.com",
-    "reddit.com",
+    "www.reddit.com",  # the subreddit, www.reddit.com/r/Uncost_org/ (2026-10-18)
     "tiktok.com",
     # Cost Watch reading list — designed, deliberate outbound links to publishers
     # the register already cites. COMING-SOON.md: "links out only, never
@@ -234,6 +238,42 @@ def registered_source_hosts() -> Set[str]:
     for m in re.finditer(r"https?://([^/\s,\"']+)", REGISTER_PATH.read_text(encoding="utf-8")):
         hosts.add(m.group(1))
     return hosts
+
+
+def social_base_host(host: str) -> str:
+    """A host with any userinfo, port, trailing dot and leading "www." removed."""
+    host = host.split("@")[-1].split(":")[0].rstrip(".").lower()
+    return host[4:] if host.startswith("www.") else host
+
+
+def hidden_social_hosts(chrome_path: Path = CHROME_PATH) -> Set[str]:
+    """Hosts of the chrome.json social[] accounts marked show: false.
+
+    The footer icons, the homepage closing links and the /contact/ "Follow
+    along" row render only the show: true accounts. A hidden account keeps its
+    URL in chrome.json (turning it back on is a one-word change), so its host
+    must not be reachable from anywhere else either: the built scan fails any
+    URL on it, subdomains included. Every entry needs a boolean "show" — a
+    missing one is a configuration error, never a default.
+    """
+    if not chrome_path.exists():
+        return set()
+    hidden: Set[str] = set()
+    for entry in json.loads(chrome_path.read_text(encoding="utf-8")).get("social", []):
+        show = entry.get("show")
+        if not isinstance(show, bool):
+            raise SystemExit(
+                f"{chrome_path.name}: social[] entry {entry.get('label')!r} needs \"show\": true or false"
+            )
+        match = re.match(r"https?://([^/\s]+)", entry.get("url", ""), re.IGNORECASE)
+        if not show and match:
+            hidden.add(social_base_host(match.group(1)))
+    return hidden
+
+
+def is_hidden_social(host: str, hidden: Set[str]) -> bool:
+    base = social_base_host(host)
+    return any(base == h or base.endswith("." + h) for h in hidden)
 
 
 def host_allowed(host: str) -> bool:
@@ -544,17 +584,22 @@ def scan_built_assertions(
     built_dir: Path,
     findings: List[Finding],
     line_texts: Dict[Tuple[str, int], str],
+    hidden_social: Optional[Set[str]] = None,
 ) -> None:
     """Built-output-only FAIL assertions, independent of the vocab/figure rules:
 
     - external-url: any http(s) URL in built HTML/CSS/JS whose host is not
       uncost.org (or a subdomain) or an allowed repo host.
+    - hidden-social: any URL on the host of a chrome.json social[] account
+      marked show: false, wherever it appears.
     - forbidden-name: any banned fabricated attribution (e.g. Okonkwo),
       case-insensitive, anywhere in the built output (all text file types).
 
     These are never allowlisted: a built-output leak is fixed at its source.
     """
     source_hosts = registered_source_hosts()
+    if hidden_social is None:
+        hidden_social = hidden_social_hosts()
     for path in sorted(built_dir.rglob("*")):
         if not path.is_file():
             continue
@@ -581,6 +626,10 @@ def scan_built_assertions(
                 nav_hosts = {m.group(1).split('//', 1)[-1] for m in ANCHOR_HREF_URL_RE.finditer(line)}
                 for match in URL_RE.finditer(line):
                     host = match.group(1)
+                    if is_hidden_social(host, hidden_social):
+                        findings.append(Finding("FAIL", "hidden-social", rel, number, match.group(0)[:90]))
+                        line_texts[(rel, number)] = line
+                        continue
                     if host_allowed(host):
                         continue
                     if host in nav_hosts and (host in ALLOWED_NAV_HOSTS or host in source_hosts):
@@ -943,6 +992,36 @@ def selftest() -> int:
     asset_rules = [f.rule for f in asset_findings]
     expect(asset_rules.count("external-url") == 1, "only the third-party CDN url fails; uncost/github/relative/mailto pass")
     expect(asset_rules.count("forbidden-name") == 2, "Okonkwo fires case-insensitively across HTML and XML")
+
+    # A chrome.json social account marked show: false may not be linked from
+    # anywhere in the built site, on any of its host's forms.
+    hidden = {"youtube.com", "reddit.com"}
+    expect(is_hidden_social("www.reddit.com", hidden), "hidden host matches with www.")
+    expect(is_hidden_social("old.reddit.com", hidden), "hidden host matches a subdomain")
+    expect(not is_hidden_social("reddit.com.evil.example", hidden), "look-alike of a hidden host is not it")
+    expect(not is_hidden_social("x.com", hidden), "a shown account's host is not hidden")
+    social_findings: List[Finding] = []
+    social_texts: Dict[Tuple[str, int], str] = {}
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / "p.html").write_text(
+            '<a href="https://www.youtube.com/@uncost_org">YouTube</a>'
+            '<a href="https://x.com/uncost_org">X</a>', encoding="utf-8")
+        scan_built_assertions(Path(tmp), social_findings, social_texts, hidden_social=hidden)
+    expect([f.rule for f in social_findings] == ["hidden-social"],
+           "a hard-coded link to a hidden account fails; a shown account passes")
+    with tempfile.TemporaryDirectory() as tmp:
+        cfg = Path(tmp) / "chrome.json"
+        cfg.write_text(json.dumps({"social": [
+            {"label": "Email", "url": "mailto:x@uncost.org", "show": True},
+            {"label": "X", "url": "https://x.com/a", "show": True},
+            {"label": "Reddit", "url": "https://www.reddit.com/r/a/", "show": False}]}), encoding="utf-8")
+        expect(hidden_social_hosts(cfg) == {"reddit.com"}, "show: false entries give the hidden hosts")
+        cfg.write_text(json.dumps({"social": [{"label": "X", "url": "https://x.com/a"}]}), encoding="utf-8")
+        try:
+            hidden_social_hosts(cfg)
+            expect(False, "a social entry without show is rejected")
+        except SystemExit:
+            pass
 
     # Gated transition markers must never reach rendered HTML.
     gated_findings: List[Finding] = []

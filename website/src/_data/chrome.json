@@ -1,5 +1,5 @@
 {
-  "_note": "STRUCTURE from the design export (design-source/data/site.json): nav, footer and social ordering, labels and section order. Routes are reconciled to the repository's contractual URLs; feature flags live in _data/features.js; org identity lives in _data/site.js. footerBar keeps only links not already present in the columns above. The footer carries no RSS link: it was removed when no feed page existed; both feeds now render as pages (CANVAS-SYNC 99), and re-adding a link is the founder's call. Footer columns (sweep 2026-10-10): The Case column reads The Case, The Sectors, The Receipts, Cost Watch, Corrections & changelog; About & records reads Uncost News; The Movement gains Events. Approved changes — docs/CANVAS-SYNC.md.",
+  "_note": "STRUCTURE from the design export (design-source/data/site.json): nav, footer and social ordering, labels and section order. Routes are reconciled to the repository's contractual URLs; feature flags live in _data/features.js; org identity lives in _data/site.js. footerBar keeps only links not already present in the columns above. The footer carries no RSS link: it was removed when no feed page existed; both feeds now render as pages (CANVAS-SYNC 99), and re-adding a link is the founder's call. Footer columns (sweep 2026-10-10): The Case column reads The Case, The Sectors, The Receipts, Cost Watch, Corrections & changelog; About & records reads Uncost News; The Movement gains Events. Social accounts (2026-10-18): every social[] entry carries \"show\"; the footer icons, the homepage closing links and the /contact/ \"Follow along\" row render only show: true entries, in social[] order. A hidden account keeps its URL, so turning it back on is a one-word change; scripts/audit_website.py fails the built site if it links to a hidden account's host. Approved changes — docs/CANVAS-SYNC.md.",
   "nav": [
     {
       "label": "The Movement",
@@ -216,35 +216,43 @@
   "social": [
     {
       "label": "Email",
-      "url": "mailto:contact@uncost.org"
+      "url": "mailto:contact@uncost.org",
+      "show": true
     },
     {
       "label": "Instagram",
-      "url": "https://instagram.com/uncost_org"
+      "url": "https://instagram.com/uncost_org",
+      "show": true
     },
     {
       "label": "Threads",
-      "url": "https://threads.net/@uncost_org"
+      "url": "https://threads.net/@uncost_org",
+      "show": true
     },
     {
       "label": "X",
-      "url": "https://x.com/uncost_org"
+      "url": "https://x.com/uncost_org",
+      "show": true
     },
     {
       "label": "Bluesky",
-      "url": "https://bsky.app/profile/uncost-org.bsky.social"
+      "url": "https://bsky.app/profile/uncost-org.bsky.social",
+      "show": true
     },
     {
       "label": "YouTube",
-      "url": "https://youtube.com/@uncost_org"
+      "url": "https://youtube.com/@uncost_org",
+      "show": false
     },
     {
       "label": "Reddit",
-      "url": "https://reddit.com/u/uncost_org"
+      "url": "https://www.reddit.com/r/Uncost_org/",
+      "show": false
     },
     {
       "label": "TikTok",
-      "url": "https://tiktok.com/@uncost.org"
+      "url": "https://tiktok.com/@uncost.org",
+      "show": true
     }
   ],
   "searchShortcuts": [
