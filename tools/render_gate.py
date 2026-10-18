@@ -228,7 +228,8 @@ SECTION_EXEMPTIONS = [
      "Measured at 1440 the section box is 1440x303 in BOTH trees — identical "
      "geometry, zero reflow — and the dominant fill goes #F2EBE1 (95% of the "
      "band) to #E8B84A (95%). The diff is the fill and nothing else. "
-     "Sweep 3, batch H."),
+     "Sweep 3, batch H. "
+     "Also (pre-launch 2026-10): the \"Can I donate right now?\" answer no longer offers to register an intention to give; the opening will be announced on the site. CANVAS-SYNC item 175."),
     ("faq", "Evidence",
      "H7, same change as \"The basics\": the question section moves to --wheat. "
      "Measured at 1440 the section box is 1440x303 in BOTH trees and the "
@@ -316,7 +317,8 @@ SECTION_EXEMPTIONS = [
      "let the headline column fill the row. CANVAS-SYNC item 109. Sweep "
      "2026-10-10 (G2): that button, which linked the page it sits on, is "
      "removed, and the sentence says the mock will be published later. "
-     "CANVAS-SYNC item 157."),
+     "CANVAS-SYNC item 157. "
+     "Also (pre-launch 2026-10): the button reads \"Read the Pledge\" instead of \"Register interest — sign the Pledge\" (forms are off). CANVAS-SYNC item 175."),
     ("contribute", "Volunteer roles",
      "V24: \"Useful roles, right now.\" gains a \"Volunteer now\" ink button to "
      "/contact/ after its closing note — one button row taller than the export. "
@@ -374,7 +376,8 @@ SECTION_EXEMPTIONS = [
      "instead of the invisible ink one. CANVAS-SYNC item 160. Round 2 (2026-10-11): the heading's final full stop leaves the accent and takes the heading's own colour. CANVAS-SYNC item 169."),
     ("treasury", "Treasury CTA",
      "H1: \"Contribute\" (coral primary on ink) has a --coral border instead "
-     "of the invisible ink one. CANVAS-SYNC item 160."),
+     "of the invisible ink one. CANVAS-SYNC item 160. "
+     "Also (pre-launch 2026-10): the closing line no longer offers to register an intention to give. CANVAS-SYNC item 175."),
     ("sectors/", "Sector CTA",
      "H1: \"Take part\" (coral primary on ink, all fifteen sector pages) has a "
      "--coral border instead of the invisible ink one. CANVAS-SYNC item 160. Round 2 (2026-10-11): the heading's final full stop leaves the accent and takes the heading's own colour. CANVAS-SYNC item 169."),
@@ -406,6 +409,19 @@ SECTION_EXEMPTIONS = [
     ("about", "Mechanism",
      "B5: the shared \"How a cost gets uncosted.\" heading's \"uncosted\" is a "
      "coral span, no longer underlined (X1's <u>). CANVAS-SYNC item 147."),
+    # Pre-launch 2026-10 — forms are off, so no page promises a form action.
+    ("contribute", "Status",
+     "Pre-launch 2026-10: the status line says donations are not open and that the "
+     "opening will be announced on the site, instead of offering to register an "
+     "intention to give. CANVAS-SYNC item 175."),
+    ("contribute", "Three ways",
+     "Pre-launch 2026-10: the Give card's first point says donations are not open and "
+     "the opening will be announced on the site; its button reads \"Read the Pledge\" "
+     "instead of \"Register intent — sign the Pledge\". CANVAS-SYNC item 175."),
+    ("privacy", "Policy body",
+     "Pre-launch 2026-10: \u00a72's \"Basic, privacy-respecting analytics\" bullet "
+     "becomes a statement that the site uses no analytics today, and \u00a710 "
+     "offers email only, not the contact form, which is off. CANVAS-SYNC item 175."),
 ]
 
 

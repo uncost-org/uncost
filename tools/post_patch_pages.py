@@ -986,4 +986,88 @@ patch("website/src/contact.njk",
       CONTACT_SOCROW, "SL-2 contact Follow along row reads chrome.social",
       guard='{%- for s in chrome.social %}{% if s.show and s.label != "Email" %}')
 
+# ---------------------------------------------------------------------------
+# Pre-launch 2026-10 (founder brief). Forms are off at launch, so no page may
+# promise an action that needs one. Every template below is re-derived from the
+# export (tools/gen_static_pages.py writes <main> and the front matter), so
+# each edit is restated here.
+# ---------------------------------------------------------------------------
+print("Pre-launch 2026-10:")
+
+
+def literal(path, old, new, label):
+    """Replace one exact export string; idempotent on the new string."""
+    patch(path, re.escape(old), new.replace("\\", "\\\\"), label, guard=new)
+
+
+# PL-1 — /contribute/: no "register an intention to give". Donations are not
+# open; the opening will be announced on the site. The Give card keeps its
+# button, which now names what /pledge/ actually offers today.
+literal("website/src/contribute.njk",
+        'description: "Back the work directly: register an intention to give before donations '
+        'open, volunteer your skills, or offer in-kind resources."',
+        'description: "Back the work directly: volunteer your skills or offer in-kind resources. '
+        'Donations aren’t open yet; we’ll announce on this site when they are."',
+        "PL-1 contribute description: no intention-to-give promise")
+literal("website/src/contribute.njk",
+        'You can register an intention to give now, and we&rsquo;ll contact you when it opens '
+        '— no money changes hands today.',
+        'Donations aren&rsquo;t open, and no money changes hands today. When they open, '
+        'we&rsquo;ll announce it here on uncost.org.',
+        "PL-1 contribute status band: donations not open, opening announced on the site")
+literal("website/src/contribute.njk",
+        '<li>Register an intention to give — we&rsquo;ll email you the moment donations lawfully open.</li>',
+        '<li>Donations aren&rsquo;t open yet. When they lawfully open, we&rsquo;ll announce it on this site.</li>',
+        "PL-1 contribute Give card: no intention-to-give promise")
+literal("website/src/contribute.njk",
+        '<a href="/pledge/" class="u-btn u-btn--primary btn">Register intent — sign the Pledge</a>',
+        '<a href="/pledge/" class="u-btn u-btn--primary btn">Read the Pledge</a>',
+        "PL-1 contribute Give button: Read the Pledge")
+
+# PL-2 — /faq/ "Can I donate right now?": the same answer, without the promise.
+literal("website/src/faq.njk",
+        'You can <a href="/contribute/">register an intention to give</a> and we&rsquo;ll email '
+        'you the moment it opens — no money changes hands today.',
+        'No money changes hands today. When donations open, we&rsquo;ll announce it on this site. '
+        'In the meantime there are <a href="/contribute/">other ways to contribute</a>.',
+        "PL-2 faq donate answer: opening announced on the site")
+
+# PL-3 — /treasury/ closing band: the same promise, found by the grep.
+literal("website/src/treasury.njk",
+        'You can register an intention to give, volunteer time and skills, or offer in-kind '
+        'support — all without money changing hands today.',
+        'Donations aren&rsquo;t open yet, and we&rsquo;ll announce it on this site when they are. '
+        'Today you can volunteer time and skills or offer in-kind support — no money changes hands.',
+        "PL-3 treasury CTA: no intention-to-give promise")
+
+# PL-4 — /assembly/ "A look ahead": the button promised registering interest
+# through the Pledge form, which is off. Same button, honest label.
+literal("website/src/assembly.njk",
+        '<a href="/pledge/" class="u-btn u-btn--primary">Register interest — sign the Pledge</a>',
+        '<a href="/pledge/" class="u-btn u-btn--primary">Read the Pledge</a>',
+        "PL-4 assembly look-ahead button: Read the Pledge")
+
+# PL-5 — /privacy/: §2 says what is true today (no analytics), matching the
+# FAQ of record (_data/faq.js: "No analytics, no advertising pixels, no
+# fingerprinting"); §10 no longer offers the contact form, which is off.
+literal("website/src/privacy.njk",
+        '<li><b>Basic, privacy-respecting analytics</b> — aggregate page usage, without building '
+        'advertising profiles.</li>',
+        '<li><b>No analytics</b> — this site uses no analytics today: no tracking scripts, no '
+        'advertising pixels, no fingerprinting. We&rsquo;ll update this policy before any are added.</li>',
+        "PL-5 privacy §2: no analytics today")
+literal("website/src/privacy.njk",
+        '<a class="u-1" href="mailto:contact@uncost.org">contact@uncost.org</a> or use the '
+        '<a class="u-1" href="/contact/">contact form</a>.',
+        '<a class="u-1" href="mailto:contact@uncost.org">contact@uncost.org</a>.',
+        "PL-5 privacy §10: email, not the contact form")
+
+# PL-6 — /contact/ description: no contact form at launch.
+literal("website/src/contact.njk",
+        'description: "Reach Uncost: email, social channels, or the contact form. A human replies '
+        'from contact@uncost.org."',
+        'description: "Reach Uncost by email or on our social channels. A human replies from '
+        'contact@uncost.org."',
+        "PL-6 contact description: no contact form")
+
 print("done")

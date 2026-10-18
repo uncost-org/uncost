@@ -268,9 +268,9 @@
   {
     "rule": "tax-deductibility-claim",
     "path": "website/src/faq.njk",
-    "line_sha256": "f5e76c374a59fd584c23de18d0c9717675c0bc553121bdea03187c035e99489c",
-    "justification": "Conditional statement, not a tax-status claim: it states donations are NOT open and that deductibility depends on fiscal sponsorship being confirmed first. The sentence exists to withhold the claim.",
-    "added": "2026-08-13"
+    "line_sha256": "07d9bcdb0878b09583501d7e7794cdd51e8a8ad8ff0d653f758376c16a8d133e",
+    "justification": "Conditional statement, not a tax-status claim: it states donations are NOT open and that deductibility depends on fiscal sponsorship being confirmed first. The sentence exists to withhold the claim. Re-recorded 2026-10-18 for the pre-launch copy fix (PL-2), which drops the register-an-intention offer from the same line; the deductibility clause is unchanged.",
+    "added": "2026-10-18"
   },
   {
     "rule": "crypto-generic",
