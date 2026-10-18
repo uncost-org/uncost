@@ -937,4 +937,20 @@ patch("website/src/index.njk",
       "M1 homepage robot loads eagerly",
       guard='[320, 640, 960], "eager", "robot" %}')
 
+# ---------------------------------------------------------------------------
+# Register refresh 2026-10-17 (founder brief). sector.njk is re-derived by
+# tools/rederive_collections.py, so its edit is restated here.
+# ---------------------------------------------------------------------------
+print("Register refresh 2026-10-17:")
+
+# RR-1 — sector "02 · Evidence status": the register line's freshness stamp
+# is the register's own last_checked (register.lastChecked), as on the
+# homepage (tools/rederive_home.py step 8), not the export's hardcoded
+# "Checked July 19, 2026".
+patch("website/src/sectors/sector.njk",
+      r'(<span class="rcpt-updated">Checked )[^<{]*(</span>)',
+      r'\1{{ register.lastChecked }}\2',
+      "RR-1 sector evidence status: the Checked date comes from the register",
+      guard='<span class="rcpt-updated">Checked {{ register.lastChecked }}</span>')
+
 print("done")
