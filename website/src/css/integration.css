@@ -3033,3 +3033,22 @@ body[data-page="sectors"] .introband p + p { margin-top: 14px; }
  *      the accent instead. */
 :is(h1, h2, h3) .stop { color: var(--ink) !important; }
 
+/* 138. Mobile fixes (2026-10-17), item 1 — the homepage robot goes ABOVE the
+ *      text when the hero stacks. The export stacks .hero-grid into one
+ *      column at max-width 1000px, where the robot (the grid's second item)
+ *      fell below the text and both buttons. `order: -1` lifts it to the top
+ *      in that layout only: the markup is unchanged, so the desktop two-column
+ *      layout and the reading order for screen readers (text first) stay as
+ *      they are. On phones (600px and below) the robot shrinks from the
+ *      export's 300px to 200px with a small bottom margin, so at 390x844 the
+ *      whole headline is on the first screen, above the fixed pledge bar
+ *      (measured: tools/probes/mobile-fixes-2026-10-17.json). At 768 (iPad
+ *      portrait) it keeps the export's 300px. index.njk loads it eagerly now
+ *      that it is the first thing on the page. */
+@media (max-width: 1000px) {
+  body[data-page="index"] .hero-grid .robot { order: -1; }
+}
+@media (max-width: 600px) {
+  body[data-page="index"] .hero-grid .robot { max-width: 200px; margin: 0 auto 8px; }
+}
+

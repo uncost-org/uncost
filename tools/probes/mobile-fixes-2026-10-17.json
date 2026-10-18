@@ -1,0 +1,86 @@
+{
+  "widths": [
+    390,
+    768,
+    1440
+  ],
+  "probes": [
+    {
+      "name": "hero-robot",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid img.robot",
+      "props": [
+        "order",
+        "max-width",
+        "margin-bottom"
+      ],
+      "box": true
+    },
+    {
+      "name": "hero-text",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid > div",
+      "props": [
+        "order"
+      ],
+      "box": true
+    },
+    {
+      "name": "hero-h1",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid h1",
+      "box": true,
+      "lines": true
+    },
+    {
+      "name": "site-header",
+      "routes": [
+        "/"
+      ],
+      "selector": "header.hd, .hd",
+      "props": [
+        "position",
+        "height"
+      ],
+      "box": true
+    },
+    {
+      "name": "pledgebar",
+      "routes": [
+        "/"
+      ],
+      "selector": ".pledgebar",
+      "props": [
+        "position",
+        "display",
+        "bottom"
+      ],
+      "box": true
+    },
+    {
+      "name": "hero-band",
+      "routes": [
+        "/"
+      ],
+      "selector": "main > [data-screen-label=\"S1 Hero\"]",
+      "props": [
+        "padding-top"
+      ],
+      "box": true
+    },
+    {
+      "name": "hero-robot-loading",
+      "routes": [
+        "/"
+      ],
+      "selector": ".hero-grid img.robot[loading=\"eager\"]",
+      "expect_count": 1
+    }
+  ]
+}

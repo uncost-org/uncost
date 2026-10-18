@@ -2,12 +2,19 @@
   Mobile menu (M1 accordion) + sticky pledge bar — structure from
   design-source/partials/nav-drawer.html (v3). Shown under 940px.
 
-  DESIGN: do not edit structure. This partial is included AFTER </main>, not
-  inside <header>: .drawer and .pledgebar are position:fixed overlays and moving
-  them into the header breaks the stacking context (v3 README, "Where the nav
-  markup lives"). Each section opens to an "Overview" link for the section
-  itself, then its dropdown links — ui.js keeps one section open at a time via
-  [data-acc] / .pm / .in.
+  DESIGN: do not edit structure (one sanctioned departure, below). This partial
+  is included AFTER </main>, not inside <header>: .drawer and .pledgebar are
+  position:fixed overlays and moving them into the header breaks the stacking
+  context (v3 README, "Where the nav markup lives"). Each section opens to its
+  description and then its dropdown links — ui.js keeps one section open at a
+  time via [data-acc] / .pm / .in.
+
+  Mobile fixes (2026-10-17, founder): the export's "Overview" link at the top of
+  each section is removed. It pointed at the section's own url, which is
+  already the section's FIRST dropdown link (chrome.json), and the desktop menu
+  has no Overview. The build fails if a section's first drawer link is ever not
+  the section's own url (eleventy.config.js, drawer landing-page guard), so no
+  landing page can quietly drop out of the menu. CANVAS-SYNC 171.
 
   CONTENT: labels, descriptions and links come from _data/chrome.json, the same
   source the header's mega panels read, so the two never drift apart.
@@ -19,7 +26,6 @@
     <button type="button" data-acc aria-expanded="false"><span>{{ item.label }}</span><span class="pm" aria-hidden="true">+</span></button>
     <div class="in">
       <div class="dd-desc">{{ item.desc }}</div>
-      <a href="{{ item.url }}">Overview<span class="ar" aria-hidden="true">&rarr;</span></a>
       {% for link in item.links %}
       <a href="{{ link.url }}"{% if link.external %} target="_blank" rel="noopener"{% endif %}>{{ link.label }}{% if link.badge %}<span class="plan">{{ link.badge }}</span>{% endif %}<span class="ar" aria-hidden="true">&rarr;</span></a>
       {% endfor %}

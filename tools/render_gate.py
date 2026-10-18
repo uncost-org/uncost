@@ -260,7 +260,7 @@ SECTION_EXEMPTIONS = [
      "so the headline sets in fewer, longer lines and the robot narrows at 1440; "
      "A2 sets \"living should not have a price tag.\" in plain ink. "
      "CANVAS-SYNC items 143 and 144. Round 2 (2026-10-11): the slogan's full "
-     "stop is ink. CANVAS-SYNC item 163."),
+     "stop is ink. CANVAS-SYNC item 163. Mobile fixes (2026-10-17): at 1000px and below the robot sits above the text (order: -1) and is 200px wide at 600px and below; desktop unchanged. CANVAS-SYNC item 170."),
     ("join", "div.privacyline",
      "C9: the \"We won't sell your data…\" strip moves from the export's --wheat "
      "to --cream-2, matching the tier cards above it. Same box, fill only. "
@@ -382,6 +382,14 @@ SECTION_EXEMPTIONS = [
     ("pledge-thanks", "Thanks hero",
      "Round 2: \"Your name is counted.\" — the full stop leaves the cream "
      "accent and is the heading's ink. CANVAS-SYNC item 169."),
+    # Mobile fixes (2026-10-17): the drawer's "Overview" links are removed.
+    # The gate measures <main>'s children only and the drawer sits after
+    # </main>, closed, in every gate screenshot, so this entry cannot fire;
+    # it is named so the departure from the export is on the record here too.
+    ("", "div.drawer",
+     "Mobile fixes item 2: each mobile-menu section opens straight onto its "
+     "links (the first is its landing page); the export's Overview link, which "
+     "repeated that url, is removed. CANVAS-SYNC item 171."),
     ("about", "Mechanism",
      "B5: the shared \"How a cost gets uncosted.\" heading's \"uncosted\" is a "
      "coral span, no longer underlined (X1's <u>). CANVAS-SYNC item 147."),
