@@ -3052,3 +3052,24 @@ body[data-page="sectors"] .introband p + p { margin-top: 14px; }
   body[data-page="index"] .hero-grid .robot { max-width: 200px; margin: 0 auto 8px; }
 }
 
+/* 139. Social links (2026-10-18), item 2 — the X glyph reads the same size as
+ *      its neighbours. The export's X mark is a thin double-struck outline;
+ *      next to the solid Bluesky, TikTok and Email marks at 16px (footer) and
+ *      18px (/contact/) it looked lighter and smaller. The glyph is kept (no
+ *      path edits, no icon set): only its rendering scale changes, 1.12,
+ *      chosen by eye from 1.0 / 1.08 / 1.12 / 1.15 / 1.2 screenshots, the
+ *      smallest at which its height matches the Instagram square and the
+ *      butterfly. Keyed on the link's aria-label, so it follows the account,
+ *      not its position. Box borders, colours, hover and focus are untouched. */
+.soc a[aria-label="X"] svg,
+.socrow a[aria-label="X"] svg { transform: scale(1.12); }
+
+/* 140. Social links (2026-10-18), item 2 — the /contact/ "Follow along" row
+ *      fits on one line. Above 820px the export's .cside column is 320px wide
+ *      with up to 40px padding, leaving 238px; five 40px icons with the
+ *      export's 10px gap need 240px, so the row wrapped 4 + 1 at 1440. An
+ *      8px column gap (232px) keeps it on one line. At 820px and below the
+ *      column stacks to full width and keeps the export's 10px. */
+@media (min-width: 821px) {
+  .cside .socrow { column-gap: 8px; }
+}

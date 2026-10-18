@@ -1,0 +1,32 @@
+{
+  "widths": [390, 768, 1024, 1290, 1440],
+  "probes": [
+    {"name": "footer-row", "routes": ["/"], "selector": "footer.ft .soc", "box": true, "shot": true, "widths": [390, 1440]},
+    {"name": "footer-icons", "routes": ["/"], "selector": "footer.ft .soc a", "all": true, "box": true,
+     "props": ["border-top-width", "border-top-color", "background-color", "color"]},
+    {"name": "closing", "routes": ["/"], "selector": "main > [data-screen-label=\"S9 Closing ask\"]", "shot": true, "widths": [390, 1440]},
+    {"name": "closing-links", "routes": ["/"], "selector": ".soc-txt a", "all": true, "box": true},
+    {"name": "contact-row", "routes": ["/contact/"], "selector": ".socrow", "box": true, "shot": true, "widths": [390, 1440]},
+    {"name": "contact-icons", "routes": ["/contact/"], "selector": ".socrow a", "all": true, "box": true,
+     "props": ["border-top-width", "border-top-color", "background-color", "color"]},
+    {"name": "footer-x-glyph", "routes": ["/"], "selector": "footer.ft .soc a[aria-label=\"X\"] svg", "box": true, "props": ["transform", "width", "height"]},
+    {"name": "footer-bluesky-glyph", "routes": ["/"], "selector": "footer.ft .soc a[aria-label=\"Bluesky\"] svg", "box": true, "props": ["transform", "width", "height"]},
+    {"name": "contact-x-glyph", "routes": ["/contact/"], "selector": ".socrow a[aria-label=\"X\"] svg", "box": true, "props": ["transform", "width", "height"]},
+    {"name": "footer-x-hover", "routes": ["/"], "selector": "footer.ft .soc a[aria-label=\"X\"]", "widths": [1440],
+     "state": {"action": "hover", "target": "footer.ft .soc a[aria-label=\"X\"]"},
+     "props": ["border-top-color", "background-color", "color"]},
+    {"name": "footer-x-focus", "routes": ["/"], "selector": "footer.ft .soc a[aria-label=\"X\"]", "widths": [1440, 390],
+     "state": {"action": "focus", "target": "footer.ft .soc a[aria-label=\"X\"]"},
+     "props": ["outline-style", "outline-width", "outline-color", "outline-offset", "box-shadow"], "ground": true},
+    {"name": "footer-row-x-focused", "routes": ["/"], "selector": "footer.ft .ft-grid > div:first-child", "widths": [1440, 390], "shot": true,
+     "state": {"action": "focus", "target": "footer.ft .soc a[aria-label=\"X\"]"}},
+    {"name": "contact-x-hover", "routes": ["/contact/"], "selector": ".socrow a[aria-label=\"X\"]", "widths": [1440],
+     "state": {"action": "hover", "target": ".socrow a[aria-label=\"X\"]"},
+     "props": ["border-top-color", "background-color", "color"]},
+    {"name": "contact-x-focus", "routes": ["/contact/"], "selector": ".socrow a[aria-label=\"X\"]", "widths": [1440, 390],
+     "state": {"action": "focus", "target": ".socrow a[aria-label=\"X\"]"},
+     "props": ["outline-style", "outline-width", "outline-color", "outline-offset", "box-shadow"], "ground": true},
+    {"name": "contact-row-x-focused", "routes": ["/contact/"], "selector": ".cside", "widths": [1440, 390], "shot": true,
+     "state": {"action": "focus", "target": ".socrow a[aria-label=\"X\"]"}}
+  ]
+}

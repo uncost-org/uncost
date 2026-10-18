@@ -307,7 +307,9 @@ SECTION_EXEMPTIONS = [
      "from this batch. The email, social and GitHub blocks above it match. "
      "Also (social links, 2026-10-18): the \"Follow along\" row renders from "
      "chrome.json and shows five accounts, not the export's seven (YouTube and "
-     "Reddit hidden). CANVAS-SYNC item 173."),
+     "Reddit hidden). CANVAS-SYNC item 173. The row keeps to one line above "
+     "820px with an 8px column gap, and the X glyph renders at scale 1.12. "
+     "CANVAS-SYNC item 174."),
     ("assembly", "Preview + interest",
      "V22: the PLANNED TOOL chip is removed from the \"A look ahead\" header "
      "row and the ink button reads \"How the Assembly works\". F2 had already "
