@@ -17,6 +17,15 @@ browser at phone width, with no mouse:
   4. pressing the open section's button again closes it (none open);
   5. no drawer link reads "Overview".
 
+And, since the pre-launch focus fix (2026-10), that the menu behaves as the
+modal dialog it declares (aria-modal):
+
+  6. opening it moves focus to its first control (FOCUS-IN);
+  7. Tab from its last control wraps to the first, Shift+Tab from the first
+     wraps to the last, and a run of Tabs and Shift+Tabs never leaves it (TRAP);
+  8. Escape closes it (ESCAPE), and so does its close button (CLOSE);
+  9. closing either way returns focus to the menu button (RETURN).
+
 STANDING RULE (docs/DESIGN_IMPORT_RUNBOOK.md): it fails on "I don't know" —
 a page that will not load, a control focus never reaches within the Tab
 budget, or a drawer with no sections is an ERROR, never a skipped line.
@@ -79,6 +88,22 @@ const TAB_BUDGET = 200;
     };
   });
 
+  const focusables = () => page.evaluate(() => {
+    const d = document.querySelector(".drawer");
+    return [...d.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])')]
+      .filter((el) => el.getClientRects().length > 0).length;
+  });
+  const focusAt = () => page.evaluate(() => {
+    const d = document.querySelector(".drawer"), a = document.activeElement;
+    const f = [...d.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])')]
+      .filter((el) => el.getClientRects().length > 0);
+    return { inDrawer: !!a && d.contains(a), index: f.indexOf(a), count: f.length,
+             onMenuButton: !!a && a.matches("[data-drawer-open]"),
+             drawerOpen: d.classList.contains("open"),
+             label: a ? (a.getAttribute("aria-label") || a.textContent || "").replace(/\s+/g, " ").trim().slice(0, 40) : "" };
+  });
+  const settle = () => new Promise((r) => setTimeout(r, 150));
+
   // 1. open the drawer from the keyboard
   const toMenu = await tabTo(() => document.activeElement && document.activeElement.matches("[data-drawer-open]"));
   if (!toMenu) errors.push("FOCUS: Tab never reached the menu button [data-drawer-open]");
@@ -91,6 +116,10 @@ const TAB_BUDGET = 200;
     if (s.sections === 0) errors.push("SECTIONS: the drawer has no sections");
     if (s.sections !== expected.length) errors.push(`SECTIONS: drawer has ${s.sections}, chrome.json nav has ${expected.length}`);
     if (s.overview) errors.push(`OVERVIEW: ${s.overview} drawer link(s) still read "Overview"`);
+    // 6. focus moved into the drawer, onto its first control
+    const fin = await focusAt();
+    steps.push({ step: "focus on open", ...fin });
+    if (!fin.inDrawer || fin.index !== 0) errors.push(`FOCUS-IN: opening the menu left focus on "${fin.label}" (drawer control #${fin.index + 1}), not its first control`);
 
     // 2-3. every section in order
     for (let i = 0; i < s.sections; i++) {
@@ -136,6 +165,54 @@ const TAB_BUDGET = 200;
       const u = await state();
       steps.push({ step: "close the open section", open: u.open });
       if (u.open.length) errors.push(`TOGGLE: pressing the open section's button left [${u.open.map((x) => x + 1)}] open`);
+    }
+
+    // 7. Tab and Shift+Tab stay inside the open drawer
+    const n = await focusables();
+    await page.evaluate(() => {
+      const d = document.querySelector(".drawer");
+      [...d.querySelectorAll("a[href], button")].filter((el) => el.getClientRects().length > 0)[0].focus();
+    });
+    await page.keyboard.down("Shift"); await page.keyboard.press("Tab"); await page.keyboard.up("Shift");
+    const wrapBack = await focusAt();
+    await page.keyboard.press("Tab");
+    const wrapFwd = await focusAt();
+    steps.push({ step: "wrap", controls: n, shiftTabFromFirst: wrapBack.index, tabFromLast: wrapFwd.index });
+    if (!wrapBack.inDrawer || wrapBack.index !== n - 1) errors.push(`TRAP: Shift+Tab from the first control went to "${wrapBack.label}", not the drawer's last control`);
+    if (!wrapFwd.inDrawer || wrapFwd.index !== 0) errors.push(`TRAP: Tab from the last control went to "${wrapFwd.label}", not the drawer's first control`);
+    let escaped = "";
+    for (let k = 0; k < n + 2 && !escaped; k++) {
+      await page.keyboard.press("Tab");
+      const at = await focusAt(); if (!at.inDrawer) escaped = `Tab x${k + 1} -> "${at.label}"`;
+    }
+    for (let k = 0; k < n + 2 && !escaped; k++) {
+      await page.keyboard.down("Shift"); await page.keyboard.press("Tab"); await page.keyboard.up("Shift");
+      const at = await focusAt(); if (!at.inDrawer) escaped = `Shift+Tab x${k + 1} -> "${at.label}"`;
+    }
+    steps.push({ step: "trap run", tabs: 2 * (n + 2), escaped });
+    if (escaped) errors.push(`TRAP: focus left the open drawer (${escaped})`);
+
+    // 8-9. Escape closes it, and focus returns to the menu button
+    await page.keyboard.press("Escape"); await settle();
+    const esc = await focusAt();
+    steps.push({ step: "Escape", drawerOpen: esc.drawerOpen, onMenuButton: esc.onMenuButton });
+    if (esc.drawerOpen) {
+      errors.push("ESCAPE: Escape did not close the drawer");
+      await page.evaluate(() => { document.querySelector(".drawer").classList.remove("open"); });
+    } else if (!esc.onMenuButton) errors.push(`RETURN: after Escape, focus is on "${esc.label}", not the menu button`);
+    await page.evaluate(() => document.querySelector("[data-drawer-open]").focus());
+    // 8-9. the close button closes it, and focus returns to the menu button
+    await page.keyboard.press("Enter"); await settle();
+    const re = await focusAt();
+    steps.push({ step: "reopen", drawerOpen: re.drawerOpen, index: re.index });
+    if (!re.drawerOpen) errors.push("OPEN: Enter on the menu button did not reopen the drawer");
+    else {
+      await page.evaluate(() => document.querySelector(".drawer [data-drawer-close]").focus());
+      await page.keyboard.press("Enter"); await settle();
+      const cl = await focusAt();
+      steps.push({ step: "close button", drawerOpen: cl.drawerOpen, onMenuButton: cl.onMenuButton });
+      if (cl.drawerOpen) errors.push("CLOSE: the close button did not close the drawer");
+      else if (!cl.onMenuButton) errors.push(`RETURN: after the close button, focus is on "${cl.label}", not the menu button`);
     }
   }
   await browser.close();
@@ -187,18 +264,38 @@ def expected_from_chrome():
 
 FIXTURE = """<!doctype html><html><head><meta charset=utf-8><style>
 .drawer{display:none}.drawer.open{display:block}.in{display:none}.drawer-acc.open .in{display:block}
-</style></head><body><button data-drawer-open>Menu</button>
-<div class="drawer">%s</div>
+</style></head><body><a href="/before/">Page link before</a><button data-drawer-open>Menu</button>
+<div class="drawer"><button type="button" data-drawer-close aria-label="Close menu">x</button>%s<a href="/faq/">FAQ</a></div>
+<a href="/after/">Page link after</a>
 <script>
-var d=document.querySelector('.drawer');
-document.querySelector('[data-drawer-open]').onclick=function(){d.classList.add('open')};
+var d=document.querySelector('.drawer'), mb=document.querySelector('[data-drawer-open]');
 d.querySelectorAll('[data-acc]').forEach(function(b){b.addEventListener('click',function(){
   var acc=b.parentElement, was=acc.classList.contains('open');
   %s
   if(!was){acc.classList.add('open');b.setAttribute('aria-expanded','true')}
   else{acc.classList.remove('open');b.setAttribute('aria-expanded','false')}
 })});
+function fz(){return [].slice.call(d.querySelectorAll('a[href],button')).filter(function(e){return e.getClientRects().length>0})}
+%s
 </script></body></html>"""
+# The drawer's focus behaviour, as ui.js does it, and four ways to get it wrong.
+FOCUS_PARTS = {
+    "in": "if(on&&!was){fz()[0].focus()}",
+    "return": "if(!on&&was){mb.focus()}",
+    "close": "d.querySelector('[data-drawer-close]').onclick=function(){setOpen(false)};",
+    "escape": "if(e.key==='Escape'){setOpen(false)}",
+    "trap": ("if(e.key!=='Tab'||!d.classList.contains('open'))return;var f=fz(),a=document.activeElement;"
+             "if(e.shiftKey&&a===f[0]){e.preventDefault();f[f.length-1].focus()}"
+             "else if(!e.shiftKey&&a===f[f.length-1]){e.preventDefault();f[0].focus()}"),
+}
+
+
+def focus_js(without: str = "") -> str:
+    part = {k: ("" if k == without else v) for k, v in FOCUS_PARTS.items()}
+    return ("function setOpen(on){var was=d.classList.contains('open');d.classList.toggle('open',on);"
+            + part["in"] + part["return"] + "}\n"
+            + "mb.onclick=function(){setOpen(true)};\n" + part["close"] + "\n"
+            + "document.addEventListener('keydown',function(e){" + part["escape"] + part["trap"] + "});")
 CLOSE_OTHERS = ("d.querySelectorAll('.drawer-acc').forEach(function(a){if(a!==acc){a.classList.remove('open');"
                 "a.querySelector('[data-acc]').setAttribute('aria-expanded','false')}});")
 
@@ -212,15 +309,22 @@ def section(label, links):
 def selftest(port: int) -> int:
     exp = [{"label": "One", "url": "/one/"}, {"label": "Two", "url": "/two/"}]
     good = section("One", [("/one/", "One home"), ("/x/", "X")]) + section("Two", [("/two/", "Two home")])
+    ok = focus_js()
     cases = {
-        "good.html": (FIXTURE % (good, CLOSE_OTHERS), set()),
+        "good.html": (FIXTURE % (good, CLOSE_OTHERS, ok), set()),
         # Opening a second section leaves the first open, so closing the last
         # one still leaves a section open: three kinds, all real.
-        "two-open.html": (FIXTURE % (good, ""), {"ONE-OPEN", "ARIA", "TOGGLE"}),
+        "two-open.html": (FIXTURE % (good, "", ok), {"ONE-OPEN", "ARIA", "TOGGLE"}),
         "wrong-first.html": (FIXTURE % (section("One", [("/x/", "X"), ("/one/", "One home")]) +
-                                        section("Two", [("/two/", "Two home")]), CLOSE_OTHERS), {"LANDING"}),
+                                        section("Two", [("/two/", "Two home")]), CLOSE_OTHERS, ok), {"LANDING"}),
         "overview.html": (FIXTURE % (section("One", [("/one/", "Overview"), ("/one/", "One home")]) +
-                                     section("Two", [("/two/", "Two home")]), CLOSE_OTHERS), {"OVERVIEW"}),
+                                     section("Two", [("/two/", "Two home")]), CLOSE_OTHERS, ok), {"OVERVIEW"}),
+        # Focus management: each fixture drops exactly one part of it.
+        "no-focus-in.html": (FIXTURE % (good, CLOSE_OTHERS, focus_js("in")), {"FOCUS-IN"}),
+        "no-trap.html": (FIXTURE % (good, CLOSE_OTHERS, focus_js("trap")), {"TRAP"}),
+        "no-escape.html": (FIXTURE % (good, CLOSE_OTHERS, focus_js("escape")), {"ESCAPE"}),
+        "no-close.html": (FIXTURE % (good, CLOSE_OTHERS, focus_js("close")), {"CLOSE"}),
+        "no-return.html": (FIXTURE % (good, CLOSE_OTHERS, focus_js("return")), {"RETURN"}),
     }
     tmp = pathlib.Path(tempfile.mkdtemp(prefix="uncost-drawer-st-"))
     failures = []

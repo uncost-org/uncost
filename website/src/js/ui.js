@@ -44,7 +44,31 @@
       if (!e.target.closest('.hd-item') && !e.target.closest('.hd-mega')) closeAll();
     });
 
-    function toggleDrawer(on){ if(!drawerEl) return; drawerEl.classList.toggle('open', on); document.body.style.overflow = on ? 'hidden' : ''; }
+    /* Mobile menu focus (pre-launch 2026-10; CANVAS-SYNC 176). The drawer is an
+       aria-modal dialog, so while it is open keyboard focus lives inside it:
+       opening moves focus to its first control (the close button); Tab and
+       Shift+Tab wrap within it; Escape or the close button closes it; and
+       closing returns focus to the menu button. Without this, focus stayed on
+       the page behind the open menu (about 63 Tabs to reach it). */
+    function drawerFocusables(){
+      return [].slice.call(drawerEl.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])'))
+        .filter(function(el){ return el.getClientRects().length > 0; });
+    }
+    function toggleDrawer(on){
+      if(!drawerEl) return;
+      var was = drawerEl.classList.contains('open');
+      drawerEl.classList.toggle('open', on); document.body.style.overflow = on ? 'hidden' : '';
+      if (on && !was) { var f = drawerFocusables()[0]; if (f) f.focus(); }
+      else if (!on && was && bOpen) bOpen.focus();
+    }
+    document.addEventListener('keydown', function(e){
+      if (e.key !== 'Tab' || !drawerEl || !drawerEl.classList.contains('open')) return;
+      var f = drawerFocusables(); if (!f.length) return;
+      var first = f[0], last = f[f.length - 1], a = document.activeElement;
+      if (!drawerEl.contains(a)) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
+      else if (e.shiftKey && a === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && a === last) { e.preventDefault(); first.focus(); }
+    });
     function toggleSearch(on){ if(!searchEl) return; searchEl.classList.toggle('open', on); document.body.style.overflow = on ? 'hidden' : ''; if(on){ var f = searchEl.querySelector('input, a, button'); if(f) f.focus(); } }  /* null-guarded on integration: with searchEnabled false the overlay renders
      no input at all, and the export's unguarded .focus() would throw. */
     var bOpen = document.querySelector('[data-drawer-open]'), bClose = document.querySelector('[data-drawer-close]');
