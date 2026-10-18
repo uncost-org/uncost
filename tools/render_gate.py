@@ -191,7 +191,9 @@ SECTION_EXEMPTIONS = [
      "cards to the shared figure card. Not in the brief's \"Apply to\" list, but "
      "they used `.fact`, so retiring it required converting them. "
      "CANVAS-SYNC item 55. Sweep 2026-10-10 (A4): the three cards are now "
-     "SRC-020, SRC-023 and SRC-022. CANVAS-SYNC item 145. Round 2 (2026-10-11): each figure card with a register sector gains a SECTOR chip after Region, linking that dossier. CANVAS-SYNC item 164."),
+     "SRC-020, SRC-023 and SRC-022. CANVAS-SYNC item 145. Round 2 (2026-10-11): each figure card with a register sector gains a SECTOR chip after Region, linking that dossier. CANVAS-SYNC item 164. "
+     "Pre-launch 2026-10 (PL-7): the three cards are now SRC-028 (Forbes 400, "
+     "wealth), SRC-022 (rent) and SRC-027 (energy). CANVAS-SYNC item 177."),
     ("receipts", "Keeping current",
      "P2 + R4: \"current\" is accented with --coral-on-ink, and the headline "
      "takes the shared prose scale. As with the CTA, a headline resize on a flat "

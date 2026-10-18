@@ -761,6 +761,9 @@ else:
 # (ownership), SRC-023 (ground beef), SRC-022 (rent vs income). The export
 # writes three .fact calls (tools/rederive_home.py); R3 made them figure
 # cards. Whatever three the template holds, they become these three.
+# Pre-launch 2026-10: PL-7 at the end of this file now sets the order
+# (SRC-028, SRC-022, SRC-027), so A4 only converts the export's three .fact
+# calls; any three figure cards already in place are left for PL-7.
 patch("website/src/index.njk",
       r'<div class="(?:cards|facts)">\n(?:    \{\{ fig\.(?:card|fact)\(register\.byId\["SRC-\d+"\]\) \}\}\n){3}  </div>',
       '<div class="cards">\n'
@@ -769,7 +772,7 @@ patch("website/src/index.njk",
       '    {{ fig.card(register.byId["SRC-022"]) }}\n'
       '  </div>',
       "A4 homepage stat cards: SRC-020, SRC-023, SRC-022",
-      guard='{{ fig.card(register.byId["SRC-020"]) }}\n    {{ fig.card(register.byId["SRC-023"]) }}')
+      guard='<div class="cards">\n    {{ fig.card(register.byId["SRC-')
 # The export's three S2 caption slots (stat1..stat3) are read by nothing — the
 # cards render the register's own captions — so they are dropped from home.json.
 if '"stat1": {' in pathlib.Path("website/src/_data/home.json").read_text(encoding="utf-8"):
@@ -1069,5 +1072,19 @@ literal("website/src/contact.njk",
         'description: "Reach Uncost by email or on our social channels. A human replies from '
         'contact@uncost.org."',
         "PL-6 contact description: no contact form")
+
+# PL-7 — homepage stat row: wealth, rent, energy. A new wealth figure that
+# appears nowhere else on the site (SRC-028, the Forbes 400), then rent
+# (SRC-022, unchanged), then energy (SRC-027). SRC-020 and SRC-023 leave the
+# homepage only; /case/ keeps both. index.njk is re-derived
+# (tools/rederive_home.py); this sits on top of M1 (#74) and SL-1 (#76).
+HOME_CARDS = ('<div class="cards">\n'
+              '    {{ fig.card(register.byId["SRC-028"]) }}\n'
+              '    {{ fig.card(register.byId["SRC-022"]) }}\n'
+              '    {{ fig.card(register.byId["SRC-027"]) }}\n'
+              '  </div>')
+patch("website/src/index.njk",
+      r'<div class="cards">\n(?:    \{\{ fig\.card\(register\.byId\["SRC-\d+"\]\) \}\}\n){3}  </div>',
+      HOME_CARDS, "PL-7 homepage stat cards: SRC-028, SRC-022, SRC-027", guard=HOME_CARDS)
 
 print("done")
