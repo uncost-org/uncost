@@ -1,0 +1,58 @@
+{
+  "widths": [
+    390,
+    1440
+  ],
+  "probes": [
+    {
+      "name": "s2-band",
+      "routes": [
+        "/"
+      ],
+      "selector": "main > [data-screen-label=\"S2 The problem\"]",
+      "box": true,
+      "shot": true
+    },
+    {
+      "name": "s2-cards",
+      "routes": [
+        "/"
+      ],
+      "selector": "main > [data-screen-label=\"S2 The problem\"] .cards > *",
+      "all": true,
+      "box": true
+    },
+    {
+      "name": "case-020",
+      "routes": [
+        "/case/"
+      ],
+      "selector": "[data-source=\"SRC-020\"]",
+      "expect_count": 1
+    },
+    {
+      "name": "case-023",
+      "routes": [
+        "/case/"
+      ],
+      "selector": "[data-source=\"SRC-023\"]",
+      "expect_count": 1
+    },
+    {
+      "name": "home-no-020",
+      "routes": [
+        "/"
+      ],
+      "selector": "[data-source=\"SRC-020\"]",
+      "expect_count": 0
+    },
+    {
+      "name": "home-no-023",
+      "routes": [
+        "/"
+      ],
+      "selector": "[data-source=\"SRC-023\"]",
+      "expect_count": 0
+    }
+  ]
+}

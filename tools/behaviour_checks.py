@@ -44,7 +44,8 @@ FIXTURES = ROOT / "tools" / "fixtures" / "behaviour"
 
 # Expected register size. Asserted rather than derived, so that a register that
 # silently loses rows fails here instead of quietly redefining "all of them".
-REGISTER_CARDS = 26
+# 27 since pre-launch 2026-10 added SRC-028 (the Forbes 400).
+REGISTER_CARDS = 27
 SHOW_MORE_STEP = 12
 
 # X17 — the scope filters' labels, in order, from the same file the overlay
@@ -515,14 +516,14 @@ BAD_HIDDEN_BEATEN = """<!doctype html><meta charset=utf-8><title>hidden beaten</
 [data-show-more]{display:block}
 .card{padding:4px}</style>
 <body><div id=register-cards>
-""" + "".join(f'<div class="card">row {i}</div>' for i in range(26)) + """
+""" + "".join(f'<div class="card">row {i}</div>' for i in range(REGISTER_CARDS)) + """
 </div><p data-show-more hidden>Show more</p></body>"""
 
-# All 26 render and the control is genuinely not rendered. Must PASS.
+# All REGISTER_CARDS render and the control is genuinely not rendered. Must PASS.
 GOOD_JS_OFF = """<!doctype html><meta charset=utf-8><title>good js-off</title>
 <style>[hidden]{display:none}.card{padding:4px}</style>
 <body><div id=register-cards>
-""" + "".join(f'<div class="card">row {i}</div>' for i in range(26)) + """
+""" + "".join(f'<div class="card">row {i}</div>' for i in range(REGISTER_CARDS)) + """
 </div><p data-show-more hidden>Show more</p>
 <div class="search-ov"><div class="so-search" data-search-box hidden>
 <input id=site-search></div>
@@ -533,7 +534,7 @@ BAD_CARDS_HIDDEN = """<!doctype html><meta charset=utf-8><title>cards hidden</ti
 <style>[hidden]{display:none}.card{padding:4px}
 #register-cards > .card:nth-child(n+13){display:none}</style>
 <body><div id=register-cards>
-""" + "".join(f'<div class="card">row {i}</div>' for i in range(26)) + """
+""" + "".join(f'<div class="card">row {i}</div>' for i in range(REGISTER_CARDS)) + """
 </div><p data-show-more hidden>Show more</p></body>"""
 
 # The search input renders with JS off — a dead control. Must FAIL.
