@@ -3088,7 +3088,7 @@ body[data-page="contact"] .introband p + p { margin-top: 18px; }
 
 /* 142. Contact form consent (founder, 2026-10-19; CHG-005) — one required,
  *      unticked checkbox before the send button: its purpose (a reply to this
- *      message only) and the minimum age, 16. A native checkbox and a real
+ *      message only) and the minimum age, 18. A native checkbox and a real
  *      <label for>, so the whole sentence is the click target, native
  *      `required` blocks the send and the browser announces it. The box is a
  *      20px target in the ink accent; the sentence takes the form's 15px. */

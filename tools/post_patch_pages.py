@@ -1118,13 +1118,13 @@ for f in ("check-email", "verify", "resent", "thanks"):
 
 # CF-3 — /privacy/ §2: what the contact form collects, what it is for, and
 # how long it is kept (CHG-005; founder decisions of 2026-10-19: no phone, the
-# consent box with the minimum age 16, 12-month retention). privacy.njk is
+# consent box with the minimum age 18, 12-month retention). privacy.njk is
 # re-derived. The pattern also takes an earlier contact-form bullet, so a
 # re-run replaces it rather than adding a second one.
 OPTIONAL_LI = ('<li><b>Optional details</b> — a name or message you choose to send us, or how you&rsquo;d '
                'like to help.</li>')
 CONTACT_LI = ('<li><b>The contact form</b> — if you use it: your name (optional), your email address, your '
-              'message, and your confirmation that you are 16 or older. We use them only to reply to your '
+              'message, and your confirmation that you are 18 or older. We use them only to reply to your '
               'message. They are not stored on this site: the form emails them to our inbox, the '
               'founder&rsquo;s, where they are kept only as long as needed to reply and deleted within 12 '
               'months of our last reply.</li>')

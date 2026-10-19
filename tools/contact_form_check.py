@@ -118,7 +118,7 @@ if (s.replyTo !== "ada@example.org") errors.push(`WORKER: replyTo is ${s.replyTo
 if (s.from === "ada@example.org") errors.push("WORKER: the visitor is From");
 if (!/^uncost\.org contact form/.test(s.subject || "")) errors.push(`WORKER: subject is "${s.subject}"`);
 if (!/Hello/.test(s.text || "")) errors.push("WORKER: the message is not in the body");
-if (!/Consent: ticked/.test(s.text || "") || !/16 or older/.test(s.text || "")) errors.push("WORKER: the body does not quote the consent box");
+if (!/Consent: ticked/.test(s.text || "") || !/18 or older/.test(s.text || "")) errors.push("WORKER: the body does not quote the consent box");
 if (!/within 12 months/.test(s.text || "")) errors.push("WORKER: the body does not state the retention rule");
 if (/Phone/.test(s.text || "")) errors.push("WORKER: the body has a phone line");
 results.push({ name: "worker send", to: "CONTACT_TO", from: s.from, replyTo: s.replyTo, subject: s.subject });
@@ -185,7 +185,7 @@ const base = process.argv[3];
   if (JSON.stringify(a11y.required) !== JSON.stringify(["email", "message", "consent"])) errors.push(`REQUIRED: required fields are ${a11y.required}`);
   if (a11y.phone) errors.push("PHONE: the form still has a phone field");
   if (a11y.consentChecked) errors.push("CONSENT: the consent box is ticked by default");
-  if (!/16 or older/.test(a11y.consentLabel) || !/only to reply to this message/.test(a11y.consentLabel)) errors.push(`CONSENT: label reads "${a11y.consentLabel}"`);
+  if (!/18 or older/.test(a11y.consentLabel) || !/only to reply to this message/.test(a11y.consentLabel)) errors.push(`CONSENT: label reads "${a11y.consentLabel}"`);
   if (a11y.action !== "/api/contact" || a11y.method !== "post") errors.push(`FORM: action ${a11y.action} method ${a11y.method}`);
   await p.focus("#c-name");
   const order = [];
