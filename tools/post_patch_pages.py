@@ -1117,15 +1117,20 @@ for f in ("check-email", "verify", "resent", "thanks"):
           f"CF-2 pledge/{f}: formFlow (noindex while forms are off)", guard="\nformFlow: true\n")
 
 # CF-3 — /privacy/ §2: what the contact form collects, what it is for, and
-# where it is kept (CHG-005). privacy.njk is re-derived.
-literal("website/src/privacy.njk",
-        '<li><b>Optional details</b> — a name or message you choose to send us, or how you&rsquo;d '
-        'like to help.</li>',
-        '<li><b>Optional details</b> — a name or message you choose to send us, or how you&rsquo;d '
-        'like to help.</li>\n      <li><b>The contact form</b> — if you use it: your name, your email '
-        'address, an optional phone number and your message. We use them only to reply. They are not '
-        'stored on this site: the form emails them to our inbox, the founder&rsquo;s, and they are kept '
-        'there.</li>',
-        "CF-3 privacy §2: what the contact form collects")
+# how long it is kept (CHG-005; founder decisions of 2026-10-19: no phone, the
+# consent box with the minimum age 16, 12-month retention). privacy.njk is
+# re-derived. The pattern also takes an earlier contact-form bullet, so a
+# re-run replaces it rather than adding a second one.
+OPTIONAL_LI = ('<li><b>Optional details</b> — a name or message you choose to send us, or how you&rsquo;d '
+               'like to help.</li>')
+CONTACT_LI = ('<li><b>The contact form</b> — if you use it: your name (optional), your email address, your '
+              'message, and your confirmation that you are 16 or older. We use them only to reply to your '
+              'message. They are not stored on this site: the form emails them to our inbox, the '
+              'founder&rsquo;s, where they are kept only as long as needed to reply and deleted within 12 '
+              'months of our last reply.</li>')
+patch("website/src/privacy.njk",
+      re.escape(OPTIONAL_LI) + r'(?:\n      <li><b>The contact form</b>.*?</li>)?',
+      (OPTIONAL_LI + "\n      " + CONTACT_LI).replace("\\", "\\\\"),
+      "CF-3 privacy §2: what the contact form collects", guard=CONTACT_LI)
 
 print("done")

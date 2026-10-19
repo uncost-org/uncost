@@ -1,5 +1,6 @@
 {#-
-  data-form="contact" — email + message required, name and phone optional.
+  data-form="contact" — email, message and the consent box required; name optional.
+  No phone field: UNP-57 §4A excludes phone from every form (founder, 2026-10-19).
 
   The export ships this one LIVE, with an inline script that fakes a success
   state. That contradicts the export's own rule that every form is disabled
@@ -14,9 +15,12 @@
   inbox and stores nothing. With JS on, ui.js sends it with fetch and writes
   the result into .cnote; with JS off, the browser posts it and lands on
   /contact/sent/ (or /contact/not-sent/). Native validation (no novalidate)
-  marks and announces a missing or malformed email or a missing message in
-  both modes. hp_url is a honeypot, hidden from people and from assistive
-  technology and checked on the server.
+  marks and announces a missing or malformed email, a missing message or an
+  unticked consent box in both modes. The consent box is unticked, names its
+  one purpose (a reply to this message) and the minimum age, 16 (POL-002
+  names none; founder, 2026-10-19), and is checked again on the server.
+  hp_url is a honeypot, hidden from people and from assistive technology and
+  checked on the server.
 -#}
 {% if features.contactFormOpen %}
 <form class="cform" data-form="contact" data-live action="/api/contact" method="post">
@@ -24,10 +28,10 @@
     <div><label class="fl" for="c-name">Name</label><input class="field" id="c-name" type="text" name="name" autocomplete="name" maxlength="200" placeholder="Your name"></div>
     <div><label class="fl" for="c-email">Email <span class="req">(required)</span></label><input class="field" id="c-email" type="email" name="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required></div>
   </div>
-  <label class="fl" for="c-phone">Phone</label><input class="field" id="c-phone" type="tel" name="phone" autocomplete="tel" maxlength="40" placeholder="Optional">
   <label class="fl" for="c-msg">Message <span class="req">(required)</span></label><textarea class="field" id="c-msg" name="message" maxlength="5000" placeholder="What&rsquo;s on your mind?" required></textarea>
   <div class="hp" hidden><label for="c-hp">Leave this field empty</label><input id="c-hp" type="text" name="hp_url" tabindex="-1" autocomplete="off"></div>
-  <p class="cprivacy">We use your details only to reply. Your message goes to our inbox and isn&rsquo;t stored on this site. <a href="/privacy/#s2">Privacy</a></p>
+  <p class="cprivacy">Your message goes to our inbox, isn&rsquo;t stored on this site, and is deleted within 12 months of our last reply. <a href="/privacy/#s2">Privacy</a></p>
+  <div class="cconsent"><input id="c-consent" type="checkbox" name="consent" value="yes" required><label for="c-consent">I&rsquo;m 16 or older, and I agree that Uncost may use my name, email address and message only to reply to this message. <span class="req">(required)</span></label></div>
   <button class="cbtn" type="submit">Send message</button>
   <div class="cnote" role="alert" aria-live="polite"></div>
 </form>

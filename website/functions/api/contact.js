@@ -18,7 +18,8 @@
 // given, and a filled honeypot gets the success answer without anything being
 // sent.
 
-export const LIMITS = { name: 200, email: 254, phone: 40, message: 5000 };
+// No phone field: UNP-57 §4A excludes phone from every form (founder, 2026-10-19).
+export const LIMITS = { name: 200, email: 254, message: 5000 };
 const MAX_BODY = 32 * 1024;
 // One @, no spaces or angle brackets, a dot in the domain, and a TLD of two or
 // more letters. Deliberately strict: the address becomes the Reply-To header.
@@ -33,17 +34,18 @@ const body = (s) => s.replace(/\r\n?/g, "\n").replace(/[\u0000-\u0008\u000b-\u00
 export function validate(fields) {
   const get = (k) => (typeof fields[k] === "string" ? fields[k] : "");
   if (get("hp_url").trim() !== "") return { spam: true };
+  // The consent box (16 or older; a reply to this message only) must be ticked,
+  // here as well as in the browser. An unticked box is a failed check.
+  if (get("consent") !== "yes") return { ok: false };
   const msg = {
     name: oneLine(get("name")),
     email: oneLine(get("email")),
-    phone: oneLine(get("phone")),
     message: body(get("message")),
   };
   if (!msg.email || !msg.message) return { ok: false };
   for (const [k, max] of Object.entries(LIMITS)) if (msg[k].length > max) return { ok: false };
   if (!EMAIL_RE.test(msg.email)) return { ok: false };
-  if (msg.phone && !/^[0-9+().\-\s]{3,40}$/.test(msg.phone)) return { ok: false };
-  return { ok: true, msg };
+  return { ok: true, msg: { ...msg, consent: true } };
 }
 
 function sameOrigin(request) {

@@ -12,15 +12,19 @@
 // sends only from routing domains); the visitor's address is Reply-To, never
 // From. Nothing is stored or logged.
 
-const LIMITS = { name: 200, email: 254, phone: 40, message: 5000 };
+const LIMITS = { name: 200, email: 254, message: 5000 };
 const FROM = "contact@uncost.org";
+// The consent box's text, quoted into every message so the founder inbox holds
+// what the sender agreed to (CHG-005). Keep it identical to
+// website/src/_includes/partials/forms/contact.njk.
+export const CONSENT_TEXT =
+  "I’m 16 or older, and I agree that Uncost may use my name, email address and message only to reply to this message.";
 
 const oneLine = (s) => String(s || "").replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim();
 
 export function compose(msg) {
   const name = oneLine(msg.name).slice(0, LIMITS.name);
   const email = oneLine(msg.email).slice(0, LIMITS.email);
-  const phone = oneLine(msg.phone).slice(0, LIMITS.phone);
   const message = String(msg.message || "").slice(0, LIMITS.message);
   const who = name || email;
   return {
@@ -31,9 +35,11 @@ export function compose(msg) {
       "",
       `Name:  ${name || "(not given)"}`,
       `Email: ${email}`,
-      `Phone: ${phone || "(not given)"}`,
+      `Consent: ticked — "${CONSENT_TEXT}"`,
       "",
       message,
+      "",
+      "Keep only as long as needed to reply; delete within 12 months of the last reply (CHG-005).",
       "",
     ].join("\n"),
     replyTo: email,
@@ -50,7 +56,9 @@ export default {
     } catch {
       return new Response(null, { status: 400 });
     }
-    if (!msg || !oneLine(msg.email) || !String(msg.message || "").trim()) return new Response(null, { status: 400 });
+    if (!msg || msg.consent !== true || !oneLine(msg.email) || !String(msg.message || "").trim()) {
+      return new Response(null, { status: 400 });
+    }
     const mail = compose(msg);
     try {
       await env.SEND_EMAIL.send({ to: env.CONTACT_TO, from: FROM, ...mail });
