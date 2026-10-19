@@ -21,7 +21,7 @@
 {% if features.contactFormOpen %}
 <form class="cform" data-form="contact" data-live action="/api/contact" method="post">
   <div class="row2">
-    <div><label class="fl" for="c-name">Name</label><input class="field" id="c-name" name="name" autocomplete="name" maxlength="200" placeholder="Your name"></div>
+    <div><label class="fl" for="c-name">Name</label><input class="field" id="c-name" type="text" name="name" autocomplete="name" maxlength="200" placeholder="Your name"></div>
     <div><label class="fl" for="c-email">Email <span class="req">(required)</span></label><input class="field" id="c-email" type="email" name="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required></div>
   </div>
   <label class="fl" for="c-phone">Phone</label><input class="field" id="c-phone" type="tel" name="phone" autocomplete="tel" maxlength="40" placeholder="Optional">
