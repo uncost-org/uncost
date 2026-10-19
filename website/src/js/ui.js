@@ -1,5 +1,6 @@
 /* Uncost — UI behaviour only. All markup lives in partials/ as real HTML.
-   Progressive enhancement: every link works with JS disabled. No third-party requests. */
+   Progressive enhancement: every link works with JS disabled. This file makes no
+   third-party request: its only fetch is the contact form's same-origin /api/contact. */
 (function () {
   function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
   ready(function () {
@@ -100,9 +101,41 @@
 
     /* FAQ / policy disclosure groups use native <details> — no JS needed. */
 
-    /* Forms: inert until data/site.json flags.formsOpen is true and a backend is wired.
-       Hooks: [data-form="pledge"] [data-form="updates"] [data-form="contact"] */
+    /* Forms: inert unless the build rendered them live. Hooks: [data-form="pledge"]
+       [data-form="updates"] [data-form="contact"]. Only the contact form can be
+       live today: features.contactFormOpen renders it with data-live and an
+       action (partials/forms/contact.njk). Every other form's submit stays
+       cancelled. The live contact form is sent with fetch to its same-origin
+       action and the outcome is written into its .cnote live region; with JS
+       off the browser posts it and the handler answers with a plain page. */
+    function contactResult(note, ok){
+      note.textContent = '';
+      if (ok) { note.textContent = 'Thank you — your message has been sent. We’ll reply by email.'; return; }
+      var a = document.createElement('a');
+      a.href = 'mailto:contact@uncost.org'; a.textContent = 'contact@uncost.org';
+      note.appendChild(document.createTextNode('Your message could not be sent. Please email '));
+      note.appendChild(a);
+      note.appendChild(document.createTextNode(' instead.'));
+    }
+    function wireContact(f){
+      var note = f.querySelector('.cnote'), btn = f.querySelector('button[type="submit"]');
+      f.addEventListener('submit', function(e){
+        e.preventDefault();
+        if (btn) btn.disabled = true;
+        if (note) note.textContent = 'Sending…';
+        fetch(f.getAttribute('action'), { method: 'POST', body: new FormData(f), headers: { 'Accept': 'application/json' } })
+          .then(function(r){ return r.ok ? r.json() : { ok: false }; })
+          .catch(function(){ return { ok: false }; })
+          .then(function(res){
+            var ok = !!(res && res.ok);
+            if (note) contactResult(note, ok);
+            if (ok) f.reset();
+            if (btn) btn.disabled = false;
+          });
+      });
+    }
     document.querySelectorAll('[data-form]').forEach(function(f){
+      if (f.matches('form[data-form="contact"][data-live][action]')) { wireContact(f); return; }
       f.addEventListener('submit', function(e){ e.preventDefault(); });
     });
   });

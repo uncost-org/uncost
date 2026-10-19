@@ -73,12 +73,17 @@ that is called out.
 
 ## Assets, fonts, and network
 
-5. **Self-hosted fonts and zero third-party runtime requests.** No CDN, no Google
-   Fonts, no external scripts, styles, images, or fetches. Fonts are vendored WOFF2
-   with OFL receipts.
+5. **Self-hosted fonts and no third-party runtime requests but one.** No CDN, no
+   Google Fonts, no external scripts, styles, images, or fetches. Fonts are vendored
+   WOFF2 with OFL receipts. The one exception (2026-10-19, CHG-005) is Cloudflare
+   Web Analytics on the production Pages project: Cloudflare injects its beacon
+   (`https://static.cloudflareinsights.com/beacon.min.js`) at the edge, and it
+   reports to `https://cloudflareinsights.com`. Those two are the only external
+   origins the CSP in `website/src/_headers` allows. A design must not add any other.
    *Enforced:* `scripts/audit_design_handoff.py` (no `https?://` in the packet CSS,
-   no `fonts.googleapis.com`) and `scripts/audit_site_quality.py` (zero third-party
-   fetched resources in built output).
+   no `fonts.googleapis.com`), `scripts/audit_site_quality.py` (no third-party
+   fetched resource in built output except that beacon script) and
+   `tools/prod_check.py` (the CSP names no other external origin).
 6. **Images come only from the approved brand manifest.** Paths, hashes, and alt
    text are authoritative in `website/assets/brand/ASSET_MANIFEST.json`; build-time
    derivatives are never committed.

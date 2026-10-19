@@ -138,6 +138,9 @@ ALLOWED_NAV_HOSTS = {
     "youtube.com",
     "www.reddit.com",  # the subreddit, www.reddit.com/r/Uncost_org/ (2026-10-18)
     "tiktok.com",
+    # /privacy/ §2 links Cloudflare's own Web Analytics privacy page, as the
+    # founder asked (contact-form batch, 2026-10-19; CHG-005).
+    "www.cloudflare.com",
     # Cost Watch reading list — designed, deliberate outbound links to publishers
     # the register already cites. COMING-SOON.md: "links out only, never
     # republished… Inclusion isn't endorsement — it's a reading list."
@@ -208,6 +211,24 @@ def strip_data_uris(line: str) -> str:
                 break
         k = line.find(closer, j + 5)
         i = k if k >= 0 else len(line)
+
+
+# The ONE third-party request the site allows: Cloudflare Web Analytics on the
+# production Pages project (records/changes/CHG-005; _headers CSP). Cloudflare
+# injects the beacon at the edge, so it is normally absent from the build; if it
+# is ever written into the build, only this exact script URL is exempt, and
+# only as a <script src>. Its report goes to https://cloudflareinsights.com
+# from inside the beacon, never from markup here.
+BEACON_SCRIPT = "https://static.cloudflareinsights.com/beacon.min.js"
+BEACON_SRC_RE = re.compile(
+    r"""(<script\b[^>]*?\bsrc\s*=\s*["']?)""" + re.escape(BEACON_SCRIPT) + r"""(?:\?[^"'\s>]*)?""",
+    re.IGNORECASE,
+)
+
+
+def strip_beacon(line: str) -> str:
+    """Remove the Web Analytics beacon's script URL, and only that, from a line."""
+    return BEACON_SRC_RE.sub(lambda m: m.group(1), line)
 
 
 # Fabricated attributions that must never reach the built site. The Okonkwo
@@ -611,7 +632,7 @@ def scan_built_assertions(
         scan_urls = path.suffix.lower() in BUILT_URL_SUFFIXES
         for number, line in enumerate(text.splitlines(), 1):
             if scan_urls:
-                line = strip_data_uris(line)
+                line = strip_beacon(strip_data_uris(line))
                 # Asset positions: first-party only, no exceptions.
                 for regex in (ASSET_URL_RE, LINK_HREF_URL_RE):
                     for match in regex.finditer(line):
@@ -641,6 +662,71 @@ def scan_built_assertions(
                 if name.lower() in lowered:
                     findings.append(Finding("FAIL", "forbidden-name", rel, number, line.strip()[:90]))
                     line_texts[(rel, number)] = line
+
+
+class _FormScanner(HTMLParser):
+    """Every form control in a page, and whether it sits inside the live form."""
+
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.controls: List[Tuple[str, Dict[str, str], int, bool]] = []
+        self.live_forms = 0
+        self._in_live = False
+
+    def handle_starttag(self, tag: str, attrs: List[Tuple[str, Optional[str]]]) -> None:
+        a = {k: (v or "") for k, v in attrs}
+        line = self.getpos()[0]
+        if tag == "form":
+            self._in_live = (a.get("data-form") == "contact" and "data-live" in a
+                             and a.get("action") == "/api/contact" and a.get("method", "").lower() == "post")
+            self.live_forms += int(self._in_live)
+            self.controls.append((tag, a, line, self._in_live))
+        elif tag in ("input", "textarea", "select"):
+            self.controls.append((tag, a, line, self._in_live))
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "form":
+            self._in_live = False
+
+
+def scan_forms(
+    built_dir: Path,
+    findings: List[Finding],
+    line_texts: Dict[Tuple[str, int], str],
+    contact_open: Optional[bool] = None,
+) -> None:
+    """FAIL on any rendered form or form control except the allowed ones.
+
+    - A type="search" box (site search, keyword filters) is always allowed.
+    - The contact form is allowed ONLY when the build was made with
+      UNCOST_CONTACT_FORM_OPEN=on (read here from the same environment), ONLY on
+      contact/index.html, and only as the live form (data-form="contact",
+      data-live, action="/api/contact", method="post"); its own controls are
+      allowed. In that build the form MUST be there (contact-form-missing).
+    - Everything else — the pledge and updates forms included, whatever
+      formsOpen says — fails (form-rendered). Never allowlisted.
+    """
+    if contact_open is None:
+        contact_open = os.environ.get("UNCOST_CONTACT_FORM_OPEN") == "on"
+    for path in sorted(built_dir.rglob("*.html")):
+        rel = str(path.relative_to(built_dir))
+        text = path.read_text(encoding="utf-8")
+        parser = _FormScanner()
+        parser.feed(text)
+        lines = text.splitlines()
+        contact_page = rel == "contact/index.html"
+        for tag, attrs, line, in_live in parser.controls:
+            if tag == "input" and attrs.get("type", "").lower() == "search" and not in_live:
+                continue
+            if contact_open and contact_page and in_live:
+                continue
+            excerpt = f"<{tag} " + " ".join(f'{k}="{v}"' for k, v in list(attrs.items())[:4]) + ">"
+            findings.append(Finding("FAIL", "form-rendered", rel, line, excerpt[:90]))
+            line_texts[(rel, line)] = lines[line - 1] if 0 < line <= len(lines) else excerpt
+        if contact_open and contact_page and parser.live_forms != 1:
+            findings.append(Finding("FAIL", "contact-form-missing", rel, 1,
+                                    f"{parser.live_forms} live contact forms; expected exactly 1"))
+            line_texts[(rel, 1)] = f"live contact forms: {parser.live_forms}"
 
 
 def scan_gated_marker_leak(
@@ -723,6 +809,7 @@ def run_scan(built_dir: Optional[Path]) -> int:
                 rel = str(path.relative_to(built_dir))
                 scan_built_html(path, rel, findings, line_texts, register_ids, cited_figures)
         scan_built_assertions(built_dir, findings, line_texts)
+        scan_forms(built_dir, findings, line_texts)
         scan_gated_marker_leak(built_dir, findings, line_texts)
 
     allowlist = load_allowlist()
@@ -1022,6 +1109,47 @@ def selftest() -> int:
             expect(False, "a social entry without show is rejected")
         except SystemExit:
             pass
+
+    # The Web Analytics beacon is the one exempt third-party URL, and only as a
+    # <script src>; the same host anywhere else still fails.
+    beacon_findings: List[Finding] = []
+    beacon_texts: Dict[Tuple[str, int], str] = {}
+    with tempfile.TemporaryDirectory() as tmp:
+        (Path(tmp) / "b.html").write_text(
+            '<script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon="{}"></script>\n'
+            '<img src="https://static.cloudflareinsights.com/pixel.gif" alt="">\n'
+            '<script src="https://static.cloudflareinsights.com/other.js"></script>', encoding="utf-8")
+        scan_built_assertions(Path(tmp), beacon_findings, beacon_texts, hidden_social=set())
+    beacon_rules = sorted((f.rule, f.line) for f in beacon_findings)
+    expect(not any(line == 1 for _, line in beacon_rules), "the beacon script URL is exempt")
+    expect(any(line == 2 for _, line in beacon_rules) and any(line == 3 for _, line in beacon_rules),
+           "the beacon host is not exempt for any other URL or tag")
+
+    # Forms: only search boxes, and the live contact form on /contact/ in a
+    # build with UNCOST_CONTACT_FORM_OPEN=on.
+    live = ('<form class="cform" data-form="contact" data-live action="/api/contact" method="post">'
+            '<input id="c-email" type="email" name="email" required><textarea name="message"></textarea>'
+            '<div hidden><input name="hp_url"></div><button type="submit">Send</button></form>')
+    def form_rules(files: Dict[str, str], contact_open: bool) -> List[str]:
+        out: List[Finding] = []
+        with tempfile.TemporaryDirectory() as tmp:
+            for rel, html_text in files.items():
+                (Path(tmp) / rel).parent.mkdir(parents=True, exist_ok=True)
+                (Path(tmp) / rel).write_text(html_text, encoding="utf-8")
+            scan_forms(Path(tmp), out, {}, contact_open=contact_open)
+        return sorted(f"{f.rule}@{f.path}" for f in out)
+    search = '<input id="site-search" type="search">'
+    expect(form_rules({"index.html": search, "contact/index.html": "<p>off</p>"}, False) == [],
+           "switch off: search boxes only passes")
+    expect(form_rules({"contact/index.html": live}, False)
+           == ["form-rendered@contact/index.html"] * 4, "switch off: a contact form fails")
+    expect(form_rules({"contact/index.html": live + search}, True) == [], "switch on: the live contact form passes")
+    expect(form_rules({"contact/index.html": live, "about/index.html": live}, True)
+           == ["form-rendered@about/index.html"] * 4, "switch on: the contact form anywhere else fails")
+    expect(form_rules({"contact/index.html": live, "pledge/index.html": '<form data-form="pledge"><input type="email"></form>'}, True)
+           == ["form-rendered@pledge/index.html"] * 2, "switch on: the pledge form still fails")
+    expect(form_rules({"contact/index.html": "<p>off</p>"}, True)
+           == ["contact-form-missing@contact/index.html"], "switch on: a missing contact form fails")
 
     # Gated transition markers must never reach rendered HTML.
     gated_findings: List[Finding] = []

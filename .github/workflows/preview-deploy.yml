@@ -1,6 +1,9 @@
 name: preview-deploy
 on:
   pull_request:
+    # `labeled` so that adding the preview-contact-form label rebuilds the
+    # preview with the contact form on (see the build step).
+    types: [opened, synchronize, reopened, labeled]
 permissions:
   contents: read
 concurrency:
@@ -36,8 +39,15 @@ jobs:
           fi
       - run: npm ci
         working-directory: website
+      # Every preview builds with the defaults, except a PR carrying the
+      # preview-contact-form label: its preview builds with
+      # UNCOST_CONTACT_FORM_OPEN=on so a test message can be sent before merge
+      # (CHG-005). No other variable or build changes. The audit below runs with
+      # the same value, so it expects exactly what was built.
       - run: npm run build
         working-directory: website
+        env:
+          UNCOST_CONTACT_FORM_OPEN: ${{ contains(github.event.pull_request.labels.*.name, 'preview-contact-form') && 'on' || '' }}
       - name: Enforce preview noindex posture
         run: |
           # Previews disallow all crawling and add a noindex header, on top of
@@ -53,6 +63,8 @@ jobs:
           echo "noindex posture verified"
       - run: python3 scripts/audit_website.py
       - run: python3 scripts/audit_website.py --built website/dist
+        env:
+          UNCOST_CONTACT_FORM_OPEN: ${{ contains(github.event.pull_request.labels.*.name, 'preview-contact-form') && 'on' || '' }}
       - name: Deploy preview
         if: steps.config.outputs.enabled == 'true'
         id: deploy

@@ -30,6 +30,16 @@ module.exports = {
   // vendor script, no third-party request.
   formsOpen: process.env.UNCOST_FORMS_OPEN === "on",
 
+  // The /contact/ form has its own switch, separate from formsOpen: the pledge
+  // and updates sign-ups stay on formsOpen and stay off. Defaults OFF. Its
+  // precondition is a working, TESTED delivery path — the Pages Function
+  // (website/functions/api/contact.js), its Service binding to the
+  // uncost-contact-mailer Worker (workers/contact-mailer/), that Worker's
+  // Email Routing send binding and destination secret, and a test message
+  // seen arriving in the founder inbox. A message is emailed, never stored on
+  // our side. Turning it on is recorded in records/changes/CHG-005.
+  contactFormOpen: process.env.UNCOST_CONTACT_FORM_OPEN === "on",
+
   // No donate ask may appear anywhere while this is false. The gate is
   // lawfulness (POL-004 financial controls), not design.
   donationsOpen: process.env.UNCOST_DONATIONS_OPEN === "on",

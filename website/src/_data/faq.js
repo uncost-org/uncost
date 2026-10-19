@@ -100,7 +100,7 @@ module.exports = {
         },
         {
           q: "Do you track me on this site?",
-          a: "No. No analytics, no advertising pixels, no fingerprinting, no third-party requests at all — every asset on this site is served from uncost.org, which you can verify in your browser’s network tab. There’s no cookie banner because there’s nothing to consent to.",
+          a: "We don’t track you as a person. The site uses Cloudflare Web Analytics, which counts page views without cookies, fingerprinting or advertising profiles; Cloudflare, our host, processes that data. Its small script is the only thing the site loads from outside uncost.org — everything else is served from uncost.org, which you can verify in your browser’s network tab. No advertising pixels, and no cookie banner, because there are no cookies to consent to.",
         },
       ],
     },

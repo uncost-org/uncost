@@ -3073,3 +3073,15 @@ body[data-page="sectors"] .introband p + p { margin-top: 14px; }
 @media (min-width: 821px) {
   .cside .socrow { column-gap: 8px; }
 }
+
+/* 141. Contact form (2026-10-19; CHG-005) — the at-collection privacy line.
+ *      When features.contactFormOpen renders the live form, one line above
+ *      the button says what the details are for and links /privacy/ §2. It
+ *      takes the side panel's secondary-note style (14px, --fg-2), not 18px
+ *      body text, so it reads as a note and not as part of the form. The
+ *      honeypot needs no CSS: it ships inside a `hidden` wrapper. */
+body[data-page="contact"] .cform .cprivacy { font-size: 14px; line-height: 1.6; color: var(--fg-2); margin: 4px 0 18px; }
+/*      The JS-off confirmation pages (/contact/sent/, /contact/not-sent/) reuse
+ *      the contact page's styles (pageId "contact"); their second paragraph
+ *      holds the "Back to Contact" button and gets the gap a paragraph would. */
+body[data-page="contact"] .introband p + p { margin-top: 18px; }
