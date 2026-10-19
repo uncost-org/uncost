@@ -158,6 +158,8 @@ module.exports = class {
       if (!(url.endsWith("/") || url.endsWith(".html"))) continue;
       // Search-index eligibility EQUALS robots indexability.
       if (item.data && item.data.noindex) continue;
+      // Pledge-flow pages are noindex while formsOpen is off (layouts/base.njk).
+      if (item.data && item.data.formFlow && !(item.data.features && item.data.features.formsOpen)) continue;
 
       const raw = item.templateContent || "";
       const body = stripBalancedDivs(raw, FIGURE_CARD_RE);

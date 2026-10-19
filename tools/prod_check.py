@@ -19,8 +19,10 @@ Checks — each an ERROR, never a skipped line (standing rule 1):
      posture, which .github/workflows/preview-deploy.yml adds to previews
      only;
   3. NOINDEX: the pages with <meta name="robots" content="noindex"> are
-     exactly the expected set (the unlinked placeholders and the two error
-     pages), none of them is in sitemap.xml, and every other page is;
+     exactly the expected set — the unlinked placeholders, the two error
+     pages and, while UNCOST_FORMS_OPEN is not "on", the four pledge-flow
+     pages (nothing to act on with forms off) — none of them is in
+     sitemap.xml, and every other page is;
   4. ORIGIN: every canonical, og:url, og:image and twitter:image URL, and
      every sitemap <loc>, starts with https://uncost.org/;
   5. FORM: no <form>, <textarea> or <select> renders, and every <input> is a
@@ -35,6 +37,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import pathlib
 import re
 import sys
@@ -47,6 +50,17 @@ ORIGIN = "https://uncost.org"
 # error pages. Anything else carrying noindex, or any of these losing it, fails.
 EXPECTED_NOINDEX = ["/404.html", "/500.html", "/press/", "/quiz/", "/share/", "/community/",
                     "/case/dashboard/", "/case/tracker/"]
+# Pledge-flow pages: noindex while formsOpen is off (formFlow: true in their
+# front matter; layouts/base.njk). The build reads UNCOST_FORMS_OPEN, so the
+# check reads the same variable from the environment it runs in.
+FORM_FLOW_PAGES = ["/pledge/check-email/", "/pledge/verify/", "/pledge/resent/", "/pledge/thanks/"]
+
+
+def expected_noindex_default(env=os.environ):
+    exp = list(EXPECTED_NOINDEX)
+    if env.get("UNCOST_FORMS_OPEN") != "on":
+        exp += FORM_FLOW_PAGES
+    return exp
 
 NOINDEX_RE = re.compile(r'<meta\s+name="robots"\s+content="[^"]*\bnoindex\b', re.I)
 META_URL_RE = re.compile(
@@ -69,7 +83,9 @@ def route_of(rel: str) -> str:
     return "/" + rel
 
 
-def check(built: pathlib.Path, expected_noindex=EXPECTED_NOINDEX) -> dict:
+def check(built: pathlib.Path, expected_noindex=None) -> dict:
+    if expected_noindex is None:
+        expected_noindex = expected_noindex_default()
     errors, facts = [], {}
 
     robots_path = built / "robots.txt"
@@ -184,6 +200,10 @@ def selftest() -> int:
         "preview-sitemap": ({"robots.txt": "User-agent: *\nAllow: /\nSitemap: https://x.pages.dev/sitemap.xml\n"}, {"ROBOTS"}),
         "x-robots": ({"_headers": "/*\n  X-Robots-Tag: noindex, nofollow\n"}, {"HEADER"}),
         "real-page-noindex": ({"about/index.html": page("<p>About</p>", "/about/", noindex=True)}, {"NOINDEX"}),
+        # A pledge-flow page that lost its noindex while forms are off.
+        "form-flow-indexed": ({"pledge/thanks/index.html": page("<p>Thanks</p>", "/pledge/thanks/"),
+                               "sitemap.xml": sm.replace("</urlset>", f"<url><loc>{ORIGIN}/pledge/thanks/</loc></url></urlset>")},
+                              {"NOINDEX"}),
         "placeholder-in-sitemap": ({"sitemap.xml": sm.replace("</urlset>", f"<url><loc>{ORIGIN}/press/</loc></url></urlset>")},
                                    {"NOINDEX"}),
         "preview-canonical": ({"about/index.html": page("<p>About</p>", "/about/", canonical="https://abc.pages.dev/about/")},
@@ -196,7 +216,8 @@ def selftest() -> int:
     for name, (over, want) in cases.items():
         with tempfile.TemporaryDirectory() as tmp:
             site(pathlib.Path(tmp), **over)
-            got = check(pathlib.Path(tmp), expected_noindex=["/press/"])
+            got = check(pathlib.Path(tmp), expected_noindex=["/press/"] + (
+                ["/pledge/thanks/"] if name == "form-flow-indexed" else []))
         kinds = {e.split(":")[0] for e in got["errors"]}
         if kinds != want:
             failures.append({"case": name, "expected": sorted(want), "got": sorted(kinds), "errors": got["errors"][:4]})

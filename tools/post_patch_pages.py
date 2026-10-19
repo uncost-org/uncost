@@ -1087,4 +1087,27 @@ patch("website/src/index.njk",
       r'<div class="cards">\n(?:    \{\{ fig\.card\(register\.byId\["SRC-\d+"\]\) \}\}\n){3}  </div>',
       HOME_CARDS, "PL-7 homepage stat cards: SRC-028, SRC-022, SRC-027", guard=HOME_CARDS)
 
+# ---------------------------------------------------------------------------
+# Contact form 2026-10-19 (founder brief). Re-derived templates only; the form
+# partials, layouts/base.njk, sitemap.njk and search-index.11ty.js are
+# repo-owned.
+# ---------------------------------------------------------------------------
+print("Contact form 2026-10-19:")
+
+# CF-1 — after launch "opens at launch" is untrue: the homepage's inline
+# forms-off line says "opens soon", like partials/forms/*.njk. index.njk is
+# re-derived (tools/rederive_home.py step 6 writes the line).
+literal("website/src/index.njk",
+        '<div class="s">The updates list opens at launch. Nothing to enter yet.</div>',
+        '<div class="s">The updates list opens soon. Nothing to enter yet.</div>',
+        "CF-1 homepage forms-off line: opens soon")
+
+# CF-2 — the pledge-flow pages carry formFlow: true, so layouts/base.njk,
+# sitemap.njk and search-index.11ty.js keep them noindex and out of the
+# sitemap and search while formsOpen is off. gen_static_pages.py writes their
+# front matter, so the flag is restated.
+for f in ("check-email", "verify", "resent", "thanks"):
+    patch(f"website/src/pledge/{f}.njk", r'\A(---\n(?:[^\n]*\n)*?)(---\n)', r'\1formFlow: true\n\2',
+          f"CF-2 pledge/{f}: formFlow (noindex while forms are off)", guard="\nformFlow: true\n")
+
 print("done")
