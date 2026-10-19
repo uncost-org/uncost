@@ -19,15 +19,28 @@ Checks — each an ERROR, never a skipped line (standing rule 1):
      posture, which .github/workflows/preview-deploy.yml adds to previews
      only;
   3. NOINDEX: the pages with <meta name="robots" content="noindex"> are
-     exactly the expected set (the unlinked placeholders and the two error
-     pages), none of them is in sitemap.xml, and every other page is;
+     exactly the expected set — the unlinked placeholders, the two error
+     pages and, while UNCOST_FORMS_OPEN is not "on", the four pledge-flow
+     pages (nothing to act on with forms off) — none of them is in
+     sitemap.xml, and every other page is;
   4. ORIGIN: every canonical, og:url, og:image and twitter:image URL, and
      every sitemap <loc>, starts with https://uncost.org/;
   5. FORM: no <form>, <textarea> or <select> renders, and every <input> is a
-     type="search" box (the site search and the keyword filters);
+     type="search" box (the site search and the keyword filters) — except,
+     in a build made with UNCOST_CONTACT_FORM_OPEN=on, the live contact form
+     on /contact/ and nowhere else (CHG-005). Its two confirmation pages,
+     /contact/sent/ and /contact/not-sent/, are then expected noindex;
   6. THIRD-PARTY: no asset URL (src, srcset, <link href>, url(), poster) points
      off uncost.org — the rule scripts/audit_website.py enforces in built
-     mode, repeated here as a count.
+     mode, repeated here as a count. The one exception is the Cloudflare Web
+     Analytics beacon, BEACON_SCRIPT, as a <script src>. Cloudflare injects it
+     at the EDGE on the production Pages project, so a build normally has no
+     beacon at all: this check passes either way, and the CSP check below is
+     what holds the line on what the deployed page may load;
+  7. CSP: the Content-Security-Policy in _headers allows no third-party
+     source except the beacon — BEACON_SCRIPT in script-src and
+     https://cloudflareinsights.com (its report endpoint) in connect-src — and
+     keeps default-src and form-action 'self'.
 
 Exit 0 when ok, 1 on any error.
 """
@@ -35,6 +48,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import pathlib
 import re
 import sys
@@ -47,6 +61,49 @@ ORIGIN = "https://uncost.org"
 # error pages. Anything else carrying noindex, or any of these losing it, fails.
 EXPECTED_NOINDEX = ["/404.html", "/500.html", "/press/", "/quiz/", "/share/", "/community/",
                     "/case/dashboard/", "/case/tracker/"]
+# Pledge-flow pages: noindex while formsOpen is off (formFlow: true in their
+# front matter; layouts/base.njk). The build reads UNCOST_FORMS_OPEN, so the
+# check reads the same variable from the environment it runs in.
+FORM_FLOW_PAGES = ["/pledge/check-email/", "/pledge/verify/", "/pledge/resent/", "/pledge/thanks/"]
+# Contact form (CHG-005): only in a build with UNCOST_CONTACT_FORM_OPEN=on.
+CONTACT_RESULT_PAGES = ["/contact/sent/", "/contact/not-sent/"]
+# The one third-party request (Cloudflare Web Analytics), and what the CSP may
+# name: the beacon script, and its report endpoint for connect-src.
+BEACON_SCRIPT = "https://static.cloudflareinsights.com/beacon.min.js"
+CSP_THIRD_PARTY = {"script-src": {BEACON_SCRIPT}, "connect-src": {"https://cloudflareinsights.com"}}
+
+
+def expected_noindex_default(env=os.environ):
+    exp = list(EXPECTED_NOINDEX)
+    if env.get("UNCOST_FORMS_OPEN") != "on":
+        exp += FORM_FLOW_PAGES
+    if env.get("UNCOST_CONTACT_FORM_OPEN") == "on":
+        exp += CONTACT_RESULT_PAGES
+    return exp
+
+
+def csp_errors(headers: str) -> list:
+    """Third-party sources in the _headers CSP beyond the beacon's, and missing 'self' anchors."""
+    lines = [ln.split(":", 1)[1].strip() for ln in headers.splitlines()
+             if ln.strip().lower().startswith("content-security-policy:")]
+    if len(lines) != 1:
+        return [f"CSP: expected one Content-Security-Policy line in _headers, found {len(lines)}"]
+    errors, directives = [], {}
+    for part in lines[0].split(";"):
+        bits = part.split()
+        if bits:
+            directives[bits[0].lower()] = bits[1:]
+    for name, sources in directives.items():
+        for src in sources:
+            if src.startswith("'") or src in ("data:", "blob:"):
+                continue
+            if src in CSP_THIRD_PARTY.get(name, set()):
+                continue
+            errors.append(f"CSP: {name} allows {src}")
+    for name in ("default-src", "form-action"):
+        if directives.get(name) != ["'self'"]:
+            errors.append(f"CSP: {name} is {directives.get(name)}, not 'self'")
+    return errors
 
 NOINDEX_RE = re.compile(r'<meta\s+name="robots"\s+content="[^"]*\bnoindex\b', re.I)
 META_URL_RE = re.compile(
@@ -59,6 +116,7 @@ ASSET_RE = re.compile(
     r"""|<link\b(?![^>]*\brel\s*=\s*["']?(?:canonical|alternate)\b)[^>]*?\bhref\s*=\s*["']?(https?://[^/\s"'<>)]+)""",
     re.I)
 DATA_URI_RE = re.compile(r"data:[^\"')\s]+")
+BEACON_SRC_RE = re.compile(r"""(<script\b[^>]*?\bsrc\s*=\s*["']?)https://static\.cloudflareinsights\.com/beacon\.min\.js(?:\?[^"'\s>]*)?""", re.I)
 
 
 def route_of(rel: str) -> str:
@@ -69,7 +127,11 @@ def route_of(rel: str) -> str:
     return "/" + rel
 
 
-def check(built: pathlib.Path, expected_noindex=EXPECTED_NOINDEX) -> dict:
+def check(built: pathlib.Path, expected_noindex=None, contact_open=None) -> dict:
+    if expected_noindex is None:
+        expected_noindex = expected_noindex_default()
+    if contact_open is None:
+        contact_open = os.environ.get("UNCOST_CONTACT_FORM_OPEN") == "on"
     errors, facts = [], {}
 
     robots_path = built / "robots.txt"
@@ -92,6 +154,7 @@ def check(built: pathlib.Path, expected_noindex=EXPECTED_NOINDEX) -> dict:
     facts["x_robots_tag_lines"] = tagged
     if tagged:
         errors.append(f"HEADER: _headers sets {tagged}")
+    errors += csp_errors(headers)
 
     sitemap_path = built / "sitemap.xml"
     sitemap = sitemap_path.read_text(encoding="utf-8") if sitemap_path.exists() else ""
@@ -105,7 +168,7 @@ def check(built: pathlib.Path, expected_noindex=EXPECTED_NOINDEX) -> dict:
             errors.append(f"ORIGIN: sitemap <loc> {loc}")
 
     pages = sorted(built.rglob("*.html"))
-    noindex, forms, inputs, third, meta_urls = [], [], [], [], 0
+    noindex, forms, inputs, third, meta_urls, contact_forms, beacons = [], [], [], [], 0, [], 0
     for path in pages:
         rel = str(path.relative_to(built))
         route = route_of(rel)
@@ -119,14 +182,25 @@ def check(built: pathlib.Path, expected_noindex=EXPECTED_NOINDEX) -> dict:
             meta_urls += 1
             if not url.startswith(ORIGIN + "/"):
                 errors.append(f"ORIGIN: {route} has {url}")
-        for m in TAG_RE.finditer(html):
+        live = re.search(r'<form\b[^>]*data-form="contact"[^>]*data-live[^>]*action="/api/contact"[^>]*>.*?</form>', html, re.S)
+        if contact_open and route == "/contact/":
+            if not live:
+                errors.append("FORM: /contact/ has no live contact form, but UNCOST_CONTACT_FORM_OPEN is on")
+            else:
+                contact_forms.append(route)
+                html_forms = html[: live.start()] + html[live.end():]
+        else:
+            html_forms = html
+        for m in TAG_RE.finditer(html_forms):
             tag, attrs = m.group(1).lower(), m.group(2)
             if tag == "input" and re.search(r'\btype\s*=\s*"search"', attrs, re.I):
                 inputs.append(route)
                 continue
             forms.append(f"{route} <{tag}{attrs[:60]}>")
         for line in html.splitlines():
-            for m in ASSET_RE.finditer(DATA_URI_RE.sub("", line)):
+            clean_line, n_beacon = BEACON_SRC_RE.subn(lambda b: b.group(1), DATA_URI_RE.sub("", line))
+            beacons += n_beacon
+            for m in ASSET_RE.finditer(clean_line):
                 host = (m.group(1) or m.group(2)).split("//", 1)[-1].lower()
                 if host != "uncost.org" and not host.endswith(".uncost.org"):
                     third.append(f"{route} {host}")
@@ -148,7 +222,8 @@ def check(built: pathlib.Path, expected_noindex=EXPECTED_NOINDEX) -> dict:
         errors.append(f"THIRD-PARTY: {t}")
     facts.update({"pages": len(pages), "noindex": sorted(noindex), "meta_urls_checked": meta_urls,
                   "search_inputs": len(inputs), "search_input_pages": sorted(set(inputs)) if len(set(inputs)) < 8 else f"{len(set(inputs))} pages",
-                  "forms_or_other_inputs": len(forms), "third_party_assets": len(third)})
+                  "forms_or_other_inputs": len(forms), "contact_form_pages": contact_forms,
+                  "third_party_assets": len(third), "beacon_scripts_in_build": beacons})
     return {"ok": not errors, "errors": errors, "facts": facts}
 
 
@@ -163,7 +238,9 @@ def selftest() -> int:
     def site(tmp: pathlib.Path, **over) -> None:
         files = {
             "robots.txt": f"User-agent: *\nAllow: /\nSitemap: {ORIGIN}/sitemap.xml\n",
-            "_headers": "/*\n  X-Content-Type-Options: nosniff\n",
+            "_headers": ("/*\n  X-Content-Type-Options: nosniff\n  Content-Security-Policy: default-src 'self'; "
+                         f"img-src 'self' data:; script-src 'self' {BEACON_SCRIPT}; connect-src 'self' "
+                         "https://cloudflareinsights.com; form-action 'self'\n"),
             "sitemap.xml": f"<urlset><url><loc>{ORIGIN}/</loc></url><url><loc>{ORIGIN}/about/</loc></url></urlset>",
             "index.html": page('<input id="site-search" type="search">', "/"),
             "about/index.html": page("<p>About</p>", "/about/"),
@@ -178,12 +255,18 @@ def selftest() -> int:
             p.write_text(text, encoding="utf-8")
 
     sm = f"<urlset><url><loc>{ORIGIN}/</loc></url><url><loc>{ORIGIN}/about/</loc></url></urlset>"
+    smc = sm.replace("</urlset>", f"<url><loc>{ORIGIN}/contact/</loc></url></urlset>")
     cases = {
         "good": ({}, set()),
         "disallow": ({"robots.txt": f"User-agent: *\nDisallow: /\nSitemap: {ORIGIN}/sitemap.xml\n"}, {"ROBOTS"}),
         "preview-sitemap": ({"robots.txt": "User-agent: *\nAllow: /\nSitemap: https://x.pages.dev/sitemap.xml\n"}, {"ROBOTS"}),
-        "x-robots": ({"_headers": "/*\n  X-Robots-Tag: noindex, nofollow\n"}, {"HEADER"}),
+        "x-robots": ({"_headers": ("/*\n  X-Robots-Tag: noindex, nofollow\n  Content-Security-Policy: default-src 'self'; "
+                                   "form-action 'self'\n")}, {"HEADER"}),
         "real-page-noindex": ({"about/index.html": page("<p>About</p>", "/about/", noindex=True)}, {"NOINDEX"}),
+        # A pledge-flow page that lost its noindex while forms are off.
+        "form-flow-indexed": ({"pledge/thanks/index.html": page("<p>Thanks</p>", "/pledge/thanks/"),
+                               "sitemap.xml": sm.replace("</urlset>", f"<url><loc>{ORIGIN}/pledge/thanks/</loc></url></urlset>")},
+                              {"NOINDEX"}),
         "placeholder-in-sitemap": ({"sitemap.xml": sm.replace("</urlset>", f"<url><loc>{ORIGIN}/press/</loc></url></urlset>")},
                                    {"NOINDEX"}),
         "preview-canonical": ({"about/index.html": page("<p>About</p>", "/about/", canonical="https://abc.pages.dev/about/")},
@@ -191,12 +274,25 @@ def selftest() -> int:
         "form": ({"about/index.html": page('<form action="/x"><input type="email"></form>', "/about/")}, {"FORM"}),
         "third-party": ({"about/index.html": page('<script src="https://cdn.example.com/a.js"></script>', "/about/")},
                         {"THIRD-PARTY"}),
+        "beacon-ok": ({"about/index.html": page(f'<script defer src="{BEACON_SCRIPT}" data-cf-beacon="{{}}"></script>', "/about/")},
+                      set()),
+        "csp-extra-origin": ({"_headers": "/*\n  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.example.com; form-action 'self'\n"},
+                             {"CSP"}),
+        "contact-form-off": ({"contact/index.html": page('<form data-form="contact" data-live action="/api/contact" method="post"><input type="email"></form>', "/contact/"),
+                              "sitemap.xml": smc}, {"FORM"}),
+        "contact-form-on": ({"contact/index.html": page('<form data-form="contact" data-live action="/api/contact" method="post"><input type="email"><textarea></textarea></form>', "/contact/"),
+                             "sitemap.xml": smc}, set()),
+        "contact-form-elsewhere": ({"contact/index.html": page('<form data-form="contact" data-live action="/api/contact" method="post"><input type="email"></form>', "/contact/"),
+                                    "about/index.html": page('<form data-form="contact" data-live action="/api/contact" method="post"><input type="email"></form>', "/about/"),
+                                    "sitemap.xml": smc}, {"FORM"}),
     }
     failures = []
     for name, (over, want) in cases.items():
         with tempfile.TemporaryDirectory() as tmp:
             site(pathlib.Path(tmp), **over)
-            got = check(pathlib.Path(tmp), expected_noindex=["/press/"])
+            on = name in ("contact-form-on", "contact-form-elsewhere")
+            got = check(pathlib.Path(tmp), expected_noindex=["/press/"] + (
+                ["/pledge/thanks/"] if name == "form-flow-indexed" else []), contact_open=on)
         kinds = {e.split(":")[0] for e in got["errors"]}
         if kinds != want:
             failures.append({"case": name, "expected": sorted(want), "got": sorted(kinds), "errors": got["errors"][:4]})

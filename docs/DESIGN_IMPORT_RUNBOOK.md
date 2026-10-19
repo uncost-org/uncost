@@ -142,7 +142,7 @@ review proceeds group by group.
    python3 scripts/audit_website.py              # source scan (fail-closed terms)
    npm --prefix website ci && npm --prefix website run build
    python3 scripts/audit_website.py --built website/dist   # built-output scan
-   python3 scripts/audit_site_quality.py website/dist       # links, anchors, zero third-party
+   python3 scripts/audit_site_quality.py website/dist       # links, anchors, third-party (beacon only)
    npx --prefix website html-validate "website/dist/**/*.html"  # validity + heading order
    python3 scripts/audit_repository.py           # structure + hygiene + design receipt
    ```

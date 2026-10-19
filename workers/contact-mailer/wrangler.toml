@@ -1,0 +1,19 @@
+# uncost-contact-mailer — see src/index.js and records/changes/CHG-005.
+# Deployed by hand (`npx wrangler deploy` from this directory); nothing in CI
+# deploys it. Reached only through the Pages project's Service binding.
+name = "uncost-contact-mailer"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+# No public URL: the Worker answers only through the Service binding.
+workers_dev = false
+preview_urls = false
+
+# Email Routing send binding. Without Email Service onboarding it can send only
+# to the account's VERIFIED destination addresses. The recipient is the secret
+# CONTACT_TO (set in the dashboard or with `wrangler secret put CONTACT_TO`),
+# not a key here, so no personal address is committed. If uncost.org is ever
+# onboarded to Email Service (which can send to any address), restrict this
+# binding (destination_address) before the next deploy.
+[[send_email]]
+name = "SEND_EMAIL"

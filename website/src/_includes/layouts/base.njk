@@ -8,7 +8,9 @@
 {% set canonical = site.origin + (page.url | default("/")) %}
 <title>{{ pageTitle }}</title>
 <meta name="description" content="{{ pageDesc }}">
-{% if noindex %}<meta name="robots" content="noindex">
+{#- formFlow: a pledge-flow page (check-email, verify, resent, thanks) has nothing
+    to act on while formsOpen is off, so it stays out of search until forms open. -#}
+{% if noindex or (formFlow and not features.formsOpen) %}<meta name="robots" content="noindex">
 {% else %}<link rel="canonical" href="{{ canonical }}">
 {% endif %}<meta property="og:type" content="website">
 <meta property="og:site_name" content="{{ site.name }}">

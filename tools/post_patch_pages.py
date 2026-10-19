@@ -1050,15 +1050,21 @@ literal("website/src/assembly.njk",
         '<a href="/pledge/" class="u-btn u-btn--primary">Read the Pledge</a>',
         "PL-4 assembly look-ahead button: Read the Pledge")
 
-# PL-5 — /privacy/: §2 says what is true today (no analytics), matching the
-# FAQ of record (_data/faq.js: "No analytics, no advertising pixels, no
-# fingerprinting"); §10 no longer offers the contact form, which is off.
-literal("website/src/privacy.njk",
-        '<li><b>Basic, privacy-respecting analytics</b> — aggregate page usage, without building '
-        'advertising profiles.</li>',
-        '<li><b>No analytics</b> — this site uses no analytics today: no tracking scripts, no '
-        'advertising pixels, no fingerprinting. We&rsquo;ll update this policy before any are added.</li>',
-        "PL-5 privacy §2: no analytics today")
+# PL-5 — /privacy/: §2 says what is true; §10 offers email only. The analytics
+# bullet first read "No analytics" (#77); since the contact-form batch
+# (2026-10-19, CHG-005) the site uses Cloudflare Web Analytics, so it says so
+# in plain words. The FAQ of record (_data/faq.js) says the same. This patch
+# goes from the export's text, or from #77's "No analytics" text, to today's.
+PL5_ANALYTICS = ('<li><b>Analytics</b> — the site uses Cloudflare Web Analytics, which counts page views '
+                 'without cookies, fingerprinting or advertising profiles. Cloudflare processes that data as '
+                 'our host (<a class="u-1" href="https://www.cloudflare.com/web-analytics/">Cloudflare&rsquo;s '
+                 'Web Analytics privacy page</a>).</li>')
+patch("website/src/privacy.njk",
+      re.escape('<li><b>Basic, privacy-respecting analytics</b> — aggregate page usage, without building '
+                'advertising profiles.</li>') + "|" +
+      re.escape('<li><b>No analytics</b> — this site uses no analytics today: no tracking scripts, no '
+                'advertising pixels, no fingerprinting. We&rsquo;ll update this policy before any are added.</li>'),
+      PL5_ANALYTICS.replace("\\", "\\\\"), "PL-5 privacy §2: Cloudflare Web Analytics", guard=PL5_ANALYTICS)
 literal("website/src/privacy.njk",
         '<a class="u-1" href="mailto:contact@uncost.org">contact@uncost.org</a> or use the '
         '<a class="u-1" href="/contact/">contact form</a>.',
@@ -1086,5 +1092,45 @@ HOME_CARDS = ('<div class="cards">\n'
 patch("website/src/index.njk",
       r'<div class="cards">\n(?:    \{\{ fig\.card\(register\.byId\["SRC-\d+"\]\) \}\}\n){3}  </div>',
       HOME_CARDS, "PL-7 homepage stat cards: SRC-028, SRC-022, SRC-027", guard=HOME_CARDS)
+
+# ---------------------------------------------------------------------------
+# Contact form 2026-10-19 (founder brief). Re-derived templates only; the form
+# partials, layouts/base.njk, sitemap.njk and search-index.11ty.js are
+# repo-owned.
+# ---------------------------------------------------------------------------
+print("Contact form 2026-10-19:")
+
+# CF-1 — after launch "opens at launch" is untrue: the homepage's inline
+# forms-off line says "opens soon", like partials/forms/*.njk. index.njk is
+# re-derived (tools/rederive_home.py step 6 writes the line).
+literal("website/src/index.njk",
+        '<div class="s">The updates list opens at launch. Nothing to enter yet.</div>',
+        '<div class="s">The updates list opens soon. Nothing to enter yet.</div>',
+        "CF-1 homepage forms-off line: opens soon")
+
+# CF-2 — the pledge-flow pages carry formFlow: true, so layouts/base.njk,
+# sitemap.njk and search-index.11ty.js keep them noindex and out of the
+# sitemap and search while formsOpen is off. gen_static_pages.py writes their
+# front matter, so the flag is restated.
+for f in ("check-email", "verify", "resent", "thanks"):
+    patch(f"website/src/pledge/{f}.njk", r'\A(---\n(?:[^\n]*\n)*?)(---\n)', r'\1formFlow: true\n\2',
+          f"CF-2 pledge/{f}: formFlow (noindex while forms are off)", guard="\nformFlow: true\n")
+
+# CF-3 — /privacy/ §2: what the contact form collects, what it is for, and
+# how long it is kept (CHG-005; founder decisions of 2026-10-19: no phone, the
+# consent box with the minimum age 16, 12-month retention). privacy.njk is
+# re-derived. The pattern also takes an earlier contact-form bullet, so a
+# re-run replaces it rather than adding a second one.
+OPTIONAL_LI = ('<li><b>Optional details</b> — a name or message you choose to send us, or how you&rsquo;d '
+               'like to help.</li>')
+CONTACT_LI = ('<li><b>The contact form</b> — if you use it: your name (optional), your email address, your '
+              'message, and your confirmation that you are 16 or older. We use them only to reply to your '
+              'message. They are not stored on this site: the form emails them to our inbox, the '
+              'founder&rsquo;s, where they are kept only as long as needed to reply and deleted within 12 '
+              'months of our last reply.</li>')
+patch("website/src/privacy.njk",
+      re.escape(OPTIONAL_LI) + r'(?:\n      <li><b>The contact form</b>.*?</li>)?',
+      (OPTIONAL_LI + "\n      " + CONTACT_LI).replace("\\", "\\\\"),
+      "CF-3 privacy §2: what the contact form collects", guard=CONTACT_LI)
 
 print("done")

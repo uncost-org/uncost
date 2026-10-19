@@ -312,7 +312,8 @@ SECTION_EXEMPTIONS = [
      "chrome.json and shows five accounts, not the export's seven (YouTube and "
      "Reddit hidden). CANVAS-SYNC item 173. The row keeps to one line above "
      "820px with an 8px column gap, and the X glyph renders at scale 1.12. "
-     "CANVAS-SYNC item 174."),
+     "CANVAS-SYNC item 174. "
+     "Contact form (2026-10-19): with UNCOST_CONTACT_FORM_OPEN=on the live form renders here (CANVAS-SYNC item 179); the default build, which the gate measures, still renders the forms-off block, now reading \"The contact form opens soon\" (item 178)."),
     ("assembly", "Preview + interest",
      "V22: the PLANNED TOOL chip is removed from the \"A look ahead\" header "
      "row and the ink button reads \"How the Assembly works\". F2 had already "
@@ -423,7 +424,8 @@ SECTION_EXEMPTIONS = [
     ("privacy", "div.pol-wrap",
      "Pre-launch 2026-10 (the policy body inside this wrapper): \u00a72's \"Basic, privacy-respecting analytics\" bullet "
      "becomes a statement that the site uses no analytics today, and \u00a710 "
-     "offers email only, not the contact form, which is off. CANVAS-SYNC item 175."),
+     "offers email only, not the contact form, which is off. CANVAS-SYNC item 175. "
+     "Contact-form batch (2026-10-19): \u00a72 names Cloudflare Web Analytics and says what the contact form collects. CANVAS-SYNC items 179 and 180."),
 ]
 
 

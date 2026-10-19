@@ -9,7 +9,9 @@ Runs against a built output directory (default website/dist). Fails closed:
   document.
 - THIRD_PARTY: no automatically-fetched resource (stylesheet, script, image,
   media, iframe, preload, font, CSS url()/@import) may point at an external
-  origin. The site must make zero third-party network requests at runtime.
+  origin. The site makes no third-party request except one: the Cloudflare
+  Web Analytics beacon (BEACON_SCRIPT, a <script src> only), which Cloudflare
+  normally injects at the edge rather than into the build (CHG-005).
   User-navigable <a href="https://..."> links are allowed (a click is not a
   runtime request) but are reported for visibility.
 
@@ -54,6 +56,9 @@ FETCH_ATTRS = {
     "image": ["href", "xlink:href"],  # SVG raster <image> element
 }
 NAV_ATTRS = {"a": ["href"], "area": ["href"]}
+# The one allowed third-party fetch: Cloudflare Web Analytics' beacon script,
+# matching website/src/_headers (script-src). Exact URL, <script src> only.
+BEACON_SCRIPT = "https://static.cloudflareinsights.com/beacon.min.js"
 IGNORED_SCHEMES = ("mailto:", "tel:", "data:", "javascript:", "sms:")
 
 
@@ -179,6 +184,8 @@ def audit(root: Path) -> Tuple[List[str], Dict[str, int]]:
                     findings.append(f"BROKEN_ANCHOR:{rel}:{line}:{url}")
                 continue
             if is_external(url):
+                if is_fetch and tag == "script" and attr == "src" and url.split("?")[0] == BEACON_SCRIPT:
+                    continue
                 if is_fetch:
                     findings.append(f"THIRD_PARTY:{rel}:{line}:{tag}.{attr}:{url}")
                 else:

@@ -1,0 +1,11 @@
+{
+  "widths": [390, 1440],
+  "height": 1000,
+  "probes": [
+    {"name": "contact-panel", "routes": ["/contact/"], "selector": "main > [data-screen-label=\"Contact\"]", "shot": true, "box": true},
+    {"name": "privacy-line", "routes": ["/contact/"], "selector": ".cform .cprivacy", "props": ["font-size", "color", "margin-top", "margin-bottom"], "box": true, "lines": true},
+    {"name": "honeypot", "routes": ["/contact/"], "selector": ".cform .hp", "props": ["display"]},
+    {"name": "sent-page", "routes": ["/contact/sent/"], "selector": "main", "shot": true},
+    {"name": "not-sent-page", "routes": ["/contact/not-sent/"], "selector": "main", "shot": true}
+  ]
+}
