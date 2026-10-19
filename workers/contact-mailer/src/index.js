@@ -18,7 +18,7 @@ const FROM = "contact@uncost.org";
 // what the sender agreed to (CHG-005). Keep it identical to
 // website/src/_includes/partials/forms/contact.njk.
 export const CONSENT_TEXT =
-  "I’m 16 or older, and I agree that Uncost may use my name, email address and message only to reply to this message.";
+  "I’m 18 or older, and I agree that Uncost may use my name, email address and message only to reply to this message.";
 
 const oneLine = (s) => String(s || "").replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim();
 

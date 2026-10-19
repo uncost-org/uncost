@@ -17,8 +17,8 @@
   /contact/sent/ (or /contact/not-sent/). Native validation (no novalidate)
   marks and announces a missing or malformed email, a missing message or an
   unticked consent box in both modes. The consent box is unticked, names its
-  one purpose (a reply to this message) and the minimum age, 16 (POL-002
-  names none; founder, 2026-10-19), and is checked again on the server.
+  one purpose (a reply to this message) and the minimum age, 18 (POL-002
+  names none; founder, 2026-10-19: UNP-57 §4.1 Option B), and is checked again on the server.
   hp_url is a honeypot, hidden from people and from assistive technology and
   checked on the server.
 -#}
@@ -31,7 +31,7 @@
   <label class="fl" for="c-msg">Message <span class="req">(required)</span></label><textarea class="field" id="c-msg" name="message" maxlength="5000" placeholder="What&rsquo;s on your mind?" required></textarea>
   <div class="hp" hidden><label for="c-hp">Leave this field empty</label><input id="c-hp" type="text" name="hp_url" tabindex="-1" autocomplete="off"></div>
   <p class="cprivacy">Your message goes to our inbox, isn&rsquo;t stored on this site, and is deleted within 12 months of our last reply. <a href="/privacy/#s2">Privacy</a></p>
-  <div class="cconsent"><input id="c-consent" type="checkbox" name="consent" value="yes" required><label for="c-consent">I&rsquo;m 16 or older, and I agree that Uncost may use my name, email address and message only to reply to this message. <span class="req">(required)</span></label></div>
+  <div class="cconsent"><input id="c-consent" type="checkbox" name="consent" value="yes" required><label for="c-consent">I&rsquo;m 18 or older, and I agree that Uncost may use my name, email address and message only to reply to this message. <span class="req">(required)</span></label></div>
   <button class="cbtn" type="submit">Send message</button>
   <div class="cnote" role="alert" aria-live="polite"></div>
 </form>

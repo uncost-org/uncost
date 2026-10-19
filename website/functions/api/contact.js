@@ -34,7 +34,7 @@ const body = (s) => s.replace(/\r\n?/g, "\n").replace(/[\u0000-\u0008\u000b-\u00
 export function validate(fields) {
   const get = (k) => (typeof fields[k] === "string" ? fields[k] : "");
   if (get("hp_url").trim() !== "") return { spam: true };
-  // The consent box (16 or older; a reply to this message only) must be ticked,
+  // The consent box (18 or older; a reply to this message only) must be ticked,
   // here as well as in the browser. An unticked box is a failed check.
   if (get("consent") !== "yes") return { ok: false };
   const msg = {
