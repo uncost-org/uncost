@@ -23,7 +23,7 @@ Publication in this repository makes the drafts visible for review and version c
 - authorize donations, sponsorship applications, outreach, data collection, any deployment other than the static site below, or an Assembly vote;
 - establish that a claim or design has passed independent review.
 
-Public launch of the static site from `main` is authorized separately, by [CHG-004](records/changes/CHG-004-public-soft-launch.md), from the date that record gives (founder to confirm). It covers the static site only: forms, donations, the signature counter and founding signers, pledge and data collection, and the Assembly stay off and remain not authorized, and no policy's draft or adoption status changes.
+Public launch of the static site from `main` is authorized separately, by [CHG-004](records/changes/CHG-004-public-soft-launch.md), from 2026-10-19. The contact form alone is authorized by [CHG-005](records/changes/CHG-005-contact-form.md), an amendment to CHG-004. Everything else stays off and remains not authorized: the pledge and updates forms, donations, the signature counter and founding signers, pledge and data collection, and the Assembly. No policy's draft or adoption status changes.
 
 ## Requested next review
 
