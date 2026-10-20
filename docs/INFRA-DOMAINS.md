@@ -105,6 +105,7 @@ Production is the Cloudflare Pages project `uncost` (production branch `main`). 
 
 | Date | Commit | Deployment ID | Previous deployment ID | What |
 |---|---|---|---|---|
+| 2026-10-20 12:30 UTC (19:30 ICT) | `fc47e83` | `28a08eb0-c0a9-4444-859d-054b6f445bb2` | `eaa96b34-1461-48b2-86f1-94f6cd915065` (the launch deploy) | `main` with #81 (page titles, preview aliases, security.txt, report-only checks) and #82 (compliance pass: privacy notice, records, accessibility, rights, uptime, favicon). Built the same way as the launch, with only `UNCOST_CONTACT_FORM_OPEN=on`; `audit_website.py` and `prod_check.py` passed on the build. `website/functions/` and `workers/` are unchanged since `fc656f9`, so the contact Worker was not redeployed. |
 | 2026-10-19 23:54 UTC (2026-10-20 06:54 ICT) | `fc656f9` | `eaa96b34-1461-48b2-86f1-94f6cd915065` | `dd7bbe15-4535-451e-bb6c-1c50a45a4bc2` (the "coming soon" page) | Public soft launch under [CHG-004](../records/changes/CHG-004-public-soft-launch.md) and [CHG-005](../records/changes/CHG-005-contact-form.md). Built with only `UNCOST_CONTACT_FORM_OPEN=on`, with Cloudflare Web Analytics enabled. The contact Worker is `uncost-contact-mailer`, version `a7678af1-908b-4164-8ecd-45af81f957b3`. |
 
 **Rollback:** in the Cloudflare dashboard, Workers & Pages → `uncost` → **Deployments** → the previous deployment → **Rollback**. Record any rollback here.
