@@ -1,0 +1,53 @@
+name: uptime
+# Checks the live site every 30 minutes (compliance pass, 2026-10-20). The
+# checks live in scripts/uptime_check.py: the homepage answers 200 with the
+# site's title; www redirects to the apex; robots.txt and sitemap.xml answer
+# 200; /api/contact rejects a cross-origin POST with {"ok":false} (the handler
+# checks the origin before reading anything, so this can never send an email);
+# and /.well-known/security.txt exists and expires more than 30 days out. A
+# failing check is retried once, a minute later, before the run fails.
+#
+# Who hears about a failure: GitHub's own notifications, so no account, token
+# or secret is added. For a scheduled workflow GitHub notifies the user who
+# last changed the `cron` line below (the repository admin who merges it),
+# by email if their Settings → Notifications → Actions allow it ("Notify on
+# failed workflows only" is enough).
+#
+# GitHub turns scheduled workflows off after 60 days without activity in a
+# public repository (no commits, issues or pull requests). It says so on the
+# Actions page and by email. To turn it back on: Actions → uptime → "Enable
+# workflow", or `gh workflow enable uptime.yml`. A push to the repository also
+# counts as activity.
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+  # A change to the check itself runs it once on its pull request, so it is
+  # tested on GitHub's runners before it merges (workflow_dispatch only works
+  # from the default branch).
+  pull_request:
+    paths:
+      - ".github/workflows/uptime.yml"
+      - "scripts/uptime_check.py"
+permissions:
+  contents: read
+concurrency:
+  group: uptime
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - name: Selftest
+        run: python3 scripts/uptime_check.py --selftest
+      - name: Check the live site
+        env:
+          # "off" if the founder switches the contact form off on production;
+          # the handler then answers 404, which this would otherwise report.
+          UPTIME_CONTACT_FORM: "on"
+        run: python3 scripts/uptime_check.py --retry-delay 60
