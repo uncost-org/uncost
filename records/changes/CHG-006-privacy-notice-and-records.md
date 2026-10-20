@@ -1,6 +1,6 @@
 # CHG-006 — Privacy notice for the live site, and the CHG-005 records (amends CHG-005)
 
-**Status:** founder decision, dated by the founder (2026-10-20). Drafted from the founder's compliance brief. It takes effect for the site when this record is merged and the site is next deployed. Amends [CHG-005](CHG-005-contact-form.md) (contact form) and builds the records CHG-005 lists under "Follow-ups".
+**Status:** founder decision, dated by the founder (2026-10-20). Drafted from the founder's compliance brief. It takes effect for the site when this record is merged and the site is next deployed. Amends [CHG-005](CHG-005-contact-form.md) (contact form) and builds the records CHG-005 lists under "Follow-ups". Amended by [CHG-007](CHG-007-rights-and-transfer-safeguard.md), which settles the rights gaps and closes UNP-73 question 1 (the transfer safeguard, /privacy/ §6).
 
 - **Date:** 2026-10-20
 - **Amends:** [CHG-005](CHG-005-contact-form.md), which amends [CHG-004](CHG-004-public-soft-launch.md).
