@@ -26,3 +26,7 @@
 # RFC 9116 security contact: plain text, whatever the host would guess.
 /.well-known/security.txt
   Content-Type: text/plain; charset=utf-8
+
+# The web app manifest (favicon batch, 2026-10-20), as its registered type.
+/site.webmanifest
+  Content-Type: application/manifest+json

@@ -86,6 +86,14 @@ module.exports = function (eleventyConfig) {
   // of the sitemap (isIndexable takes only "/" and ".html" URLs). Its Expires
   // line is renewed by hand; tools/prod_check.py fails once it has passed.
   eleventyConfig.addPassthroughCopy({ "src/.well-known/security.txt": ".well-known/security.txt" });
+  // Favicon and app icons at the site root (tools/make_favicons.py writes
+  // assets/favicon/; the review previews there are not copied). The manifest
+  // is served as application/manifest+json (_headers); none of these is a
+  // page, so isIndexable keeps them out of the sitemap.
+  for (const f of ["favicon.ico", "icon-192.png", "icon-512.png", "apple-touch-icon.png"]) {
+    eleventyConfig.addPassthroughCopy({ [`assets/favicon/${f}`]: f });
+  }
+  eleventyConfig.addPassthroughCopy({ "src/site.webmanifest": "site.webmanifest" });
   // Cloudflare Pages redirect table. Routes that have moved keep working
   // rather than 404ing, and the old URL is not left to rot in someone's
   // bookmarks or a feed reader.
