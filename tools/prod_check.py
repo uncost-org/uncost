@@ -40,13 +40,18 @@ Checks — each an ERROR, never a skipped line (standing rule 1):
   7. CSP: the Content-Security-Policy in _headers allows no third-party
      source except the beacon — BEACON_SCRIPT in script-src and
      https://cloudflareinsights.com (its report endpoint) in connect-src — and
-     keeps default-src and form-action 'self'.
+     keeps default-src and form-action 'self';
+  8. SECURITY-TXT: /.well-known/security.txt (RFC 9116) is built, names a
+     Contact, Preferred-Languages and the production Canonical URL, and its
+     one Expires date has not passed; _headers serves it as text/plain; and it
+     is not in sitemap.xml.
 
 Exit 0 when ok, 1 on any error.
 """
 from __future__ import annotations
 
 import argparse
+import datetime
 import json
 import os
 import pathlib
@@ -117,6 +122,49 @@ ASSET_RE = re.compile(
     re.I)
 DATA_URI_RE = re.compile(r"data:[^\"')\s]+")
 BEACON_SRC_RE = re.compile(r"""(<script\b[^>]*?\bsrc\s*=\s*["']?)https://static\.cloudflareinsights\.com/beacon\.min\.js(?:\?[^"'\s>]*)?""", re.I)
+
+
+SECURITY_TXT = ".well-known/security.txt"
+SECURITY_TXT_HEADER_RE = re.compile(
+    r"^/\.well-known/security\.txt[ \t]*\n(?:[ \t]+\S[^\n]*\n?)*?[ \t]+Content-Type:\s*text/plain\b", re.M | re.I)
+
+
+def security_txt_errors(built: pathlib.Path, headers: str, in_sitemap: set, now=None) -> tuple[list, dict]:
+    """Check 8: the RFC 9116 file, its Content-Type and its absence from the sitemap."""
+    errors, facts = [], {}
+    path = built / SECURITY_TXT
+    if not path.exists():
+        return [f"SECURITY-TXT: /{SECURITY_TXT} is not built"], facts
+    fields: dict = {}
+    for ln in path.read_text(encoding="utf-8").splitlines():
+        if ln.strip() and not ln.startswith("#") and ":" in ln:
+            k, v = ln.split(":", 1)
+            fields.setdefault(k.strip().lower(), []).append(v.strip())
+    if not fields.get("contact"):
+        errors.append("SECURITY-TXT: no Contact field")
+    if not fields.get("preferred-languages"):
+        errors.append("SECURITY-TXT: no Preferred-Languages field")
+    if fields.get("canonical") != [f"{ORIGIN}/{SECURITY_TXT}"]:
+        errors.append(f"SECURITY-TXT: Canonical is {fields.get('canonical')}, not {ORIGIN}/{SECURITY_TXT}")
+    expires = fields.get("expires", [])
+    if len(expires) != 1:
+        errors.append(f"SECURITY-TXT: {len(expires)} Expires fields, not exactly one")
+    else:
+        try:
+            when = datetime.datetime.fromisoformat(expires[0].replace("Z", "+00:00"))
+            if when.tzinfo is None:
+                raise ValueError("no time zone")
+            days = (when - (now or datetime.datetime.now(datetime.timezone.utc))).days
+            facts["security_txt_expires_in_days"] = days
+            if days < 0:
+                errors.append(f"SECURITY-TXT: Expires {expires[0]} has passed")
+        except ValueError:
+            errors.append(f"SECURITY-TXT: Expires {expires[0]!r} is not an RFC 3339 date-time")
+    if not SECURITY_TXT_HEADER_RE.search(headers):
+        errors.append(f"SECURITY-TXT: _headers does not serve /{SECURITY_TXT} as text/plain")
+    if f"/{SECURITY_TXT}" in in_sitemap:
+        errors.append(f"SECURITY-TXT: /{SECURITY_TXT} is in sitemap.xml")
+    return errors, facts
 
 
 def route_of(rel: str) -> str:
@@ -211,6 +259,10 @@ def check(built: pathlib.Path, expected_noindex=None, contact_open=None) -> dict
                 if host != "uncost.org" and not host.endswith(".uncost.org"):
                     third.append(f"{path.relative_to(built)} {host}")
 
+    sec_errors, sec_facts = security_txt_errors(built, headers, in_sitemap)
+    errors += sec_errors
+    facts.update(sec_facts)
+
     if sorted(noindex) != sorted(expected_noindex):
         errors.append(f"NOINDEX: noindex pages are {sorted(noindex)}, expected {sorted(expected_noindex)}")
     for route in noindex:
@@ -240,7 +292,9 @@ def selftest() -> int:
             "robots.txt": f"User-agent: *\nAllow: /\nSitemap: {ORIGIN}/sitemap.xml\n",
             "_headers": ("/*\n  X-Content-Type-Options: nosniff\n  Content-Security-Policy: default-src 'self'; "
                          f"img-src 'self' data:; script-src 'self' {BEACON_SCRIPT}; connect-src 'self' "
-                         "https://cloudflareinsights.com; form-action 'self'\n"),
+                         "https://cloudflareinsights.com; form-action 'self'\n"
+                         + sech),
+            ".well-known/security.txt": sec,
             "sitemap.xml": f"<urlset><url><loc>{ORIGIN}/</loc></url><url><loc>{ORIGIN}/about/</loc></url></urlset>",
             "index.html": page('<input id="site-search" type="search">', "/"),
             "about/index.html": page("<p>About</p>", "/about/"),
@@ -254,6 +308,9 @@ def selftest() -> int:
             p.parent.mkdir(parents=True, exist_ok=True)
             p.write_text(text, encoding="utf-8")
 
+    sec = (f"Contact: https://example.org/report\nExpires: 2999-01-01T00:00:00Z\nPreferred-Languages: en\n"
+           f"Canonical: {ORIGIN}/.well-known/security.txt\n")
+    sech = "/.well-known/security.txt\n  Content-Type: text/plain; charset=utf-8\n"
     sm = f"<urlset><url><loc>{ORIGIN}/</loc></url><url><loc>{ORIGIN}/about/</loc></url></urlset>"
     smc = sm.replace("</urlset>", f"<url><loc>{ORIGIN}/contact/</loc></url></urlset>")
     cases = {
@@ -261,7 +318,7 @@ def selftest() -> int:
         "disallow": ({"robots.txt": f"User-agent: *\nDisallow: /\nSitemap: {ORIGIN}/sitemap.xml\n"}, {"ROBOTS"}),
         "preview-sitemap": ({"robots.txt": "User-agent: *\nAllow: /\nSitemap: https://x.pages.dev/sitemap.xml\n"}, {"ROBOTS"}),
         "x-robots": ({"_headers": ("/*\n  X-Robots-Tag: noindex, nofollow\n  Content-Security-Policy: default-src 'self'; "
-                                   "form-action 'self'\n")}, {"HEADER"}),
+                                   "form-action 'self'\n" + sech)}, {"HEADER"}),
         "real-page-noindex": ({"about/index.html": page("<p>About</p>", "/about/", noindex=True)}, {"NOINDEX"}),
         # A pledge-flow page that lost its noindex while forms are off.
         "form-flow-indexed": ({"pledge/thanks/index.html": page("<p>Thanks</p>", "/pledge/thanks/"),
@@ -276,7 +333,7 @@ def selftest() -> int:
                         {"THIRD-PARTY"}),
         "beacon-ok": ({"about/index.html": page(f'<script defer src="{BEACON_SCRIPT}" data-cf-beacon="{{}}"></script>', "/about/")},
                       set()),
-        "csp-extra-origin": ({"_headers": "/*\n  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.example.com; form-action 'self'\n"},
+        "csp-extra-origin": ({"_headers": "/*\n  Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.example.com; form-action 'self'\n" + sech},
                              {"CSP"}),
         "contact-form-off": ({"contact/index.html": page('<form data-form="contact" data-live action="/api/contact" method="post"><input type="email"></form>', "/contact/"),
                               "sitemap.xml": smc}, {"FORM"}),
@@ -285,6 +342,15 @@ def selftest() -> int:
         "contact-form-elsewhere": ({"contact/index.html": page('<form data-form="contact" data-live action="/api/contact" method="post"><input type="email"></form>', "/contact/"),
                                     "about/index.html": page('<form data-form="contact" data-live action="/api/contact" method="post"><input type="email"></form>', "/about/"),
                                     "sitemap.xml": smc}, {"FORM"}),
+        "security-txt-missing": ({".well-known/security.txt": None}, {"SECURITY-TXT"}),
+        "security-txt-expired": ({".well-known/security.txt": sec.replace("2999-01-01", "2001-01-01")}, {"SECURITY-TXT"}),
+        "security-txt-preview-canonical": ({".well-known/security.txt": sec.replace(ORIGIN, "https://abc.pages.dev")},
+                                           {"SECURITY-TXT"}),
+        "security-txt-no-contact": ({".well-known/security.txt": sec.replace("Contact:", "# Contact:")}, {"SECURITY-TXT"}),
+        "security-txt-not-plain": ({"_headers": ("/*\n  Content-Security-Policy: default-src 'self'; form-action 'self'\n")},
+                                   {"SECURITY-TXT"}),
+        "security-txt-in-sitemap": ({"sitemap.xml": sm.replace("</urlset>", f"<url><loc>{ORIGIN}/.well-known/security.txt</loc></url></urlset>")},
+                                    {"SECURITY-TXT"}),
     }
     failures = []
     for name, (over, want) in cases.items():
