@@ -65,25 +65,43 @@ jobs:
       - run: python3 scripts/audit_website.py --built website/dist
         env:
           UNCOST_CONTACT_FORM_OPEN: ${{ contains(github.event.pull_request.labels.*.name, 'preview-contact-form') && 'on' || '' }}
+      # The preview's branch alias. wrangler-action does not run `command:`
+      # through a shell, so a "$HEAD_REF" there reached wrangler as the literal
+      # text and every PR shared one alias (head-ref). The branch name is
+      # sanitised here instead, as data from the environment (never templated
+      # into a script), to the alias Cloudflare would make of it: lowercase
+      # letters, digits and hyphens, at most 28 characters. Only [a-z0-9-]
+      # reaches the deploy command.
+      - name: Preview branch alias
+        if: steps.config.outputs.enabled == 'true'
+        id: branch
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          alias=$(printf '%s' "$HEAD_REF" | tr '[:upper:]' '[:lower:]' | tr -c 'a-z0-9' '-' | tr -s '-' | cut -c1-28 | sed 's/^-*//; s/-*$//')
+          [ -n "$alias" ] || alias="pr-$PR_NUMBER"
+          printf '%s' "$alias" | grep -Eq '^[a-z0-9]([a-z0-9-]*[a-z0-9])?$'
+          echo "alias=$alias" >> "$GITHUB_OUTPUT"
       - name: Deploy preview
         if: steps.config.outputs.enabled == 'true'
         id: deploy
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
-        env:
-          # Branch name reaches the shell as data, never as templated code.
-          HEAD_REF: ${{ github.head_ref }}
         with:
           apiToken: ${{ secrets.CF_PAGES_TOKEN }}
           accountId: ${{ secrets.CF_ACCOUNT_ID }}
           workingDirectory: website
-          command: pages deploy dist --project-name=uncost-site-preview --branch="$HEAD_REF"
+          command: pages deploy dist --project-name=uncost-site-preview --branch=${{ steps.branch.outputs.alias }}
       - name: Report preview URL
         if: steps.config.outputs.enabled == 'true'
         env:
           DEPLOY_URL: ${{ steps.deploy.outputs.deployment-url }}
+          ALIAS_URL: https://${{ steps.branch.outputs.alias }}.uncost-site-preview.pages.dev
         run: |
           {
             echo "### Preview deployment"
             echo ""
             echo "Preview (noindex, robots-disallowed; Cloudflare Access must be enabled on the project): $DEPLOY_URL"
+            echo ""
+            echo "Branch alias (follows this PR's latest preview): $ALIAS_URL"
           } >> "$GITHUB_STEP_SUMMARY"
