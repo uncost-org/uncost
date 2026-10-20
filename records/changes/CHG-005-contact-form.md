@@ -1,6 +1,6 @@
 # CHG-005 — Contact form at the public soft launch (amends CHG-004)
 
-**Status:** DRAFT for founder decision, dated by the founder. Nothing here is decided by this record. It takes effect once merged, and even then the form stays off until the founder has tested delivery and set the switch (see "Turning it on").
+**Status:** founder authorization, dated by the founder. The founder approved the contact form on 2026-10-19 (the decisions below) and it went live with the public soft launch that day: the production build carries `UNCOST_CONTACT_FORM_OPEN=on` (`docs/INFRA-DOMAINS.md`, "Deploys"). Amended by [CHG-006](CHG-006-privacy-notice-and-records.md), which brings /privacy/ up to date for the live site and builds the follow-up records below.
 
 - **Date:** 2026-10-19
 - **Amends:** [CHG-004](CHG-004-public-soft-launch.md) (public soft launch, 2026-10-19). CHG-004 kept every form off. This record turns on **the contact form only**.
@@ -43,11 +43,11 @@ On the policy conflicts listed in the pull request:
 
 - **A consent-event ledger.** §4 asks each consent control to record the "presented-text hash + policy version at submission (append-only consent event)". That needs storage, and this form stores nothing by design. Each email to the founder inbox quotes the consent box's exact text instead, which is a record kept with the message, not a ledger.
 - **The at-collection transfer disclosure (§3.5).** This is the notice, on each form, that data may pass to a fiscal sponsor or successor controller. Its wording depends on the controller identity (§3.1), which is still open, so it is not added.
-- **Withdrawal links in receipt emails (§4).** The form sends the visitor no email. Withdrawal and deletion work by email to contact@uncost.org (/privacy/ §7 and §10).
+- **Withdrawal links in receipt emails (§4).** The form sends the visitor no email. Withdrawal and deletion work by email to contact@uncost.org (/privacy/ §8 and §13 since CHG-006; §7 and §10 before).
 
 ## Follow-ups
 
-Tracked here, not built:
+Tracked here when this record was written; [CHG-006](CHG-006-privacy-notice-and-records.md) (2026-10-20) says where each went. The data inventory and the processor entries are built in the private register; the legal entity is named in /privacy/ §1; UNP-73 is partly discharged for the live site, and its open questions are listed in CHG-006.
 
 - **Private data inventory** (POL-002, "Prospective data inventory"): a row for contact messages, covering category, purpose, basis, vendor, storage region, access, retention (12 months), deletion route, transfer and rights.
 - **Processor entries** (POL-002 Rule 6, private processor/security register): Cloudflare (Pages, Pages Functions, Workers, Email Routing, Web Analytics) and the provider of the founder inbox.

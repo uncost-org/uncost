@@ -1050,26 +1050,10 @@ literal("website/src/assembly.njk",
         '<a href="/pledge/" class="u-btn u-btn--primary">Read the Pledge</a>',
         "PL-4 assembly look-ahead button: Read the Pledge")
 
-# PL-5 — /privacy/: §2 says what is true; §10 offers email only. The analytics
-# bullet first read "No analytics" (#77); since the contact-form batch
-# (2026-10-19, CHG-005) the site uses Cloudflare Web Analytics, so it says so
-# in plain words. The FAQ of record (_data/faq.js) says the same. This patch
-# goes from the export's text, or from #77's "No analytics" text, to today's.
-PL5_ANALYTICS = ('<li><b>Analytics</b> — the site uses Cloudflare Web Analytics, which counts page views '
-                 'without cookies, fingerprinting or advertising profiles. Cloudflare processes that data as '
-                 'our host (<a class="u-1" href="https://www.cloudflare.com/web-analytics/">Cloudflare&rsquo;s '
-                 'Web Analytics privacy page</a>).</li>')
-patch("website/src/privacy.njk",
-      re.escape('<li><b>Basic, privacy-respecting analytics</b> — aggregate page usage, without building '
-                'advertising profiles.</li>') + "|" +
-      re.escape('<li><b>No analytics</b> — this site uses no analytics today: no tracking scripts, no '
-                'advertising pixels, no fingerprinting. We&rsquo;ll update this policy before any are added.</li>'),
-      PL5_ANALYTICS.replace("\\", "\\\\"), "PL-5 privacy §2: Cloudflare Web Analytics", guard=PL5_ANALYTICS)
-literal("website/src/privacy.njk",
-        '<a class="u-1" href="mailto:contact@uncost.org">contact@uncost.org</a> or use the '
-        '<a class="u-1" href="/contact/">contact form</a>.',
-        '<a class="u-1" href="mailto:contact@uncost.org">contact@uncost.org</a>.',
-        "PL-5 privacy §10: email, not the contact form")
+# PL-5 — /privacy/ §2 (analytics) and §10 (email only) — superseded on
+# 2026-10-20 by CP-1 below, which restates the whole policy body (CHG-006).
+# The patches that stood here would no longer find their text, so they are
+# retired rather than left to fail; their history is CANVAS-SYNC 175 and 180.
 
 # PL-6 — /contact/ description: no contact form at launch.
 literal("website/src/contact.njk",
@@ -1116,22 +1100,8 @@ for f in ("check-email", "verify", "resent", "thanks"):
     patch(f"website/src/pledge/{f}.njk", r'\A(---\n(?:[^\n]*\n)*?)(---\n)', r'\1formFlow: true\n\2',
           f"CF-2 pledge/{f}: formFlow (noindex while forms are off)", guard="\nformFlow: true\n")
 
-# CF-3 — /privacy/ §2: what the contact form collects, what it is for, and
-# how long it is kept (CHG-005; founder decisions of 2026-10-19: no phone, the
-# consent box with the minimum age 18, 12-month retention). privacy.njk is
-# re-derived. The pattern also takes an earlier contact-form bullet, so a
-# re-run replaces it rather than adding a second one.
-OPTIONAL_LI = ('<li><b>Optional details</b> — a name or message you choose to send us, or how you&rsquo;d '
-               'like to help.</li>')
-CONTACT_LI = ('<li><b>The contact form</b> — if you use it: your name (optional), your email address, your '
-              'message, and your confirmation that you are 18 or older. We use them only to reply to your '
-              'message. They are not stored on this site: the form emails them to our inbox, the '
-              'founder&rsquo;s, where they are kept only as long as needed to reply and deleted within 12 '
-              'months of our last reply.</li>')
-patch("website/src/privacy.njk",
-      re.escape(OPTIONAL_LI) + r'(?:\n      <li><b>The contact form</b>.*?</li>)?',
-      (OPTIONAL_LI + "\n      " + CONTACT_LI).replace("\\", "\\\\"),
-      "CF-3 privacy §2: what the contact form collects", guard=CONTACT_LI)
+# CF-3 — /privacy/ §2, what the contact form collects — superseded on
+# 2026-10-20 by CP-1 below (CHG-006). History: CANVAS-SYNC 179.
 
 # ---------------------------------------------------------------------------
 # Page titles 2026-10-20 (founder brief). layouts/base.njk now finds the
@@ -1150,5 +1120,200 @@ literal("website/src/privacy.njk",
         'title: "Privacy &amp; Data Protection (POL-001)"',
         'title: "Privacy"',
         "PT-1 privacy title: Privacy")
+
+# ---------------------------------------------------------------------------
+# Compliance pass 2026-10-20 (founder brief; CHG-006). Re-derived templates
+# only: privacy.njk and policies/index.njk (gen_static_pages.py). The layout,
+# accessibility.njk, ui.js and integration.css are repo-owned.
+# ---------------------------------------------------------------------------
+print("Compliance pass 2026-10-20:")
+
+# CP-1 — /privacy/: the notice says what the live site does today and is
+# complete for CalOPPA and GDPR Art. 13 as far as the founder's decisions of
+# 2026-10-20 reach (CHG-006): the operator, Dafuq Industries LLC, until a
+# fiscal sponsor takes it on; only the contact form, emails, Cloudflare Web
+# Analytics and security processing described as live, and the Pledge, the
+# updates list, the Assembly and the anti-manipulation signals moved under
+# "When sign-ups open"; a legal basis for each use; the providers and US
+# processing; no cookies or browser storage; the right to complain and the
+# one-month answer; Do Not Track and Global Privacy Control; how changes are
+# announced, and an effective date. The export's POL-001 labels (description,
+# ref badge, §9) become POL-002. The whole body is restated in one patch, so
+# it reproduces from the export or from any earlier state (PL-5, CF-3).
+PRIVACY = "website/src/privacy.njk"
+CP1_DESC = ('description: "POL-002 — the privacy notice for uncost.org: what the site collects today, why, '
+            'who processes it, and your rights. No cookies; we don’t sell data or use it for partisan '
+            'targeting."')
+patch(PRIVACY, r'^description: ".*?"$', CP1_DESC.replace("\\", "\\\\"), "CP-1 privacy description: POL-002",
+      flags=re.M, guard=CP1_DESC)
+CP1_META = ('<div class="meta">\n'
+            '    <span class="ref">POL-002</span>\n'
+            '    <span class="m">Version 0.2</span>\n'
+            '    <span class="m">Effective 20 October 2026</span>\n'
+            '    <span class="m">Public review</span>\n'
+            '  </div>')
+patch(PRIVACY, r'<div class="meta">.*?</div>', CP1_META, "CP-1 privacy header: POL-002, version 0.2, effective date",
+      guard=CP1_META)
+CP1_TOC_ITEMS = ["Who we are", "What we collect today", "Why we use it", "Cookies and your browser",
+                 "What we never do", "Sharing, providers &amp; transfers", "Retention", "Your rights",
+                 "Do Not Track &amp; Global Privacy Control", "Security", "When sign-ups open",
+                 "Changes to this notice", "Contact"]
+CP1_TOC = ('<nav class="pol-toc" aria-label="Contents" data-screen-label="TOC">\n    <h2>Contents</h2>\n'
+           + "".join(f'    <a href="#s{i}">{i} · {t}</a>\n' for i, t in enumerate(CP1_TOC_ITEMS, 1))
+           + '  </nav>')
+patch(PRIVACY, r'<nav class="pol-toc".*?</nav>', CP1_TOC, "CP-1 privacy contents: 13 sections", guard=CP1_TOC)
+
+
+def _sec(n, title, body):
+    return (f'    <section id="s{n}"><h3 class="s"><span class="num">{n}</span>{title}</h3>{body}</section>\n\n')
+
+
+CF_PRIVACY = '<a class="u-1" href="https://www.cloudflare.com/privacypolicy/">Cloudflare&rsquo;s privacy policy</a>'
+CP1_BODY = (
+    '    <div class="callout">\n'
+    '      <h3>The plain-language version</h3>\n'
+    '      <p>Today this site collects very little. If you use the contact form or email us, we get your name '
+    '(if you give it), your email address and your message, and we use them only to reply. Our host, '
+    'Cloudflare, counts page views without cookies. The site sets no cookies and stores nothing in your '
+    'browser. We don&rsquo;t sell your data, and we never use it for partisan targeting. You can ask us to '
+    'see or delete your data at any time.</p>\n'
+    '    </div>\n\n'
+    + _sec(1, "Who we are",
+           '<p>Uncost (&ldquo;we&rdquo;, &ldquo;us&rdquo;) is a nonprofit, nonpartisan movement to reduce the '
+           'cost of living. This notice explains how we handle personal data on uncost.org and when you write '
+           'to us. Until a fiscal sponsor takes this on, uncost.org is operated by Dafuq Industries LLC, which '
+           'is responsible for the personal data described here (in EU and UK law, the &ldquo;controller&rdquo;). '
+           'That will change when a fiscal sponsor is confirmed, and we&rsquo;ll update this notice when it does. '
+           'For anything about your data, email <a class="u-1" href="mailto:contact@uncost.org">contact@uncost.org</a>. '
+           'Our accounts on social platforms are run under those platforms&rsquo; own privacy policies.</p>')
+    + _sec(2, "What we collect today",
+           '<p>We collect as little as we can. Today that is:</p><ul>\n'
+           '      <li><b>The contact form</b> — if you use it: your name (optional), your email address, your '
+           'message, and your confirmation that you are 18 or older. The form emails them to our inbox; '
+           'nothing is stored on this site.</li>\n'
+           '      <li><b>Emails you send us</b> — if you write to contact@uncost.org: your email address, your '
+           'name if your email shows it, and what you write. They reach the same inbox.</li>\n'
+           '      <li><b>Page views</b> — Cloudflare Web Analytics counts visits to our pages without cookies, '
+           'fingerprinting or advertising profiles (<a class="u-1" href="https://www.cloudflare.com/web-analytics/">'
+           'Cloudflare&rsquo;s Web Analytics privacy page</a>).</li>\n'
+           '      <li><b>Security data</b> — like every website, our host receives your IP address and the basic '
+           'details of each request, such as the page asked for and your browser type, so it can deliver the '
+           'page, keep the site secure and limit how often the contact form can be used.</li>\n'
+           '    </ul><p>The Pledge, the updates list and the Assembly aren&rsquo;t open yet, so nothing on this '
+           'site asks for those details (section&nbsp;11).</p>')
+    + _sec(3, "Why we use it",
+           '<p>Each use has a legal basis under EU and UK law:</p><ul>\n'
+           '      <li><b>Replying to your contact-form message</b> — your consent, which you give by ticking the '
+           'box on the form. You can withdraw it at any time by emailing us, and we then delete your '
+           'message.</li>\n'
+           '      <li><b>Replying to emails you send us</b> — our legitimate interest in answering the people who '
+           'write to us.</li>\n'
+           '      <li><b>Counting page views</b> — our legitimate interest in knowing which pages are read, '
+           'without identifying anyone.</li>\n'
+           '      <li><b>Keeping the site secure</b>, including limiting how often the contact form can be used — '
+           'our legitimate interest in protecting the site and the people who use it from abuse.</li>\n'
+           '      <li><b>Answering a request about your data</b> — the legal obligation to do so.</li>\n'
+           '    </ul><p>Where we rely on legitimate interests, you can object (section&nbsp;8).</p>')
+    + _sec(4, "Cookies and your browser",
+           '<p>This site sets no cookies and stores nothing in your browser: no local storage, no session '
+           'storage, no browser database. Neither does the Cloudflare analytics script. That&rsquo;s why there '
+           'is no cookie banner: there is nothing to accept or refuse.</p>')
+    + _sec(5, "What we never do",
+           '<ul>\n'
+           '      <li>We never sell, rent, or trade your personal data.</li>\n'
+           '      <li>We never use your pledge or contact details for partisan political targeting.</li>\n'
+           '      <li>We never require payment to vote or to take part.</li>\n'
+           '      <li>We don&rsquo;t use tokens, on-chain voting, or crypto mechanics that expose your identity or '
+           'funds.</li>\n'
+           '    </ul>')
+    + _sec(6, "Sharing, providers &amp; transfers",
+           '<p>We share data only with the service providers that help us run the site, and only for that:</p><ul>\n'
+           '      <li><b>Cloudflare, Inc.</b> — hosts the site; runs the contact form and sends each message to '
+           'our inbox (Pages Functions, Workers and Email Routing); forwards email sent to contact@uncost.org; '
+           'provides Web Analytics; and protects the site, including the limit on the contact form.</li>\n'
+           '      <li><b>Google (Gmail)</b> — our inbox, where contact-form messages and the emails you send us are '
+           'kept.</li>\n'
+           '    </ul><p>Your data may be processed in the United States. We disclose data if the law requires '
+           'it, and we&rsquo;ll say so where we&rsquo;re permitted to.</p>')
+    + _sec(7, "Retention",
+           '<ul>\n'
+           '      <li><b>Contact-form messages and emails you send us</b> — kept in our inbox only as long as '
+           'needed to reply, and deleted within 12 months of our last reply.</li>\n'
+           '      <li><b>Page views</b> — counted in aggregate; we keep nothing that identifies you.</li>\n'
+           f'      <li><b>Security data</b> — kept by Cloudflare for the periods set out in {CF_PRIVACY}.</li>\n'
+           '    </ul><p>If you ask us to delete your data, we delete it promptly, keeping only what the law '
+           'requires.</p>')
+    + _sec(8, "Your rights",
+           '<p>Depending on where you live, you may have the right to access, correct, export, or delete your '
+           'data, to object to certain processing, including anything based on our legitimate interests, and to '
+           'withdraw consent. To exercise any of these, email us — see section&nbsp;13. We won&rsquo;t make you '
+           'jump through hoops, and we answer within one month. If you are in the EU, the EEA or the UK, you can '
+           'also complain to a data protection authority: the one where you live or work, or in the UK the '
+           'Information Commissioner&rsquo;s Office.</p>')
+    + _sec(9, "Do Not Track &amp; Global Privacy Control",
+           '<p>This site doesn&rsquo;t track you across other websites, and no one else tracks you across sites '
+           'through it. So a Do Not Track signal has nothing to switch off: the site works the same whether or '
+           'not your browser sends one. We treat a Global Privacy Control signal as a request to opt out of any '
+           'sale or sharing of your personal information. We don&rsquo;t sell or share it anyway.</p>')
+    + _sec(10, "Security",
+           '<p>We protect data with reasonable technical and organisational measures and keep collection minimal, '
+           'so there&rsquo;s less to protect in the first place. No system is perfectly secure, but we treat your '
+           'trust as the whole point of the movement.</p>')
+    + _sec(11, "When sign-ups open",
+           '<p>The Pledge, the updates list and the Assembly aren&rsquo;t open yet. Before each one opens, we&rsquo;ll '
+           'update this notice. This is what will then apply:</p><ul>\n'
+           '      <li><b>Email address</b> — when you sign the Pledge or subscribe to updates, to send the '
+           'confirmations or updates you asked for, and to record and count Pledge signatures as public '
+           'support.</li>\n'
+           '      <li><b>Optional details</b> — how you&rsquo;d like to help, if you tell us.</li>\n'
+           '      <li><b>The Assembly</b> — what&rsquo;s needed to run the advisory Assembly fairly (one person, '
+           'one vote), including the minimum anti-manipulation signals needed to reduce duplicate accounts and '
+           'automated abuse.</li>\n'
+           '      <li><b>An email provider</b> — to send those emails. We&rsquo;ll name it here first.</li>\n'
+           '      <li><b>Donations</b> — once fiscal sponsorship is confirmed, the sponsor may process donation '
+           'data under its own compliant rules.</li>\n'
+           '    </ul>')
+    + '    <section id="s12"><h3 class="s"><span class="num">12</span>Changes to this notice</h3><p>This notice is '
+      'version-controlled. Its reference number (POL-002) stays fixed while the version increments. When it '
+      'changes, we update the effective date at the top and add a row to the table below, and every change is '
+      'logged with a date and reason in the <a class="u-1" href="https://github.com/uncost-org/uncost/tree/main/'
+      'records/changes">public change record</a>. The policy behind it, <a class="u-1" '
+      'href="/policies/privacy-data-protection/">POL-002</a>, is still a public review draft. Supporters will '
+      'be able to propose changes through the advisory Assembly once it opens; requirements carrying legal or '
+      'safeguarding duty are approved by the responsible leadership and fiscal sponsor.</p>\n'
+      '      <table class="vhist"><thead><tr><th class="u-109">Version</th><th class="u-110">Date</th>'
+      '<th>Change</th></tr></thead><tbody>\n'
+      '        <tr><td>0.1</td><td>Pre-launch</td><td>Initial public review draft.</td></tr>\n'
+      '        <tr><td>0.2</td><td>20 October 2026</td><td>Describes what the live site does today: who operates '
+      'it, the contact form, emails, analytics and security data; the legal basis for each; no cookies; the '
+      'providers and US processing; complaints and our one-month answer; Do Not Track and Global Privacy '
+      'Control. Sign-ups move under &ldquo;When sign-ups open&rdquo;. Reference corrected to POL-002 '
+      '(CHG-006).</td></tr>\n'
+      '      </tbody></table>\n'
+      '    </section>\n\n'
+    + _sec(13, "Contact",
+           '<p>Questions about privacy or a request about your data? Email '
+           '<a class="u-1" href="mailto:contact@uncost.org">contact@uncost.org</a>. The full policy set lives on '
+           'the <a class="u-1" href="/policies/">Policies</a> page.</p>').rstrip("\n") + "\n"
+)
+patch(PRIVACY, r'(<div class="pol-body" data-screen-label="Policy body">\n).*?(\n  </div>\n</div>)',
+      r'\g<1>' + CP1_BODY.replace("\\", "\\\\") + r'\g<2>'.lstrip(), "CP-1 privacy body: the live site, today",
+      guard='<section id="s13">')
+literal(PRIVACY,
+        '<p class="u-44 lead">Unsubscribe or request deletion anytime — one email, no friction.</p>',
+        '<p class="u-44 lead">Ask to see or delete your data anytime — one email, no friction.</p>',
+        "CP-1 privacy call to action: no unsubscribe while nothing is subscribed")
+
+# CP-2 — /policies/: donations are not taken today. The export said "Because
+# Uncost handles donations, collects email and community input, ...". Founder
+# (2026-10-20): future, conditional wording for donations. Email is collected
+# today, through the contact form; community input is not, so it goes.
+literal("website/src/policies/index.njk",
+        '<p>Because Uncost handles donations, collects email and community input, builds public data tools, '
+        'and explores sensitive sectors, it commits to a clear set of policies from the start.',
+        '<p>Uncost collects email through its contact form, builds public data tools, and explores sensitive '
+        'sectors. When Uncost accepts donations, through a fiscal sponsor, it will handle money too. So it '
+        'commits to a clear set of policies from the start.',
+        "CP-2 policies intro: donations future and conditional")
 
 print("done")
