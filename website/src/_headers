@@ -22,3 +22,7 @@
   Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), interest-cohort=()
   Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self'; font-src 'self'; script-src 'self' https://static.cloudflareinsights.com/beacon.min.js; connect-src 'self' https://cloudflareinsights.com; object-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'self'; upgrade-insecure-requests
   Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+
+# RFC 9116 security contact: plain text, whatever the host would guess.
+/.well-known/security.txt
+  Content-Type: text/plain; charset=utf-8

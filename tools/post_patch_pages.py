@@ -1133,4 +1133,22 @@ patch("website/src/privacy.njk",
       (OPTIONAL_LI + "\n      " + CONTACT_LI).replace("\\", "\\\\"),
       "CF-3 privacy §2: what the contact form collects", guard=CONTACT_LI)
 
+# ---------------------------------------------------------------------------
+# Page titles 2026-10-20 (founder brief). layouts/base.njk now finds the
+# homepage by URL, so every other page shows "<its title> · Uncost"
+# (base.njk is repo-owned). Re-derived front matter that gave a bad title is
+# restated here.
+# ---------------------------------------------------------------------------
+print("Page titles 2026-10-20:")
+
+# PT-1 — /privacy/: the export titles it "Privacy &amp; Data Protection
+# (POL-001)". The entity is escaped twice in <title>, and POL-001 is the
+# Political Activity policy here (privacy is POL-002). The page is the site's
+# privacy notice, so it is titled as the footer names it. gen_static_pages.py
+# writes the front matter.
+literal("website/src/privacy.njk",
+        'title: "Privacy &amp; Data Protection (POL-001)"',
+        'title: "Privacy"',
+        "PT-1 privacy title: Privacy")
+
 print("done")

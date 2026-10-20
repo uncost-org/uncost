@@ -38,6 +38,7 @@ ALLOWLIST_PATH = ROOT / "scripts" / "audit-website-allowlist.json"
 QUEUE_PATH = ROOT / "scripts" / "audit-website-review-queue.json"
 REGISTER_PATH = ROOT / "sources" / "register.csv"
 CHROME_PATH = ROOT / "website" / "src" / "_data" / "chrome.json"
+SITE_DATA_PATH = ROOT / "website" / "src" / "_data" / "site.js"
 
 SOURCE_SCOPE = ("website", "sectors", "policies", "projects")
 
@@ -729,6 +730,59 @@ def scan_forms(
             line_texts[(rel, 1)] = f"live contact forms: {parser.live_forms}"
 
 
+def tagline_title(site_path: Path = SITE_DATA_PATH) -> str:
+    """The homepage's title, "Uncost — <site.tagline>" (layouts/base.njk)."""
+    m = re.search(r'tagline:\s*"([^"]+)"', site_path.read_text(encoding="utf-8"))
+    if not m:
+        raise SystemExit(f"{site_path.name}: no tagline found")
+    return "Uncost — " + m.group(1)
+
+
+TITLE_RE = re.compile(r"<title>(.*?)</title>", re.S | re.I)
+NOINDEX_META_RE = re.compile(r'<meta\s+name="robots"\s+content="[^"]*\bnoindex\b', re.I)
+
+
+def scan_titles(
+    built_dir: Path,
+    findings: List[Finding],
+    line_texts: Dict[Tuple[str, int], str],
+    home_title: Optional[str] = None,
+) -> None:
+    """FAIL on page titles that would mislabel the site in search and shares.
+
+    - tagline-title: a page other than / carries the homepage's tagline title
+      (the 2026-10 launch shipped it on every page: base.njk tested `home`,
+      which _data/home.json makes truthy everywhere).
+    - empty-title: a page whose title has no text of its own (" · Uncost").
+    - duplicate-title: two INDEXABLE pages (no robots noindex) share a title.
+    Never allowlisted: a title is fixed at its source.
+    """
+    if home_title is None:
+        home_title = tagline_title()
+    seen: Dict[str, str] = {}
+    for path in sorted(built_dir.rglob("*.html")):
+        rel = str(path.relative_to(built_dir))
+        text = path.read_text(encoding="utf-8")
+        m = TITLE_RE.search(text)
+        title = html.unescape(m.group(1)).strip() if m else ""
+        line = text[: m.start()].count("\n") + 1 if m else 1
+        excerpt = f"<title>{title}</title>"
+        if rel != "index.html" and title == home_title:
+            findings.append(Finding("FAIL", "tagline-title", rel, line, excerpt[:90]))
+            line_texts[(rel, line)] = excerpt
+        if not title or title.startswith("·") or title == "· Uncost" or title.lower().startswith("undefined"):
+            findings.append(Finding("FAIL", "empty-title", rel, line, excerpt[:90]))
+            line_texts[(rel, line)] = excerpt
+        # The tagline title is reported once, by tagline-title, wherever it is.
+        if NOINDEX_META_RE.search(text) or title == home_title:
+            continue
+        if title in seen:
+            findings.append(Finding("FAIL", "duplicate-title", rel, line, f"{excerpt[:60]} also on {seen[title]}"))
+            line_texts[(rel, line)] = excerpt
+        else:
+            seen[title] = rel
+
+
 def scan_gated_marker_leak(
     built_dir: Path,
     findings: List[Finding],
@@ -810,6 +864,7 @@ def run_scan(built_dir: Optional[Path]) -> int:
                 scan_built_html(path, rel, findings, line_texts, register_ids, cited_figures)
         scan_built_assertions(built_dir, findings, line_texts)
         scan_forms(built_dir, findings, line_texts)
+        scan_titles(built_dir, findings, line_texts)
         scan_gated_marker_leak(built_dir, findings, line_texts)
 
     allowlist = load_allowlist()
@@ -1150,6 +1205,29 @@ def selftest() -> int:
            == ["form-rendered@pledge/index.html"] * 2, "switch on: the pledge form still fails")
     expect(form_rules({"contact/index.html": "<p>off</p>"}, True)
            == ["contact-form-missing@contact/index.html"], "switch on: a missing contact form fails")
+
+    # Titles: the tagline only on /, no empty titles, no shared indexable titles.
+    def title_rules(files: Dict[str, str]) -> List[str]:
+        out: List[Finding] = []
+        with tempfile.TemporaryDirectory() as tmp:
+            for rel, html_text in files.items():
+                (Path(tmp) / rel).parent.mkdir(parents=True, exist_ok=True)
+                (Path(tmp) / rel).write_text(html_text, encoding="utf-8")
+            scan_titles(Path(tmp), out, {}, home_title="Uncost — Tagline.")
+        return sorted(f"{f.rule}@{f.path}" for f in out)
+    t = lambda title, noindex=False: (('<meta name="robots" content="noindex">' if noindex else "") + f"<title>{title}</title>")
+    expect(title_rules({"index.html": t("Uncost — Tagline."), "about/index.html": t("About · Uncost")}) == [],
+           "titles: the tagline on / and an own title elsewhere pass")
+    expect(title_rules({"index.html": t("Uncost — Tagline."), "about/index.html": t("Uncost — Tagline.")})
+           == ["tagline-title@about/index.html"], "titles: the tagline on another page fails")
+    expect(title_rules({"index.html": t("Uncost — Tagline."), "x/index.html": t("Uncost — Tagline.", noindex=True)})
+           == ["tagline-title@x/index.html"], "titles: the tagline fails on a noindex page too")
+    expect(title_rules({"a/index.html": t("Same · Uncost"), "b/index.html": t("Same · Uncost")})
+           == ["duplicate-title@b/index.html"], "titles: two indexable pages sharing a title fail")
+    expect(title_rules({"a/index.html": t("Same · Uncost"), "b/index.html": t("Same · Uncost", noindex=True)}) == [],
+           "titles: a noindex page may share a title")
+    expect(title_rules({"a/index.html": t(" · Uncost")}) == ["empty-title@a/index.html"],
+           "titles: a page with no title of its own fails")
 
     # Gated transition markers must never reach rendered HTML.
     gated_findings: List[Finding] = []

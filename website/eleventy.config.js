@@ -82,6 +82,10 @@ module.exports = function (eleventyConfig) {
     "assets/downloads/the-case-for-uncost.pdf": "downloads/the-case-for-uncost.pdf",
   });
   eleventyConfig.addPassthroughCopy({ "src/_headers": "_headers" });
+  // RFC 9116 security contact, served as text/plain (_headers) and kept out
+  // of the sitemap (isIndexable takes only "/" and ".html" URLs). Its Expires
+  // line is renewed by hand; tools/prod_check.py fails once it has passed.
+  eleventyConfig.addPassthroughCopy({ "src/.well-known/security.txt": ".well-known/security.txt" });
   // Cloudflare Pages redirect table. Routes that have moved keep working
   // rather than 404ing, and the old URL is not left to rot in someone's
   // bookmarks or a feed reader.

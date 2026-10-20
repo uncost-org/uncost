@@ -3,7 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-{% set pageTitle = "Uncost — " + site.tagline if home else title + " · Uncost" %}
+{#- The homepage is found by its URL. `home` cannot be used: _data/home.json
+    makes it global data, truthy on every page, so every page used to get the
+    tagline title. Every other page is "<its own title> · Uncost". -#}
+{% set pageTitle = "Uncost — " + site.tagline if page.url == "/" else (title or "") + " · Uncost" %}
 {% set pageDesc = description or site.description %}
 {% set canonical = site.origin + (page.url | default("/")) %}
 <title>{{ pageTitle }}</title>
