@@ -98,3 +98,13 @@ Entries newest first.
 | 2026-07-21 | `_dmarc.uncost.org` (TXT) | Cloudflare DMARC Management enabled, `p=none`, aggregate reports to dashboard. | Founder action. |
 | 2026-07-21 | apex SPF / DKIM | Cloudflare Email Routing added apex SPF (`~all`) and DKIM; `contact@` inbound routing live. | Founder action. |
 | ≤2026-08-02 | apex (`uncost.org`) | Apex serves the website via Cloudflare Pages; `www.uncost.org` 301-redirects to the apex. | Exact date to confirm against Cloudflare. |
+
+## Deploys
+
+Production is the Cloudflare Pages project `uncost` (production branch `main`). It is Git-disconnected and deployed by hand from `website/`: `npx wrangler pages deploy dist --project-name=uncost --branch=main`. Running from `website/` makes `website/functions/` ship with it. Entries newest first.
+
+| Date | Commit | Deployment ID | Previous deployment ID | What |
+|---|---|---|---|---|
+| 2026-10-19 23:54 UTC (2026-10-20 06:54 ICT) | `fc656f9` | `eaa96b34-1461-48b2-86f1-94f6cd915065` | `dd7bbe15-4535-451e-bb6c-1c50a45a4bc2` (the "coming soon" page) | Public soft launch under [CHG-004](../records/changes/CHG-004-public-soft-launch.md) and [CHG-005](../records/changes/CHG-005-contact-form.md). Built with only `UNCOST_CONTACT_FORM_OPEN=on`, with Cloudflare Web Analytics enabled. The contact Worker is `uncost-contact-mailer`, version `a7678af1-908b-4164-8ecd-45af81f957b3`. |
+
+**Rollback:** in the Cloudflare dashboard, Workers & Pages → `uncost` → **Deployments** → the previous deployment → **Rollback**. Record any rollback here.
