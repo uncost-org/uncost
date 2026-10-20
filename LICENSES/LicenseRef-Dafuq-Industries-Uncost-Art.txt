@@ -1,0 +1,61 @@
+Artwork licence: Dafuq Industries LLC to Uncost
+
+Date: 20 October 2026
+Recorded in: records/changes/CHG-007-rights-and-transfer-safeguard.md
+
+Licensor: Dafuq Industries LLC ("Dafuq Industries")
+Licensee: Uncost, and, once this licence has been transferred under clause 3,
+Uncost's fiscal sponsor or successor entity
+
+1. The licensed works
+
+   The following images in website/assets/brand/ (identified by path and
+   SHA-256 in website/assets/brand/ASSET_MANIFEST.json), every resized copy
+   made of them when the site is built, and the icons derived from them:
+
+   Logo marks
+     logos/logo-tight-light.png
+     logos/logo-tight-dark.png
+
+   The Open Graph image
+     logos/mark-only-final-light.png
+
+   The six robots
+     robots/07_pointing_transparent.png
+     robots/08_shrugging_transparent.png
+     robots/10_building_transparent.png
+     robots/19_presenting_transparent.png
+     robots/21_holding_globe_transparent.png
+     robots/40_arms_crossed_transparent.png
+
+   The fifteen sector images
+     sectors/sector-care.png             sectors/sector-goods.png
+     sectors/sector-clothing.png         sectors/sector-healthcare.png
+     sectors/sector-communication.png    sectors/sector-leisure.png
+     sectors/sector-education.png        sectors/sector-materials.png
+     sectors/sector-energy.png           sectors/sector-safety.png
+     sectors/sector-environment.png      sectors/sector-shelter.png
+     sectors/sector-food.png             sectors/sector-transportation.png
+                                         sectors/sector-water.png
+
+   The favicon and app icons
+     website/assets/favicon/ (favicon.ico, icon-192.png, icon-512.png,
+     apple-touch-icon.png), derived by tools/make_favicons.py from the robot
+     image robots/robot_01_front_transparent.png, which this licence covers
+     for that purpose.
+
+2. Grant
+
+   Dafuq Industries grants Uncost a non-exclusive, royalty-free, worldwide
+   licence to use, adapt and publish the licensed works for Uncost's work.
+
+3. Transfer
+
+   On request, this licence transfers to Uncost's fiscal sponsor or successor
+   entity.
+
+4. Ownership
+
+   Dafuq Industries keeps ownership of the licensed works. This licence grants
+   no other right. The licensed works stay outside this repository's
+   Apache-2.0 and CC BY 4.0 licences (NOTICE.md).

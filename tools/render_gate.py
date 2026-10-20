@@ -427,7 +427,8 @@ SECTION_EXEMPTIONS = [
      "offers email only, not the contact form, which is off. CANVAS-SYNC item 175. "
      "Contact-form batch (2026-10-19): \u00a72 names Cloudflare Web Analytics and says what the contact form collects. CANVAS-SYNC items 179 and 180. "
      "Compliance pass (2026-10-20; CHG-006): the whole body is the notice for the live site, thirteen sections from "
-     "\"Who we are\" to \"Contact\", restated as CP-1. CANVAS-SYNC item 182."),
+     "\"Who we are\" to \"Contact\", restated as CP-1. CANVAS-SYNC item 182. "
+     "Rights follow-up (2026-10-20; CHG-007): \u00a76 names the transfer safeguard and the version table gains row 0.3 (CP-3). CANVAS-SYNC item 185."),
 ]
 
 

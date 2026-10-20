@@ -2953,8 +2953,8 @@
       "website/assets/brand/logos/logo-final-transparent.png"
     ]
   ],
-  "license_boundary": "Brand identifiers and artwork are reserved and excluded from this repository\u2019s open-content licence; see NOTICE.md and website/assets/brand/RIGHTS.md.",
-  "publication_scope": "GitHub repository intake only; no website deployment, runtime selection, merge, or production publication",
+  "license_boundary": "Brand identifiers and artwork are reserved and excluded from this repository\u2019s open-content licence; see NOTICE.md and website/assets/brand/RIGHTS.md. The published images, and the favicon source, are licensed to Uncost by Dafuq Industries LLC, which keeps ownership: LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt (CHG-007).",
+  "publication_scope": "Published on uncost.org since the public soft launch (CHG-004, 2026-10-19), under the artwork licence from Dafuq Industries LLC (LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt; CHG-007, 2026-10-20). Published: logos/logo-tight-light.png, logos/logo-tight-dark.png, logos/mark-only-final-light.png (the Open Graph image), six robots (07_pointing, 08_shrugging, 10_building, 19_presenting, 21_holding_globe, 40_arms_crossed) and the fifteen sector images; robots/robot_01_front_transparent.png is the source of the favicon and app icons. The other 61 images are in the repository only.",
   "qa": {
     "backgrounds": {
       "coral": "#D64A1E",

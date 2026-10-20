@@ -24,8 +24,13 @@ depend on a third-party host.
 ### The Case for Uncost (August 2026 edition)
 
 - Logical document: **The Case for Uncost, August 2026 edition**
-- SHA-256: `4fc813c0f4935502cd5c20bb8bfd6e0341aae0d451261f43595b76cc23021fce`
-- Size: 14 pages, 3,836,948 bytes
+- SHA-256: `b4815c7b44281d6072ef0e0f64dc3e6a65c44b6a37fcedfdaf40b250679f1f87`
+- Size: 14 pages, 3,836,927 bytes
+- Re-pinned 2026-10-20 ([CHG-007](../records/changes/CHG-007-rights-and-transfer-safeguard.md)): the
+  metadata's Author (Info and XMP `dc:creator`) now reads "Uncost" instead of a
+  personal name. Nothing else changed: the 14 pages' content streams and images
+  are byte-identical, and every page renders pixel-identical. Previous pin:
+  `4fc813c0f4935502cd5c20bb8bfd6e0341aae0d451261f43595b76cc23021fce` (3,836,948 bytes).
 - Repository path: `website/assets/downloads/the-case-for-uncost.pdf`
 - Published at: `/downloads/the-case-for-uncost.pdf` (Eleventy passthrough copy)
 - Authority: a public derivative of the controlling movement source. It states

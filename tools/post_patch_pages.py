@@ -1152,8 +1152,10 @@ CP1_META = ('<div class="meta">\n'
             '    <span class="m">Effective 20 October 2026</span>\n'
             '    <span class="m">Public review</span>\n'
             '  </div>')
+# Guarded on the POL-002 badge, not the whole block, so a later version bump
+# (CP-3) is not undone by a re-run.
 patch(PRIVACY, r'<div class="meta">.*?</div>', CP1_META, "CP-1 privacy header: POL-002, version 0.2, effective date",
-      guard=CP1_META)
+      guard='<span class="ref">POL-002</span>')
 CP1_TOC_ITEMS = ["Who we are", "What we collect today", "Why we use it", "Cookies and your browser",
                  "What we never do", "Sharing, providers &amp; transfers", "Retention", "Your rights",
                  "Do Not Track &amp; Global Privacy Control", "Security", "When sign-ups open",
@@ -1315,5 +1317,29 @@ literal("website/src/policies/index.njk",
         'sectors. When Uncost accepts donations, through a fiscal sponsor, it will handle money too. So it '
         'commits to a clear set of policies from the start.',
         "CP-2 policies intro: donations future and conditional")
+
+# ---------------------------------------------------------------------------
+# Rights follow-up 2026-10-20 (founder brief; CHG-007).
+# ---------------------------------------------------------------------------
+print("Rights follow-up 2026-10-20:")
+
+# CP-3 — /privacy/ §6 names the safeguard for US transfers. Read on
+# dataprivacyframework.gov on 2026-10-20: Cloudflare, Inc. and Google LLC are
+# active EU-U.S. DPF participants, UK Extension included (CHG-007). This closes
+# UNP-73 question 1. §12's own rule: a change bumps the version (0.3) and adds a
+# dated row.
+literal(PRIVACY,
+        '<p>Your data may be processed in the United States. We disclose data',
+        '<p>Your data may be processed in the United States. Cloudflare and Google take part in the EU-U.S. Data '
+        'Privacy Framework (and its UK Extension), which is the safeguard for these transfers. We disclose data',
+        "CP-3 privacy §6: the transfer safeguard")
+literal(PRIVACY, '<span class="m">Version 0.2</span>', '<span class="m">Version 0.3</span>',
+        "CP-3 privacy header: version 0.3")
+literal(PRIVACY,
+        '(CHG-006).</td></tr>\n      </tbody></table>',
+        '(CHG-006).</td></tr>\n        <tr><td>0.3</td><td>20 October 2026</td><td>Names the safeguard for transfers to '
+        'the United States: Cloudflare and Google take part in the EU-U.S. Data Privacy Framework and its UK Extension '
+        '(CHG-007).</td></tr>\n      </tbody></table>',
+        "CP-3 privacy §12: version row 0.3")
 
 print("done")
