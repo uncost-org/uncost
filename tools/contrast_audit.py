@@ -27,6 +27,18 @@ The last one is why the effective background is resolved by compositing every
 ancestor layer the way a browser does, rather than by taking the nearest
 ancestor that happens to declare one.
 
+Partial opacity (compliance pass, 2026-10-20). `opacity` fades an element's
+whole rendering — its text and its own background — over whatever is behind
+it. The export gives every `.eyebrow` `opacity:.7`, which took --coral-deep
+from 5.1–6.0:1 down to 3.1–3.4:1, and this audit, which skipped only opacity 0,
+reported them as passing (axe-core caught them). Where the element or any
+ancestor has opacity below 1, the run is now composited as a browser does it:
+walking up, the text pixel and the ground pixel are each laid over every
+ancestor background, and each ancestor's opacity fades both, until both are
+opaque and nothing higher is translucent. The ratio is taken between those two
+final colours. Runs with no translucent ancestor are measured exactly as
+before.
+
 Standing rule (DESIGN_IMPORT_RUNBOOK, 2026-09-19): an audit fails on "I don't
 know". Anything this cannot resolve — a gradient, an image, a colour it cannot
 composite to an opaque value — is an ERROR, not a skipped line.
@@ -247,9 +259,43 @@ const IN_PAGE = (rootSel) => {
       const hb = parse(getComputedStyle(document.documentElement).backgroundColor);
       if (hb && hb[3] > 0) accs = accs.map((a) => over(a, hb));
     }
+    // Partial opacity: composite the text pixel (T) and the ground pixel (B)
+    // through every ancestor, fading both by each ancestor's opacity. Only
+    // when something in the chain is translucent; otherwise `pairs` is null
+    // and the run is judged as before.
+    const opChain = [];
+    for (let n = el; n && n.nodeType === 1; n = n.parentElement) opChain.push(parseFloat(getComputedStyle(n).opacity));
+    let pairs = null;
+    if (!unresolved && fg && opChain.some((o) => o < 0.999)) {
+      let Ts = [fg.slice()], Bs = [[0, 0, 0, 0]];
+      let n = el, i = 0;
+      while (n && n.nodeType === 1 && !unresolved) {
+        const ns = getComputedStyle(n);
+        if (ns.backgroundImage && ns.backgroundImage !== "none") {
+          const stops = (ns.backgroundImage.match(/rgba?\([^)]*\)/g) || []).map(parse);
+          if (!GRAD.test(ns.backgroundImage) || !stops.length || stops.some((v) => !v)) { unresolved = "background-image under opacity"; break; }
+          const nT = [], nB = [];
+          Ts.forEach((t, k) => { for (const st of stops) { nT.push(over(t, st)); nB.push(over(Bs[k], st)); } });
+          Ts = nT; Bs = nB;
+        }
+        const bg = parse(ns.backgroundColor);
+        if (bg) { Ts = Ts.map((t) => over(t, bg)); Bs = Bs.map((b) => over(b, bg)); }
+        const op = opChain[i];
+        if (op < 0.999) { Ts = Ts.map((t) => [t[0], t[1], t[2], t[3] * op]); Bs = Bs.map((b) => [b[0], b[1], b[2], b[3] * op]); }
+        const higher = opChain.slice(i + 1).some((o) => o < 0.999);
+        if (!higher && Ts.every((t) => t[3] >= 0.999) && Bs.every((b) => b[3] >= 0.999)) break;
+        n = n.parentElement; i++;
+      }
+      // Whatever is still translucent sits on the canvas, which is white.
+      const canvas = [255, 255, 255, 1];
+      Ts = Ts.map((t) => over(t, canvas)); Bs = Bs.map((b) => over(b, canvas));
+      if (!unresolved) pairs = Ts.map((t, k) => [t, Bs[k]]);
+    }
     out.push({
       sel: sel(el),
       text: (el.textContent || "").trim().slice(0, 40),
+      pairs,
+      opacity: opChain.reduce((a, o) => a * o, 1),
       fg: fg === undefined ? null : fg,
       fgRaw: cs.color,
       bg: unresolved ? null : accs[0],
@@ -450,8 +496,14 @@ def evaluate(payload, exemptions=None):
                     a = r["fg"][3]
                     f = [f[i] * a + ground[i] * (1 - a) for i in range(3)]
                 return f
-            bg = min(cands, key=lambda c: ratio(_fg_over(c), c[:3]))
-            fg_rgb = _fg_over(bg)
+            if r.get("pairs"):
+                # A translucent element or ancestor: the page composited the
+                # text and its ground already; the worst pair decides.
+                t, b = min(r["pairs"], key=lambda tb: ratio(tb[0][:3], tb[1][:3]))
+                fg_rgb, bg = t[:3], b
+            else:
+                bg = min(cands, key=lambda c: ratio(_fg_over(c), c[:3]))
+                fg_rgb = _fg_over(bg)
             got = ratio(fg_rgb, bg[:3])
             need = required(r["px"], r["weight"])
             checked += 1
@@ -615,6 +667,20 @@ EXEMPT_FIXTURES = [
     ("/bad-exempt-stale.html", "span.redact", "#0A0A0A", "#0A0A0A", "fixture"),
 ]
 
+# Partial opacity (2026-10-20): the export's .eyebrow — 13px --coral-deep at
+# opacity .7 on cream — measures 3.24:1, though the colour alone is 5.59:1.
+BAD_OPACITY = """<!doctype html><meta charset=utf-8><title>opacity</title>
+<style>body{background:#FAF7F0;font:13px sans-serif}.eyebrow{color:#B23A14;opacity:.7}</style>
+<body><div class="eyebrow">What we run</div></body>"""
+# The same fade from a translucent wrapper with no background of its own.
+BAD_OPACITY_ANCESTOR = """<!doctype html><meta charset=utf-8><title>opacity-ancestor</title>
+<style>body{background:#FAF7F0;font:13px sans-serif}.wrap{opacity:.7}p{color:#B23A14}</style>
+<body><div class="wrap"><p>faded by an ancestor</p></div></body>"""
+# Ink at opacity .9 on cream stays far above 4.5:1.
+GOOD_OPACITY = """<!doctype html><meta charset=utf-8><title>opacity-good</title>
+<style>body{background:#FAF7F0;font:13px sans-serif}p{color:#0A0A0A;opacity:.9}</style>
+<body><p>ink at ninety per cent</p></body>"""
+
 CASES = [
     ("good-cream.html", GOOD_1, True),
     ("good-ink.html", GOOD_2, True),
@@ -626,6 +692,9 @@ CASES = [
     ("bad-gradient-worst-stop.html", BAD_GRADIENT_WORST_STOP, False),
     ("good-gradient-hatch.html", GOOD_GRADIENT_HATCH, True),
     ("bad-alpha-text.html", BAD_ALPHA, False),
+    ("bad-opacity-eyebrow.html", BAD_OPACITY, False),
+    ("bad-opacity-ancestor.html", BAD_OPACITY_ANCESTOR, False),
+    ("good-opacity-high.html", GOOD_OPACITY, True),
     ("good-exempt.html", GOOD_EXEMPT, True),
     ("bad-exempt-lookalike.html", BAD_EXEMPT_LOOKALIKE, False),
     ("bad-exempt-stale.html", GOOD_NO_REDACT, False),
@@ -691,8 +760,13 @@ def show(payload, needles):
                         a = r["fg"][3]
                         f = [f[i] * a + g[i] * (1 - a) for i in range(3)]
                     return f
-                ground = min(r.get("bgs") or [r["bg"]], key=lambda g: ratio(_fo(g), g[:3]))
-                fg = _fo(ground)
+                if r.get("pairs"):
+                    t, ground = min(r["pairs"], key=lambda tb: ratio(tb[0][:3], tb[1][:3]))
+                    fg = t[:3]
+                    row["opacity"] = round(r.get("opacity", 1), 3)
+                else:
+                    ground = min(r.get("bgs") or [r["bg"]], key=lambda g: ratio(_fo(g), g[:3]))
+                    fg = _fo(ground)
                 row["fg"] = "#%02X%02X%02X" % tuple(int(round(c)) for c in fg)
                 row["bg"] = "#%02X%02X%02X" % tuple(int(round(c)) for c in ground[:3])
                 row["ratio"] = round(ratio(fg, ground[:3]), 2)

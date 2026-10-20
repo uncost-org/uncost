@@ -37,12 +37,31 @@
     items.forEach(function(it,i){
       var link = it.querySelector('a');
       if (window.matchMedia('(hover:hover)').matches) it.addEventListener('mouseenter', function(){ openItem(i); });
-      link.addEventListener('focus', function(){ openItem(i); });
+      link.addEventListener('focus', function(){ if (!escaping) openItem(i); });
       link.addEventListener('click', function(e){ if(!it.classList.contains('open')){ e.preventDefault(); openItem(i); } });
     });
     if (hdEl) hdEl.addEventListener('mouseleave', closeAll);
     document.addEventListener('click', function(e){
       if (!e.target.closest('.hd-item') && !e.target.closest('.hd-mega')) closeAll();
+    });
+    /* Keyboard (compliance pass 2026-10-20; WCAG 2.4.11 and 1.4.13). A panel
+       that focus opened stayed open after Tab left the header, lying over the
+       control that then had focus (the /sectors/ breadcrumb, for one). Now it
+       closes when focus moves to anything outside the header (a null
+       relatedTarget, such as a click on panel text, leaves it alone), and
+       Escape closes an open panel and puts focus back on its menu item. */
+    var escaping = false;
+    if (hdEl) hdEl.addEventListener('focusout', function(e){
+      if (e.relatedTarget && !hdEl.contains(e.relatedTarget)) closeAll();
+    });
+    document.addEventListener('keydown', function(e){
+      if (e.key !== 'Escape') return;
+      var open = null;
+      items.forEach(function(it){ if (it.classList.contains('open')) open = it; });
+      if (!open) return;
+      var a = document.activeElement, back = a && (a.closest('.hd-mega') || open.contains(a));
+      closeAll();
+      if (back) { escaping = true; open.querySelector('a').focus(); escaping = false; }
     });
 
     /* Mobile menu focus (pre-launch 2026-10; CANVAS-SYNC 176). The drawer is an
