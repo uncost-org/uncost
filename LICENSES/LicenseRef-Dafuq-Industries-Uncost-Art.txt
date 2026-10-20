@@ -2,6 +2,8 @@ Artwork licence: Dafuq Industries LLC to Uncost
 
 Date: 20 October 2026
 Recorded in: records/changes/CHG-007-rights-and-transfer-safeguard.md
+Amended: 20 October 2026, to add the interface icons
+         (records/changes/CHG-008-icon-and-pdf-licences.md)
 
 Licensor: Dafuq Industries LLC ("Dafuq Industries")
 Licensee: Uncost, and, once this licence has been transferred under clause 3,
@@ -43,6 +45,16 @@ Uncost's fiscal sponsor or successor entity
      apple-touch-icon.png), derived by tools/make_favicons.py from the robot
      image robots/robot_01_front_transparent.png, which this licence covers
      for that purpose.
+
+   The interface icons (added 20 October 2026)
+     Created for the design export that Dafuq Industries supplied:
+     website/design-system/icons/icons.svg (all 21 symbols), and the inline
+     icon drawings in website/src: the header's search icon
+     (_includes/partials/header.njk) and the pledge pages' icons
+     (pledge/check-email.njk, pledge/verify.njk, pledge/resent.njk, and the
+     share icons in pledge/thanks.njk). Where an icon stands for another
+     company's service (the X and Threads share icons), that company's name
+     and marks remain its own; this licence covers the drawing only.
 
 2. Grant
 
