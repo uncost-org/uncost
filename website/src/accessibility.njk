@@ -14,8 +14,19 @@ description: "How uncost.org is built for accessibility, what that means in prac
     title centred in the accent — in the FAQ page's pattern. No breadcrumb (no
     other top-level page has one) and no <header> wrapper. -#}
 <div class="titleband" data-screen-label="Accessibility — title"><h1><span class="u-1">Accessibility</span></h1></div>
+{#- Compliance pass (2026-10-20): the statement's date, the standard, the issues
+    still known and where to report. Each known issue is one an automated or
+    keyboard check still reports (tools/axe_check.py, tools/contrast_audit.py
+    D5 exemption); update this list when one is fixed or a new one is found. -#}
 <section class="blk" data-screen-label="Accessibility">
   <div class="eyebrow">Accessibility</div>
   <h2 class="u-12 sec">Built to WCAG 2.2 AA.</h2>
   <p class="u-13 lead">Real text over images, visible keyboard focus, logical heading order, alt text on meaningful images, reduced-motion respected, and no meaning carried by color alone. Found something that falls short? Tell us: <a href="mailto:contact@uncost.org">contact@uncost.org</a> — accessibility reports get priority.</p>
+  <p class="u-13 lead">This statement was last reviewed on 20 October 2026. We aim for the Web Content Accessibility Guidelines (WCAG) 2.2 at level AA. We test every page with automated contrast and structure checks, and our key pages with the keyboard alone, at desktop and phone widths.</p>
+  <p class="u-13 lead">Two known issues remain:</p>
+  <ul class="u-13 lead">
+    <li>On the homepage, the word &ldquo;Uncost&rdquo; at the start of the headline&rsquo;s second line is gold on cream, at a contrast of 1.72:1, below the 3:1 that large text needs. It is a deliberate brand choice we have accepted for now.</li>
+    <li>On phones and small tablets, the &ldquo;Sign the Pledge&rdquo; bar fixed to the bottom of the screen sits outside the page&rsquo;s landmark regions, so a screen reader&rsquo;s list of landmarks doesn&rsquo;t include it. It is still reached in reading order, after the footer.</li>
+  </ul>
+  <p class="u-13 lead">If anything on this site is hard or impossible for you to use, email <a href="mailto:contact@uncost.org">contact@uncost.org</a>. We&rsquo;ll reply, and fix what we can.</p>
 </section>

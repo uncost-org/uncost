@@ -425,7 +425,9 @@ SECTION_EXEMPTIONS = [
      "Pre-launch 2026-10 (the policy body inside this wrapper): \u00a72's \"Basic, privacy-respecting analytics\" bullet "
      "becomes a statement that the site uses no analytics today, and \u00a710 "
      "offers email only, not the contact form, which is off. CANVAS-SYNC item 175. "
-     "Contact-form batch (2026-10-19): \u00a72 names Cloudflare Web Analytics and says what the contact form collects. CANVAS-SYNC items 179 and 180."),
+     "Contact-form batch (2026-10-19): \u00a72 names Cloudflare Web Analytics and says what the contact form collects. CANVAS-SYNC items 179 and 180. "
+     "Compliance pass (2026-10-20; CHG-006): the whole body is the notice for the live site, thirteen sections from "
+     "\"Who we are\" to \"Contact\", restated as CP-1. CANVAS-SYNC item 182."),
 ]
 
 

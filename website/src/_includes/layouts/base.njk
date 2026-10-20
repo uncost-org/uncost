@@ -27,6 +27,12 @@
 <meta name="twitter:title" content="{{ pageTitle }}">
 <meta name="twitter:description" content="{{ pageDesc }}">
 <meta name="twitter:image" content="{{ site.origin + site.ogImage }}">
+{#- Favicon and app icons: the robot's head on a coral square (founder choice C3,
+    2026-10-20; tools/make_favicons.py). Same origin, so the CSP's img-src
+    'self' and default-src 'self' (the manifest) cover them. -#}
+<link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 <link rel="alternate" type="application/rss+xml" title="Uncost — News" href="{{ site.origin }}/news/feed.xml">
 <link rel="alternate" type="application/rss+xml" title="Uncost — Cost Watch" href="{{ site.origin }}/news/cost-watch/feed.xml">
 {#- The design export's four stylesheets, adopted byte-identically and loaded in

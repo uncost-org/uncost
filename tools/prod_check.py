@@ -44,7 +44,12 @@ Checks — each an ERROR, never a skipped line (standing rule 1):
   8. SECURITY-TXT: /.well-known/security.txt (RFC 9116) is built, names a
      Contact, Preferred-Languages and the production Canonical URL, and its
      one Expires date has not passed; _headers serves it as text/plain; and it
-     is not in sitemap.xml.
+     is not in sitemap.xml;
+  9. FAVICON: /favicon.ico is built and holds 16, 32 and 48 px images; the
+     app icons (/icon-192.png, /icon-512.png, /apple-touch-icon.png at 180)
+     are built at their sizes; /site.webmanifest names the site, a theme colour
+     and only icons that are built; every page links /favicon.ico; and none of
+     these is in sitemap.xml.
 
 Exit 0 when ok, 1 on any error.
 """
@@ -167,6 +172,56 @@ def security_txt_errors(built: pathlib.Path, headers: str, in_sitemap: set, now=
     return errors, facts
 
 
+ICONS = {"icon-192.png": 192, "icon-512.png": 512, "apple-touch-icon.png": 180}
+ICON_LINK_RE = re.compile(r'<link\s+rel="icon"\s+href="/favicon\.ico"', re.I)
+
+
+def png_size(path: pathlib.Path) -> tuple[int, int] | None:
+    head = path.read_bytes()[:24]
+    if head[:8] != b"\x89PNG\r\n\x1a\n":
+        return None
+    return int.from_bytes(head[16:20], "big"), int.from_bytes(head[20:24], "big")
+
+
+def ico_sizes(path: pathlib.Path) -> list[int]:
+    data = path.read_bytes()
+    if data[:4] != b"\x00\x00\x01\x00":
+        return []
+    count = int.from_bytes(data[4:6], "little")
+    return sorted((data[6 + 16 * i] or 256) for i in range(count) if 6 + 16 * i < len(data))
+
+
+def favicon_errors(built: pathlib.Path, in_sitemap: set) -> tuple[list, dict]:
+    """Check 9: the favicon, the app icons and the manifest."""
+    errors, facts = [], {}
+    ico = built / "favicon.ico"
+    if not ico.exists():
+        errors.append("FAVICON: /favicon.ico is not built")
+    else:
+        facts["favicon_sizes"] = ico_sizes(ico)
+        if not {16, 32, 48} <= set(facts["favicon_sizes"]):
+            errors.append(f"FAVICON: /favicon.ico holds {facts['favicon_sizes']}, not 16, 32 and 48")
+    for name, size in ICONS.items():
+        f = built / name
+        got = png_size(f) if f.exists() else None
+        if got != (size, size):
+            errors.append(f"FAVICON: /{name} is {got or 'missing'}, not {size}x{size} PNG")
+    mf = built / "site.webmanifest"
+    try:
+        manifest = json.loads(mf.read_text(encoding="utf-8"))
+        if not manifest.get("name") or not manifest.get("theme_color") or not manifest.get("icons"):
+            errors.append("FAVICON: site.webmanifest lacks name, theme_color or icons")
+        for icon in manifest.get("icons", []):
+            if not (built / icon.get("src", "").lstrip("/")).exists():
+                errors.append(f"FAVICON: site.webmanifest names {icon.get('src')}, which is not built")
+    except (OSError, ValueError) as e:
+        errors.append(f"FAVICON: site.webmanifest is missing or not JSON ({e.__class__.__name__})")
+    for name in ["favicon.ico", "site.webmanifest", *ICONS]:
+        if f"/{name}" in in_sitemap:
+            errors.append(f"FAVICON: /{name} is in sitemap.xml")
+    return errors, facts
+
+
 def route_of(rel: str) -> str:
     if rel == "index.html":
         return "/"
@@ -221,6 +276,8 @@ def check(built: pathlib.Path, expected_noindex=None, contact_open=None) -> dict
         rel = str(path.relative_to(built))
         route = route_of(rel)
         html = path.read_text(encoding="utf-8")
+        if not ICON_LINK_RE.search(html):
+            errors.append(f"FAVICON: {route} does not link /favicon.ico")
         if NOINDEX_RE.search(html):
             noindex.append(route)
         elif route not in in_sitemap:
@@ -262,6 +319,9 @@ def check(built: pathlib.Path, expected_noindex=None, contact_open=None) -> dict
     sec_errors, sec_facts = security_txt_errors(built, headers, in_sitemap)
     errors += sec_errors
     facts.update(sec_facts)
+    fav_errors, fav_facts = favicon_errors(built, in_sitemap)
+    errors += fav_errors
+    facts.update(fav_facts)
 
     if sorted(noindex) != sorted(expected_noindex):
         errors.append(f"NOINDEX: noindex pages are {sorted(noindex)}, expected {sorted(expected_noindex)}")
@@ -282,7 +342,8 @@ def check(built: pathlib.Path, expected_noindex=None, contact_open=None) -> dict
 def page(body: str, route_path: str, noindex: bool = False, canonical: str | None = None) -> str:
     canonical = canonical or ORIGIN + route_path
     robots = '<meta name="robots" content="noindex">' if noindex else ""
-    return (f'<!doctype html><html><head>{robots}<link rel="canonical" href="{canonical}">'
+    return (f'<!doctype html><html><head>{robots}<link rel="icon" href="/favicon.ico" sizes="any">'
+            f'<link rel="canonical" href="{canonical}">'
             f'<meta property="og:url" content="{canonical}"></head><body>{body}</body></html>')
 
 
@@ -295,6 +356,9 @@ def selftest() -> int:
                          "https://cloudflareinsights.com; form-action 'self'\n"
                          + sech),
             ".well-known/security.txt": sec,
+            "favicon.ico": ico([16, 32, 48]),
+            "icon-192.png": png(192), "icon-512.png": png(512), "apple-touch-icon.png": png(180),
+            "site.webmanifest": manifest,
             "sitemap.xml": f"<urlset><url><loc>{ORIGIN}/</loc></url><url><loc>{ORIGIN}/about/</loc></url></urlset>",
             "index.html": page('<input id="site-search" type="search">', "/"),
             "about/index.html": page("<p>About</p>", "/about/"),
@@ -306,7 +370,20 @@ def selftest() -> int:
                 continue
             p = tmp / rel
             p.parent.mkdir(parents=True, exist_ok=True)
-            p.write_text(text, encoding="utf-8")
+            if isinstance(text, bytes):
+                p.write_bytes(text)
+            else:
+                p.write_text(text, encoding="utf-8")
+
+    def ico(sizes: list) -> bytes:
+        return (b"\x00\x00\x01\x00" + len(sizes).to_bytes(2, "little")
+                + b"".join(bytes([s % 256]) + bytes(15) for s in sizes))
+
+    def png(size: int) -> bytes:
+        return b"\x89PNG\r\n\x1a\n" + bytes(4) + b"IHDR" + size.to_bytes(4, "big") * 2
+
+    manifest = json.dumps({"name": "Uncost", "theme_color": "#D64A1E",
+                           "icons": [{"src": "/icon-192.png"}, {"src": "/icon-512.png"}]})
 
     sec = (f"Contact: https://example.org/report\nExpires: 2999-01-01T00:00:00Z\nPreferred-Languages: en\n"
            f"Canonical: {ORIGIN}/.well-known/security.txt\n")
@@ -342,6 +419,12 @@ def selftest() -> int:
         "contact-form-elsewhere": ({"contact/index.html": page('<form data-form="contact" data-live action="/api/contact" method="post"><input type="email"></form>', "/contact/"),
                                     "about/index.html": page('<form data-form="contact" data-live action="/api/contact" method="post"><input type="email"></form>', "/about/"),
                                     "sitemap.xml": smc}, {"FORM"}),
+        "favicon-missing": ({"favicon.ico": None}, {"FAVICON"}),
+        "favicon-16-only": ({"favicon.ico": ico([16])}, {"FAVICON"}),
+        "apple-icon-wrong-size": ({"apple-touch-icon.png": png(192)}, {"FAVICON"}),
+        "manifest-names-missing-icon": ({"icon-512.png": None}, {"FAVICON"}),
+        "page-without-icon-link": ({"about/index.html": page("<p>About</p>", "/about/").replace('<link rel="icon" href="/favicon.ico" sizes="any">', "")},
+                                   {"FAVICON"}),
         "security-txt-missing": ({".well-known/security.txt": None}, {"SECURITY-TXT"}),
         "security-txt-expired": ({".well-known/security.txt": sec.replace("2999-01-01", "2001-01-01")}, {"SECURITY-TXT"}),
         "security-txt-preview-canonical": ({".well-known/security.txt": sec.replace(ORIGIN, "https://abc.pages.dev")},

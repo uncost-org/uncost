@@ -3095,3 +3095,37 @@ body[data-page="contact"] .introband p + p { margin-top: 18px; }
 body[data-page="contact"] .cform .cconsent { display: flex; align-items: flex-start; gap: 10px; margin: 0 0 18px; }
 body[data-page="contact"] .cform .cconsent input { flex: 0 0 auto; width: 20px; height: 20px; margin: 2px 0 0; accent-color: var(--ink); }
 body[data-page="contact"] .cform .cconsent label { font-size: 15px; line-height: 1.5; color: var(--ink); }
+
+/* 143. Eyebrow contrast (compliance pass, 2026-10-20). site.css gives every
+ *      .eyebrow `opacity:.7`, which fades the 13px --coral-deep label into its
+ *      band: 3.24:1 on cream, 3.10 on cream2 (3.08 on /treasury/'s #F2ECE1),
+ *      3.40 on white, against the 4.5:1 small-text bar. axe-core found it, and
+ *      tools/contrast_audit.py now composites partial opacity so it cannot come
+ *      back unseen. The smallest change that clears every band is one opacity
+ *      value: .93 gives 4.55:1 on the worst ground (#F2ECE1), 4.9 on cream and
+ *      5.5 on white. The colour is untouched; pages whose export rules already
+ *      set eyebrows to opacity 1 (sectors, projects) keep 1, as their rules are
+ *      more specific. */
+.eyebrow { opacity: .93; }
+
+/* 144. Contact form "(required)" markers (compliance pass, 2026-10-20). The
+ *      export's sections.css paints `.cform .req` --coral #D64A1E: 4.04:1 on
+ *      cream at 13–15px, under the 4.5:1 small-text bar. C1 (item 68) moved
+ *      small coral text to --coral-deep, but the form was off when C1 ran.
+ *      --coral-deep on cream is 5.59:1. */
+.cform .req { color: var(--coral-deep); }
+
+/* 145. Focus not hidden by the sticky header or the pledge bar (compliance
+ *      pass, 2026-10-20; WCAG 2.4.11). The export's header is sticky: 74px tall
+ *      at 940px and below, about 100px from 941px (where the nav wraps) and
+ *      84px on wide screens. At 940px and below the .pledgebar is fixed to the
+ *      bottom (54px; site.css pads <body> by the same). Tab scrolled each newly
+ *      focused link to the bottom edge, wholly under the bar, and Shift+Tab
+ *      scrolled it to the top edge, wholly under the header. Scroll padding a
+ *      little larger than each makes the browser stop short of both; in-page
+ *      links (#main, /privacy/#s2, a sector's section links) now land below
+ *      the header too, instead of under it. */
+html { scroll-padding-top: 108px; }
+@media (max-width: 940px) {
+  html { scroll-padding-top: 82px; scroll-padding-bottom: 64px; }
+}
