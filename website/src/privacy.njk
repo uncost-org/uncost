@@ -12,8 +12,8 @@ description: "POL-002 — the privacy notice for uncost.org: what the site colle
 <header class="pol-hd" data-screen-label="Policy header">
   <div class="meta">
     <span class="ref">POL-002</span>
-    <span class="m">Version 0.3</span>
-    <span class="m">Effective 20 October 2026</span>
+    <span class="m">Version {% if features.formsOpen %}0.4{% else %}0.3{% endif %}</span>
+    <span class="m">Effective {% if features.formsOpen %}{{ signups.noticeEffective or "date to be set" }}{% else %}20 October 2026{% endif %}</span>
     <span class="m">Public review</span>
   </div>
   <h1>Privacy &amp; Data Protection Policy</h1>
@@ -33,7 +33,7 @@ description: "POL-002 — the privacy notice for uncost.org: what the site colle
     <a href="#s8">8 · Your rights</a>
     <a href="#s9">9 · Do Not Track &amp; Global Privacy Control</a>
     <a href="#s10">10 · Security</a>
-    <a href="#s11">11 · When sign-ups open</a>
+    <a href="#s11">11 · {% if features.formsOpen %}Sign-ups: the Pledge and email updates{% else %}When sign-ups open{% endif %}</a>
     <a href="#s12">12 · Changes to this notice</a>
     <a href="#s13">13 · Contact</a>
   </nav>
@@ -42,7 +42,7 @@ description: "POL-002 — the privacy notice for uncost.org: what the site colle
   <div class="pol-body" data-screen-label="Policy body">
     <div class="callout">
       <h3>The plain-language version</h3>
-      <p>Today this site collects very little. If you use the contact form or email us, we get your name (if you give it), your email address and your message, and we use them only to reply. Our host, Cloudflare, counts page views without cookies. The site sets no cookies and stores nothing in your browser. We don&rsquo;t sell your data, and we never use it for partisan targeting. You can ask us to see or delete your data at any time.</p>
+      <p>Today this site collects very little. If you use the contact form or email us, we get your name (if you give it), your email address and your message, and we use them only to reply.{% if features.formsOpen %} If you sign the Pledge or sign up for email updates, we keep your email address, encrypted, and use it only for that.{% endif %} Our host, Cloudflare, counts page views without cookies. The site sets no cookies and stores nothing in your browser. We don&rsquo;t sell your data, and we never use it for partisan targeting. You can ask us to see or delete your data at any time.</p>
     </div>
 
     <section id="s1"><h3 class="s"><span class="num">1</span>Who we are</h3><p>Uncost (&ldquo;we&rdquo;, &ldquo;us&rdquo;) is a nonprofit, nonpartisan movement to reduce the cost of living. This notice explains how we handle personal data on uncost.org and when you write to us. Until a fiscal sponsor takes this on, uncost.org is operated by Dafuq Industries LLC, which is responsible for the personal data described here (in EU and UK law, the &ldquo;controller&rdquo;). That will change when a fiscal sponsor is confirmed, and we&rsquo;ll update this notice when it does. For anything about your data, email <a class="u-1" href="mailto:contact@uncost.org">contact@uncost.org</a>. Our accounts on social platforms are run under those platforms&rsquo; own privacy policies.</p></section>
@@ -51,11 +51,14 @@ description: "POL-002 — the privacy notice for uncost.org: what the site colle
       <li><b>The contact form</b> — if you use it: your name (optional), your email address, your message, and your confirmation that you are 18 or older. The form emails them to our inbox; nothing is stored on this site.</li>
       <li><b>Emails you send us</b> — if you write to contact@uncost.org: your email address, your name if your email shows it, and what you write. They reach the same inbox.</li>
       <li><b>Page views</b> — Cloudflare Web Analytics counts visits to our pages without cookies, fingerprinting or advertising profiles (<a class="u-1" href="https://www.cloudflare.com/web-analytics/">Cloudflare&rsquo;s Web Analytics privacy page</a>).</li>
-      <li><b>Security data</b> — like every website, our host receives your IP address and the basic details of each request, such as the page asked for and your browser type, so it can deliver the page, keep the site secure and limit how often the contact form can be used.</li>
-    </ul><p>The Pledge, the updates list and the Assembly aren&rsquo;t open yet, so nothing on this site asks for those details (section&nbsp;11).</p></section>
+      <li><b>Security data</b> — like every website, our host receives your IP address and the basic details of each request, such as the page asked for and your browser type, so it can deliver the page, keep the site secure and limit how often the contact form can be used.{% if features.formsOpen %}</li>
+      <li><b>The Pledge and email updates</b> — if you sign up: your email address, your name if you give it (Pledge only), the boxes you ticked, including your confirmation that you are {{ signups.minAge }} or older, and when you confirmed (section&nbsp;11).{% endif %}</li>
+    </ul>{% if features.formsOpen %}<p>The Assembly isn&rsquo;t open yet, so nothing on this site asks for its details.</p>{% else %}<p>The Pledge, the updates list and the Assembly aren&rsquo;t open yet, so nothing on this site asks for those details (section&nbsp;11).</p>{% endif %}</section>
 
     <section id="s3"><h3 class="s"><span class="num">3</span>Why we use it</h3><p>Each use has a legal basis under EU and UK law:</p><ul>
-      <li><b>Replying to your contact-form message</b> — your consent, which you give by ticking the box on the form. You can withdraw it at any time by emailing us, and we then delete your message.</li>
+      <li><b>Replying to your contact-form message</b> — your consent, which you give by ticking the box on the form. You can withdraw it at any time by emailing us, and we then delete your message.{% if features.formsOpen %}</li>
+      <li><b>The Pledge and email updates</b> — your consent, which you give by ticking the boxes on the form and clicking the link we email you. You can withdraw it at any time, with the links in every email or by emailing us.</li>
+      <li><b>Keeping a do-not-email record</b> after you unsubscribe or ask us to delete your data, or after an email to you bounces or is reported as spam — our legitimate interest in never emailing you against your wishes.{% endif %}</li>
       <li><b>Replying to emails you send us</b> — our legitimate interest in answering the people who write to us.</li>
       <li><b>Counting page views</b> — our legitimate interest in knowing which pages are read, without identifying anyone.</li>
       <li><b>Keeping the site secure</b>, including limiting how often the contact form can be used — our legitimate interest in protecting the site and the people who use it from abuse.</li>
@@ -72,35 +75,51 @@ description: "POL-002 — the privacy notice for uncost.org: what the site colle
     </ul></section>
 
     <section id="s6"><h3 class="s"><span class="num">6</span>Sharing, providers &amp; transfers</h3><p>We share data only with the service providers that help us run the site, and only for that:</p><ul>
-      <li><b>Cloudflare, Inc.</b> — hosts the site; runs the contact form and sends each message to our inbox (Pages Functions, Workers and Email Routing); forwards email sent to contact@uncost.org; provides Web Analytics; and protects the site, including the limit on the contact form.</li>
-      <li><b>Google (Gmail)</b> — our inbox, where contact-form messages and the emails you send us are kept.</li>
-    </ul><p>Your data may be processed in the United States. Cloudflare and Google take part in the EU-U.S. Data Privacy Framework (and its UK Extension), which is the safeguard for these transfers. We disclose data if the law requires it, and we&rsquo;ll say so where we&rsquo;re permitted to.</p></section>
+      <li><b>Cloudflare, Inc.</b> — hosts the site; runs the contact form and sends each message to our inbox (Pages Functions, Workers and Email Routing); forwards email sent to contact@uncost.org;{% if features.formsOpen %} runs the Pledge and email-updates sign-ups and stores them (Workers and D1, a database in eastern North America);{% endif %} provides Web Analytics; and protects the site, including the limit on the contact form.</li>
+      <li><b>Google (Gmail)</b> — our inbox, where contact-form messages and the emails you send us are kept.{% if features.formsOpen %}</li>
+      <li><b>Amazon Web Services, Inc.</b> — sends the sign-up emails (Amazon SES) and tells us when one bounces or is reported as spam (Amazon SNS), from the United States.{% endif %}</li>
+    </ul><p>Your data may be processed in the United States. Cloudflare and Google take part in the EU-U.S. Data Privacy Framework (and its UK Extension), which is the safeguard for these transfers. We disclose data if the law requires it, and we&rsquo;ll say so where we&rsquo;re permitted to.</p>{% if features.formsOpen %}<p>Sign-ups are stored by Cloudflare in North America, and the sign-up emails are sent by Amazon Web Services in the United States.</p>{% endif %}</section>
 
     <section id="s7"><h3 class="s"><span class="num">7</span>Retention</h3><ul>
       <li><b>Contact-form messages and emails you send us</b> — kept in our inbox only as long as needed to reply, and deleted within 12 months of our last reply.</li>
       <li><b>Page views</b> — counted in aggregate; we keep nothing that identifies you.</li>
-      <li><b>Security data</b> — kept by Cloudflare for the periods set out in <a class="u-1" href="https://www.cloudflare.com/privacypolicy/">Cloudflare&rsquo;s privacy policy</a>.</li>
+      <li><b>Security data</b> — kept by Cloudflare for the periods set out in <a class="u-1" href="https://www.cloudflare.com/privacypolicy/">Cloudflare&rsquo;s privacy policy</a>.{% if features.formsOpen %}</li>
+      <li><b>Sign-ups you don&rsquo;t confirm</b> — deleted, with their links, 7 days after you sign up.</li>
+      <li><b>Your Pledge signature</b> — kept until you ask us to delete it. It is the record of your support.</li>
+      <li><b>Your email updates</b> — kept until you unsubscribe. Once you have neither a signature nor a subscription, we delete your email address and your consent records within about a week.</li>
+      <li><b>Links in our emails</b> — deleted 7 days after they expire.</li>
+      <li><b>The do-not-email record</b> — a scrambled form of your address that can&rsquo;t be turned back into it, kept for as long as we must honour your unsubscribe or deletion, and reviewed every year.</li>
+      <li><b>Sign-up notes</b> — dated notes that a sign-up was confirmed, unsubscribed or deleted. They hold no email address.{% endif %}</li>
     </ul><p>If you ask us to delete your data, we delete it promptly, keeping only what the law requires.</p></section>
 
-    <section id="s8"><h3 class="s"><span class="num">8</span>Your rights</h3><p>Depending on where you live, you may have the right to access, correct, export, or delete your data, to object to certain processing, including anything based on our legitimate interests, and to withdraw consent. To exercise any of these, email us — see section&nbsp;13. We won&rsquo;t make you jump through hoops, and we answer within one month. If you are in the EU, the EEA or the UK, you can also complain to a data protection authority: the one where you live or work, or in the UK the Information Commissioner&rsquo;s Office.</p></section>
+    <section id="s8"><h3 class="s"><span class="num">8</span>Your rights</h3><p>Depending on where you live, you may have the right to access, correct, export, or delete your data, to object to certain processing, including anything based on our legitimate interests, and to withdraw consent. To exercise any of these, email us — see section&nbsp;13. We won&rsquo;t make you jump through hoops, and we answer within one month.{% if features.formsOpen %} For the Pledge and email updates, every email we send has a one-click unsubscribe link and a link to delete your data; neither needs a login.{% endif %} If you are in the EU, the EEA or the UK, you can also complain to a data protection authority: the one where you live or work, or in the UK the Information Commissioner&rsquo;s Office.</p></section>
 
     <section id="s9"><h3 class="s"><span class="num">9</span>Do Not Track &amp; Global Privacy Control</h3><p>This site doesn&rsquo;t track you across other websites, and no one else tracks you across sites through it. So a Do Not Track signal has nothing to switch off: the site works the same whether or not your browser sends one. We treat a Global Privacy Control signal as a request to opt out of any sale or sharing of your personal information. We don&rsquo;t sell or share it anyway.</p></section>
 
     <section id="s10"><h3 class="s"><span class="num">10</span>Security</h3><p>We protect data with reasonable technical and organisational measures and keep collection minimal, so there&rsquo;s less to protect in the first place. No system is perfectly secure, but we treat your trust as the whole point of the movement.</p></section>
 
-    <section id="s11"><h3 class="s"><span class="num">11</span>When sign-ups open</h3><p>The Pledge, the updates list and the Assembly aren&rsquo;t open yet. Before each one opens, we&rsquo;ll update this notice. This is what will then apply:</p><ul>
+    <section id="s11">{% if features.formsOpen %}<h3 class="s"><span class="num">11</span>Sign-ups: the Pledge and email updates</h3><p>You can sign the Pledge and sign up for email updates on this site. Each is separate and optional, and each needs your consent.</p><ul>
+      <li><b>What we collect</b> — for the Pledge: your email address, your name if you give it, and your confirmation that you agree with the Pledge and are {{ signups.minAge }} or older. For email updates: your email address and your confirmation that you want them and are {{ signups.minAge }} or older. With each, we record which form you used, the version of this notice, a fingerprint of the exact wording you agreed to, and the time.</li>
+      <li><b>Why, and on what basis</b> — to count your signature as support for the Pledge, and to send the updates you asked for. The basis is your consent (section&nbsp;3). Your name is never shown and isn&rsquo;t used to count you.</li>
+      <li><b>Confirming by email</b> — nothing counts and nothing else is sent until you click the link in the email we send you. A Pledge link works for 24 hours, an updates link for 7 days. If you also ask for updates when you sign the Pledge, the same link confirms both. If you don&rsquo;t confirm, we delete the sign-up and its link after 7 days.</li>
+      <li><b>Who provides each part</b> — Cloudflare runs the forms (Pages Functions and Workers) and stores sign-ups in Cloudflare D1, a database in eastern North America. Amazon Web Services sends our emails (Amazon SES) and tells us when one bounces or is reported as spam (Amazon SNS), from the United States. Your address is stored encrypted, and we look it up by a keyed fingerprint, not the address itself.</li>
+      <li><b>How long we keep it</b> — see section&nbsp;7.</li>
+      <li><b>Unsubscribe, delete and see your data</b> — every email we send has a link to unsubscribe, which works with one click and takes effect at once, and a link to delete your data. Deleting removes your email address, your name, your signature, your subscription and your consent records. We keep only a scrambled do-not-email record, which can&rsquo;t be turned back into your address, so that we never email you again, and a dated note that a deletion happened. To see what we hold about you, or to correct it, email <a class="u-1" href="mailto:contact@uncost.org">contact@uncost.org</a>.</li>
+      <li><b>If Uncost changes hands</b> — when a fiscal sponsor or a successor organisation takes Uncost on, your sign-up passes to it under this notice. We&rsquo;ll update this notice before that happens.</li>
+    </ul><p>The Assembly isn&rsquo;t open yet; before it opens, we&rsquo;ll update this notice. Donations wait for a fiscal sponsor, which may process donation data under its own compliant rules.</p>{% else %}<h3 class="s"><span class="num">11</span>When sign-ups open</h3><p>The Pledge, the updates list and the Assembly aren&rsquo;t open yet. Before each one opens, we&rsquo;ll update this notice. This is what will then apply:</p><ul>
       <li><b>Email address</b> — when you sign the Pledge or subscribe to updates, to send the confirmations or updates you asked for, and to record and count Pledge signatures as public support.</li>
       <li><b>Optional details</b> — how you&rsquo;d like to help, if you tell us.</li>
       <li><b>The Assembly</b> — what&rsquo;s needed to run the advisory Assembly fairly (one person, one vote), including the minimum anti-manipulation signals needed to reduce duplicate accounts and automated abuse.</li>
       <li><b>An email provider</b> — to send those emails. We&rsquo;ll name it here first.</li>
       <li><b>Donations</b> — once fiscal sponsorship is confirmed, the sponsor may process donation data under its own compliant rules.</li>
-    </ul></section>
+    </ul>{% endif %}</section>
 
     <section id="s12"><h3 class="s"><span class="num">12</span>Changes to this notice</h3><p>This notice is version-controlled. Its reference number (POL-002) stays fixed while the version increments. When it changes, we update the effective date at the top and add a row to the table below, and every change is logged with a date and reason in the <a class="u-1" href="https://github.com/uncost-org/uncost/tree/main/records/changes">public change record</a>. The policy behind it, <a class="u-1" href="/policies/privacy-data-protection/">POL-002</a>, is still a public review draft. Supporters will be able to propose changes through the advisory Assembly once it opens; requirements carrying legal or safeguarding duty are approved by the responsible leadership and fiscal sponsor.</p>
       <table class="vhist"><thead><tr><th class="u-109">Version</th><th class="u-110">Date</th><th>Change</th></tr></thead><tbody>
         <tr><td>0.1</td><td>Pre-launch</td><td>Initial public review draft.</td></tr>
         <tr><td>0.2</td><td>20 October 2026</td><td>Describes what the live site does today: who operates it, the contact form, emails, analytics and security data; the legal basis for each; no cookies; the providers and US processing; complaints and our one-month answer; Do Not Track and Global Privacy Control. Sign-ups move under &ldquo;When sign-ups open&rdquo;. Reference corrected to POL-002 (CHG-006).</td></tr>
-        <tr><td>0.3</td><td>20 October 2026</td><td>Names the safeguard for transfers to the United States: Cloudflare and Google take part in the EU-U.S. Data Privacy Framework and its UK Extension (CHG-007).</td></tr>
+        <tr><td>0.3</td><td>20 October 2026</td><td>Names the safeguard for transfers to the United States: Cloudflare and Google take part in the EU-U.S. Data Privacy Framework and its UK Extension (CHG-007).</td>{% if features.formsOpen %}</tr>
+        <tr><td>0.4</td><td>{{ signups.noticeEffective or "Date to be set" }}</td><td>Opens the Pledge and email updates: what they collect, the legal basis, the providers (Cloudflare Workers and D1; Amazon SES and SNS), confirming by email, deleting unconfirmed sign-ups after 7 days, retention, unsubscribing and deleting your data (CHG-009).</td>{% endif %}</tr>
       </tbody></table>
     </section>
 

@@ -666,28 +666,39 @@ def scan_built_assertions(
 
 
 class _FormScanner(HTMLParser):
-    """Every form control in a page, and whether it sits inside the live form."""
+    """Every form control in a page, and which live form (if any) it sits in."""
+
+    # A live form: its data-form, the same-origin action its handler answers,
+    # data-live and method="post". Anything else is not live.
+    LIVE_ACTIONS = {"contact": "/api/contact", "pledge": "/api/signup/pledge", "updates": "/api/signup/updates"}
 
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
-        self.controls: List[Tuple[str, Dict[str, str], int, bool]] = []
-        self.live_forms = 0
-        self._in_live = False
+        self.controls: List[Tuple[str, Dict[str, str], int, Optional[str]]] = []
+        self.live_forms: Dict[str, int] = {"contact": 0, "pledge": 0, "updates": 0}
+        self._live: Optional[str] = None
 
     def handle_starttag(self, tag: str, attrs: List[Tuple[str, Optional[str]]]) -> None:
         a = {k: (v or "") for k, v in attrs}
         line = self.getpos()[0]
         if tag == "form":
-            self._in_live = (a.get("data-form") == "contact" and "data-live" in a
-                             and a.get("action") == "/api/contact" and a.get("method", "").lower() == "post")
-            self.live_forms += int(self._in_live)
-            self.controls.append((tag, a, line, self._in_live))
+            kind = a.get("data-form", "")
+            live = (kind in self.LIVE_ACTIONS and "data-live" in a and a.get("action") == self.LIVE_ACTIONS[kind]
+                    and a.get("method", "").lower() == "post")
+            self._live = kind if live else None
+            if live:
+                self.live_forms[kind] += 1
+            self.controls.append((tag, a, line, self._live))
         elif tag in ("input", "textarea", "select"):
-            self.controls.append((tag, a, line, self._in_live))
+            self.controls.append((tag, a, line, self._live))
 
     def handle_endtag(self, tag: str) -> None:
         if tag == "form":
-            self._in_live = False
+            self._live = None
+
+
+# The pages a live pledge form may appear on (partials/forms/pledge.njk).
+PLEDGE_FORM_PAGES = {"pledge/index.html", "pledge/resent/index.html"}
 
 
 def scan_forms(
@@ -695,6 +706,7 @@ def scan_forms(
     findings: List[Finding],
     line_texts: Dict[Tuple[str, int], str],
     contact_open: Optional[bool] = None,
+    signups_open: Optional[bool] = None,
 ) -> None:
     """FAIL on any rendered form or form control except the allowed ones.
 
@@ -704,11 +716,18 @@ def scan_forms(
       contact/index.html, and only as the live form (data-form="contact",
       data-live, action="/api/contact", method="post"); its own controls are
       allowed. In that build the form MUST be there (contact-form-missing).
-    - Everything else — the pledge and updates forms included, whatever
-      formsOpen says — fails (form-rendered). Never allowlisted.
+    - The pledge and updates sign-ups (CHG-009) are allowed ONLY when the build
+      was made with UNCOST_FORMS_OPEN=on, and only as live forms (data-live,
+      method="post", action /api/signup/pledge or /api/signup/updates). The
+      pledge form only on /pledge/ and /pledge/resent/; the updates form on any
+      page (it is in the footer). In that build /pledge/ MUST have the pledge
+      form and / the updates form (signup-form-missing).
+    - Everything else fails (form-rendered). Never allowlisted.
     """
     if contact_open is None:
         contact_open = os.environ.get("UNCOST_CONTACT_FORM_OPEN") == "on"
+    if signups_open is None:
+        signups_open = os.environ.get("UNCOST_FORMS_OPEN") == "on"
     for path in sorted(built_dir.rglob("*.html")):
         rel = str(path.relative_to(built_dir))
         text = path.read_text(encoding="utf-8")
@@ -716,18 +735,24 @@ def scan_forms(
         parser.feed(text)
         lines = text.splitlines()
         contact_page = rel == "contact/index.html"
-        for tag, attrs, line, in_live in parser.controls:
-            if tag == "input" and attrs.get("type", "").lower() == "search" and not in_live:
+        for tag, attrs, line, live in parser.controls:
+            if tag == "input" and attrs.get("type", "").lower() == "search" and not live:
                 continue
-            if contact_open and contact_page and in_live:
+            if contact_open and contact_page and live == "contact":
+                continue
+            if signups_open and (live == "updates" or (live == "pledge" and rel in PLEDGE_FORM_PAGES)):
                 continue
             excerpt = f"<{tag} " + " ".join(f'{k}="{v}"' for k, v in list(attrs.items())[:4]) + ">"
             findings.append(Finding("FAIL", "form-rendered", rel, line, excerpt[:90]))
             line_texts[(rel, line)] = lines[line - 1] if 0 < line <= len(lines) else excerpt
-        if contact_open and contact_page and parser.live_forms != 1:
+        if contact_open and contact_page and parser.live_forms["contact"] != 1:
             findings.append(Finding("FAIL", "contact-form-missing", rel, 1,
-                                    f"{parser.live_forms} live contact forms; expected exactly 1"))
-            line_texts[(rel, 1)] = f"live contact forms: {parser.live_forms}"
+                                    f"{parser.live_forms['contact']} live contact forms; expected exactly 1"))
+            line_texts[(rel, 1)] = f"live contact forms: {parser.live_forms['contact']}"
+        for page, kind in (("pledge/index.html", "pledge"), ("index.html", "updates")):
+            if signups_open and rel == page and parser.live_forms[kind] < 1:
+                findings.append(Finding("FAIL", "signup-form-missing", rel, 1, f"no live {kind} form"))
+                line_texts[(rel, 1)] = f"live {kind} forms: 0"
 
 
 def tagline_title(site_path: Path = SITE_DATA_PATH) -> str:
@@ -1185,13 +1210,13 @@ def selftest() -> int:
     live = ('<form class="cform" data-form="contact" data-live action="/api/contact" method="post">'
             '<input id="c-email" type="email" name="email" required><textarea name="message"></textarea>'
             '<div hidden><input name="hp_url"></div><button type="submit">Send</button></form>')
-    def form_rules(files: Dict[str, str], contact_open: bool) -> List[str]:
+    def form_rules(files: Dict[str, str], contact_open: bool, signups_open: bool = False) -> List[str]:
         out: List[Finding] = []
         with tempfile.TemporaryDirectory() as tmp:
             for rel, html_text in files.items():
                 (Path(tmp) / rel).parent.mkdir(parents=True, exist_ok=True)
                 (Path(tmp) / rel).write_text(html_text, encoding="utf-8")
-            scan_forms(Path(tmp), out, {}, contact_open=contact_open)
+            scan_forms(Path(tmp), out, {}, contact_open=contact_open, signups_open=signups_open)
         return sorted(f"{f.rule}@{f.path}" for f in out)
     search = '<input id="site-search" type="search">'
     expect(form_rules({"index.html": search, "contact/index.html": "<p>off</p>"}, False) == [],
@@ -1205,6 +1230,31 @@ def selftest() -> int:
            == ["form-rendered@pledge/index.html"] * 2, "switch on: the pledge form still fails")
     expect(form_rules({"contact/index.html": "<p>off</p>"}, True)
            == ["contact-form-missing@contact/index.html"], "switch on: a missing contact form fails")
+
+    # Sign-ups (CHG-009): the live pledge form on /pledge/ and /pledge/resent/,
+    # the live updates form anywhere, only in a build with UNCOST_FORMS_OPEN=on.
+    pledge = ('<form id="pledge-form" data-form="pledge" data-live action="/api/signup/pledge" method="post">'
+              '<input type="email" name="email" required><input type="checkbox" name="agree" required></form>')
+    updates = ('<form class="ft-form" data-form="updates" data-live action="/api/signup/updates" method="post">'
+               '<input type="email" name="email" required><input type="hidden" name="surface"></form>')
+    on_site = {"index.html": updates, "pledge/index.html": pledge + updates, "about/index.html": updates}
+    expect(form_rules(on_site, False, True) == [], "sign-ups on: the live pledge and updates forms pass")
+    expect(form_rules({"pledge/resent/index.html": pledge, **on_site}, False, True) == [],
+           "sign-ups on: the pledge form on /pledge/resent/ passes")
+    expect(form_rules(on_site, False, False)
+           == sorted(["form-rendered@about/index.html"] * 3 + ["form-rendered@index.html"] * 3
+                     + ["form-rendered@pledge/index.html"] * 6), "sign-ups off: both sign-up forms fail")
+    expect(form_rules({**on_site, "about/index.html": pledge}, False, True)
+           == ["form-rendered@about/index.html"] * 3, "sign-ups on: the pledge form elsewhere fails")
+    expect(form_rules({**on_site, "about/index.html": pledge.replace(' data-live', '').replace('pledge-form', 'x')
+                       .replace('data-form="pledge"', 'data-form="updates"')}, False, True)
+           == ["form-rendered@about/index.html"] * 3, "sign-ups on: a form that is not live fails")
+    expect(form_rules({**on_site, "pledge/index.html": updates}, False, True)
+           == ["signup-form-missing@pledge/index.html"], "sign-ups on: /pledge/ without its form fails")
+    expect(form_rules({**on_site, "index.html": "<p>home</p>"}, False, True)
+           == ["signup-form-missing@index.html"], "sign-ups on: / without the updates form fails")
+    expect(form_rules({"contact/index.html": live + updates, **on_site}, True, True) == [],
+           "both on: the contact form and the footer updates form on /contact/ pass")
 
     # Titles: the tagline only on /, no empty titles, no shared indexable titles.
     def title_rules(files: Dict[str, str]) -> List[str]:

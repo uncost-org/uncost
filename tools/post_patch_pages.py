@@ -1163,7 +1163,10 @@ CP1_TOC_ITEMS = ["Who we are", "What we collect today", "Why we use it", "Cookie
 CP1_TOC = ('<nav class="pol-toc" aria-label="Contents" data-screen-label="TOC">\n    <h2>Contents</h2>\n'
            + "".join(f'    <a href="#s{i}">{i} · {t}</a>\n' for i, t in enumerate(CP1_TOC_ITEMS, 1))
            + '  </nav>')
-patch(PRIVACY, r'<nav class="pol-toc".*?</nav>', CP1_TOC, "CP-1 privacy contents: 13 sections", guard=CP1_TOC)
+# Guarded on an entry the export's list doesn't have, not the whole list, so
+# CP-4's switch on the §11 entry is not undone by a re-run.
+patch(PRIVACY, r'<nav class="pol-toc".*?</nav>', CP1_TOC, "CP-1 privacy contents: 13 sections",
+      guard='<a href="#s2">2 · What we collect today</a>')
 
 
 def _sec(n, title, body):
@@ -1333,13 +1336,167 @@ literal(PRIVACY,
         '<p>Your data may be processed in the United States. Cloudflare and Google take part in the EU-U.S. Data '
         'Privacy Framework (and its UK Extension), which is the safeguard for these transfers. We disclose data',
         "CP-3 privacy §6: the transfer safeguard")
-literal(PRIVACY, '<span class="m">Version 0.2</span>', '<span class="m">Version 0.3</span>',
-        "CP-3 privacy header: version 0.3")
-literal(PRIVACY,
-        '(CHG-006).</td></tr>\n      </tbody></table>',
+# Guarded on the 0.3 version row added just below, so CP-4's switch on the
+# version number is not undone by a re-run.
+patch(PRIVACY, re.escape('<span class="m">Version 0.2</span>'), '<span class="m">Version 0.3</span>',
+      "CP-3 privacy header: version 0.3", guard='<tr><td>0.3</td>')
+# Guarded on the 0.3 row, not the end of the table, so CP-4's row after it
+# is not undone by a re-run.
+patch(PRIVACY, re.escape('(CHG-006).</td></tr>\n      </tbody></table>'),
         '(CHG-006).</td></tr>\n        <tr><td>0.3</td><td>20 October 2026</td><td>Names the safeguard for transfers to '
         'the United States: Cloudflare and Google take part in the EU-U.S. Data Privacy Framework and its UK Extension '
-        '(CHG-007).</td></tr>\n      </tbody></table>',
-        "CP-3 privacy §12: version row 0.3")
+        '(CHG-007).</td></tr>\n      </tbody></table>'.replace('\\', '\\\\'),
+      "CP-3 privacy §12: version row 0.3", guard='<tr><td>0.3</td>')
+
+# ---------------------------------------------------------------------------
+# Sign-ups 2026-10-21 (founder brief; CHG-009). Re-derived template only:
+# privacy.njk. The form partials, the result pages, footer.njk, ui.js and
+# _data/signups.json are repo-owned.
+# ---------------------------------------------------------------------------
+print("Sign-ups 2026-10-21:")
+
+# CP-4 — /privacy/ version 0.4, shown only while features.formsOpen is on. With
+# it off every built page is byte-identical to version 0.3: each patch below
+# either wraps the 0.3 text as the {% else %} branch or adds text that only an
+# on build renders. With it on: §11 becomes the sign-ups section; §2, §3, §6,
+# §7 and §8 gain the sign-up lines; the header and §12 read 0.4, with the
+# effective date from _data/signups.json (noticeEffective, the founder's to
+# set; empty renders "date to be set"). §7's sign-up retention is a PROPOSED
+# rule, a founder decision recorded as open in CHG-009. §6 names no transfer
+# safeguard for Amazon Web Services: the mechanism is open (UNP-73 question 4,
+# CHG-009).
+ON, ELSE, END = "{% if features.formsOpen %}", "{% else %}", "{% endif %}"
+AGE = "{{ signups.minAge }}"
+# The build sets Nunjucks' trimBlocks and lstripBlocks (eleventy.config.js), so
+# a block tag that opens or ends a line would change the whitespace around it
+# in the off build too. Every tag below sits mid-line.
+
+
+def switch(old, on, label):
+    """Show `on` instead of `old` while formsOpen is on; `old` is untouched off."""
+    literal(PRIVACY, old, ON + on + ELSE + old + END, label)
+
+
+def add_after(anchor, extra, label):
+    """Add `extra` after `anchor` while formsOpen is on; nothing changes off."""
+    literal(PRIVACY, anchor, anchor + ON + extra + END, label)
+
+
+def add_items_after(item_end, items, label):
+    """Add list items after the item ending in `item_end` while formsOpen is on."""
+    literal(PRIVACY, item_end + "</li>",
+            item_end + ON + "</li>\n      <li>" + "</li>\n      <li>".join(items) + END + "</li>", label)
+
+
+literal(PRIVACY, '<span class="m">Version 0.3</span>',
+        '<span class="m">Version ' + ON + '0.4' + ELSE + '0.3' + END + '</span>',
+        "CP-4 privacy header: version 0.4 while forms are open")
+literal(PRIVACY, '<span class="m">Effective 20 October 2026</span>',
+        '<span class="m">Effective ' + ON + '{{ signups.noticeEffective or "date to be set" }}' + ELSE
+        + '20 October 2026' + END + '</span>',
+        "CP-4 privacy header: effective date while forms are open")
+literal(PRIVACY, '<a href="#s11">11 · When sign-ups open</a>',
+        '<a href="#s11">11 · ' + ON + 'Sign-ups: the Pledge and email updates' + ELSE + 'When sign-ups open' + END + '</a>',
+        "CP-4 privacy contents: §11 title while forms are open")
+add_after('and we use them only to reply.',
+          ' If you sign the Pledge or sign up for email updates, we keep your email address, encrypted, and use it '
+          'only for that.',
+          "CP-4 privacy summary: sign-ups")
+add_items_after('limit how often the contact form can be used.',
+                ['<b>The Pledge and email updates</b> — if you sign up: your email address, your name if you give it '
+                 '(Pledge only), the boxes you ticked, including your confirmation that you are ' + AGE + ' or older, '
+                 'and when you confirmed (section&nbsp;11).'],
+                "CP-4 privacy §2: what the sign-ups collect")
+switch('<p>The Pledge, the updates list and the Assembly aren&rsquo;t open yet, so nothing on this site asks for '
+       'those details (section&nbsp;11).</p>',
+       '<p>The Assembly isn&rsquo;t open yet, so nothing on this site asks for its details.</p>',
+       "CP-4 privacy §2: only the Assembly is still closed")
+add_items_after('and we then delete your message.',
+                ['<b>The Pledge and email updates</b> — your consent, which you give by ticking the boxes on the form '
+                 'and clicking the link we email you. You can withdraw it at any time, with the links in every email '
+                 'or by emailing us.',
+                 '<b>Keeping a do-not-email record</b> after you unsubscribe or ask us to delete your data, or after '
+                 'an email to you bounces or is reported as spam — our legitimate interest in never emailing you '
+                 'against your wishes.'],
+                "CP-4 privacy §3: the sign-ups' legal basis")
+add_after('forwards email sent to contact@uncost.org;',
+          ' runs the Pledge and email-updates sign-ups and stores them (Workers and D1, a database in eastern North '
+          'America);',
+          "CP-4 privacy §6: Cloudflare runs and stores the sign-ups")
+add_items_after('where contact-form messages and the emails you send us are kept.',
+                ['<b>Amazon Web Services, Inc.</b> — sends the sign-up emails (Amazon SES) and tells us when one '
+                 'bounces or is reported as spam (Amazon SNS), from the United States.'],
+                "CP-4 privacy §6: Amazon Web Services sends the sign-up emails")
+add_after('we&rsquo;ll say so where we&rsquo;re permitted to.</p>',
+          '<p>Sign-ups are stored by Cloudflare in North America, and the sign-up emails are sent by Amazon Web '
+          'Services in the United States.</p>',
+          "CP-4 privacy §6: where sign-ups are processed")
+add_items_after('Cloudflare&rsquo;s privacy policy</a>.',
+                ['<b>Sign-ups you don&rsquo;t confirm</b> — deleted, with their links, 7 days after you sign up.',
+                 '<b>Your Pledge signature</b> — kept until you ask us to delete it. It is the record of your support.',
+                 '<b>Your email updates</b> — kept until you unsubscribe. Once you have neither a signature nor a '
+                 'subscription, we delete your email address and your consent records within about a week.',
+                 '<b>Links in our emails</b> — deleted 7 days after they expire.',
+                 '<b>The do-not-email record</b> — a scrambled form of your address that can&rsquo;t be turned back '
+                 'into it, kept for as long as we must honour your unsubscribe or deletion, and reviewed every year.',
+                 '<b>Sign-up notes</b> — dated notes that a sign-up was confirmed, unsubscribed or deleted. They hold '
+                 'no email address.'],
+                "CP-4 privacy §7: sign-up retention (proposed; CHG-009)")
+add_after('and we answer within one month.',
+          ' For the Pledge and email updates, every email we send has a one-click unsubscribe link and a link to '
+          'delete your data; neither needs a login.',
+          "CP-4 privacy §8: unsubscribe and delete links")
+S11_OFF = ('<h3 class="s"><span class="num">11</span>When sign-ups open</h3><p>The Pledge, the '
+           'updates list and the Assembly aren&rsquo;t open yet. Before each one opens, we&rsquo;ll update this '
+           'notice. This is what will then apply:</p><ul>\n'
+           '      <li><b>Email address</b> — when you sign the Pledge or subscribe to updates, to send the '
+           'confirmations or updates you asked for, and to record and count Pledge signatures as public '
+           'support.</li>\n'
+           '      <li><b>Optional details</b> — how you&rsquo;d like to help, if you tell us.</li>\n'
+           '      <li><b>The Assembly</b> — what&rsquo;s needed to run the advisory Assembly fairly (one person, '
+           'one vote), including the minimum anti-manipulation signals needed to reduce duplicate accounts and '
+           'automated abuse.</li>\n'
+           '      <li><b>An email provider</b> — to send those emails. We&rsquo;ll name it here first.</li>\n'
+           '      <li><b>Donations</b> — once fiscal sponsorship is confirmed, the sponsor may process donation '
+           'data under its own compliant rules.</li>\n'
+           '    </ul>')
+S11_ON = ('<h3 class="s"><span class="num">11</span>Sign-ups: the Pledge and email updates</h3>'
+          '<p>You can sign the Pledge and sign up for email updates on this site. Each is separate and optional, and '
+          'each needs your consent.</p><ul>\n'
+          '      <li><b>What we collect</b> — for the Pledge: your email address, your name if you give it, and your '
+          'confirmation that you agree with the Pledge and are ' + AGE + ' or older. For email updates: your email '
+          'address and your confirmation that you want them and are ' + AGE + ' or older. With each, we record which '
+          'form you used, the version of this notice, a fingerprint of the exact wording you agreed to, and the '
+          'time.</li>\n'
+          '      <li><b>Why, and on what basis</b> — to count your signature as support for the Pledge, and to send '
+          'the updates you asked for. The basis is your consent (section&nbsp;3). Your name is never shown and '
+          'isn&rsquo;t used to count you.</li>\n'
+          '      <li><b>Confirming by email</b> — nothing counts and nothing else is sent until you click the link in '
+          'the email we send you. A Pledge link works for 24 hours, an updates link for 7 days. If you also ask for '
+          'updates when you sign the Pledge, the same link confirms both. If you don&rsquo;t confirm, we delete the '
+          'sign-up and its link after 7 days.</li>\n'
+          '      <li><b>Who provides each part</b> — Cloudflare runs the forms (Pages Functions and Workers) and stores '
+          'sign-ups in Cloudflare D1, a database in eastern North America. Amazon Web Services sends our emails '
+          '(Amazon SES) and tells us when one bounces or is reported as spam (Amazon SNS), from the United States. '
+          'Your address is stored encrypted, and we look it up by a keyed fingerprint, not the address itself.</li>\n'
+          '      <li><b>How long we keep it</b> — see section&nbsp;7.</li>\n'
+          '      <li><b>Unsubscribe, delete and see your data</b> — every email we send has a link to unsubscribe, '
+          'which works with one click and takes effect at once, and a link to delete your data. Deleting removes '
+          'your email address, your name, your signature, your subscription and your consent records. We keep only '
+          'a scrambled do-not-email record, which can&rsquo;t be turned back into your address, so that we never '
+          'email you again, and a dated note that a deletion happened. To see what we hold about you, or to correct '
+          'it, email <a class="u-1" href="mailto:contact@uncost.org">contact@uncost.org</a>.</li>\n'
+          '      <li><b>If Uncost changes hands</b> — when a fiscal sponsor or a successor organisation takes Uncost '
+          'on, your sign-up passes to it under this notice. We&rsquo;ll update this notice before that '
+          'happens.</li>\n'
+          '    </ul><p>The Assembly isn&rsquo;t open yet; before it opens, we&rsquo;ll update this notice. Donations '
+          'wait for a fiscal sponsor, which may process donation data under its own compliant rules.</p>')
+switch(S11_OFF, S11_ON, "CP-4 privacy §11: the sign-ups section while forms are open")
+literal(PRIVACY, '(CHG-007).</td></tr>',
+        '(CHG-007).</td>' + ON + '</tr>\n        <tr><td>0.4</td><td>{{ signups.noticeEffective or "Date to be set" }}'
+        '</td><td>Opens the Pledge and email updates: what they collect, the legal basis, the providers (Cloudflare '
+        'Workers and D1; Amazon SES and SNS), confirming by email, deleting unconfirmed sign-ups after 7 days, '
+        'retention, unsubscribing and deleting your data (CHG-009).</td>' + END + '</tr>',
+        "CP-4 privacy §12: version row 0.4 while forms are open")
 
 print("done")

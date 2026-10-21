@@ -4,16 +4,32 @@
   While features.formsOpen is false NO input, checkbox or submit button is
   rendered: only the message. That is deliberate (design-source/README.md §5) —
   a visually dimmed form is still keyboard-focusable and submittable, which
-  fails WCAG. There is no endpoint, no vendor and no third-party script in
-  either state; the backend wires to the data-form hook.
+  fails WCAG.
+
+  When open (records/changes/CHG-009) it posts to the same-origin handler
+  /api/signup/updates (website/functions/api/signup/updates.js), which forwards
+  to the uncost-signups Worker; that sends a 7-day confirmation link (double
+  opt-in). With JS on, ui.js sends it with fetch and writes the result into
+  the note; with JS off, the browser lands on /updates/check-email/ (or
+  /signup/not-sent/). The consent and age boxes are required and unticked;
+  their texts come from _data/signups.json, which the handler hashes into the
+  consent event. hp_url is a honeypot.
+
+  The form appears twice on the homepage and on /join/ (in the page and in
+  the footer), so its ids carry the surface: footer.njk sets
+  updatesSurface = "footer"; elsewhere it follows the page.
 -#}
 {% if features.formsOpen %}
+{%- set upSurface = updatesSurface or ("home" if page.url == "/" else ("join" if page.url == "/join/" else "page")) %}
 <div data-updates-form>
-  <form class="ft-form" data-form="updates" novalidate>
-    <label class="skip-link" for="ft-email">Email address</label>
-    <input id="ft-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required>
+  <form class="ft-form" data-form="updates" data-live action="/api/signup/updates" method="post">
+    <label class="skip-link" for="up-{{ upSurface }}-email">Email address</label>
+    <input id="up-{{ upSurface }}-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" maxlength="254" required>
     <button type="submit">Get updates</button>
-    <label class="chk"><input type="checkbox" name="consent" required><span>Yes &mdash; email me Uncost updates. We use your address for updates only: we won&rsquo;t sell your data or use it for partisan targeting, and you can unsubscribe anytime. <a href="/privacy/">Privacy policy</a></span></label>
+    <input type="hidden" name="surface" value="{{ upSurface }}">
+    <div class="hp" hidden><label for="up-{{ upSurface }}-hp">Leave this field empty</label><input id="up-{{ upSurface }}-hp" type="text" name="hp_url" tabindex="-1" autocomplete="off"></div>
+    <label class="chk"><input type="checkbox" name="consent" value="yes" required><span>{{ signups.texts.email_updates }} <a href="/privacy/#s11">Privacy policy</a></span></label>
+    <label class="chk"><input type="checkbox" name="age" value="yes" required><span>{{ signups.texts.age | replace("{minAge}", signups.minAge) }}</span></label>
   </form>
   <div class="ft-note" data-updates-note role="status" aria-live="polite"></div>
 </div>

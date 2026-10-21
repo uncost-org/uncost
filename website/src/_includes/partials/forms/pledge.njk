@@ -1,18 +1,35 @@
 {#-
-  data-form="pledge" — double opt-in. When open, submitting sends a 24h
-  confirmation link and routes to /pledge/check-email/. Disabled unless
-  features.formsOpen; see partials/forms/updates.njk for why nothing renders.
+  data-form="pledge" — double opt-in. Disabled unless features.formsOpen; see
+  partials/forms/updates.njk for why nothing renders while it is off.
+
+  When open (records/changes/CHG-009) it posts to the same-origin handler
+  /api/signup/pledge (website/functions/api/signup/pledge.js), which forwards
+  to the uncost-signups Worker (uncost-org/uncost-api). That sends a 24-hour
+  confirmation link; the signature counts only once it is confirmed. With JS
+  on, ui.js sends it with fetch and writes the result into .err; with JS off,
+  the browser posts it and lands on /pledge/check-email/ (or
+  /signup/not-sent/). Native validation (no novalidate) marks and announces a
+  missing or malformed email and an unticked agree or age box in both modes,
+  and the server checks them again. The box texts come from _data/signups.json,
+  which the handler hashes into each consent event, so they cannot drift. The
+  updates box is optional and unticked; the same confirmation link confirms
+  it. hp_url is a honeypot, hidden from people and from assistive technology.
 -#}
 {% if features.formsOpen %}
-<form class="pl-form" data-form="pledge" novalidate>
-  <label for="pl-name">Name <span class="opt">(optional &mdash; shown only as a count)</span></label>
-  <input id="pl-name" type="text" name="name" autocomplete="name">
-  <label for="pl-email">Email <span class="req">(required)</span></label>
-  <input id="pl-email" type="email" name="email" autocomplete="email" required>
-  <label class="chk"><input type="checkbox" name="agree" required><span>I agree with the pledge above.</span></label>
-  <label class="chk"><input type="checkbox" name="updates"><span>Also email me occasional Uncost updates.</span></label>
-  <button class="pl-btn" type="submit">Add my name</button>
+<form id="pledge-form" class="pl-form" data-form="pledge" data-live action="/api/signup/pledge" method="post">
+  <div class="u-84">
+    <div><label class="skip-link" for="pl-name">Name (optional)</label><input id="pl-name" class="field" type="text" name="name" autocomplete="name" maxlength="80" placeholder="Name (optional)"></div>
+    <div><label class="skip-link" for="pl-email">Email (required)</label><input id="pl-email" class="field" type="email" name="email" autocomplete="email" maxlength="254" placeholder="Email" required></div>
+  </div>
+  <div class="hp" hidden><label for="pl-hp">Leave this field empty</label><input id="pl-hp" type="text" name="hp_url" tabindex="-1" autocomplete="off"></div>
+  <div class="consents">
+    <label class="crow"><input type="checkbox" name="agree" value="yes" required><span>{{ signups.texts.signing }} <span class="req">(required)</span></span></label>
+    <label class="crow"><input type="checkbox" name="updates" value="yes"><span>{{ signups.texts.email_updates_pledge }}</span></label>
+    <label class="crow agerow"><input type="checkbox" name="age" value="yes" required><span>{{ signups.texts.age | replace("{minAge}", signups.minAge) }} <span class="req">(required)</span></span></label>
+  </div>
+  <button class="pbtn" type="submit">Add my name</button>
   <div class="err" role="alert" aria-live="polite"></div>
+  <div class="privacy"><span>We won&rsquo;t sell your data or use your pledge for partisan targeting. A confirmation link &mdash; valid for 24 hours &mdash; must be clicked before your signature counts. If you don&rsquo;t confirm, we delete your sign-up after 7 days. <a href="/privacy/#s11">Privacy policy</a></span></div>
 </form>
 {% else %}
 <div class="form-off" data-pledge-form data-form="pledge">
