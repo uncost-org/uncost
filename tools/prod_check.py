@@ -45,11 +45,14 @@ Checks — each an ERROR, never a skipped line (standing rule 1):
      Contact, Preferred-Languages and the production Canonical URL, and its
      one Expires date has not passed; _headers serves it as text/plain; and it
      is not in sitemap.xml;
-  9. FAVICON: /favicon.ico is built and holds 16, 32 and 48 px images; the
-     app icons (/icon-192.png, /icon-512.png, /apple-touch-icon.png at 180)
-     are built at their sizes; /site.webmanifest names the site, a theme colour
-     and only icons that are built; every page links /favicon.ico; and none of
-     these is in sitemap.xml.
+  9. FAVICON: /favicon.svg is built, is an <svg> with a viewBox and nothing
+     active in it (no script, event handler, foreignObject or external
+     reference), and _headers serves it as image/svg+xml; /favicon.ico is built
+     and holds 16, 32 and 48 px images; the app icons (/icon-192.png,
+     /icon-512.png, /apple-touch-icon.png at 180) are built at their sizes;
+     /site.webmanifest names the site, a theme colour and only icons that are
+     built; every page links /favicon.svg (type image/svg+xml) and then
+     /favicon.ico; and none of these is in sitemap.xml.
 
 Exit 0 when ok, 1 on any error.
 """
@@ -174,6 +177,10 @@ def security_txt_errors(built: pathlib.Path, headers: str, in_sitemap: set, now=
 
 ICONS = {"icon-192.png": 192, "icon-512.png": 512, "apple-touch-icon.png": 180}
 ICON_LINK_RE = re.compile(r'<link\s+rel="icon"\s+href="/favicon\.ico"', re.I)
+SVG_LINK_RE = re.compile(r'<link\s+rel="icon"\s+href="/favicon\.svg"\s+type="image/svg\+xml"', re.I)
+SVG_HEADER_RE = re.compile(
+    r"^/favicon\.svg[ \t]*\n(?:[ \t]+\S[^\n]*\n?)*?[ \t]+Content-Type:\s*image/svg\+xml\b", re.M | re.I)
+SVG_ACTIVE_RE = re.compile(r"<script\b|<foreignObject\b|\son[a-z]+\s*=|(?:xlink:)?href\s*=\s*[\"'](?!#)|url\(\s*['\"]?(?!#)", re.I)
 
 
 def png_size(path: pathlib.Path) -> tuple[int, int] | None:
@@ -191,9 +198,22 @@ def ico_sizes(path: pathlib.Path) -> list[int]:
     return sorted((data[6 + 16 * i] or 256) for i in range(count) if 6 + 16 * i < len(data))
 
 
-def favicon_errors(built: pathlib.Path, in_sitemap: set) -> tuple[list, dict]:
-    """Check 9: the favicon, the app icons and the manifest."""
+def favicon_errors(built: pathlib.Path, in_sitemap: set, headers: str = "") -> tuple[list, dict]:
+    """Check 9: the favicons, the app icons and the manifest."""
     errors, facts = [], {}
+    svg = built / "favicon.svg"
+    if not svg.exists():
+        errors.append("FAVICON: /favicon.svg is not built")
+    else:
+        text = svg.read_text(encoding="utf-8", errors="replace")
+        facts["favicon_svg_bytes"] = len(text.encode())
+        if not re.search(r"<svg\b[^>]*\bviewBox=", text):
+            errors.append("FAVICON: /favicon.svg is not an <svg> with a viewBox")
+        active = SVG_ACTIVE_RE.findall(text)
+        if active:
+            errors.append(f"FAVICON: /favicon.svg has active or external content: {active[:3]}")
+        if not SVG_HEADER_RE.search(headers):
+            errors.append("FAVICON: _headers does not serve /favicon.svg as image/svg+xml")
     ico = built / "favicon.ico"
     if not ico.exists():
         errors.append("FAVICON: /favicon.ico is not built")
@@ -216,7 +236,7 @@ def favicon_errors(built: pathlib.Path, in_sitemap: set) -> tuple[list, dict]:
                 errors.append(f"FAVICON: site.webmanifest names {icon.get('src')}, which is not built")
     except (OSError, ValueError) as e:
         errors.append(f"FAVICON: site.webmanifest is missing or not JSON ({e.__class__.__name__})")
-    for name in ["favicon.ico", "site.webmanifest", *ICONS]:
+    for name in ["favicon.svg", "favicon.ico", "site.webmanifest", *ICONS]:
         if f"/{name}" in in_sitemap:
             errors.append(f"FAVICON: /{name} is in sitemap.xml")
     return errors, facts
@@ -276,8 +296,13 @@ def check(built: pathlib.Path, expected_noindex=None, contact_open=None) -> dict
         rel = str(path.relative_to(built))
         route = route_of(rel)
         html = path.read_text(encoding="utf-8")
-        if not ICON_LINK_RE.search(html):
+        ico_link, svg_link = ICON_LINK_RE.search(html), SVG_LINK_RE.search(html)
+        if not svg_link:
+            errors.append(f"FAVICON: {route} does not link /favicon.svg as image/svg+xml")
+        if not ico_link:
             errors.append(f"FAVICON: {route} does not link /favicon.ico")
+        if svg_link and ico_link and ico_link.start() < svg_link.start():
+            errors.append(f"FAVICON: {route} links /favicon.ico before /favicon.svg")
         if NOINDEX_RE.search(html):
             noindex.append(route)
         elif route not in in_sitemap:
@@ -319,7 +344,7 @@ def check(built: pathlib.Path, expected_noindex=None, contact_open=None) -> dict
     sec_errors, sec_facts = security_txt_errors(built, headers, in_sitemap)
     errors += sec_errors
     facts.update(sec_facts)
-    fav_errors, fav_facts = favicon_errors(built, in_sitemap)
+    fav_errors, fav_facts = favicon_errors(built, in_sitemap, headers)
     errors += fav_errors
     facts.update(fav_facts)
 
@@ -342,7 +367,8 @@ def check(built: pathlib.Path, expected_noindex=None, contact_open=None) -> dict
 def page(body: str, route_path: str, noindex: bool = False, canonical: str | None = None) -> str:
     canonical = canonical or ORIGIN + route_path
     robots = '<meta name="robots" content="noindex">' if noindex else ""
-    return (f'<!doctype html><html><head>{robots}<link rel="icon" href="/favicon.ico" sizes="any">'
+    return (f'<!doctype html><html><head>{robots}<link rel="icon" href="/favicon.svg" type="image/svg+xml">'
+            f'<link rel="icon" href="/favicon.ico" sizes="any">'
             f'<link rel="canonical" href="{canonical}">'
             f'<meta property="og:url" content="{canonical}"></head><body>{body}</body></html>')
 
@@ -357,6 +383,7 @@ def selftest() -> int:
                          + sech),
             ".well-known/security.txt": sec,
             "favicon.ico": ico([16, 32, 48]),
+            "favicon.svg": fsvg,
             "icon-192.png": png(192), "icon-512.png": png(512), "apple-touch-icon.png": png(180),
             "site.webmanifest": manifest,
             "sitemap.xml": f"<urlset><url><loc>{ORIGIN}/</loc></url><url><loc>{ORIGIN}/about/</loc></url></urlset>",
@@ -387,7 +414,9 @@ def selftest() -> int:
 
     sec = (f"Contact: https://example.org/report\nExpires: 2999-01-01T00:00:00Z\nPreferred-Languages: en\n"
            f"Canonical: {ORIGIN}/.well-known/security.txt\n")
-    sech = "/.well-known/security.txt\n  Content-Type: text/plain; charset=utf-8\n"
+    sech = ("/.well-known/security.txt\n  Content-Type: text/plain; charset=utf-8\n"
+            "/favicon.svg\n  Content-Type: image/svg+xml\n")
+    fsvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#D64A1E"/></svg>'
     sm = f"<urlset><url><loc>{ORIGIN}/</loc></url><url><loc>{ORIGIN}/about/</loc></url></urlset>"
     smc = sm.replace("</urlset>", f"<url><loc>{ORIGIN}/contact/</loc></url></urlset>")
     cases = {
@@ -420,17 +449,28 @@ def selftest() -> int:
                                     "about/index.html": page('<form data-form="contact" data-live action="/api/contact" method="post"><input type="email"></form>', "/about/"),
                                     "sitemap.xml": smc}, {"FORM"}),
         "favicon-missing": ({"favicon.ico": None}, {"FAVICON"}),
+        "favicon-svg-missing": ({"favicon.svg": None}, {"FAVICON"}),
+        "favicon-svg-script": ({"favicon.svg": fsvg.replace("</svg>", "<script>alert(1)</script></svg>")}, {"FAVICON"}),
+        "favicon-svg-external": ({"favicon.svg": fsvg.replace("<rect", '<image href="https://example.com/x.png"/><rect')}, {"FAVICON"}),
+        "favicon-svg-not-svg-type": ({"_headers": ("/*\n  Content-Security-Policy: default-src 'self'; form-action 'self'\n"
+                                                   "/.well-known/security.txt\n  Content-Type: text/plain; charset=utf-8\n")},
+                                     {"FAVICON"}),
+        "favicon-ico-before-svg": ({"about/index.html": page("<p>About</p>", "/about/").replace(
+            '<link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="icon" href="/favicon.ico" sizes="any">',
+            '<link rel="icon" href="/favicon.ico" sizes="any"><link rel="icon" href="/favicon.svg" type="image/svg+xml">')},
+            {"FAVICON"}),
         "favicon-16-only": ({"favicon.ico": ico([16])}, {"FAVICON"}),
         "apple-icon-wrong-size": ({"apple-touch-icon.png": png(192)}, {"FAVICON"}),
         "manifest-names-missing-icon": ({"icon-512.png": None}, {"FAVICON"}),
-        "page-without-icon-link": ({"about/index.html": page("<p>About</p>", "/about/").replace('<link rel="icon" href="/favicon.ico" sizes="any">', "")},
+        "page-without-icon-link": ({"about/index.html": page("<p>About</p>", "/about/").replace('<link rel="icon" href="/favicon.ico" sizes="any">', "").replace('<link rel="icon" href="/favicon.svg" type="image/svg+xml">', "")},
                                    {"FAVICON"}),
         "security-txt-missing": ({".well-known/security.txt": None}, {"SECURITY-TXT"}),
         "security-txt-expired": ({".well-known/security.txt": sec.replace("2999-01-01", "2001-01-01")}, {"SECURITY-TXT"}),
         "security-txt-preview-canonical": ({".well-known/security.txt": sec.replace(ORIGIN, "https://abc.pages.dev")},
                                            {"SECURITY-TXT"}),
         "security-txt-no-contact": ({".well-known/security.txt": sec.replace("Contact:", "# Contact:")}, {"SECURITY-TXT"}),
-        "security-txt-not-plain": ({"_headers": ("/*\n  Content-Security-Policy: default-src 'self'; form-action 'self'\n")},
+        "security-txt-not-plain": ({"_headers": ("/*\n  Content-Security-Policy: default-src 'self'; form-action 'self'\n"
+                                                 "/favicon.svg\n  Content-Type: image/svg+xml\n")},
                                    {"SECURITY-TXT"}),
         "security-txt-in-sitemap": ({"sitemap.xml": sm.replace("</urlset>", f"<url><loc>{ORIGIN}/.well-known/security.txt</loc></url></urlset>")},
                                     {"SECURITY-TXT"}),

@@ -94,6 +94,10 @@ module.exports = function (eleventyConfig) {
     eleventyConfig.addPassthroughCopy({ [`assets/favicon/${f}`]: f });
   }
   eleventyConfig.addPassthroughCopy({ "src/site.webmanifest": "site.webmanifest" });
+  // The small favicon: a simplified vector redraw of the robot's head, served
+  // as /favicon.svg (founder-approved, 2026-10-21). /favicon.ico is rendered
+  // from it; the large icons above keep the detailed art.
+  eleventyConfig.addPassthroughCopy({ "assets/favicon/favicon-robot.svg": "favicon.svg" });
   // Cloudflare Pages redirect table. Routes that have moved keep working
   // rather than 404ing, and the old URL is not left to rot in someone's
   // bookmarks or a feed reader.
