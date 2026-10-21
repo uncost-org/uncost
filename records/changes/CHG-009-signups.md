@@ -10,7 +10,7 @@
 
 ## What is built
 
-**The backend: `uncost-org/uncost-api`** (private), the Worker `uncost-signups` and its D1 database `uncost-signups`. Pull request: uncost-org/uncost-api#1.
+**The backend: `uncost-org/uncost-api`** (private), the Worker `uncost-signups` and its D1 database `uncost-signups`. Pull request: [uncost-org/uncost-api#1](https://github.com/uncost-org/uncost-api/pull/1).
 - **Shape.** The Worker has no public URL (`workers_dev` and preview URLs are off). It is reached only through a Service binding, `SIGNUPS`, from this site's Pages Functions. It is JavaScript ES modules with no runtime dependency.
 - **Data.**
   - The address is held only AES-256-GCM encrypted, and found by an HMAC-SHA-256 key of the normalized address (UNP-57 §9.1), with key versions (§9.2).
@@ -59,7 +59,7 @@ The Content-Security-Policy does not change: `form-action 'self'` and `connect-s
 
 ## Founder decision recorded (2026-10-21)
 
-1. **Postal address in every email.** The postal address shown in every sign-up email is the founder's designated mailbox: a private mailbox (PMB) at a commercial address in Newark, New Jersey. It is not a personal address. It is set only as the Worker's plain variable `MAIL_POSTAL_ADDRESS`, in the Cloudflare dashboard. Following the brief's rule that no address goes in any file, it is not written in either repository.
+1. **Postal address in every email.** The postal address shown in every sign-up email is the mailbox **96 Clinton Ave, PMB 111, Newark, NJ 07114**. It is a published business mailbox, not a personal address, and it appears in every email. It is set as the Worker's plain variable `MAIL_POSTAL_ADDRESS` in the Cloudflare dashboard; the code holds no address, and without the variable nothing is sent.
 
 ## Founder decisions still open (each dated by the founder)
 
@@ -150,7 +150,7 @@ The pull request lists the results.
 **Cloudflare**
 1. Create the D1 database `uncost-signups`, location hint `enam`. Put its id in `wrangler.toml`, then apply the migrations: `npx wrangler d1 migrations apply uncost-signups --remote`.
 2. Set the Worker's secrets: `HMAC_KEY_V1` and `ENC_KEY` (32 random bytes each, base64), `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`. Keep a copy of both keys outside Cloudflare: the admin script needs them, and every HMAC key ever used must be kept.
-3. Deploy the Worker by hand from uncost-api (`npx wrangler deploy`). Then set its plain variables `MAIL_POSTAL_ADDRESS` (the mailbox) and `SNS_TOPIC_ARN`. `keep_vars` keeps them across deploys.
+3. Deploy the Worker by hand from uncost-api (`npx wrangler deploy`). Then set its plain variables `MAIL_POSTAL_ADDRESS = 96 Clinton Ave, PMB 111, Newark, NJ 07114` and `SNS_TOPIC_ARN`. `keep_vars` keeps them across deploys.
 4. On the **preview** Pages project only (`uncost-site-preview`, Preview environment): the Service binding `SIGNUPS` → `uncost-signups`, and the variable `UNCOST_SIGNUPS_OPEN=on`.
 5. Cloudflare Access on the preview: a Bypass policy for `/api/signup/ses-events` only, so that SNS can reach it. The Worker verifies every SNS message's signature and topic.
 6. Rate limiting. On the Free plan the zone has one rate-limiting rule, with path-only expressions, a 10-second period and a 10-second block. Extend the `/api/contact` rule (CHG-005) rather than adding one, for example to `(http.request.uri.path in {"/api/contact" "/api/signup/pledge" "/api/signup/updates"})`, counted by IP, with a threshold such as 5 requests per 10 seconds. The confirm, unsubscribe, delete and SNS paths stay out of it.
