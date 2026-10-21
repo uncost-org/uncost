@@ -124,6 +124,7 @@ The data stays in D1 until it is deleted. Record the rollback here with its date
 - **POL-002 adoption checklist.** It still requires "qualified privacy/legal review". POL-002 is not adopted, and this record does not adopt it.
 - **CHG-005 decision 4.** The backend now lives in a separate repository: decision 3 above.
 - **The /pledge/ page.** Its "What happens when you sign" band (export copy) still says "You can register interest in the advisory Assembly". The live form has no Assembly box, because Assembly interest is never written. The copy is not changed here.
+- **The /join/ page.** The export's interest form there is replaced by the updates form (`tools/post_patch_pages.py`, CHECKLIST H). With the switch on, that form sits under the export's heading "The interest form." and its promise to "reply from a human inbox". The copy is not changed here.
 - **The deletion copy.** The delete confirm page and /signup/deleted/ say what deletion keeps (the do-not-email record and a dated note), as the brief asks. UNP-57 §5 also asks deletion to "propagate to the ESP". SES keeps no list of ours, but SES's account-level suppression list would keep a bounced or complaining address in plain text. Setup step A5 turns it off for the configuration set.
 
 ## Left out: the brief is narrower than UNP-57
