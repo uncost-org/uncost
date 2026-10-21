@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+<!-- Uncost favicon: a simplified redraw of website/assets/brand/robots/robot_01_front_transparent.png, under the Dafuq Industries artwork licence (NOTICE.md). Strokes and pupils nudged for 16px (2026-10-21). -->
+<rect width="64" height="64" rx="14" fill="#D64A1E"/>
+<g stroke="#0A0A0A" stroke-linecap="round" stroke-linejoin="round">
+<line x1="32" y1="9.5" x2="32" y2="16" stroke-width="4"/>
+<circle cx="32" cy="8" r="3.6" fill="#F2B234" stroke-width="2.8"/>
+<rect x="8.5" y="26" width="7" height="14" rx="3" fill="#F2B234" stroke-width="3.2"/>
+<rect x="48.5" y="26" width="7" height="14" rx="3" fill="#F2B234" stroke-width="3.2"/>
+<rect x="13" y="16" width="38" height="33" rx="8" fill="#DADADA" stroke-width="4"/>
+<circle cx="24" cy="31" r="5" fill="#fff" stroke-width="1.5"/>
+<circle cx="40" cy="31" r="5" fill="#fff" stroke-width="1.5"/>
+<line x1="20" y1="22.5" x2="27" y2="22.5" stroke-width="2.6"/>
+<line x1="37" y1="22.5" x2="44" y2="22.5" stroke-width="2.6"/>
+<path d="M28 41 Q32 44 36 41" fill="none" stroke-width="3.2"/>
+</g>
+<circle cx="24.5" cy="31.5" r="3.4" fill="#0A0A0A"/><circle cx="40.5" cy="31.5" r="3.4" fill="#0A0A0A"/>
+</svg>

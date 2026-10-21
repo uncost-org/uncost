@@ -4,6 +4,8 @@ Date: 20 October 2026
 Recorded in: records/changes/CHG-007-rights-and-transfer-safeguard.md
 Amended: 20 October 2026, to add the interface icons
          (records/changes/CHG-008-icon-and-pdf-licences.md)
+         21 October 2026, to name the SVG favicon, a simplified redraw
+         of robot_01 (favicon-robot.svg)
 
 Licensor: Dafuq Industries LLC ("Dafuq Industries")
 Licensee: Uncost, and, once this licence has been transferred under clause 3,
@@ -44,7 +46,9 @@ Uncost's fiscal sponsor or successor entity
      website/assets/favicon/ (favicon.ico, icon-192.png, icon-512.png,
      apple-touch-icon.png), derived by tools/make_favicons.py from the robot
      image robots/robot_01_front_transparent.png, which this licence covers
-     for that purpose.
+     for that purpose; and website/assets/favicon/favicon-robot.svg (served as
+     /favicon.svg; added 21 October 2026), a simplified vector redraw of that
+     robot's head, from which favicon.ico is rendered.
 
    The interface icons (added 20 October 2026)
      Created for the design export that Dafuq Industries supplied:
