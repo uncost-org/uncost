@@ -76,6 +76,19 @@ export async function consentFor(kind, fields) {
   return { policyVersion: signups.policyVersion, surface, texts };
 }
 
+// The answer to a sign-up post. `forwarding` is a function that forwards it
+// to the Worker, which answers 202 (accepted), 400 (refused) or 503 (closed,
+// answered as dark). A forward that fails, or any other answer, means the
+// sign-up was not sent: JSON 502 {"ok": false}, or a 303 to /signup/not-sent/.
+export async function answerIntake(request, json, forwarding, okPath) {
+  let status = 0;
+  try { status = (await forwarding()).status; } catch { /* not sent */ }
+  if (status === 503) return notFound();
+  const ok = status === 202;
+  if (json) return jsonAnswer(ok ? 202 : status === 400 ? 400 : 502, { ok });
+  return redirect(request, ok ? okPath : "/signup/not-sent/");
+}
+
 export function forward(env, path, payload) {
   return env.SIGNUPS.fetch(`https://signups.internal${path}`, {
     method: "POST",
@@ -89,8 +102,9 @@ export const tokenFrom = (request, fields = {}) =>
 
 const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
 
-// The no-JS confirm page for a link from an email (unsubscribe, delete): it
-// asks before acting, so a mail scanner that opens the link changes nothing.
+// The no-JS confirm page for a link from an email (confirm, unsubscribe,
+// delete): it asks before acting, so a mail scanner that opens the link
+// changes nothing. Only the page's POST acts.
 // It reuses the pledge flow's card and the site's own stylesheets. _headers
 // does not reach a Function's response, so the page sends its own security
 // headers; its CSP is stricter than the site's (no script at all).

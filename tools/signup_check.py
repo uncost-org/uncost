@@ -16,10 +16,13 @@ intercepts /api/signup/*. Standing rule 4: these are the results to report.
     per purpose the SHA-256 of the exact text the form shows (from
     _data/signups.json) plus the age box's text. JSON for fetch; a plain post
     is sent to /pledge/check-email/, /updates/check-email/ or
-    /signup/not-sent/. The confirm link sends each Worker answer to its page.
-    Unsubscribe and delete links show a no-JS confirm page (noindex, no
-    script, its own CSP) and act only on its POST; an RFC 8058 one-click POST
-    unsubscribes with a bare 200. SES events pass through untouched. No
+    /signup/not-sent/. A forward that fails, or a Worker answer other than
+    202, 400 or 503, is answered as not sent (JSON 502 {"ok": false}, or
+    /signup/not-sent/). The confirm, unsubscribe and delete links show a
+    no-JS confirm page (noindex, no script, its own CSP) and act only on its
+    POST, which must be same-origin; a confirmed link sends each Worker
+    answer to its page; an RFC 8058 one-click POST unsubscribes with a bare
+    200. SES events pass through untouched. No
     response sets a cookie.
   BROWSER (puppeteer, a build with UNCOST_FORMS_OPEN=on): each form's
     controls have labels, the boxes are unticked, the required set is right,
@@ -108,13 +111,14 @@ for (const [label, e] of [["switch off", env(worker(), "off")], ["no binding", {
     await call(pledge.onRequestPost, post("/api/signup/pledge", goodPledge), e),
     await call(updates.onRequestPost, post("/api/signup/updates", goodUpdates), e),
     await call(confirm.onRequestGet, get("/api/signup/confirm?t=x"), e),
+    await call(confirm.onRequestPost, post("/api/signup/confirm", { t: "x" }, { json: false }), e),
     await call(unsubscribe.onRequestGet, get("/api/signup/unsubscribe?t=x"), e),
     await call(unsubscribe.onRequestPost, post("/api/signup/unsubscribe?t=x", { "List-Unsubscribe": "One-Click" }, { origin: null, site: null }), e),
     await call(del.onRequestGet, get("/api/signup/delete?t=x"), e),
     await call(del.onRequestPost, post("/api/signup/delete", { t: "x" }), e),
     await call(ses.onRequestPost, new Request(ORIGIN + "/api/signup/ses-events", { method: "POST", body: "{}" }), e),
   ].map((x) => x.status);
-  check(`dark: ${label}`, { statuses: r, forwarded: w ? w.calls.length : 0 }, { statuses: [404, 404, 404, 404, 404, 404, 404, 404], forwarded: 0 });
+  check(`dark: ${label}`, { statuses: r, forwarded: w ? w.calls.length : 0 }, { statuses: [404, 404, 404, 404, 404, 404, 404, 404, 404], forwarded: 0 });
 }
 
 // Pledge.
@@ -139,6 +143,16 @@ check("pledge: refused (plain)", { status: r.status, location: r.location }, { s
 w = worker(() => new Response('{"ok":false,"closed":true}', { status: 503 }));
 r = await call(pledge.onRequestPost, post("/api/signup/pledge", goodPledge), env(w));
 check("pledge: Worker closed", { status: r.status }, { status: 404 });
+// A failed forward, or an unexpected Worker answer: not sent.
+for (const [label, answer] of [["forward fails", () => { throw new Error("down"); }], ["forward rejects", () => Promise.reject(new Error("down"))], ["Worker 500", () => new Response("{}", { status: 500 })]]) {
+  for (const [mod, path, fields] of [[pledge, "/api/signup/pledge", goodPledge], [updates, "/api/signup/updates", goodUpdates]]) {
+    w = worker(answer);
+    const j = await call(mod.onRequestPost, post(path, fields), env(w));
+    const pl = await call(mod.onRequestPost, post(path, fields, { json: false }), env(w));
+    check(`${path.split("/").pop()}: ${label}`, { json: j.status, body: j.body, plain: pl.status, location: pl.location },
+      { json: 502, body: { ok: false }, plain: 303, location: ORIGIN + "/signup/not-sent/" });
+  }
+}
 for (const [label, opts] of [["cross origin", { origin: "https://evil.example" }], ["cross site", { site: "cross-site" }], ["same site", { site: "same-site" }]]) {
   w = worker(); r = await call(pledge.onRequestPost, post("/api/signup/pledge", goodPledge, opts), env(w));
   check(`pledge: ${label}`, { status: r.status, forwarded: w.calls.length }, { status: 403, forwarded: 0 });
@@ -159,7 +173,7 @@ check("updates: plain post", { status: r.status, location: r.location }, { statu
 w = worker(); r = await call(updates.onRequestPost, post("/api/signup/updates", goodUpdates, { origin: "https://evil.example", json: false }), env(w));
 check("updates: cross origin (plain)", { status: r.status, location: r.location, forwarded: w.calls.length }, { status: 303, location: ORIGIN + "/signup/not-sent/", forwarded: 0 });
 
-// Confirm: each Worker answer goes to its page.
+// Confirm: the POST from the confirm page sends each Worker answer to its page.
 const answers = [
   [{ result: "confirmed", kind: "pledge" }, "/pledge/verify/"], [{ result: "already", kind: "pledge" }, "/pledge/verify/"],
   [{ result: "confirmed", kind: "updates" }, "/updates/confirmed/"], [{ result: "already", kind: "updates" }, "/updates/confirmed/"],
@@ -168,16 +182,22 @@ const answers = [
 ];
 for (const [answer, page] of answers) {
   w = worker(() => new Response(JSON.stringify(answer), { status: 200 }));
-  r = await call(confirm.onRequestGet, get("/api/signup/confirm?t=tok123"), env(w));
-  check(`confirm: ${answer.result} ${answer.kind || ""}`, { status: r.status, location: r.location, token: JSON.parse(w.calls[0].body).token },
-    { status: 303, location: ORIGIN + page, token: "tok123" });
+  r = await call(confirm.onRequestPost, post("/api/signup/confirm", { t: "tok123" }, { json: false }), env(w));
+  check(`confirm: ${answer.result} ${answer.kind || ""}`, { status: r.status, location: r.location, path: w.calls[0] && w.calls[0].path, token: w.calls[0] && JSON.parse(w.calls[0].body).token },
+    { status: 303, location: ORIGIN + page, path: "/v1/confirm", token: "tok123" });
 }
 w = worker(() => { throw new Error("down"); });
-r = await call(confirm.onRequestGet, get("/api/signup/confirm?t=tok123"), env(w));
+r = await call(confirm.onRequestPost, post("/api/signup/confirm", { t: "tok123" }, { json: false }), env(w));
 check("confirm: Worker unreachable", { status: r.status, location: r.location }, { status: 303, location: ORIGIN + "/signup/link-expired/" });
+for (const [label, opts] of [["cross origin", { origin: "https://evil.example" }], ["cross site", { origin: null, site: "cross-site" }]]) {
+  w = worker(() => new Response('{"result":"confirmed","kind":"pledge"}', { status: 200 }));
+  r = await call(confirm.onRequestPost, post("/api/signup/confirm", { t: "tok123" }, { json: false, ...opts }), env(w));
+  check(`confirm: ${label}`, { location: r.location, forwarded: w.calls.length }, { location: ORIGIN + "/signup/link-expired/", forwarded: 0 });
+}
 
-// Unsubscribe and delete: a confirm page first; only its POST acts.
-for (const [mod, path, label] of [[unsubscribe, "/api/signup/unsubscribe", "unsubscribe"], [del, "/api/signup/delete", "delete"]]) {
+// Confirm, unsubscribe and delete: opening the link shows a confirm page and
+// changes nothing; only its POST acts.
+for (const [mod, path, label] of [[confirm, "/api/signup/confirm", "confirm"], [unsubscribe, "/api/signup/unsubscribe", "unsubscribe"], [del, "/api/signup/delete", "delete"]]) {
   w = worker();
   r = await call(mod.onRequestGet, get(`${path}?t=tok"<x`), env(w));
   const csp = r.headers.get("Content-Security-Policy") || "";

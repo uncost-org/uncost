@@ -37,11 +37,10 @@
 **The site, in this repository.**
 - **Handlers.** `website/functions/api/signup/` holds the Pages Functions:
   - `pledge` and `updates` (POST);
-  - `confirm` (GET);
-  - `unsubscribe` and `delete` (GET for a confirm page, POST to act);
+  - `confirm`, `unsubscribe` and `delete` (GET shows a no-JS page with a button; only that page's same-origin POST acts, so a mail scanner that opens a link changes nothing);
   - `ses-events` (POST).
 
-  Their shared code is `website/lib/signup.js`. Each handler checks Origin and Sec-Fetch-Site on POST and forwards through `SIGNUPS`. They set no cookies.
+  Their shared code is `website/lib/signup.js`. Each handler checks Origin and Sec-Fetch-Site on POST and forwards through `SIGNUPS`. A sign-up whose forward fails, or that gets any Worker answer other than accepted, refused or closed, is answered as not sent. They set no cookies.
 - **Forms and pages.**
   - The live forms are `partials/forms/pledge.njk` and `partials/forms/updates.njk`. The updates form's ids carry its surface, because it appears twice on `/` and `/join/`.
   - `_data/signups.json` holds the consent texts and the minimum age. The templates render the same texts that the handlers hash.
@@ -55,7 +54,7 @@
 1. **Build:** `features.formsOpen` (`UNCOST_FORMS_OPEN=on`). While it is off, no sign-up input renders anywhere; only "Sign-ups open soon."
 2. **Runtime:** every `/api/signup/*` handler answers 404 unless the Pages environment sets `UNCOST_SIGNUPS_OPEN=on` **and** carries the `SIGNUPS` binding. A Worker that is not set up for mail answers 503, and the handler turns that into 404 as well.
 
-The Content-Security-Policy does not change: `form-action 'self'` and `connect-src 'self'` already cover same-origin handlers. The unsubscribe and delete confirm pages are rendered by a Function, which `_headers` does not reach, so they send their own stricter policy (`default-src 'none'`, no script).
+The Content-Security-Policy does not change: `form-action 'self'` and `connect-src 'self'` already cover same-origin handlers. The confirm, unsubscribe and delete pages are rendered by a Function, which `_headers` does not reach, so they send their own stricter policy (`default-src 'none'`, no script).
 
 ## Founder decision recorded (2026-10-21)
 
@@ -167,9 +166,9 @@ The pull request lists the results.
 **Preview build and test.** Build: `cd website && UNCOST_CONTACT_FORM_OPEN=on UNCOST_FORMS_OPEN=on npm run build && npx wrangler pages deploy dist --project-name=uncost-site-preview --branch=signups-test`. Then, on that preview:
 
 1. **Sign.** Sign the Pledge with the test inbox and the updates box ticked. The page shows "Check your inbox" in place. The email arrives From `Uncost <confirm@uncost.org>`, with the footer and the postal address.
-2. **Confirm.** Open the link: you land on /pledge/verify/. Open it again: the same page, and nothing changes.
+2. **Confirm.** Open the link: a page asks you to confirm, and nothing has changed yet. Press Confirm: you land on /pledge/verify/. Open the link and press Confirm again: the same page, and nothing changes.
 3. **Sign again.** The same answer, and no email.
-4. **Updates only.** Sign up for updates from the footer with a second address. Confirm, and you land on /updates/confirmed/.
+4. **Updates only.** Sign up for updates from the footer with a second address. Open its link and press Confirm: you land on /updates/confirmed/.
 5. **Unsubscribe.** Use the email's unsubscribe link, then the confirm page's button. You land on /signup/unsubscribed/, and signing up for updates again sends nothing.
 6. **Delete.** Use the delete link and confirm. You land on /signup/deleted/. `node scripts/admin.mjs export <address>` then shows only the suppression row.
 7. **Without JS.** Repeat step 1 with JavaScript off: you land on /pledge/check-email/.
