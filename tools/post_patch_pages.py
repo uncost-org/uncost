@@ -1412,9 +1412,9 @@ switch('<p>The Pledge, the updates list and the Assembly aren&rsquo;t open yet, 
        '<p>The Assembly isn&rsquo;t open yet, so nothing on this site asks for its details.</p>',
        "CP-4 privacy §2: only the Assembly is still closed")
 add_items_after('and we then delete your message.',
-                ['<b>The Pledge and email updates</b> — your consent, which you give by ticking the boxes on the form '
-                 'and clicking the link we email you. You can withdraw it at any time, with the links in every email '
-                 'or by emailing us.',
+                ['<b>The Pledge and email updates</b> — your consent, which you give by ticking the boxes on the form, '
+                 'then opening the link we email you and pressing Confirm. You can withdraw it at any time, with the '
+                 'links in every email or by emailing us.',
                  '<b>Keeping a do-not-email record</b> after you unsubscribe or ask us to delete your data, or after '
                  'an email to you bounces or is reported as spam — our legitimate interest in never emailing you '
                  'against your wishes.'],
@@ -1471,8 +1471,8 @@ S11_ON = ('<h3 class="s"><span class="num">11</span>Sign-ups: the Pledge and ema
           '      <li><b>Why, and on what basis</b> — to count your signature as support for the Pledge, and to send '
           'the updates you asked for. The basis is your consent (section&nbsp;3). Your name is never shown and '
           'isn&rsquo;t used to count you.</li>\n'
-          '      <li><b>Confirming by email</b> — nothing counts and nothing else is sent until you click the link in '
-          'the email we send you. A Pledge link works for 24 hours, an updates link for 7 days. If you also ask for '
+          '      <li><b>Confirming by email</b> — nothing counts and nothing else is sent until you open the link in '
+          'the email we send you and press Confirm. A Pledge link works for 24 hours, an updates link for 7 days. If you also ask for '
           'updates when you sign the Pledge, the same link confirms both. If you don&rsquo;t confirm, we delete the '
           'sign-up and its link after 7 days.</li>\n'
           '      <li><b>Who provides each part</b> — Cloudflare runs the forms (Pages Functions and Workers) and stores '
@@ -1498,5 +1498,14 @@ literal(PRIVACY, '(CHG-007).</td></tr>',
         'Workers and D1; Amazon SES and SNS), confirming by email, deleting unconfirmed sign-ups after 7 days, '
         'retention, unsubscribing and deleting your data (CHG-009).</td>' + END + '</tr>',
         "CP-4 privacy §12: version row 0.4 while forms are open")
+
+# SU-1 — /pledge/check-email/: a confirmation link opens a page with a Confirm
+# button (the confirm link asks before it confirms, so a mail scanner that
+# opens it changes nothing; CHG-009). While formsOpen is on, "Click it" reads
+# "Open it and press Confirm". Off, the export's line is untouched. The tags sit
+# mid-line (trimBlocks, lstripBlocks).
+literal("website/src/pledge/check-email.njk", "Click it to count your signature.",
+        ON + "Open it and press Confirm to count your signature." + ELSE + "Click it to count your signature." + END,
+        "SU-1 pledge check-email: open the link and press Confirm while forms are open")
 
 print("done")

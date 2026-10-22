@@ -158,8 +158,8 @@
     /* Sign-ups: the answer is the same for a new, repeated or opted-out
        address, so "check your inbox" is all a success can say. */
     var SIGNUP_SENT = {
-      pledge: 'Check your inbox: we’ve sent you a link to confirm your signature. It works for 24 hours, and your signature counts once you click it.',
-      updates: 'Check your inbox: we’ve sent you a link to confirm. It works for 7 days, and we won’t email you anything else until you click it.'
+      pledge: 'Check your inbox: we’ve sent you a link to confirm your signature. It works for 24 hours, and your signature counts once you open it and press Confirm.',
+      updates: 'Check your inbox: we’ve sent you a link to confirm. It works for 7 days, and we won’t email you anything else until you open it and press Confirm.'
     };
     function signupNote(f){
       return f.querySelector('.err') || (f.parentNode && f.parentNode.querySelector('[data-updates-note]'));
