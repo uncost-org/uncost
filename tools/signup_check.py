@@ -206,6 +206,25 @@ for (const [mod, path, label] of [[confirm, "/api/signup/confirm", "confirm"], [
     csp: /default-src 'none'/.test(csp) && /form-action 'self'/.test(csp) && !/script-src/.test(csp) },
     { status: 200, forwarded: 0, noindex: true, script: false, postsToken: true, csp: true });
 }
+// A browser's press on each confirm page. A form POST carries the Origin the
+// browser derives from that page's Referrer-Policy (Fetch standard, "append a
+// request Origin header"): "no-referrer" makes it Origin: null, which
+// sameOrigin() rightly refuses, so the press would land on link-expired
+// without reaching the Worker (the preview test, 2026-10-24).
+const browserOrigin = (policy, pageOrigin) =>
+  (policy || "").split(",").map((x) => x.trim()).filter(Boolean).pop() === "no-referrer" ? "null" : pageOrigin;
+for (const [mod, path, label, answer, page] of [
+  [confirm, "/api/signup/confirm", "confirm", { result: "confirmed", kind: "pledge" }, "/pledge/verify/"],
+  [unsubscribe, "/api/signup/unsubscribe", "unsubscribe", { result: "done" }, "/signup/unsubscribed/"],
+  [del, "/api/signup/delete", "delete", { result: "deleted" }, "/signup/deleted/"],
+]) {
+  w = worker(() => new Response(JSON.stringify(answer), { status: 200 }));
+  const shown = await call(mod.onRequestGet, get(`${path}?t=tokB`), env(w));
+  const origin = browserOrigin(shown.headers.get("Referrer-Policy"), ORIGIN);
+  r = await call(mod.onRequestPost, post(path, { t: "tokB" }, { json: false, origin, site: "same-origin" }), env(w));
+  check(`${label}: a browser's press on the confirm page`, { origin, location: r.location, forwarded: w.calls.length },
+    { origin: ORIGIN, location: ORIGIN + page, forwarded: 1 });
+}
 w = worker(() => new Response('{"result":"done"}', { status: 200 }));
 r = await call(unsubscribe.onRequestPost, post("/api/signup/unsubscribe?t=tok1", { "List-Unsubscribe": "One-Click" }, { origin: null, site: null, json: false }), env(w));
 check("unsubscribe: RFC 8058 one-click", { status: r.status, body: r.body, token: w.calls[0] && JSON.parse(w.calls[0].body).token }, { status: 200, body: "", token: "tok1" });
@@ -353,6 +372,48 @@ const data = JSON.parse(process.argv[4]);
     if (landed.method !== "POST" || !/age=yes/.test(landed.body || "")) errors.push(`${kind} NOJS: the browser did not post the form with the age box`);
     await pp.p.close();
   }
+  // A real browser's Confirm press. The page is the confirm handler's own GET
+  // output, headers included; Chromium submits its form, and the headers it
+  // sent go to the real POST handler, which must forward and redirect.
+  {
+    const { pathToFileURL } = require("node:url");
+    const path = require("node:path");
+    const confirmMod = await import(pathToFileURL(path.join(process.argv[2], "functions", "api", "signup", "confirm.js")).href);
+    const shown = await confirmMod.onRequestGet({ request: new Request(base + "/api/signup/confirm?t=tokC"), env: { UNCOST_SIGNUPS_OPEN: "on", SIGNUPS: {} } });
+    const html = await shown.text();
+    const headers = Object.fromEntries(shown.headers.entries());
+    const p = await browser.newPage();
+    await p.setRequestInterception(true);
+    let posted = null;
+    p.on("request", (rq) => {
+      const u = new URL(rq.url());
+      if (u.pathname === "/api/signup/confirm" && rq.method() === "GET") return rq.respond({ status: 200, headers, body: html });
+      if (u.pathname === "/api/signup/confirm" && rq.method() === "POST") {
+        posted = { headers: rq.headers(), body: rq.postData() || "" };
+        return rq.respond({ status: 200, contentType: "text/plain", body: "ok" });
+      }
+      rq.continue();
+    });
+    await p.goto(base + "/api/signup/confirm?t=tokC", { waitUntil: "networkidle0" });
+    await Promise.all([p.waitForNavigation({ waitUntil: "load" }).catch(() => {}), p.click('form.actions button[type="submit"]')]);
+    await p.close();
+    if (!posted) {
+      errors.push("CONFIRM PRESS: Chromium sent no POST from the confirm page");
+    } else {
+      const calls = [];
+      const env = { UNCOST_SIGNUPS_OPEN: "on", SIGNUPS: { fetch: async (url) => { calls.push(url); return new Response('{"result":"confirmed","kind":"pledge"}', { status: 200 }); } } };
+      const h = new Headers();
+      for (const k of ["origin", "sec-fetch-site", "content-type"]) if (posted.headers[k]) h.set(k, posted.headers[k]);
+      const res = await confirmMod.onRequestPost({ request: new Request(base + "/api/signup/confirm", { method: "POST", headers: h, body: posted.body }), env });
+      const location = res.headers.get("Location") || "";
+      steps.push({ step: "confirm page: a real browser's press", referrerPolicy: headers["referrer-policy"], origin: posted.headers.origin || "(none)",
+                   secFetchSite: posted.headers["sec-fetch-site"] || "(none)", location: location.replace(base, ""), forwarded: calls.length });
+      if (calls.length !== 1 || !location.endsWith("/pledge/verify/")) {
+        errors.push(`CONFIRM PRESS: Chromium's POST (Origin: ${posted.headers.origin || "(none)"}) went to ${location.replace(base, "")} and reached the Worker ${calls.length} times`);
+      }
+    }
+  }
+
   // /join/ carries the updates form twice too.
   const { p } = await page("/join/", true, answer(202));
   const dup = await p.evaluate(() => { const ids = [...document.querySelectorAll("[id]")].map((el) => el.id); return ids.filter((id, i) => ids.indexOf(id) !== i); });

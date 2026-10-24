@@ -112,7 +112,11 @@ const PAGE_HEADERS = {
   ...NO_STORE,
   "Content-Type": "text/html; charset=utf-8",
   "Content-Security-Policy": "default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'none'",
-  "Referrer-Policy": "no-referrer",
+  // same-origin, not no-referrer: a browser's form POST from a no-referrer page
+  // carries Origin: null, which sameOrigin() refuses, so every Confirm press
+  // landed on link-expired (preview test, 2026-10-24). same-origin still sends
+  // nothing to another site, and the page loads nothing from one.
+  "Referrer-Policy": "same-origin",
   "X-Frame-Options": "DENY",
   "Cross-Origin-Opener-Policy": "same-origin",
   "X-Robots-Tag": "noindex",
