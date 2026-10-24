@@ -1,0 +1,172 @@
+name: deploy-production
+# Production deploys of uncost.org (CHG-010). A push to main that changes
+# anything under website/, or a manual run, builds the site the way the hand
+# deploys did, checks the build, then waits for the founder's approval before
+# it deploys to the Cloudflare Pages project `uncost`.
+#
+# No pull request or fork can start this workflow. The build job reads no
+# secrets. The deploy job runs in the GitHub environment `production`, which
+# requires the founder's approval, accepts main only, and holds the only
+# secrets this workflow reads: CF_PRODUCTION_TOKEN (a Cloudflare API token
+# limited to Account → Cloudflare Pages → Edit on the Uncost account) and
+# CF_PRODUCTION_ACCOUNT_ID. Their names differ from the preview secrets
+# (CF_PAGES_TOKEN, CF_ACCOUNT_ID), so a missing production secret can never
+# fall back to a repository secret.
+#
+# Each run's summary records its commit, deployment ID and previous deployment
+# ID (docs/INFRA-DOMAINS.md, "Deploys"). Rollback is unchanged: Cloudflare
+# dashboard → Workers & Pages → uncost → Deployments → the previous deployment
+# → Rollback.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "website/**"
+  workflow_dispatch:
+permissions:
+  contents: read
+# One production deploy at a time. A run waiting for approval is in progress,
+# so a newer push waits behind it instead of cancelling it.
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+defaults:
+  run:
+    shell: bash
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: website/.nvmrc
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - run: npm ci
+        working-directory: website
+      # The production build of CHG-004 and CHG-005: every other switch unset,
+      # only the contact form on. The two checks run with the same value, so
+      # they expect exactly what was built.
+      - name: Build
+        working-directory: website
+        run: env -u SITE_ORIGIN -u UNCOST_FORMS_OPEN -u UNCOST_DONATIONS_OPEN -u UNCOST_SIGNATURE_COUNTER -u UNCOST_FOUNDING_SIGNERS -u UNCOST_SEARCH_ENABLED -u UNCOST_TODAY UNCOST_CONTACT_FORM_OPEN=on npm run build
+      - name: Content audit of the build
+        working-directory: website
+        env:
+          UNCOST_CONTACT_FORM_OPEN: "on"
+        run: python3 ../scripts/audit_website.py --built dist
+      - name: Production check of the build
+        working-directory: website
+        env:
+          UNCOST_CONTACT_FORM_OPEN: "on"
+        run: python3 ../tools/prod_check.py --built dist
+      # The artifact holds dist/ and functions/. include-hidden-files keeps
+      # dist/.well-known/security.txt. It outlives the 30 days a run can wait
+      # for approval.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: production-site
+          path: |
+            website/dist
+            website/functions
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    # The approval click: the job waits here until the founder approves it.
+    environment: production
+    steps:
+      - name: Check the environment's secrets
+        env:
+          HAS_TOKEN: ${{ secrets.CF_PRODUCTION_TOKEN != '' }}
+          HAS_ACCOUNT: ${{ secrets.CF_PRODUCTION_ACCOUNT_ID != '' }}
+        run: |
+          if [ "$HAS_TOKEN" != "true" ] || [ "$HAS_ACCOUNT" != "true" ]; then
+            echo "::error::The production environment has no CF_PRODUCTION_TOKEN or CF_PRODUCTION_ACCOUNT_ID secret. Nothing was deployed."
+            exit 1
+          fi
+      # The same commit as the build. The checkout supplies
+      # scripts/uptime_check.py and anything the functions import from outside
+      # website/functions/; dist/ and functions/ come from the checked build.
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: website/.nvmrc
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      # wrangler-action installs wrangler beside website's own packages, as in
+      # preview-deploy.yml.
+      - run: npm ci
+        working-directory: website
+      - run: rm -rf website/dist website/functions
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: production-site
+          path: website
+      - name: Production deployment before this one
+        id: before
+        env:
+          CF_TOKEN: ${{ secrets.CF_PRODUCTION_TOKEN }}
+          CF_ACCOUNT: ${{ secrets.CF_PRODUCTION_ACCOUNT_ID }}
+        run: |
+          id=$(curl -sSf -H "Authorization: Bearer $CF_TOKEN" \
+            "https://api.cloudflare.com/client/v4/accounts/$CF_ACCOUNT/pages/projects/uncost" \
+            | jq -r '.result.canonical_deployment.id // empty')
+          echo "id=${id:-unknown}" >> "$GITHUB_OUTPUT"
+      # From website/, so ./functions ships with the deploy. wrangler is the
+      # version of the hand deploys; Dependabot does not update this line.
+      - name: Deploy
+        id: deploy
+        uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
+        with:
+          apiToken: ${{ secrets.CF_PRODUCTION_TOKEN }}
+          accountId: ${{ secrets.CF_PRODUCTION_ACCOUNT_ID }}
+          wranglerVersion: "4.151.3"
+          workingDirectory: website
+          command: pages deploy dist --project-name=uncost --branch=main
+      - name: Record the deploy
+        env:
+          COMMIT: ${{ github.sha }}
+          PREVIOUS: ${{ steps.before.outputs.id }}
+          DEPLOYMENT_ID: ${{ steps.deploy.outputs.pages-deployment-id }}
+          DEPLOYMENT_URL: ${{ steps.deploy.outputs.deployment-url }}
+          PAGES_ENVIRONMENT: ${{ steps.deploy.outputs.pages-environment }}
+        run: |
+          {
+            echo "### Production deploy"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Commit | \`$COMMIT\` |"
+            echo "| Deployment ID | \`${DEPLOYMENT_ID:-not reported}\` |"
+            echo "| Previous deployment ID | \`$PREVIOUS\` |"
+            echo "| Environment | ${PAGES_ENVIRONMENT:-not reported} |"
+            echo "| Deployment URL | ${DEPLOYMENT_URL:-not reported} |"
+            echo ""
+            echo "Rollback: Cloudflare dashboard → Workers & Pages → uncost → Deployments → \`$PREVIOUS\` → Rollback."
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ -z "$DEPLOYMENT_ID" ] || [ "$PAGES_ENVIRONMENT" != "production" ]; then
+            echo "::error::wrangler did not report a production deployment."
+            exit 1
+          fi
+      - name: Live checks
+        env:
+          UPTIME_CONTACT_FORM: "on"
+        run: python3 scripts/uptime_check.py --retry-delay 60

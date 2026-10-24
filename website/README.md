@@ -1,6 +1,6 @@
 # Website implementation status
 
-A routing scaffold (Eleventy, `website/src/`, placeholder templates only) builds locally and in CI, and its built output is content-audited on every pull request. Nothing is deployed: page design and copy arrive via the governed design handoff, form markup arrives via the UNP-57 page contract, and deployment remains separately gated.
+A routing scaffold (Eleventy, `website/src/`, placeholder templates only) builds locally and in CI, and its built output is content-audited on every pull request. Page design and copy arrive via the governed design handoff, and form markup via the UNP-57 page contract. The build from `main` has been public at https://uncost.org since the soft launch of 2026-10-19 ([CHG-004](../records/changes/CHG-004-public-soft-launch.md)). Since [CHG-010](../records/changes/CHG-010-production-deploys-from-github.md), production deploys run through `.github/workflows/deploy-production.yml`, after the founder approves each one; see `docs/INFRA-DOMAINS.md`, "Deploys".
 
 ## Content control
 
