@@ -3129,3 +3129,42 @@ html { scroll-padding-top: 108px; }
 @media (max-width: 940px) {
   html { scroll-padding-top: 82px; scroll-padding-bottom: 64px; }
 }
+
+/* 146. Sign-up forms (2026-10-21; CHG-009). Only a build with formsOpen on
+ *      renders them. (a) /pledge/resent/ carries the live Pledge form
+ *      (partials/forms/pledge.njk), which uses the export's own /pledge/ form
+ *      classes (.consents, .crow, .agerow, .pbtn, .privacy). sections.css
+ *      scopes those to body[data-page="pledge"], so on the resend card they
+ *      were unstyled. These are the same declarations, scoped to the resend
+ *      page's form. (b) At 560px and below the name and email fields stack:
+ *      side by side at 390px, "Name (optional)" was cut off. (c) The updates
+ *      form also renders inside the page on / and /join/, on cream. site.css
+ *      styles .ft-form and .chk for the dark footer it was drawn for (cream
+ *      borders and button, #C9C5BA text), and recolours them only inside
+ *      .ft-updates. On cream the button and the box borders vanished and the
+ *      box text measured under 4.5:1 (axe color-contrast, serious). Outside
+ *      the footer the form takes the footer's own light-band values, with
+ *      the checked box's inner ring in the page's cream. */
+body[data-page="pledge-resend"] #pledge-form .consents { border:2px solid var(--ink);margin-top:16px }
+body[data-page="pledge-resend"] #pledge-form .crow { display:flex;gap:12px;align-items:flex-start;padding:14px 16px;border-top:1px solid var(--rule-soft);font-size:14px;line-height:1.5;color:var(--fg-2);cursor:pointer }
+body[data-page="pledge-resend"] #pledge-form .crow:first-child { border-top:0 }
+body[data-page="pledge-resend"] #pledge-form .crow input { appearance:none;width:20px;height:20px;border:2px solid var(--ink);background:var(--cream);flex:0 0 auto;margin-top:1px;cursor:pointer }
+body[data-page="pledge-resend"] #pledge-form .crow input:checked { background:var(--coral);box-shadow:inset 0 0 0 3px var(--cream) }
+body[data-page="pledge-resend"] #pledge-form .crow b { color:var(--ink) }
+body[data-page="pledge-resend"] #pledge-form .crow a { color:var(--coral) }
+body[data-page="pledge-resend"] #pledge-form .agerow { font-size:13px;color:var(--fg-3);background:var(--cream-2) }
+body[data-page="pledge-resend"] #pledge-form .pbtn { display:block;width:100%;box-sizing:border-box;font-family:var(--font-display);font-weight:700;font-size:19px;padding:16px;border:2px solid var(--ink);background:var(--coral);color:var(--ink);text-align:center;cursor:pointer;margin-top:18px;transition:background-color 80ms linear,color 80ms linear }
+body[data-page="pledge-resend"] #pledge-form .pbtn:hover { background:var(--coral-deep);color:var(--cream) }
+body[data-page="pledge-resend"] #pledge-form .privacy { font-size:13px;color:var(--fg-3);display:flex;gap:8px;align-items:flex-start;margin-top:16px;justify-content:center;text-align:left }
+body[data-page="pledge-resend"] #pledge-form .privacy::before { content:"";width:7px;height:7px;background:var(--sage);display:inline-block;flex:none;margin-top:5px }
+@media (max-width: 560px) {
+  #pledge-form .u-84 { grid-template-columns: 1fr !important; }
+}
+main [data-updates-form] .chk { color: var(--fg-2); }
+main [data-updates-form] .chk input { border-color: #0A0A0A; }
+main [data-updates-form] .chk input:checked { background: var(--coral); box-shadow: inset 0 0 0 3px var(--cream); }
+main [data-updates-form] .ft-note { color: var(--fg-2); }
+main [data-updates-form] .ft-form input[type=email] { background: var(--cream); border-color: #0A0A0A; color: #0A0A0A; }
+main [data-updates-form] .ft-form input[type=email]::placeholder { color: #6B675E; }
+main [data-updates-form] .ft-form button { background: #0A0A0A; color: var(--cream); border-color: #0A0A0A; }
+main [data-updates-form] .ft-form button:hover { background: var(--coral); color: var(--ink-on-coral); border-color: var(--ink-on-coral); }

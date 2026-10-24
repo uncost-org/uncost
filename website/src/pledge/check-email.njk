@@ -16,7 +16,7 @@ formFlow: true
     <div class="bd">
       <div class="eq">Almost there</div>
       <h1>Check your inbox.</h1>
-      <p>We&rsquo;ve sent a confirmation link to <span class="em">your email address</span>. Click it to count your signature.</p>
+      <p>We&rsquo;ve sent a confirmation link to <span class="em">your email address</span>. {% if features.formsOpen %}Open it and press Confirm to count your signature.{% else %}Click it to count your signature.{% endif %}</p>
       <p>The link is valid for <b>24 hours</b>. Your pledge isn&rsquo;t counted until you confirm — that&rsquo;s how we keep the tally honest.</p>
       <div class="actions">
         <a href="/pledge/resent/" class="u-btn u-btn--ink">Didn&rsquo;t get it? Resend</a>

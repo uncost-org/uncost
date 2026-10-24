@@ -21,17 +21,24 @@ module.exports = {
 
   // ---- Design-export flags (design-source/data/site.json → flags) ----------
   //
-  // formsOpen is the single switch for every form on the site. While it is
-  // false, NO input, checkbox or submit button is rendered anywhere — only
-  // "Sign-ups open soon." That is deliberate and is an accessibility
-  // requirement, not a cosmetic one: a visually dimmed form is still
-  // keyboard-focusable and submittable. The markup that ships when it opens is
-  // vendor-agnostic and carries only the data-form hooks — no endpoint, no
-  // vendor script, no third-party request.
+  // formsOpen is the build switch for the Pledge and email updates sign-ups
+  // (the contact form has its own, below). While it is false, NO input,
+  // checkbox or submit button is rendered for them anywhere — only "Sign-ups
+  // open soon." That is deliberate and is an accessibility requirement, not a
+  // cosmetic one: a visually dimmed form is still keyboard-focusable and
+  // submittable. With it on (records/changes/CHG-009) the forms post to the
+  // same-origin handlers in website/functions/api/signup/, which forward
+  // through the SIGNUPS Service binding to the uncost-signups Worker
+  // (uncost-org/uncost-api): no vendor script, no third-party request from the
+  // browser. /privacy/ then shows version 0.4, the /updates/ and /signup/
+  // result pages exist, and the pledge-flow pages leave noindex. The handlers
+  // have their own runtime switch, UNCOST_SIGNUPS_OPEN=on in the Pages
+  // environment, and answer 404 without it; turning sign-ups on needs both,
+  // and the founder's decision (CHG-009).
   formsOpen: process.env.UNCOST_FORMS_OPEN === "on",
 
   // The /contact/ form has its own switch, separate from formsOpen: the pledge
-  // and updates sign-ups stay on formsOpen and stay off. Defaults OFF. Its
+  // and updates sign-ups stay on formsOpen. Defaults OFF. Its
   // precondition is a working, TESTED delivery path — the Pages Function
   // (website/functions/api/contact.js), its Service binding to the
   // uncost-contact-mailer Worker (workers/contact-mailer/), that Worker's
