@@ -101,7 +101,9 @@ Entries newest first.
 
 ## Deploys
 
-Production is the Cloudflare Pages project `uncost` (production branch `main`). It is Git-disconnected and deployed by hand from `website/`: `npx wrangler pages deploy dist --project-name=uncost --branch=main`. Running from `website/` makes `website/functions/` ship with it. Entries newest first.
+Production is the Cloudflare Pages project `uncost` (production branch `main`). It is Git-disconnected, so Cloudflare builds nothing itself. Since [CHG-010](../records/changes/CHG-010-production-deploys-from-github.md), production deploys run through the workflow [`.github/workflows/deploy-production.yml`](../.github/workflows/deploy-production.yml). A push to `main` that changes anything under `website/`, or a manual run, builds the site with only `UNCOST_CONTACT_FORM_OPEN=on` and runs `audit_website.py` and `prod_check.py` on the build. The run then waits for the founder's approval in the GitHub environment `production`, and runs `wrangler pages deploy dist --project-name=uncost --branch=main` from `website/`, so `website/functions/` ships with it. Each run's summary records its commit, deployment ID and previous deployment ID; those deploys are not added to the table below. Pull-request previews go to the project `uncost-site-preview` on the same account. A Cloudflare Pages token can't be limited to one project, so each preview deploy also waits for the founder's approval, in the GitHub environment `preview` ([CHG-011](../records/changes/CHG-011-previews-need-approval.md)). GitHub keeps this repository's run logs for 90 days; Cloudflare's own list (Workers & Pages → `uncost` → **Deployments**) is the lasting record.
+
+The table records the deploys made by hand, from `website/` with `npx wrangler pages deploy dist --project-name=uncost --branch=main`. A hand deploy is now the fallback only; record any here. Entries newest first.
 
 | Date | Commit | Deployment ID | Previous deployment ID | What |
 |---|---|---|---|---|

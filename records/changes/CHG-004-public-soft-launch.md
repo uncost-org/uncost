@@ -1,6 +1,6 @@
 # CHG-004 — Public soft launch of uncost.org
 
-**Status:** founder authorization, dated by the founder. Drafted from the founder's pre-launch brief (2026-10-18); the founder gave the launch date below in the contact-form brief (2026-10-19). It takes effect from that date once this record is merged. Amended by [CHG-005](CHG-005-contact-form.md), which turns on the contact form only.
+**Status:** founder authorization, dated by the founder. Drafted from the founder's pre-launch brief (2026-10-18); the founder gave the launch date below in the contact-form brief (2026-10-19). It takes effect from that date once this record is merged. Amended by [CHG-005](CHG-005-contact-form.md), which turns on the contact form only, and by [CHG-010](CHG-010-production-deploys-from-github.md), which replaces the deploys by hand with a GitHub workflow that deploys after the founder's approval.
 
 - **Date:** 2026-10-19
 - **Changed claim:** the publication boundary. Until now this repository authorized access-gated preview deployments only (`SECURITY.md`, 2026-07-19), and public launch was not authorized. This record authorizes a **public soft launch of uncost.org**: the static site goes public on its own domain, with everything that collects data, takes money or runs a vote still switched off.
