@@ -10,8 +10,8 @@ name: deploy-production
 # secrets this workflow reads: CF_PRODUCTION_TOKEN (a Cloudflare API token
 # limited to Account → Cloudflare Pages → Edit on the Uncost account) and
 # CF_PRODUCTION_ACCOUNT_ID. Their names differ from the preview secrets
-# (CF_PAGES_TOKEN, CF_ACCOUNT_ID), so a missing production secret can never
-# fall back to a repository secret.
+# (CF_PREVIEW_TOKEN, CF_PREVIEW_ACCOUNT_ID, in the `preview` environment:
+# CHG-011), so a missing production secret can never fall back to another.
 #
 # Each run's summary records its commit, deployment ID and previous deployment
 # ID (docs/INFRA-DOMAINS.md, "Deploys"). Rollback is unchanged: Cloudflare

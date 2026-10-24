@@ -1,6 +1,6 @@
 # CHG-010 — Production deploys run from GitHub, after the founder's approval (amends CHG-004)
 
-**Status:** founder decision, dated by the founder (2026-10-22). Drafted from the founder's auto-deploy brief. It takes effect when this record is merged. The Cloudflare token and the GitHub environment `production` (below) are set up before the merge, and the merge's own run is the first deploy through the workflow. Amends [CHG-004](CHG-004-public-soft-launch.md).
+**Status:** founder decision, dated by the founder (2026-10-22). Drafted from the founder's auto-deploy brief. It takes effect when this record is merged. The Cloudflare token and the GitHub environment `production` (below) are set up before the merge, and the merge's own run is the first deploy through the workflow. Amends [CHG-004](CHG-004-public-soft-launch.md). Amended by [CHG-011](CHG-011-previews-need-approval.md), which makes preview deploys wait for approval too, because a Cloudflare Pages token can't be limited to one project.
 
 - **Date:** 2026-10-22
 - **Amends:** [CHG-004](CHG-004-public-soft-launch.md), in how its build reaches production. Since the launch the founder deployed it by hand with wrangler (`docs/INFRA-DOMAINS.md`, "Deploys").
