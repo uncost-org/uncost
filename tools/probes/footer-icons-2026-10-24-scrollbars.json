@@ -9,6 +9,7 @@
     {"name": "link-cols", "routes": ["/"], "selector": "footer.ft .ft-grid > .ft-col", "all": true, "box": true},
     {"name": "link-labels", "routes": ["/"], "selector": "footer.ft .ft-col h3, footer.ft .ft-col a", "all": true, "lines": true},
     {"name": "grid", "routes": ["/"], "selector": "footer.ft .ft-grid", "box": true, "props": ["grid-template-columns"]},
-    {"name": "contact-icons", "routes": ["/contact/"], "selector": ".cside .socrow a", "all": true, "box": true, "widths": [941, 1100, 1230, 1440]}
+    {"name": "contact-icons", "routes": ["/contact/"], "selector": ".cside .socrow a", "all": true, "box": true, "widths": [941, 1100, 1230, 1440]},
+    {"name": "footer-grid", "routes": ["/"], "selector": "footer.ft .ft-grid", "shot": true, "widths": [941, 1100, 1230]}
   ]
 }

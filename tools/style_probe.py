@@ -215,7 +215,10 @@ const IN_PAGE = (probe) => {
           const name = (route.replace(/^\//, "").replace(/\/$/, "").replace(/[\/.]/g, "_") || "index");
           const file = path.join(shots, `${name}__${probe.name}@${w}.png`);
           fs.mkdirSync(shots, { recursive: true });
-          await handle.screenshot({ path: file });
+          // With "scrollbars", capturing beyond the viewport would resize the
+          // page for the shot, drop the scrollbar and lay it out wider than
+          // what was just measured; the probed elements fit in the viewport.
+          await handle.screenshot({ path: file, captureBeyondViewport: !spec.scrollbars });
           row.shot = file;
         }
         results.push(row);
