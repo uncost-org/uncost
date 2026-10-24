@@ -1,0 +1,14 @@
+{
+  "widths": [360, 390, 414, 768, 899, 900, 910, 920, 930, 940, 941, 950, 960, 970, 980, 990, 1000, 1010, 1020, 1030, 1040, 1050, 1060, 1070, 1080, 1090, 1100, 1110, 1120, 1130, 1140, 1150, 1160, 1169, 1170, 1180, 1190, 1200, 1210, 1220, 1230, 1240, 1241, 1280, 1366, 1440, 1600, 1920],
+  "scrollbars": true,
+  "probes": [
+    {"name": "soc-row", "routes": ["/"], "selector": "footer.ft .ft-grid .soc", "box": true, "props": ["display", "flex-wrap", "column-gap", "row-gap", "grid-template-columns"]},
+    {"name": "icons", "routes": ["/"], "selector": "footer.ft .ft-grid .soc a", "all": true, "box": true, "props": ["width", "height", "border-top-width"]},
+    {"name": "glyphs", "routes": ["/"], "selector": "footer.ft .ft-grid .soc svg", "all": true, "box": true},
+    {"name": "first-col", "routes": ["/"], "selector": "footer.ft .ft-grid > div:first-child", "box": true},
+    {"name": "link-cols", "routes": ["/"], "selector": "footer.ft .ft-grid > .ft-col", "all": true, "box": true},
+    {"name": "link-labels", "routes": ["/"], "selector": "footer.ft .ft-col h3, footer.ft .ft-col a", "all": true, "lines": true},
+    {"name": "grid", "routes": ["/"], "selector": "footer.ft .ft-grid", "box": true, "props": ["grid-template-columns"]},
+    {"name": "contact-icons", "routes": ["/contact/"], "selector": ".cside .socrow a", "all": true, "box": true, "widths": [941, 1100, 1230, 1440]}
+  ]
+}

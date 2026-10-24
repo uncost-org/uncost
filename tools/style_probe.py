@@ -9,7 +9,9 @@ the measurements behind those claims come from here, driven by a spec file
 committed beside it (tools/probes/*.json).
 
 A spec (optional "height" sets the viewport height for every width; default
-1000):
+1000; optional "scrollbars": true keeps the classic scrollbars headless
+Chromium hides, so a page taller than the viewport lays out narrower than the
+window, as on Windows and Linux, while media queries still see the window):
 
     {"widths": [390, 1440], "height": 844,
      "probes": [
@@ -41,7 +43,8 @@ For each route x width x probe it records how many elements match and, for the
 first match (every match with "all": true), the requested computed properties,
 the border box (x, y, width, height) and, with "lines", the number of rendered
 line boxes of its text. Every row also carries the page's scrollWidth, so a
-horizontal scroll shows as scrollWidth > width.
+horizontal scroll shows as scrollWidth > width, and its clientWidth (the layout
+width: the window less any scrollbar).
 
 Checks — each an ERROR, never a skipped line (standing rule 1):
   - a selector that matches nothing, unless the probe says "expect_count": 0;
@@ -139,11 +142,12 @@ const IN_PAGE = (probe) => {
     return out;
   };
   return { count: els.length, items: (probe.all ? els : els.slice(0, 1)).map(read),
-           scrollWidth: document.documentElement.scrollWidth };
+           scrollWidth: document.documentElement.scrollWidth, clientWidth: document.documentElement.clientWidth };
 };
 
 (async () => {
-  const browser = await puppeteer.launch({ args: ["--no-sandbox", "--force-device-scale-factor=1"] });
+  const browser = await puppeteer.launch({ args: ["--no-sandbox", "--force-device-scale-factor=1"],
+    ignoreDefaultArgs: spec.scrollbars ? ["--hide-scrollbars"] : [] });
   const page = await browser.newPage();
   await page.setCacheEnabled(false);  // a cached revisit answers 304, which is not a load
   await page.emulateMediaFeatures([{ name: "prefers-reduced-motion", value: "reduce" }]);
@@ -370,6 +374,16 @@ def selftest(port: int) -> int:
         sp.write_text(json.dumps(spec), encoding="utf-8")
         rows = run(sp, tmp, port)
         errs = judge(spec, rows)
+        # The same tall page with and without "scrollbars".
+        (tmp / "tall.html").write_text("<!doctype html><html><body style='margin:0'>"
+                                       "<div class='tall' style='height:3000px'></div></body></html>", encoding="utf-8")
+        bars = {}
+        for shown in (False, True):
+            tall = {"widths": [400], "scrollbars": shown,
+                    "probes": [{"name": "tall", "routes": ["/tall.html"], "selector": ".tall", "box": True}]}
+            tp = tmp / f"tall-{int(shown)}.json"
+            tp.write_text(json.dumps(tall), encoding="utf-8")
+            bars[shown] = run(tp, tmp, port)[0]
         kinds = sorted((e["kind"], e["probe"]) for e in errs)
         wrap = next(r for r in rows if r["probe"] == "wrap")["items"][0]
         cases = [
@@ -397,6 +411,10 @@ def selftest(port: int) -> int:
              next(r for r in rows if r["probe"] == "ground")["items"][0]["ground"]["color"] == "rgb(10, 10, 10)"),
             ("optional accepts no match", not any(p == "maybe" for _, p in kinds)),
             ("a probe limited to other widths is not run", not any(p == "narrow-only" for _, p in kinds)),
+            ("scrollbars: hidden by default, so the layout width is the window's",
+             bars[False]["clientWidth"] == 400 and bars[False]["items"][0]["box"][2] == 400),
+            ("scrollbars: true takes the scrollbar out of the layout width",
+             bars[True]["clientWidth"] < 400 and bars[True]["items"][0]["box"][2] == bars[True]["clientWidth"]),
             ("lines set tighter than their glyphs still count apart",
              (lambda t: t["lines"] == round(t["box"][3] / 38.4))(next(r for r in rows if r["probe"] == "tight")["items"][0])),
         ]
