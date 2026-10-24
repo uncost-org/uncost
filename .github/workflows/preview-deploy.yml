@@ -1,4 +1,10 @@
 name: preview-deploy
+# Access-gated previews of pull requests (SECURITY.md, 2026-07-19), deployed to
+# the Cloudflare Pages project uncost-site-preview. That project shares its
+# account with production, and a Cloudflare Pages token can't be limited to one
+# project, so a preview deploy waits for the founder's approval like a
+# production one (CHG-011). Building and checking need no secrets and run
+# without a click; only the job in the `preview` environment reads the token.
 on:
   pull_request:
     # `labeled` so that adding the preview-contact-form label rebuilds the
@@ -6,17 +12,17 @@ on:
     types: [opened, synchronize, reopened, labeled]
 permissions:
   contents: read
+# A newer push cancels the run before it, including one waiting for approval.
 concurrency:
   group: preview-deploy-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 jobs:
-  preview:
-    # Same-repo branches only: fork PRs must never reach a job that can
-    # read the deploy token.
-    if: github.event.pull_request.head.repo.full_name == github.repository
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.12'
@@ -25,18 +31,6 @@ jobs:
           node-version-file: website/.nvmrc
           cache: npm
           cache-dependency-path: website/package-lock.json
-      - name: Check deploy configuration
-        id: config
-        env:
-          HAS_TOKEN: ${{ secrets.CF_PAGES_TOKEN != '' }}
-          HAS_ACCOUNT: ${{ secrets.CF_ACCOUNT_ID != '' }}
-        run: |
-          if [ "$HAS_TOKEN" = "true" ] && [ "$HAS_ACCOUNT" = "true" ]; then
-            echo "enabled=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "::notice::Preview deployment not configured — CF_PAGES_TOKEN and CF_ACCOUNT_ID secrets are absent. Building and auditing only."
-          fi
       - run: npm ci
         working-directory: website
       # Every preview builds with the defaults, except a PR carrying the
@@ -65,6 +59,58 @@ jobs:
       - run: python3 scripts/audit_website.py --built website/dist
         env:
           UNCOST_CONTACT_FORM_OPEN: ${{ contains(github.event.pull_request.labels.*.name, 'preview-contact-form') && 'on' || '' }}
+      # The checked build, noindex posture included, for the preview job:
+      # dist/ (include-hidden-files keeps .well-known/) and functions/.
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: preview-site
+          path: |
+            website/dist
+            website/functions
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 7
+
+  preview:
+    needs: build
+    # Same-repo branches only: fork PRs must never reach a job that can read
+    # the deploy token. Dependabot's runs get no secrets, so its PRs are built
+    # and checked but not deployed, as before.
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.pull_request.user.login != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    # The approval click: the job waits here until the founder approves it.
+    # The environment's secrets, CF_PREVIEW_TOKEN and CF_PREVIEW_ACCOUNT_ID,
+    # are the only ones this workflow reads.
+    environment: preview
+    steps:
+      - name: Check the environment's secrets
+        env:
+          HAS_TOKEN: ${{ secrets.CF_PREVIEW_TOKEN != '' }}
+          HAS_ACCOUNT: ${{ secrets.CF_PREVIEW_ACCOUNT_ID != '' }}
+        run: |
+          if [ "$HAS_TOKEN" != "true" ] || [ "$HAS_ACCOUNT" != "true" ]; then
+            echo "::error::The preview environment has no CF_PREVIEW_TOKEN or CF_PREVIEW_ACCOUNT_ID secret. Nothing was deployed."
+            exit 1
+          fi
+      # The same commit as the build. The checkout supplies website/package.json
+      # for wrangler-action and anything the functions import from outside
+      # website/functions/; dist/ and functions/ come from the checked build.
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: website/.nvmrc
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      # wrangler-action installs wrangler beside website's own packages.
+      - run: npm ci
+        working-directory: website
+      - run: rm -rf website/dist website/functions
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: preview-site
+          path: website
       # The preview's branch alias. wrangler-action does not run `command:`
       # through a shell, so a "$HEAD_REF" there reached wrangler as the literal
       # text and every PR shared one alias (head-ref). The branch name is
@@ -73,7 +119,6 @@ jobs:
       # letters, digits and hyphens, at most 28 characters. Only [a-z0-9-]
       # reaches the deploy command.
       - name: Preview branch alias
-        if: steps.config.outputs.enabled == 'true'
         id: branch
         env:
           HEAD_REF: ${{ github.head_ref }}
@@ -84,16 +129,14 @@ jobs:
           printf '%s' "$alias" | grep -Eq '^[a-z0-9]([a-z0-9-]*[a-z0-9])?$'
           echo "alias=$alias" >> "$GITHUB_OUTPUT"
       - name: Deploy preview
-        if: steps.config.outputs.enabled == 'true'
         id: deploy
         uses: cloudflare/wrangler-action@ebbaa1584979971c8614a24965b4405ff95890e0 # v4.0.0
         with:
-          apiToken: ${{ secrets.CF_PAGES_TOKEN }}
-          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CF_PREVIEW_TOKEN }}
+          accountId: ${{ secrets.CF_PREVIEW_ACCOUNT_ID }}
           workingDirectory: website
           command: pages deploy dist --project-name=uncost-site-preview --branch=${{ steps.branch.outputs.alias }}
       - name: Report preview URL
-        if: steps.config.outputs.enabled == 'true'
         env:
           DEPLOY_URL: ${{ steps.deploy.outputs.deployment-url }}
           ALIAS_URL: https://${{ steps.branch.outputs.alias }}.uncost-site-preview.pages.dev
