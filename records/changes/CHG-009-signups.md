@@ -4,7 +4,7 @@
 
 - **Date:** 2026-10-21
 - **Amends:** [CHG-007](CHG-007-rights-and-transfer-safeguard.md), whose §5 transfer safeguard names Cloudflare and Google only. It also partly closes UNP-73 question 4 ([CHG-006](CHG-006-privacy-notice-and-records.md), "Sign-up providers") and settles nothing else in CHG-006's open list.
-- **Changed claims:** none while sign-ups are off. With the build switch off, every page the site serves is byte-identical to the build before this change. Only `/js/ui.js` and `/css/integration.css` differ, and `/sitemap.xml` lists the same 55 URLs with /privacy/ in a different place (pages are ordered by file date). With the switch on, /privacy/ becomes version 0.4 (below) and the forms post to working handlers.
+- **Changed claims:** none while sign-ups are off. With the build switch off, every page the site serves is byte-identical to the build before this change. Only `/js/ui.js` and `/css/integration.css` differ; `/sitemap.xml` is unchanged (byte-identical). With the switch on, /privacy/ becomes version 0.4 (below) and the forms post to working handlers.
 - **Source:** the founder's sign-ups brief (2026-10-21). The governing spec is UNP-57 revision 5 (`d55be3b5`) and the UNP-63 build plan; where the brief is narrower, the brief wins, and what it leaves out is listed below. No AI decision; this file records what the founder set and what was built.
 - **Rationale:** have the backend for the two forms the site already shows built, tested on a preview and ready, so that opening them is a switch and a dated founder decision rather than a build.
 
@@ -222,7 +222,7 @@ The data inventory and the processor register stay private, as CHG-006 says. The
 
 ## Affected public surfaces
 
-- **With the switch off:** none. Every page is byte-identical; `/js/ui.js` and `/css/integration.css` change, `/sitemap.xml` reorders one entry, and `/api/signup/*` exists but answers 404.
+- **With the switch off:** none. Every page is byte-identical; `/js/ui.js` and `/css/integration.css` change, `/sitemap.xml` is unchanged (byte-identical), and `/api/signup/*` exists but answers 404.
 - **With it on:**
   - /pledge/ and /pledge/resent/;
   - the updates form in every page's footer, on / and on /join/;
