@@ -1,6 +1,6 @@
 # CHG-007 — Artwork licence, rights records, the PDF's metadata and the transfer safeguard (amends CHG-006)
 
-**Status:** founder decision, dated by the founder (2026-10-20). Drafted from the founder's rights follow-up brief. It takes effect for the site when this record is merged and the site is next deployed. Amends [CHG-006](CHG-006-privacy-notice-and-records.md). Amended by [CHG-008](CHG-008-icon-and-pdf-licences.md), which licenses the interface icons and the PDF.
+**Status:** founder decision, dated by the founder (2026-10-20). Drafted from the founder's rights follow-up brief. It takes effect for the site when this record is merged and the site is next deployed. Amends [CHG-006](CHG-006-privacy-notice-and-records.md). Amended by [CHG-008](CHG-008-icon-and-pdf-licences.md), which licenses the interface icons and the PDF. Amended by [CHG-009](CHG-009-signups.md), which builds the Pledge and email updates sign-ups, switched off, and partly closes UNP-73 question 4: §6's safeguard sentence still covers Cloudflare and Google only.
 
 - **Date:** 2026-10-20
 - **Amends:** [CHG-006](CHG-006-privacy-notice-and-records.md), whose rights gaps (PR #82) and UNP-73 question 1 this record settles.

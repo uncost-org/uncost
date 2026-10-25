@@ -121,12 +121,14 @@
     /* FAQ / policy disclosure groups use native <details> — no JS needed. */
 
     /* Forms: inert unless the build rendered them live. Hooks: [data-form="pledge"]
-       [data-form="updates"] [data-form="contact"]. Only the contact form can be
-       live today: features.contactFormOpen renders it with data-live and an
-       action (partials/forms/contact.njk). Every other form's submit stays
-       cancelled. The live contact form is sent with fetch to its same-origin
-       action and the outcome is written into its .cnote live region; with JS
-       off the browser posts it and the handler answers with a plain page. */
+       [data-form="updates"] [data-form="contact"]. A form is live only when its
+       switch rendered it with data-live and an action: features.contactFormOpen
+       for the contact form (partials/forms/contact.njk), features.formsOpen for
+       the pledge and updates sign-ups (partials/forms/pledge.njk, updates.njk;
+       CHG-009). Every other form's submit stays cancelled. A live form is sent
+       with fetch to its same-origin action and the outcome is written into its
+       live region; with JS off the browser posts it and the handler answers
+       with a plain page. */
     function contactResult(note, ok){
       note.textContent = '';
       if (ok) { note.textContent = 'Thank you — your message has been sent. We’ll reply by email.'; return; }
@@ -153,8 +155,39 @@
           });
       });
     }
+    /* Sign-ups: the answer is the same for a new, repeated or opted-out
+       address, so "check your inbox" is all a success can say. */
+    var SIGNUP_SENT = {
+      pledge: 'Check your inbox: we’ve sent you a link to confirm your signature. It works for 24 hours, and your signature counts once you open it and press Confirm.',
+      updates: 'Check your inbox: we’ve sent you a link to confirm. It works for 7 days, and we won’t email you anything else until you open it and press Confirm.'
+    };
+    function signupNote(f){
+      return f.querySelector('.err') || (f.parentNode && f.parentNode.querySelector('[data-updates-note]'));
+    }
+    function wireSignup(f){
+      var kind = f.getAttribute('data-form'), note = signupNote(f), btn = f.querySelector('button[type="submit"]');
+      f.addEventListener('submit', function(e){
+        e.preventDefault();
+        if (btn) btn.disabled = true;
+        if (note) note.textContent = 'Sending…';
+        fetch(f.getAttribute('action'), { method: 'POST', body: new FormData(f), headers: { 'Accept': 'application/json' } })
+          .then(function(r){ return r.status; })
+          .catch(function(){ return 0; })
+          .then(function(status){
+            var msg = status === 202 ? SIGNUP_SENT[kind]
+              : status === 400 ? 'That wasn’t accepted. Check your email address and the required boxes, then try again.'
+              : status === 404 ? 'Sign-ups are closed just now. Please try again later.'
+              : status === 429 ? 'Too many tries from here. Please wait a few minutes, then try again.'
+              : 'That didn’t go through. Please try again in a few minutes.';
+            if (note) note.textContent = msg;
+            if (status === 202) f.reset();
+            if (btn) btn.disabled = false;
+          });
+      });
+    }
     document.querySelectorAll('[data-form]').forEach(function(f){
       if (f.matches('form[data-form="contact"][data-live][action]')) { wireContact(f); return; }
+      if (f.matches('form[data-form="pledge"][data-live][action], form[data-form="updates"][data-live][action]')) { wireSignup(f); return; }
       f.addEventListener('submit', function(e){ e.preventDefault(); });
     });
   });
