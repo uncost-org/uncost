@@ -47,16 +47,11 @@ elif p.exists():
     p.write_text(s, encoding="utf-8")
     print(f"  + one state kept (h1 count {s.count('<h1>')}, switcher {'present' if 'class=\"switch\"' in s else 'removed'})")
 
-print("Outbound hosts — only the movement's reviewed profiles:")
-p = pathlib.Path("website/src/pledge/thanks.njk")
-if p.exists() and "facebook.com/sharer" not in p.read_text(encoding="utf-8"):
-    print("  = thanks page (already applied)")
-elif p.exists():
-    s = p.read_text(encoding="utf-8")
-    s = re.sub(r'<a href="https://www\.facebook\.com/sharer[^"]*"[^>]*>.*?</a>\s*', "", s, flags=re.S)
-    s = s.replace("https://www.threads.net/", "https://threads.net/")
-    p.write_text(s, encoding="utf-8")
-    print("  + thanks: facebook share dropped, threads canonicalised")
+# Outbound hosts — the /pledge/thanks/ patch that stood here dropped the
+# export's Facebook share and canonicalised its Threads link. It is superseded
+# on 2026-10-25 by SB-1 below, which restates the whole share row (Facebook
+# included, Threads gone); left in, a re-run would strip SB-1's Facebook link.
+# History: CANVAS-SYNC 189.
 
 print("Heading levels — the export skips a level in these three places:")
 for f in ("website/src/about.njk", "website/src/roadmap.njk", "website/src/policies/index.njk"):
@@ -1509,5 +1504,50 @@ literal(PRIVACY, '(CHG-007).</td></tr>',
 literal("website/src/pledge/check-email.njk", "Click it to count your signature.",
         ON + "Open it and press Confirm to count your signature." + ELSE + "Click it to count your signature." + END,
         "SU-1 pledge check-email: open the link and press Confirm while forms are open")
+
+# ---------------------------------------------------------------------------
+# Share buttons 2026-10-25 (founder brief, 2026-10-24). Re-derived template
+# only: pledge/thanks.njk (gen_static_pages.py). social-icons.njk, ui.js,
+# integration.css (item 148) and scripts/audit_website.py are repo-owned.
+# ---------------------------------------------------------------------------
+print("Share buttons 2026-10-25:")
+
+# SB-1 — /pledge/thanks/ "Now make it count double.": the export's row (Share
+# on X, Threads, Facebook, email, with hand-drawn outline icons) becomes Copy
+# link, Facebook, X, Bluesky, LinkedIn and Email with the brand glyphs, plus a
+# Share… button for the phone's own share sheet. The share text and URL are
+# the export's. Both buttons ship hidden; ui.js shows them. The h2, the .sub
+# line and the .share / .srow structure are the export's. Replaces the whole
+# row, so it reproduces from the export or from main before 2026-10-25.
+SHARE_TEXT = "Living%20should%20not%20have%20a%20price%20tag.%20I%20signed%20the%20Uncost%20Pledge."
+SHARE_URL = "https%3A%2F%2Funcost.org%2Fpledge"
+SHARE_ROW = (
+    '  {#- Share row (founder, 2026-10-24; CANVAS-SYNC 189). Wider than 600px:\n'
+    '      Copy link, Facebook, X, Bluesky, LinkedIn, Email. 600px and below, where\n'
+    '      the browser has a share sheet: Share… on top, then Copy link and Email.\n'
+    '      Both buttons ship hidden; ui.js shows each only where the browser can do\n'
+    '      it, so with JS off the links are all there is. -#}\n'
+    '  {%- import "partials/social-icons.njk" as socialIcon %}\n'
+    '  <div class="srow">\n'
+    '    <button type="button" class="share-native" hidden><svg viewBox="0 0 24 24" aria-hidden="true">'
+    '<path d="M9 9H5v12h14V9h-4"></path><path d="M12 15V3"></path><path d="M8 7l4-4 4 4"></path></svg>Share…</button>\n'
+    '    <button type="button" class="share-copy" hidden><svg viewBox="0 0 24 24" aria-hidden="true">'
+    '<rect x="2.5" y="12" width="13" height="6" rx="3" transform="rotate(-45 9 15)"></rect>'
+    '<rect x="8.5" y="6" width="13" height="6" rx="3" transform="rotate(-45 15 9)"></rect></svg>Copy link</button>\n'
+    + "".join(f'    <a class="share-platform" href="{href}" target="_blank" rel="noopener" aria-label="Share on {name}">'
+              f'{{{{ socialIcon.glyph("{name}") }}}}{name}</a>\n'
+              for name, href in (
+                  ("Facebook", f"https://www.facebook.com/sharer/sharer.php?u={SHARE_URL}"),
+                  ("X", f"https://x.com/intent/tweet?text={SHARE_TEXT}&url={SHARE_URL}"),
+                  ("Bluesky", f"https://bsky.app/intent/compose?text={SHARE_TEXT}%20{SHARE_URL}"),
+                  ("LinkedIn", f"https://www.linkedin.com/sharing/share-offsite/?url={SHARE_URL}")))
+    + '    <a href="mailto:?subject=I%20signed%20the%20Uncost%20Pledge&body=Living%20should%20not%20have%20a%20price'
+      '%20tag.%20Add%20your%20name%3A%20https%3A%2F%2Funcost.org%2Fpledge" aria-label="Share by email">'
+      '{{ socialIcon.glyph("Email") }}Email</a>\n'
+    '  </div>\n'
+    '  <span class="share-status" role="status" aria-live="polite"></span>\n')
+patch("website/src/pledge/thanks.njk", r'  <div class="srow">\n.*?\n  </div>\n', SHARE_ROW.replace("\\", "\\\\"),
+      "SB-1 pledge/thanks share row: Copy link, Facebook, X, Bluesky, LinkedIn, Email, Share…",
+      guard='<button type="button" class="share-copy" hidden>')
 
 print("done")

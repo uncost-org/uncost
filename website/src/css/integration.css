@@ -3191,3 +3191,47 @@ main [data-updates-form] .ft-form button:hover { background: var(--coral); color
 @media (min-width: 1170px) and (max-width: 1240px) {
   .ft-grid .soc { display: flex; flex-wrap: nowrap; gap: 6px; }
 }
+
+/* 148. Share buttons on /pledge/thanks/ (founder, 2026-10-24; CANVAS-SYNC
+ *      189). The row SB-1 (tools/post_patch_pages.py) writes: Copy link,
+ *      Facebook, X, Bluesky, LinkedIn, Email, and Share… for a phone's own
+ *      share sheet. The export's box stays: 2px ink border, cream ground, ink
+ *      on hover, 18px icons.
+ *      (a) The two buttons take the links' box, with the button defaults
+ *          reset. `hidden` is (0,1,0) and would lose to their display, so the
+ *          hidden state is restated, more specific.
+ *      (b) The brand glyphs are filled marks, so they drop the export's
+ *          stroke-only svg rule. The two UI icons, Copy link's chain and
+ *          Share…'s box and arrow, keep it.
+ *      (c) Each layout leads with one filled ink button, the hover state at
+ *          rest: Copy link wider than 600px, Share… at 600px and below.
+ *      (d) Wider than 600px the six take 695px with 8px between them, which
+ *          the export's 712px row holds (with its 12px they needed 715px, and
+ *          Email wrapped at 1440 and 768). Below 744px they wrap.
+ *          Share… is for phones only. At 600px and below the row is two
+ *          columns. Where ui.js has shown Share… (the browser has
+ *          navigator.share), it spans both and the four platform links go,
+ *          since the share sheet covers them: Copy link and Email sit side by
+ *          side under it.
+ *      (e) The "Link copied" line sits in the band's bottom padding, so
+ *          showing it moves nothing. */
+body[data-page="pledge-thanks"] .srow button { display: inline-flex; align-items: center; gap: 9px; margin: 0; border: 2px solid var(--ink); background: var(--cream); padding: 11px 18px; font: inherit; font-family: var(--font-display); font-weight: 700; font-size: 15px; letter-spacing: inherit; color: var(--ink); cursor: pointer; }
+body[data-page="pledge-thanks"] .srow button:hover { background: var(--ink); color: var(--cream); }
+body[data-page="pledge-thanks"] .srow > [hidden] { display: none; }
+body[data-page="pledge-thanks"] .srow a svg { fill: currentColor; stroke: none; }
+body[data-page="pledge-thanks"] .srow button svg { stroke-linecap: round; stroke-linejoin: round; }
+body[data-page="pledge-thanks"] .srow > .share-copy { background: var(--ink); color: var(--cream); }
+body[data-page="pledge-thanks"] .share { position: relative; }
+body[data-page="pledge-thanks"] .share-status { position: absolute; left: 0; right: 0; bottom: 6px; text-align: center; font-size: 14px; line-height: 20px; color: var(--fg-2); }
+@media (min-width: 601px) {
+  body[data-page="pledge-thanks"] .srow { column-gap: 8px; }
+  body[data-page="pledge-thanks"] .srow > .share-native { display: none; }
+}
+@media (max-width: 600px) {
+  body[data-page="pledge-thanks"] .srow { display: grid; grid-template-columns: 1fr 1fr; }
+  body[data-page="pledge-thanks"] .srow > * { justify-content: center; }
+  body[data-page="pledge-thanks"] .srow > .share-native { grid-column: 1 / -1; background: var(--ink); color: var(--cream); }
+  body[data-page="pledge-thanks"] .srow:has(> .share-native:not([hidden])) > .share-platform { display: none; }
+  body[data-page="pledge-thanks"] .srow:has(> .share-native:not([hidden])) > .share-copy { background: var(--cream); color: var(--ink); }
+  body[data-page="pledge-thanks"] .srow:has(> .share-native:not([hidden])) > .share-copy:hover { background: var(--ink); color: var(--cream); }
+}

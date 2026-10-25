@@ -139,6 +139,10 @@ ALLOWED_NAV_HOSTS = {
     "youtube.com",
     "www.reddit.com",  # the subreddit, www.reddit.com/r/Uncost_org/ (2026-10-18)
     "tiktok.com",
+    # Share intents on /pledge/thanks/ only (founder, 2026-10-24). Uncost has
+    # no account on either, so neither is in chrome.json social[].
+    "www.facebook.com",
+    "www.linkedin.com",
     # /privacy/ §2 links Cloudflare's own Web Analytics privacy page, as the
     # founder asked (contact-form batch, 2026-10-19; CHG-005).
     "www.cloudflare.com",
