@@ -1,0 +1,10 @@
+{
+  "widths": [1169, 1170, 1200, 1236, 1237, 1238, 1239, 1240, 1241, 1242, 1243, 1244, 1245, 1246, 1247, 1248, 1249, 1250, 1251, 1252, 1280, 1440],
+  "probes": [
+    {"name": "soc-row", "routes": ["/"], "selector": "footer.ft .ft-grid .soc", "box": true, "props": ["display", "flex-wrap", "column-gap", "row-gap", "grid-template-columns"]},
+    {"name": "icons", "routes": ["/"], "selector": "footer.ft .ft-grid .soc a", "all": true, "box": true, "props": ["width", "height", "border-top-width"]},
+    {"name": "first-col", "routes": ["/"], "selector": "footer.ft .ft-grid > div:first-child", "box": true},
+    {"name": "link-cols", "routes": ["/"], "selector": "footer.ft .ft-grid > .ft-col", "all": true, "box": true},
+    {"name": "link-labels", "routes": ["/"], "selector": "footer.ft .ft-col h3, footer.ft .ft-col a", "all": true, "lines": true}
+  ]
+}

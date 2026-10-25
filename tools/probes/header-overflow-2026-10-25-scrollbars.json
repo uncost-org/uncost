@@ -1,0 +1,18 @@
+{
+  "widths": [360, 390, 414, 768, 900, 920, 930, 932, 934, 936, 938, 940, 941, 942, 944, 945, 946, 948, 950, 952, 954, 956, 958, 960, 962, 964, 965, 966, 968, 970, 972, 974, 976, 978, 980, 982, 984, 986, 988, 990, 992, 1000, 1010, 1015, 1016, 1024, 1100, 1126, 1127, 1200, 1240, 1280, 1366, 1440, 1600, 1920],
+  "scrollbars": true,
+  "probes": [
+    {"name": "hd", "routes": ["/", "/movement/", "/faq/", "/contact/"], "selector": "header.hd", "box": true},
+    {"name": "hd-main", "routes": ["/", "/movement/", "/faq/", "/contact/"], "selector": ".hd-main", "box": true, "props": ["grid-template-columns", "column-gap", "padding-left", "padding-right"]},
+    {"name": "brand", "routes": ["/", "/movement/", "/faq/", "/contact/"], "selector": ".hd-main .brand", "box": true},
+    {"name": "nav", "routes": ["/", "/movement/", "/faq/", "/contact/"], "selector": ".hd-nav", "box": true, "props": ["column-gap", "display"]},
+    {"name": "nav-links", "routes": ["/", "/movement/", "/faq/", "/contact/"], "selector": ".hd-nav .hd-item > a", "all": true, "box": true, "lines": true, "props": ["padding-left", "padding-right"]},
+    {"name": "actions", "routes": ["/", "/movement/", "/faq/", "/contact/"], "selector": ".hd-actions", "box": true, "props": ["column-gap"]},
+    {"name": "quick", "routes": ["/", "/movement/", "/faq/", "/contact/"], "selector": ".hd-quick", "box": true, "props": ["column-gap", "margin-right", "display"]},
+    {"name": "quick-links", "routes": ["/", "/movement/", "/faq/", "/contact/"], "selector": ".hd-quick a", "all": true, "box": true, "lines": true, "props": ["padding-left", "padding-right"]},
+    {"name": "search", "routes": ["/", "/movement/", "/faq/", "/contact/"], "selector": ".hd-actions .hd-search", "box": true},
+    {"name": "cta", "routes": ["/", "/movement/", "/faq/", "/contact/"], "selector": ".hd .cta-btn", "box": true, "lines": true, "props": ["padding-top", "padding-bottom", "padding-left", "padding-right", "font-family", "font-size", "font-weight", "letter-spacing", "color", "background-color", "border-top-width", "display"]},
+    {"name": "burger", "routes": ["/", "/movement/", "/faq/", "/contact/"], "selector": ".hd-burger", "box": true, "props": ["display"]},
+    {"name": "header-shot", "routes": ["/"], "selector": ".hd-main", "shot": true, "widths": [945, 965]}
+  ]
+}
