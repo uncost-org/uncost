@@ -231,22 +231,13 @@ module.exports = function (eleventyConfig) {
 
     // The register is the other direction of the same rule: "reported" is not
     // a confidence value, so it must never appear in that column.
+    // The file is parsed as CSV (register.js's parser), never split on commas:
+    // quoted cells hold commas, and a comma split read the wrong cell.
     const csv = path.resolve(__dirname, "..", "sources", "register.csv");
     if (fs.existsSync(csv)) {
-      const [head, ...rows] = fs.readFileSync(csv, "utf8").trim().split(/\r?\n/);
-      const col = head.split(",").indexOf("confidence");
-      if (col !== -1) {
-        rows.forEach((line, i) => {
-          // Confidence is a bare enum value, so a naive split is enough to spot
-          // it without pulling in a CSV parser; quoted prose fields cannot
-          // produce the exact token "reported" in this position by accident.
-          // The `sector` column (round 2, 2026-10-11) is appended LAST, so the
-          // header still names `confidence` at the same index.
-          const cells = line.split(",");
-          if ((cells[col] || "").trim().toLowerCase() === "reported") {
-            leaks.push(`sources/register.csv row ${i + 2}: confidence="reported" — Reported is a /news/ label, not a confidence value.`);
-          }
-        });
+      const { reportedConfidenceRows } = require("./src/_data/register.js");
+      for (const line of reportedConfidenceRows(fs.readFileSync(csv, "utf8"))) {
+        leaks.push(`sources/register.csv row ${line}: confidence="reported" — Reported is a /news/ label, not a confidence value.`);
       }
     }
 

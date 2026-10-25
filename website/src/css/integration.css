@@ -3168,3 +3168,26 @@ main [data-updates-form] .ft-form input[type=email] { background: var(--cream); 
 main [data-updates-form] .ft-form input[type=email]::placeholder { color: #6B675E; }
 main [data-updates-form] .ft-form button { background: #0A0A0A; color: var(--cream); border-color: #0A0A0A; }
 main [data-updates-form] .ft-form button:hover { background: var(--coral); color: var(--ink-on-coral); border-color: var(--ink-on-coral); }
+
+/* 147. Footer social icons (founder, 2026-10-24) — no ragged icon row. Row
+ *      174 left this open: from 941px to about 1230px the export's five-column
+ *      footer gives the first column 180–255px, and six 34px icons with the
+ *      export's 10px gap need 254px, so the row wrapped 4 + 2 (941–1050) or
+ *      5 + 1 (1060–1220). The founder chose one row with a tighter gap. Six
+ *      icons with 6px gaps need 234px, which the column has only from about
+ *      1150px (1166px with a 15px scrollbar). Below that `nowrap` made the grid
+ *      widen the column to 234px, the link columns narrowed, and another link
+ *      label wrapped at 960–1000, 1090–1100 and 1140px. So, founder's choice:
+ *      (a) 941–1169px: two full rows of three, 8px gaps (118px wide);
+ *      (b) 1170–1240px: one row, 6px gaps.
+ *      At 940px and below the footer is two columns and the row already fits;
+ *      above 1240px it fits with the export's 10px. The icon boxes (34px, 2px
+ *      border), the glyphs and so the tap targets are unchanged: only the
+ *      row's layout and gap. Measured every 10px from 900 to 1240, with and
+ *      without a scrollbar: tools/probes/footer-icons-2026-10-24*.json. */
+@media (min-width: 941px) and (max-width: 1169px) {
+  .ft-grid .soc { display: grid; grid-template-columns: repeat(3, max-content); gap: 8px; }
+}
+@media (min-width: 1170px) and (max-width: 1240px) {
+  .ft-grid .soc { display: flex; flex-wrap: nowrap; gap: 6px; }
+}

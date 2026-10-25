@@ -46,8 +46,13 @@ function parseCsv(text) {
   return rows;
 }
 
-module.exports = function () {
-  const text = fs.readFileSync(CSV_PATH, "utf8");
+// `checked_by` (the Friday review's attribution schema, 2026-10-24): blank, or
+// exactly what an approved Friday review card writes when Matt approves the
+// row. Fractional seconds are allowed. The value contains a comma, so it is
+// always a quoted CSV cell.
+const CHECKED_BY_RE = /^agent-checked, human-approved: Matt \d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,9})?Z$/;
+
+function load(text) {
   const table = parseCsv(text).filter((r) => r.length > 1 || (r.length === 1 && r[0] !== ""));
   const header = table[0];
   const all = table.slice(1).map((cells) => {
@@ -91,6 +96,22 @@ module.exports = function () {
       );
     }
     row.sectorName = sector.name;
+  }
+
+  // `checked_by` is appended after `sector`, so no column moves. Blank means the
+  // row has not been approved through the Friday review; every legacy row is
+  // blank, and nothing back-fills it. The column is required, and any other
+  // value fails the build. Nothing renders it yet: it is data only.
+  if (!header.includes("checked_by")) {
+    throw new Error("register: sources/register.csv has no `checked_by` column (attribution schema)");
+  }
+  for (const row of all) {
+    if (row.checked_by !== "" && !CHECKED_BY_RE.test(row.checked_by)) {
+      throw new Error(
+        `register: ${row.source_id} checked_by "${row.checked_by}" is neither blank nor ` +
+        `"agent-checked, human-approved: Matt <UTC timestamp>" (e.g. 2026-10-31T02:14:07Z)`
+      );
+    }
   }
 
   const byId = {};
@@ -294,4 +315,24 @@ module.exports = function () {
     // V4 — see the needs-refresh block above.
     refreshAsOf, needsRefresh, undefinedCadence, uncheckable,
   };
+}
+
+// The register rows whose confidence is "reported", for the news-label guard in
+// eleventy.config.js. It parses the file as CSV and finds the column by name:
+// a plain comma split misread the column wherever an earlier cell held a
+// quoted comma (13 of 28 rows at the time), and every checked_by value holds one.
+function reportedConfidenceRows(text) {
+  const table = parseCsv(text).filter((r) => r.length > 1 || (r.length === 1 && r[0] !== ""));
+  const col = (table[0] || []).indexOf("confidence");
+  if (col === -1) return [];
+  return table.slice(1)
+    .map((cells, i) => ({ line: i + 2, value: (cells[col] || "").trim().toLowerCase() }))
+    .filter((r) => r.value === "reported")
+    .map((r) => r.line);
+}
+
+module.exports = function () {
+  return load(fs.readFileSync(CSV_PATH, "utf8"));
 };
+// For eleventy.config.js and tools/register_check.py.
+Object.assign(module.exports, { CSV_PATH, CHECKED_BY_RE, parseCsv, load, reportedConfidenceRows });
