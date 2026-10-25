@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BAD — header row that only breaks in a 30px band</title>
+<link rel="stylesheet" href="./base.css">
+<style>
+  /* The defect class found on 2026-10-25: a 1fr auto 1fr header grid whose
+     outer tracks cannot shrink below their nowrap content. Below 941px the
+     wide row is swapped for a short one (as the site swaps its nav for a menu
+     button); from 941px it needs 972px. So it overflows for every width in
+     941..971 and for none of the eighteen widths the sweep sampled before
+     (900 and 1024 straddle the band). */
+  .hd { display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; padding: 0 28px; }
+  .hd > div { white-space: nowrap; background: #efe9dd; }
+  .hd .l { width: 200px; } .hd .m { width: 400px; } .hd .r { width: 276px; }
+  @media (max-width: 940px) { .hd .m, .hd .r { display: none; } }
+</style>
+</head><body>
+<div class="hd"><div class="l">Brand</div><div class="m">Nav</div><div class="r">Actions</div></div>
+<div class="wrap"><h1>Narrow-band header</h1></div>
+</body></html>
