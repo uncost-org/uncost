@@ -1,6 +1,8 @@
 /* Uncost — UI behaviour only. All markup lives in partials/ as real HTML.
    Progressive enhancement: every link works with JS disabled. This file makes no
-   third-party request: its only fetch is the contact form's same-origin /api/contact. */
+   third-party request: its only fetches are the live forms' same-origin /api/
+   actions, and the /pledge/thanks/ share buttons use the browser's own clipboard
+   and share sheet. */
 (function () {
   function ready(fn){ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn); else fn(); }
   ready(function () {
@@ -190,5 +192,40 @@
       if (f.matches('form[data-form="pledge"][data-live][action], form[data-form="updates"][data-live][action]')) { wireSignup(f); return; }
       f.addEventListener('submit', function(e){ e.preventDefault(); });
     });
+
+    /* Share row on /pledge/thanks/ (founder, 2026-10-24; CANVAS-SYNC 189).
+       Both buttons ship hidden, and each is shown only where the browser can
+       do what it says: Copy link where it has the async clipboard, Share…
+       where it has a share sheet (integration.css item 148 shows Share… at
+       600px and below only). Neither makes a request. A failed copy keeps its
+       message, which carries the link; "Link copied" clears after 2 seconds. */
+    var shareEl = document.querySelector('.share');
+    if (shareEl) {
+      var SHARE_URL = 'https://uncost.org/pledge';
+      var SHARE_TEXT = 'Living should not have a price tag. I signed the Uncost Pledge.';
+      var copyBtn = shareEl.querySelector('.share-copy'), nativeBtn = shareEl.querySelector('.share-native');
+      var shareStatus = shareEl.querySelector('.share-status'), shareTimer = null;
+      var shareSay = function(msg, clears){
+        if (!shareStatus) return;
+        clearTimeout(shareTimer);
+        shareStatus.textContent = msg;
+        if (clears) shareTimer = setTimeout(function(){ shareStatus.textContent = ''; }, 2000);
+      };
+      if (copyBtn && navigator.clipboard && navigator.clipboard.writeText) {
+        copyBtn.hidden = false;
+        copyBtn.addEventListener('click', function(){
+          navigator.clipboard.writeText(SHARE_URL).then(
+            function(){ shareSay('Link copied', true); },
+            function(){ shareSay('Copy failed. The link is uncost.org/pledge', false); });
+        });
+      }
+      if (nativeBtn && navigator.share) {
+        nativeBtn.hidden = false;
+        nativeBtn.addEventListener('click', function(){
+          navigator.share({ title: 'The Uncost Pledge', text: SHARE_TEXT, url: SHARE_URL })
+            .catch(function(err){ if (!err || err.name !== 'AbortError') shareSay('Sharing failed. The link is uncost.org/pledge', false); });
+        });
+      }
+    }
   });
 })();

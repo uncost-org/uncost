@@ -300,7 +300,13 @@ SECTION_EXEMPTIONS = [
      "same wrap point. CANVAS-SYNC item 95."),
     ("pledge-thanks", "Share",
      "F1: \"Now make it count double.\" heads its own band and takes the one "
-     "section-headline scale (was 22px). F2 aligns its body. CANVAS-SYNC item 95."),
+     "section-headline scale (was 22px). F2 aligns its body. CANVAS-SYNC item 95. "
+     "Share buttons (founder, 2026-10-24): the row is Copy link, Facebook, X, "
+     "Bluesky, LinkedIn and Email with filled brand glyphs and Copy link in "
+     "filled ink, not the export's outline-icon Share on X / Threads / Facebook "
+     "/ email buttons, with 8px between them. At 600px and below it is two "
+     "columns, and where the browser has a share sheet a full-width Share… "
+     "leads, with only Copy link and Email under it. CANVAS-SYNC item 189."),
     ("contact", "Contact",
      "formsOpen is false (CHECKLIST H: no page may ship a live form), so the "
      "export's Name/Email/Phone/Message form is replaced by the forms-closed "
