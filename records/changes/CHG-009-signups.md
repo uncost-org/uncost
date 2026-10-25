@@ -146,7 +146,15 @@ From committed scripts, 2026-10-21:
 
 The pull request lists the results.
 
-## Setup, in order (founder; nothing here was done by Claude Code)
+## Setup, in order (Claude Code: D1, migrations, keys, Worker deploy, preview deploys; Matt: AWS and the dashboards)
+
+**Done by Claude Code (2026-10-22 to 25), with Matt's Uncost logins:**
+- Cloudflare 1: the D1 database and its migrations.
+- Cloudflare 2: the keys `HMAC_KEY_V1` and `ENC_KEY`, which went straight into the Worker's secrets and the macOS Keychain.
+- Cloudflare 3: the Worker deploys, with `MAIL_POSTAL_ADDRESS` set at the first.
+- The preview deploys to `signups-test`.
+
+**Done by Matt:** every AWS step, the AWS keys, `SNS_TOPIC_ARN`, and the dashboard steps.
 
 **Cloudflare**
 1. Create the D1 database `uncost-signups`, location hint `enam`. Put its id in `wrangler.toml`, then apply the migrations: `npx wrangler d1 migrations apply uncost-signups --remote`.
@@ -186,6 +194,25 @@ The pull request lists the results.
 - Build with `UNCOST_FORMS_OPEN=on` and deploy.
 - Record the deploy in `docs/INFRA-DOMAINS.md`.
 - Settle the AWS transfer safeguard, the age and the retention rule first.
+
+## Preview test, 24–25 Oct 2026
+
+**Result.** All nine steps pass on `signups-test` (deployment `10694443`, this PR at `f4bc641`), against the Worker `uncost-signups` version `1c25c314` (uncost-api `02bb775`).
+- The bounce and the complaint each became a suppression row 2–3 seconds after the sign-up, through SNS.
+- Step 10's retention job logged its daily row on 23, 24 and 25 Oct.
+
+**Three fixes the test found:**
+1. **Why a send failed is now logged.** SES answered 403, and the log said only "ses HTTP 403". The Worker now logs SES's error type and message, with addresses masked (uncost-api `10065b3`).
+2. **No per-message tracking override.** It needed a second IAM action, `ses:ApplyTrackingConfigurationOverrides`. Tracking is off in the configuration set instead, and IAM stays `ses:SendEmail`-only (uncost-api `02bb775`).
+3. **The confirm pages send `Referrer-Policy: same-origin`.** That applies to the confirm, unsubscribe and delete pages (`f4bc641`). With `no-referrer`, browsers posted `Origin: null`, the same-origin check refused it, and every Confirm press landed on "link expired".
+
+**IAM changes (Matt):**
+- `ses:FromAddress` is StringLike `confirm@uncost.org` or `*<confirm@uncost.org>`, since the From header carries the display name.
+- In the SES sandbox the recipient's identity is checked too. So the Resource is `identity/*` for now, with From still limited by the condition, and the second test address is verified in SES. This replaces AWS step 2's per-identity list.
+
+**Follow-ups:**
+- Narrow `identity/*` back to `identity/uncost.org` once SES leaves the sandbox.
+- Recreate the D1 database before production. It holds the test rows and their suppression rows.
 
 ## Private records (outside this repository)
 
