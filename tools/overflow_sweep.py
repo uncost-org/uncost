@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Horizontal-overflow sweep: every built route, at eighteen widths.
+"""Horizontal-overflow sweep: every built route, at forty-nine widths.
 
-WHY EIGHTEEN AND NOT THREE
---------------------------
+WHY FORTY-NINE AND NOT THREE
+----------------------------
 This repository shipped a real horizontal-overflow defect while a render gate
 was already sampling 1440 / 1290 / 390. A `.sgrid` grid had its column count
 pinned by media-query bands, so the right-hand column was pushed off the page
@@ -16,6 +16,13 @@ samples INSIDE each of those three known-bad bands:
     461-523   -> 480, 500
     681-784   -> 700, 768
     1041-1304 -> 1100, 1200, 1290
+
+A fourth band was found on 2026-10-25, again between two samples (900 and
+1024): from 941px, where the header shows its full nav, its row was wider
+than the window up to 971px, by up to 31px (up to 986px, by up to 46px,
+behind a 15px scrollbar). So the list also carries every 2px from 930 to 990:
+
+    941-986   -> 930, 932, ... 990
 
 WHAT COUNTS AS OVERFLOW
 -----------------------
@@ -59,10 +66,12 @@ USAGE
 Prints JSON. Exit 0 when ok, exit 1 on any overflow or error.
 
 The selftest runs ONLY against tools/fixtures/overflow/ -- never against
-website/dist or any tracked source -- and asserts that four adversarial
+website/dist or any tracked source -- and asserts that five adversarial
 fixtures are caught, three good fixtures are not, a missing page is reported
-as an error, and that the mid-band grid fixture is invisible to a sparse
-390/1440 width list. That last case is the point of the whole file.
+as an error, that the mid-band grid fixture is invisible to a sparse
+390/1440 width list, and that the narrow-band header fixture is invisible to
+the eighteen widths this sweep used before 2026-10-25. Those last cases are
+the point of the whole file.
 """
 
 import argparse
@@ -84,17 +93,23 @@ WEBSITE = ROOT / "website"
 PORT = 8850
 TOLERANCE_PX = 1.0
 
-# Dense across 360..1600, with samples inside all three historically broken
-# bands. Eighteen widths; see the module docstring for why each cluster exists.
+# Dense across 360..1600, with samples inside all four historically broken
+# bands. Forty-nine widths; see the module docstring for why each cluster exists.
 WIDTHS = [
     360, 390, 414,        # small phones
     480, 500,             # inside the 461-523 two-column band
     600,
     700, 768,             # inside the 681-784 three-column band
-    800, 900, 1024,
+    800, 900,
+    *range(930, 991, 2),  # every 2px across the 941-986 header band
+    1024,
     1100, 1200, 1290,     # inside the 1041-1304 five-column band
     1366, 1440, 1536, 1600,
 ]
+# The list before 2026-10-25, kept as the selftest's control: the header band
+# fixture must be invisible to it, or catching it proves nothing.
+WIDTHS_BEFORE_HEADER_BAND = [360, 390, 414, 480, 500, 600, 700, 768, 800, 900,
+                             1024, 1100, 1200, 1290, 1366, 1440, 1536, 1600]
 
 # How many named offenders to report per (route, width). The count of unclipped
 # offenders is always reported in full; only the detail list is capped.
@@ -511,7 +526,8 @@ def sweep(built: pathlib.Path, routes=None, widths=None) -> dict:
 # --------------------------------------------------------------- selftest --
 
 BAD = ["bad-fixed-width.html", "bad-mid-band-grid.html",
-       "bad-long-string.html", "bad-offset-right.html"]
+       "bad-long-string.html", "bad-offset-right.html",
+       "bad-narrow-band-header.html"]
 GOOD = ["good-simple.html", "good-tall.html", "good-scroll-container.html"]
 MISSING = "does-not-exist.html"
 
@@ -539,6 +555,10 @@ def selftest() -> dict:
             # The control: the exact width list that let the shipped defect
             # through. The mid-band grid fixture must be INVISIBLE here.
             {"id": "sparse", "routes": ["/bad-mid-band-grid.html"], "widths": [390, 1440]},
+            # The same control for the header band: the eighteen widths swept
+            # before 2026-10-25 straddle it (900, 1024) and must miss it.
+            {"id": "before", "routes": ["/bad-narrow-band-header.html"],
+             "widths": WIDTHS_BEFORE_HEADER_BAND},
         ])
     except Exception as e:
         return {"ok": False, "selftest_cases": 0,
@@ -549,26 +569,27 @@ def selftest() -> dict:
 
     dense = decorate(results["dense"])
     sparse = decorate(results["sparse"])
+    before = decorate(results["before"])
 
     def widths_hit(entries, route, kind="overflow"):
         return sorted(e["width"] for e in entries
                       if e.get("route") == route and e.get("type") == kind)
 
-    # 1-4: every adversarial fixture must be caught by the dense list.
+    # 1-5: every adversarial fixture must be caught by the dense list.
     for name in BAD:
         cases += 1
         hit = widths_hit(dense["entries"], "/" + name)
         if not hit:
             failures.append(f"{name}: deliberately broken but the sweep reported no overflow")
 
-    # 5: a page that will not load is an error, not a quiet pass.
+    # 6: a page that will not load is an error, not a quiet pass.
     cases += 1
     load_errs = [e for e in dense["entries"]
                  if e.get("route") == "/" + MISSING and e.get("type") == "load"]
     if not load_errs:
         failures.append(f"{MISSING}: a route that cannot load must be reported as an error")
 
-    # 6-8: the good fixtures must be clean, with no errors of any kind.
+    # 7-9: the good fixtures must be clean, with no errors of any kind.
     for name in GOOD:
         cases += 1
         noise = [e for e in dense["entries"] if e.get("route") == "/" + name]
@@ -576,7 +597,7 @@ def selftest() -> dict:
             failures.append(f"{name}: expected clean, got {len(noise)} finding(s): "
                             + "; ".join(n["message"] for n in noise[:3]))
 
-    # 9: THE case. The mid-band grid must pass a 390/1440 sweep. If it does not,
+    # 10: THE case. The mid-band grid must pass a 390/1440 sweep. If it does not,
     # the fixture is not actually band-limited and case 2 proves nothing.
     cases += 1
     if sparse["overflow_cells"] or sparse["hard_errors"]:
@@ -590,13 +611,27 @@ def selftest() -> dict:
             failures.append("bad-mid-band-grid.html was not caught at any width inside "
                             "461-523; the dense list is not covering the known-bad band")
 
-    # 10: the run as a whole must fail.
+    # 11: the same for the header band: invisible to the eighteen widths swept
+    # before 2026-10-25, caught by the 930-990 run inside 941-986.
+    cases += 1
+    if before["overflow_cells"] or before["hard_errors"]:
+        failures.append("bad-narrow-band-header.html was flagged by the widths swept before "
+                        "2026-10-25; the fixture is not band-limited, so catching it proves "
+                        f"nothing ({'; '.join(e['message'] for e in before['entries'][:2])})")
+    else:
+        band = [w for w in widths_hit(dense["entries"], "/bad-narrow-band-header.html")
+                if 941 <= w <= 986]
+        if not band:
+            failures.append("bad-narrow-band-header.html was not caught at any width inside "
+                            "941-986; the dense list is not covering the header band")
+
+    # 12: the run as a whole must fail.
     cases += 1
     if dense["overflow_cells"] == 0 and dense["hard_errors"] == 0:
-        failures.append("the fixture sweep reported ok; it contains four broken pages "
+        failures.append("the fixture sweep reported ok; it contains five broken pages "
                         "and one unloadable route")
 
-    # 11: coverage -- every loadable route x width must actually have been measured.
+    # 13: coverage -- every loadable route x width must actually have been measured.
     cases += 1
     expected = (len(BAD) + len(GOOD)) * len(WIDTHS)
     if dense["checks"] != expected:

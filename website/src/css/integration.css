@@ -3179,16 +3179,20 @@ main [data-updates-form] .ft-form button:hover { background: var(--coral); color
  *      widen the column to 234px, the link columns narrowed, and another link
  *      label wrapped at 960–1000, 1090–1100 and 1140px. So, founder's choice:
  *      (a) 941–1169px: two full rows of three, 8px gaps (118px wide);
- *      (b) 1170–1240px: one row, 6px gaps.
+ *      (b) 1170–1246px: one row, 6px gaps.
  *      At 940px and below the footer is two columns and the row already fits;
- *      above 1240px it fits with the export's 10px. The icon boxes (34px, 2px
- *      border), the glyphs and so the tap targets are unchanged: only the
- *      row's layout and gap. Measured every 10px from 900 to 1240, with and
- *      without a scrollbar: tools/probes/footer-icons-2026-10-24*.json. */
+ *      above 1246px it fits with the export's 10px. (b) first stopped at
+ *      1240px, which left 1241–1242px wrapping 5 + 1 behind a 15px scrollbar
+ *      (measured) and, by the same arithmetic, 1241–1244px behind a 17px one
+ *      (2026-10-25, row 190). The icon boxes (34px, 2px border), the glyphs
+ *      and so the tap targets are unchanged: only the row's layout and gap.
+ *      Measured every 10px from 900 to 1240, with and without a scrollbar:
+ *      tools/probes/footer-icons-2026-10-24*.json; every 1px from 1236 to
+ *      1252: tools/probes/footer-edge-2026-10-25*.json. */
 @media (min-width: 941px) and (max-width: 1169px) {
   .ft-grid .soc { display: grid; grid-template-columns: repeat(3, max-content); gap: 8px; }
 }
-@media (min-width: 1170px) and (max-width: 1240px) {
+@media (min-width: 1170px) and (max-width: 1246px) {
   .ft-grid .soc { display: flex; flex-wrap: nowrap; gap: 6px; }
 }
 
@@ -3234,4 +3238,29 @@ body[data-page="pledge-thanks"] .share-status { position: absolute; left: 0; rig
   body[data-page="pledge-thanks"] .srow:has(> .share-native:not([hidden])) > .share-platform { display: none; }
   body[data-page="pledge-thanks"] .srow:has(> .share-native:not([hidden])) > .share-copy { background: var(--cream); color: var(--ink); }
   body[data-page="pledge-thanks"] .srow:has(> .share-native:not([hidden])) > .share-copy:hover { background: var(--ink); color: var(--cream); }
+}
+
+/* 149. Header row from 941px (2026-10-25) — no sideways scroll, no lost
+ *      margin. From 941px the export's header shows its full row: brand, the
+ *      four nav labels (already on two lines below 1127px), FAQ / About
+ *      / Contact, search and "Sign the Pledge". With the export's gaps that
+ *      row needs 1000px. In narrower windows the 1fr outer columns cannot
+ *      shrink below their contents, so the row overran the header: first
+ *      into its 28px right padding (972–1000px), then past the window (941–
+ *      971px, by up to 31px), and every page scrolled sideways. A 15px
+ *      scrollbar moves both edges up 15px (986 and 1015). Here the row's gaps
+ *      close up and the button's side padding loses 2px, 76px in all, so the
+ *      row fits inside the header's own 28px padding at every width from
+ *      941px, scrollbar or not. Nothing is hidden and nothing new wraps; the
+ *      button keeps its text, colours and height (47px), only 4px narrower.
+ *      Above 1000px the tighter gaps are needed only behind a scrollbar, which
+ *      a media query cannot see. Measured every 2px from 930 to 990 and at
+ *      the edges, with and without a scrollbar:
+ *      tools/probes/header-overflow-2026-10-25*.json. */
+@media (min-width: 941px) and (max-width: 1015px) {
+  .hd-main { column-gap: 8px; }
+  .hd-nav { gap: 0; }
+  .hd-quick { gap: 0; margin-right: 0; }
+  .hd-actions { gap: 8px; }
+  .hd .cta-btn { padding-left: 16px; padding-right: 16px; }
 }
