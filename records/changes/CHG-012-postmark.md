@@ -3,6 +3,7 @@
 **Status:** founder decision, dated by the founder (2026-11-01). Drafted from the founder's Postmark brief. It takes effect when this record is merged. Sign-ups stay off in production: turning them on is still decision 1 in [CHG-009](CHG-009-signups.md). Amends [CHG-009](CHG-009-signups.md).
 
 - **Date:** 2026-11-01
+- **Amended by:** [CHG-013](CHG-013-signups-go-live-prep.md), for the deletion copy.
 - **Amends:** [CHG-009](CHG-009-signups.md), for the provider that sends sign-up email and for its setup steps. CHG-009's history stands as written.
 - **Changed claim:** with the switch on, sign-up emails are sent by Postmark, not Amazon SES. With the switch off, nothing changes: no page or `/sitemap.xml` differs.
 - **Source:** the founder's Postmark brief (2026-11-01). No AI decision; this file records what the founder set, and the sources read for the privacy wording.
@@ -80,7 +81,7 @@ The contact form is unchanged; it sends through Cloudflare Email Routing.
 
 ## Conflicts, listed and not resolved
 
-- **The deletion copy.** /signup/deleted/ and the delete confirm page say "We keep only a scrambled record…". The email Postmark sent, with the plain address, stays there for 45 days, and a hard-bounced or complaining address stays on Postmark's own list, with no stated limit. /privacy/ §7 and §11 now say so. Those two pages are not changed here; the brief covers the notice. They render only with the forms on, so this needs settling before go-live.
+- **The deletion copy.** /signup/deleted/ and the delete confirm page say "We keep only a scrambled record…". The email Postmark sent, with the plain address, stays there for 45 days, and a hard-bounced or complaining address stays on Postmark's own list, with no stated limit. /privacy/ §7 and §11 now say so. Those two pages are not changed here; the brief covers the notice. **Settled by [CHG-013](CHG-013-signups-go-live-prep.md)**, which adds the same facts to both pages.
 - **POL-002 Rule 6 and its "adequate written terms".** The founder confirms Postmark's DPA applies to the account. Whether the transfer wording is right remains for counsel, as with the rest of /privacy/ 0.4.
 
 ## Re-test result

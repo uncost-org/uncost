@@ -209,6 +209,10 @@ for (const [mod, path, label] of [[confirm, "/api/signup/confirm", "confirm"], [
     csp: /default-src 'none'/.test(csp) && /form-action 'self'/.test(csp) && !/script-src/.test(csp) },
     { status: 200, forwarded: 0, noindex: true, script: false, postsToken: true, csp: true });
 }
+// The delete confirm page says what stays with Postmark (CHG-013).
+w = worker();
+r = await call(del.onRequestGet, get("/api/signup/delete?t=x"), env(w));
+check("delete: confirm page says what Postmark keeps", { days: r.body.includes("for up to 45 days"), list: r.body.includes("Postmark’s own list") }, { days: true, list: true });
 // A browser's press on each confirm page. A form POST carries the Origin the
 // browser derives from that page's Referrer-Policy (Fetch standard, "append a
 // request Origin header"): "no-referrer" makes it Origin: null, which
@@ -469,6 +473,10 @@ def unit() -> dict:
 def browser(built: pathlib.Path, port: int) -> dict:
     if not (built / "updates" / "check-email" / "index.html").exists():
         return {"errors": [f"BUILD: {built} has no /updates/check-email/ — build with UNCOST_FORMS_OPEN=on"], "steps": []}
+    # The deleted page says what stays with Postmark (CHG-013).
+    deleted = (built / "signup" / "deleted" / "index.html").read_text(encoding="utf-8")
+    if "for up to 45 days" not in deleted or "Postmark&rsquo;s own list" not in deleted:
+        return {"errors": ["BUILD: /signup/deleted/ does not say what stays with Postmark"], "steps": []}
     tmp = pathlib.Path(tempfile.mkdtemp(prefix="uncost-signup-b-"))
     try:
         js = tmp / "probe.cjs"

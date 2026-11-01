@@ -81,6 +81,9 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({
     "assets/downloads/the-case-for-uncost.pdf": "downloads/the-case-for-uncost.pdf",
   });
+  // The two images the sign-up emails load (CHG-013). Static files at /email/,
+  // so they are not pages and not in the sitemap.
+  eleventyConfig.addPassthroughCopy({ "email": "email" });
   eleventyConfig.addPassthroughCopy({ "src/_headers": "_headers" });
   // RFC 9116 security contact, served as text/plain (_headers) and kept out
   // of the sitemap (isIndexable takes only "/" and ".html" URLs). Its Expires
