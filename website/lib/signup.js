@@ -21,7 +21,7 @@ export function notFound() {
 }
 
 // A browser POST from another site is refused. A POST with no Origin and no
-// Sec-Fetch-Site (a mail provider's RFC 8058 one-click, SNS) is let through.
+// Sec-Fetch-Site (a mail provider's RFC 8058 one-click, a webhook) is let through.
 export function sameOrigin(request) {
   const origin = request.headers.get("Origin");
   const site = request.headers.get("Sec-Fetch-Site");
@@ -89,10 +89,12 @@ export async function answerIntake(request, json, forwarding, okPath) {
   return redirect(request, ok ? okPath : "/signup/not-sent/");
 }
 
-export function forward(env, path, payload) {
+// `authorization` is for the Postmark webhook only: the Worker checks it, and no
+// other route passes on a request's headers.
+export function forward(env, path, payload, { authorization } = {}) {
   return env.SIGNUPS.fetch(`https://signups.internal${path}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...(authorization ? { Authorization: authorization } : {}) },
     body: typeof payload === "string" ? payload : JSON.stringify(payload),
   });
 }
