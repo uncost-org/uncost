@@ -29,7 +29,7 @@ At `website/email/`, served at `/email/`. Each is a new binary, so this is its l
 
 Both were made with Pillow (Lanczos resize) and checked by eye in the rendered email, in Chromium at 640px and 390px. They must be live on `uncost.org` before any branded email is sent.
 
-**Licence extended, 2026-11-01, by the decision of Matt, owner of Dafuq Industries LLC.** The artwork licence (`LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt`) named six robots, and `robots/06_thumbs_up_transparent.png` was not one of them. It now also covers that file and its derived `website/email/robot-thumbs-up.png`. The logo was already licensed, and the licence's grant to adapt covers `logo.png`.
+**Licence extended, 2026-11-01, by the decision of Matt, owner of Dafuq Industries LLC.** The artwork licence (`LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt`) named six robots, and `robots/06_thumbs_up_transparent.png` was not one of them. It now also covers that file and its derived `website/email/robot-thumbs-up.png`, which makes seven robots, and it names `website/email/logo.png` as an adapted copy of its licensed source, `logos/logo-tight-light.png`. `NOTICE.md` and `website/assets/brand/RIGHTS.md` say the same.
 
 ## The deletion wording
 
@@ -87,7 +87,6 @@ For speed, the dashboard's rollback to the previous deployment restores the earl
 
 ## Conflicts, listed and not resolved
 
-- **The licence's summaries.** `NOTICE.md` and `website/assets/brand/RIGHTS.md` still list "six robots". The licence file is the full text, and the founder's decision named that file and this record, so the summaries are not changed here.
 - **POL-002 Rule 6 and its "adequate written terms".** CHG-012 left the founder's confirmation of Postmark's DPA, and counsel's view of the transfer wording, open. Closing the AWS question does not close those.
 
 ## Email preview result
@@ -102,7 +101,7 @@ To be filled in after the founder checks the email in Gmail, on the web and the 
   - `website/email/` (new), `website/eleventy.config.js`;
   - `website/src/signup/deleted.njk`, `website/functions/api/signup/delete.js`, `tools/signup_check.py`;
   - `.github/workflows/deploy-production.yml`, `tools/prod_check.py`;
-  - `LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt`;
+  - `LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt`, `NOTICE.md`, `website/assets/brand/RIGHTS.md`;
   - CHG-009 and CHG-012.
 
 ## Provenance
