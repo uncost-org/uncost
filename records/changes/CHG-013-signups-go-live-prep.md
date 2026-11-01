@@ -43,6 +43,8 @@ This settles the conflict CHG-012 listed. /privacy/ §11 is **not changed**: it 
 - unset, or anything but `on`: the forms stay off;
 - `on`: the forms are built on, and both checks of the build expect that.
 
+`tools/prod_check.py`, which the build job runs, used to refuse any sign-up form, so setting the variable to `on` would have failed the run and deployed nothing. It now reads the same switch and allows what `scripts/audit_website.py` allows: the live updates form on any page and the live Pledge form on /pledge/ and /pledge/resent/, requires them on / and /pledge/, and expects the sign-up result pages noindex. With the switch off it still refuses them.
+
 The variable is not set by this change. It changes only what gets built. The run still waits for the founder's approval, and the handlers stay dark until the project `uncost` has the `SIGNUPS` binding and `UNCOST_SIGNUPS_OPEN=on`.
 
 `noticeEffective` in `_data/signups.json` stays unset here. It is set on the go-live day.
@@ -97,7 +99,7 @@ To be filled in after the founder checks the email in Gmail, on the web and the 
 - **Files:**
   - `website/email/` (new), `website/eleventy.config.js`;
   - `website/src/signup/deleted.njk`, `website/functions/api/signup/delete.js`, `tools/signup_check.py`;
-  - `.github/workflows/deploy-production.yml`;
+  - `.github/workflows/deploy-production.yml`, `tools/prod_check.py`;
   - CHG-009 and CHG-012.
 
 ## Provenance
