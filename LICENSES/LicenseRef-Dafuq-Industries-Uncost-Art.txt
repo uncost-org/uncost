@@ -6,6 +6,8 @@ Amended: 20 October 2026, to add the interface icons
          (records/changes/CHG-008-icon-and-pdf-licences.md)
          21 October 2026, to name the SVG favicon, a simplified redraw
          of robot_01 (favicon-robot.svg)
+         1 November 2026, to add the email robot
+         (records/changes/CHG-013-signups-go-live-prep.md)
 
 Licensor: Dafuq Industries LLC ("Dafuq Industries")
 Licensee: Uncost, and, once this licence has been transferred under clause 3,
@@ -31,6 +33,11 @@ Uncost's fiscal sponsor or successor entity
      robots/19_presenting_transparent.png
      robots/21_holding_globe_transparent.png
      robots/40_arms_crossed_transparent.png
+
+   The email robot (added 1 November 2026)
+     robots/06_thumbs_up_transparent.png, and website/email/robot-thumbs-up.png
+     (served as /email/robot-thumbs-up.png), the copy resized from it for the
+     sign-up emails.
 
    The fifteen sector images
      sectors/sector-care.png             sectors/sector-goods.png
