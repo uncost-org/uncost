@@ -148,6 +148,8 @@ The pull request lists the results.
 
 ## Setup, in order (Claude Code: D1, migrations, keys, Worker deploy, preview deploys; Matt: AWS and the dashboards)
 
+Superseded for email sending by [CHG-012](CHG-012-postmark.md) (Postmark); SES left configured but unused.
+
 **Done by Claude Code (2026-10-22 to 25), with Matt's Uncost logins:**
 - Cloudflare 1: the D1 database and its migrations.
 - Cloudflare 2: the keys `HMAC_KEY_V1` and `ENC_KEY`, which went straight into the Worker's secrets and the macOS Keychain.

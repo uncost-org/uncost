@@ -1357,9 +1357,10 @@ print("Sign-ups 2026-10-21:")
 # §7 and §8 gain the sign-up lines; the header and §12 read 0.4, with the
 # effective date from _data/signups.json (noticeEffective, the founder's to
 # set; empty renders "date to be set"). §7's sign-up retention is a PROPOSED
-# rule, a founder decision recorded as open in CHG-009. §6 names no transfer
-# safeguard for Amazon Web Services: the mechanism is open (UNP-73 question 4,
-# CHG-009).
+# rule, a founder decision recorded as open in CHG-009. The sign-up emails are
+# sent by Postmark (CHG-012), and §6 names its Data Privacy Framework listing:
+# AC PM LLC, a covered entity of ActiveCampaign, LLC. §7's 45 days is Postmark's
+# default retention; if the account setting changes, this text changes with it.
 ON, ELSE, END = "{% if features.formsOpen %}", "{% else %}", "{% endif %}"
 AGE = "{{ signups.minAge }}"
 # The build sets Nunjucks' trimBlocks and lstripBlocks (eleventy.config.js), so
@@ -1419,12 +1420,14 @@ add_after('forwards email sent to contact@uncost.org;',
           'America);',
           "CP-4 privacy §6: Cloudflare runs and stores the sign-ups")
 add_items_after('where contact-form messages and the emails you send us are kept.',
-                ['<b>Amazon Web Services, Inc.</b> — sends the sign-up emails (Amazon SES) and tells us when one '
-                 'bounces or is reported as spam (Amazon SNS), from the United States.'],
-                "CP-4 privacy §6: Amazon Web Services sends the sign-up emails")
+                ['<b>Postmark, operated by AC PM LLC (part of ActiveCampaign)</b> — sends the sign-up emails and '
+                 'tells us when one bounces or is reported as spam, from the United States.'],
+                "CP-4 privacy §6: Postmark sends the sign-up emails")
 add_after('we&rsquo;ll say so where we&rsquo;re permitted to.</p>',
-          '<p>Sign-ups are stored by Cloudflare in North America, and the sign-up emails are sent by Amazon Web '
-          'Services in the United States.</p>',
+          '<p>Sign-ups are stored by Cloudflare in North America, and the sign-up emails are sent by Postmark in '
+          'the United States. AC PM LLC, which operates Postmark, also takes part in the EU-U.S. Data Privacy '
+          'Framework (and its UK Extension), through ActiveCampaign&rsquo;s certification, which is the safeguard '
+          'for that transfer.</p>',
           "CP-4 privacy §6: where sign-ups are processed")
 add_items_after('Cloudflare&rsquo;s privacy policy</a>.',
                 ['<b>Sign-ups you don&rsquo;t confirm</b> — deleted, with their links, 7 days after you sign up.',
@@ -1432,6 +1435,9 @@ add_items_after('Cloudflare&rsquo;s privacy policy</a>.',
                  '<b>Your email updates</b> — kept until you unsubscribe. Once you have neither a signature nor a '
                  'subscription, we delete your email address and your consent records within about a week.',
                  '<b>Links in our emails</b> — deleted 7 days after they expire.',
+                 '<b>The emails we send you</b> — Postmark keeps each email&rsquo;s content and activity for 45 days, '
+                 'its default, and then deletes them. It also keeps its own list of addresses that hard-bounced or '
+                 'reported an email as spam, so that it won&rsquo;t send to them.',
                  '<b>The do-not-email record</b> — a scrambled form of your address that can&rsquo;t be turned back '
                  'into it, kept for as long as we must honour your unsubscribe or deletion, and reviewed every year.',
                  '<b>Sign-up notes</b> — dated notes that a sign-up was confirmed, unsubscribed or deleted. They hold '
@@ -1471,15 +1477,17 @@ S11_ON = ('<h3 class="s"><span class="num">11</span>Sign-ups: the Pledge and ema
           'updates when you sign the Pledge, the same link confirms both. If you don&rsquo;t confirm, we delete the '
           'sign-up and its link after 7 days.</li>\n'
           '      <li><b>Who provides each part</b> — Cloudflare runs the forms (Pages Functions and Workers) and stores '
-          'sign-ups in Cloudflare D1, a database in eastern North America. Amazon Web Services sends our emails '
-          '(Amazon SES) and tells us when one bounces or is reported as spam (Amazon SNS), from the United States. '
+          'sign-ups in Cloudflare D1, a database in eastern North America. Postmark, operated by AC PM LLC (part of '
+          'ActiveCampaign), sends our emails and tells us when one bounces or is reported as spam, from the United States. '
           'Your address is stored encrypted, and we look it up by a keyed fingerprint, not the address itself.</li>\n'
           '      <li><b>How long we keep it</b> — see section&nbsp;7.</li>\n'
           '      <li><b>Unsubscribe, delete and see your data</b> — every email we send has a link to unsubscribe, '
           'which works with one click and takes effect at once, and a link to delete your data. Deleting removes '
           'your email address, your name, your signature, your subscription and your consent records. We keep only '
           'a scrambled do-not-email record, which can&rsquo;t be turned back into your address, so that we don&rsquo;t '
-          'email you again, and a dated note that a deletion happened. After you unsubscribe or delete, we won&rsquo;t '
+          'email you again, and a dated note that a deletion happened. Postmark&rsquo;s copy of the emails it sent you '
+          'stays until its 45 days are up, and if an email to you hard-bounced or you reported one as spam, your '
+          'address stays on Postmark&rsquo;s own list (section&nbsp;7). After you unsubscribe or delete, we won&rsquo;t '
           'email that address again. If you change your mind, write to us through the <a class="u-1" '
           'href="/contact/">contact form</a> and we&rsquo;ll lift the block. To see what we hold about you, or to correct '
           'it, email <a class="u-1" href="mailto:contact@uncost.org">contact@uncost.org</a>.</li>\n'
@@ -1492,8 +1500,8 @@ switch(S11_OFF, S11_ON, "CP-4 privacy §11: the sign-ups section while forms are
 literal(PRIVACY, '(CHG-007).</td></tr>',
         '(CHG-007).</td>' + ON + '</tr>\n        <tr><td>0.4</td><td>{{ signups.noticeEffective or "Date to be set" }}'
         '</td><td>Opens the Pledge and email updates: what they collect, the legal basis, the providers (Cloudflare '
-        'Workers and D1; Amazon SES and SNS), confirming by email, deleting unconfirmed sign-ups after 7 days, '
-        'retention, unsubscribing and deleting your data (CHG-009).</td>' + END + '</tr>',
+        'Workers and D1; Postmark), confirming by email, deleting unconfirmed sign-ups after 7 days, '
+        'retention, unsubscribing and deleting your data (CHG-009, CHG-012).</td>' + END + '</tr>',
         "CP-4 privacy §12: version row 0.4 while forms are open")
 
 # SU-1 — /pledge/check-email/: a confirmation link opens a page with a Confirm

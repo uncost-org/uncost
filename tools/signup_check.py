@@ -22,8 +22,9 @@ intercepts /api/signup/*. Standing rule 4: these are the results to report.
     no-JS confirm page (noindex, no script, its own CSP) and act only on its
     POST, which must be same-origin; a confirmed link sends each Worker
     answer to its page; an RFC 8058 one-click POST unsubscribes with a bare
-    200. SES events pass through untouched. No
-    response sets a cookie.
+    200. SES events pass through untouched. Postmark events pass through with
+    their Authorization header, the one route that forwards it. No response
+    sets a cookie.
   BROWSER (puppeteer, a build with UNCOST_FORMS_OPEN=on): each form's
     controls have labels, the boxes are unticked, the required set is right,
     the form links /privacy/,
@@ -66,6 +67,7 @@ import * as confirm from "./functions/api/signup/confirm.js";
 import * as unsubscribe from "./functions/api/signup/unsubscribe.js";
 import * as del from "./functions/api/signup/delete.js";
 import * as ses from "./functions/api/signup/ses-events.js";
+import * as postmark from "./functions/api/signup/postmark-events.js";
 const data = JSON.parse(readFileSync(new URL("./src/_data/signups.json", import.meta.url), "utf8"));
 const errors = [], results = [];
 const ORIGIN = "https://uncost.org";
@@ -74,7 +76,7 @@ const sha = async (t) => [...new Uint8Array(await crypto.subtle.digest("SHA-256"
 
 function worker(answer = () => new Response(JSON.stringify({ ok: true }), { status: 202 })) {
   const calls = [];
-  return { calls, fetch: async (url, init) => { calls.push({ path: new URL(url).pathname, body: init.body }); return answer(new URL(url).pathname, init); } };
+  return { calls, fetch: async (url, init) => { calls.push({ path: new URL(url).pathname, body: init.body, authorization: (init.headers || {}).Authorization || null }); return answer(new URL(url).pathname, init); } };
 }
 const env = (w, on = "on") => ({ UNCOST_SIGNUPS_OPEN: on, SIGNUPS: w });
 function post(path, fields, { json = true, origin = ORIGIN, site = "same-origin", length } = {}) {
@@ -117,8 +119,9 @@ for (const [label, e] of [["switch off", env(worker(), "off")], ["no binding", {
     await call(del.onRequestGet, get("/api/signup/delete?t=x"), e),
     await call(del.onRequestPost, post("/api/signup/delete", { t: "x" }), e),
     await call(ses.onRequestPost, new Request(ORIGIN + "/api/signup/ses-events", { method: "POST", body: "{}" }), e),
+    await call(postmark.onRequestPost, new Request(ORIGIN + "/api/signup/postmark-events", { method: "POST", body: "{}", headers: { Authorization: "Basic eDp5" } }), e),
   ].map((x) => x.status);
-  check(`dark: ${label}`, { statuses: r, forwarded: w ? w.calls.length : 0 }, { statuses: [404, 404, 404, 404, 404, 404, 404, 404, 404], forwarded: 0 });
+  check(`dark: ${label}`, { statuses: r, forwarded: w ? w.calls.length : 0 }, { statuses: [404, 404, 404, 404, 404, 404, 404, 404, 404, 404], forwarded: 0 });
 }
 
 // Pledge.
@@ -257,6 +260,25 @@ for (const [status, want] of [[200, 200], [400, 400], [401, 401], [500, 502]]) {
 w = worker();
 r = await call(ses.onRequestPost, new Request(ORIGIN + "/api/signup/ses-events", { method: "POST", body: "x".repeat(300000) }), env(w));
 check("ses-events: too large", { status: r.status, forwarded: w.calls.length }, { status: 413, forwarded: 0 });
+w = worker(() => new Response("{}", { status: 200 }));
+await call(ses.onRequestPost, new Request(ORIGIN + "/api/signup/ses-events", { method: "POST", body: "{}", headers: { Authorization: "Basic eDp5" } }), env(w));
+check("ses-events: no Authorization forwarded", { auth: w.calls[0].authorization }, { auth: null });
+
+// Postmark events: the body and the Authorization header pass through; the
+// Worker's verdict is the status, and the answer has no body.
+for (const [status, want] of [[200, 200], [400, 400], [401, 401], [500, 502]]) {
+  w = worker(() => new Response(null, { status }));
+  const body = '{"RecordType":"Bounce","Type":"HardBounce","Email":"a@example.org"}';
+  r = await call(postmark.onRequestPost, new Request(ORIGIN + "/api/signup/postmark-events", { method: "POST", body, headers: { "Content-Type": "application/json", Authorization: "Basic eDp5" } }), env(w));
+  check(`postmark-events: Worker ${status}`, { status: r.status, body: r.body, path: w.calls[0].path, passed: w.calls[0].body === body, auth: w.calls[0].authorization },
+    { status: want, body: "", path: "/v1/postmark-events", passed: true, auth: "Basic eDp5" });
+}
+w = worker(() => new Response(null, { status: 401 }));
+r = await call(postmark.onRequestPost, new Request(ORIGIN + "/api/signup/postmark-events", { method: "POST", body: "{}" }), env(w));
+check("postmark-events: no credentials", { status: r.status, auth: w.calls[0].authorization }, { status: 401, auth: null });
+w = worker();
+r = await call(postmark.onRequestPost, new Request(ORIGIN + "/api/signup/postmark-events", { method: "POST", body: "x".repeat(300000), headers: { Authorization: "Basic eDp5" } }), env(w));
+check("postmark-events: too large", { status: r.status, forwarded: w.calls.length }, { status: 413, forwarded: 0 });
 process.stdout.write(JSON.stringify({ errors, results: results.map((x) => x.name) }));
 """
 
