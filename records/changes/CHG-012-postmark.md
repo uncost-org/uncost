@@ -85,19 +85,19 @@ The contact form is unchanged; it sends through Cloudflare Email Routing.
 
 ## Re-test result
 
-**Result: not a full pass yet.** The founder ran CHG-009's nine steps through Postmark on 1 Nov 2026, 19:45–19:57 ICT, and reports them finished. The Worker log and the D1 rows bear out most of it, but three actions do not appear in either, so those three still need showing.
+**Result: all nine steps done, with the limits below.** The founder ran CHG-009's nine steps through Postmark on 1 Nov 2026, 19:45–19:57 ICT, and three actions missing from that run's evidence in a top-up at about 22:22 ICT. **No real spam complaint has been tested**, and the two repeat Confirm presses rest on the founder's report.
 
 - **Tested:** `signups-test` (deployment `4edcc28f`, this PR at `e9e27f0`), against the Worker `uncost-signups` version `024d868f` (uncost-api `48d1fb4`, with the founder's secrets).
-- **Evidence:** the log of every Worker request, and D1 rows read without addresses. By the founder's decision, D1 rows replace step 6's admin export. What a page or an inbox showed rests on the founder's report.
-- **Failures:** none logged. Across the test there were no send failures and no exceptions.
+- **Evidence:** for the main run, the log of every Worker request and D1 rows read without addresses. For the top-up, D1 rows only. By the founder's decision, D1 rows replace step 6's admin export. What a page or an inbox showed rests on the founder's report.
+- **Failures:** none logged in the main run: no send failures and no exceptions. The log was not running for the top-up.
 
 | Step | What the log and D1 show | Result |
 |---|---|---|
 | 1. Sign | `/v1/pledge` 202 at 19:45:45. | Shown |
-| 2. Confirm | `/v1/confirm` 200 at 19:46:29, with `confirm_pledge` and `confirm_updates` in the audit. Only one `/v1/confirm` request, so the second press is not there. | First press shown; **second press not shown** |
+| 2. Confirm | `/v1/confirm` 200 at 19:46:29, with `confirm_pledge` and `confirm_updates` in the audit. Only one `/v1/confirm` request in that run; the second press is in the top-up. | First press shown; second press on the founder's report |
 | 3. Sign again | `/v1/pledge` 202 at 19:48:49. That "no email" went out rests on the founder's report: step 6 removed the subject and its tokens. | Shown, on the founder's report |
-| 4. Updates only | `/v1/updates` 202 at 19:51:39. Its `updates_confirm` token is unused, there is no `confirmed_at`, and no `/v1/confirm` request follows. | **Confirm not shown** |
-| 5. Unsubscribe | `/v1/unsubscribe` 200 at 19:52:04, an `unsubscribe` row, and that subscription `unsubscribed`. No later `/v1/updates` request, so signing up again is not there. | Unsubscribe shown; **second sign-up not shown** |
+| 4. Updates only | `/v1/updates` 202 at 19:51:39. Its `updates_confirm` token is unused and no `/v1/confirm` request follows, so that run did not confirm it. The top-up did. | Shown in the top-up |
+| 5. Unsubscribe | `/v1/unsubscribe` 200 at 19:52:04, an `unsubscribe` row, and that subscription `unsubscribed`. No later `/v1/updates` request in that run; the second sign-up is in the top-up. | Shown; second sign-up in the top-up |
 | 6. Delete | `/v1/delete` 200 at 19:52:24, audit `delete` via link, a `deletion` row, and step 1's subject gone. | Shown |
 | 7. Without JS | `/v1/pledge` 202 at 19:54:00, `/v1/confirm` 200 at 19:54:32, pledge `accepted_unique`, updates `confirmed`. The Worker cannot see whether JavaScript was off. | Shown, on the founder's report |
 | 8. Bounce | Signed as `hardbounce@bounce-testing.postmarkapp.com` at 19:54:50. A `hard_bounce` row at 19:57:16, and that subscription `unsubscribed`. | Shown; **2 min 26 s**, not CHG-009's "within a minute" |
@@ -113,11 +113,16 @@ No real complaint has come through Postmark.
 - The hard bounce produced two `suppress` audit rows a second apart, and one suppression row. The audit count can run above the row count, with no effect on who is suppressed.
 - The preview's D1 database has more test rows now. CHG-009's follow-up stands: recreate it before production.
 
-**Still to show (founder, with a new address):**
-1. Sign up for updates, open the link and press Confirm: /updates/confirmed/. Press it again: the same page.
-2. Unsubscribe with that address, sign up for updates again: no email.
+**The top-up, about 22:22 ICT, with one new address for steps 4 and 5 and step 7's address for a repeat press:**
 
-The result here gets updated when that is done.
+| Action | What D1 shows | Result |
+|---|---|---|
+| Sign up for updates | A new subject at 22:22:14, consent `given` on the footer form. | Shown |
+| Confirm | `updates_confirm` token used at 22:22:34, `confirmed_at` set, one `confirm_updates` audit row. | Shown |
+| Confirm again, on that link | Still one audit row, and the token's `used_at` is unchanged. A repeat press writes nothing, by design, so D1 shows that nothing changed and cannot show the press. | On the founder's report |
+| Unsubscribe | `unsubscribe` token used at 22:23:17, an `unsubscribe` row, and the subscription `unsubscribed`. | Shown |
+| Sign up again | No token, consent event or subject change after 22:23:17. A suppressed sign-up stops before it writes anything, so D1 shows that no link was issued and cannot show the request. | No email shown; the request on the founder's report |
+| Confirm again, on step 7's link | No token used and no audit row since the main run. The same limit applies. | On the founder's report |
 
 ## Affected surfaces
 
