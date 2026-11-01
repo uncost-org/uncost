@@ -31,6 +31,12 @@ Both were made with Pillow (Lanczos resize) and checked by eye in the rendered e
 
 **Licence extended, 2026-11-01, by the decision of Matt, owner of Dafuq Industries LLC.** The artwork licence (`LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt`) named six robots, and `robots/06_thumbs_up_transparent.png` was not one of them. It now also covers that file and its derived `website/email/robot-thumbs-up.png`, which makes seven robots, and it names `website/email/logo.png` as an adapted copy of its licensed source, `logos/logo-tight-light.png`. `NOTICE.md` and `website/assets/brand/RIGHTS.md` say the same.
 
+**Asset manifest (`website/assets/brand/ASSET_MANIFEST.json`).**
+- **`publication_scope`:** now says seven robots, names the two email copies, and counts 60 images as repository-only, not 61.
+- **`derived_copies` (new):** the two email copies by path and SHA-256, in the style of the `assets` entries, with their source and how they were made.
+- **Not changed:** `robots/06_thumbs_up_transparent.png` already has its entry in `assets`, so it gets no second one. `assets`, `counts`, `ASSET_MANIFEST.csv` and `SHA256SUMS.txt` stay the approved 86-file set, which `scripts/audit_design_handoff.py` holds at exactly 86. The email copies are not part of that set.
+- **Manifest hash:** `6263f38a56a36ffcdc2e56c1b7652b518f67bd98afceb21428f71777aa7dbc07` before, `521892b83b464eb55e8176998f3ec713bfb72736df306544d141909670a549ae` after.
+
 ## The deletion wording
 
 /signup/deleted/ and the delete confirm page (`website/functions/api/signup/delete.js`) now also say:
@@ -101,7 +107,7 @@ To be filled in after the founder checks the email in Gmail, on the web and the 
   - `website/email/` (new), `website/eleventy.config.js`;
   - `website/src/signup/deleted.njk`, `website/functions/api/signup/delete.js`, `tools/signup_check.py`;
   - `.github/workflows/deploy-production.yml`, `tools/prod_check.py`;
-  - `LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt`, `NOTICE.md`, `website/assets/brand/RIGHTS.md`;
+  - `LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt`, `NOTICE.md`, `website/assets/brand/RIGHTS.md`, `website/assets/brand/ASSET_MANIFEST.json`;
   - CHG-009 and CHG-012.
 
 ## Provenance
