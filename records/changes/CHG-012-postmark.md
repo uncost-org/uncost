@@ -23,9 +23,17 @@ AWS refused SES production access twice, in the cases of 4 August and 1 November
 
 ## DNS records added
 
-To be filled in when the founder publishes them, with their date, in this record and in the change log of `docs/INFRA-DOMAINS.md`. Postmark's domain page gives the exact values. Two records are expected:
-- a **DKIM TXT** record at the host Postmark generates (`<selector>._domainkey.uncost.org`);
-- a **Return-Path CNAME**, `pm-bounces.uncost.org` → `pm.mtasv.net`.
+The founder published two records on 1 Nov 2026, and they are in the change log of `docs/INFRA-DOMAINS.md`. Both show Verified in Postmark, as the founder reports.
+
+| Name | Type | Value | TTL |
+|---|---|---|---|
+| `20261101110558pm._domainkey.uncost.org` | TXT (DKIM) | `k=rsa;p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCD5QPPll6gWvHdX3qx0ceGN6arMgOyPxK2wmby8Q/EWGfDhUbTRwN3yit3dMi7hJszY6WudA83yvnfqLNoiB7OoKr7EmMr8vwwjUTirCzwWZC2BGYJkMDXLIFbI1njwc9DKraE66SD5Lji7yGwZqjSpmo6bU3+r8Zhq0H2/1uKuwIDAQAB` | 300 |
+| `pm-bounces.uncost.org` | CNAME (Return-Path) | `pm.mtasv.net` | 300 |
+
+**How they were checked (1 Nov 2026):**
+- The DKIM value is the same from 1.1.1.1, 8.8.8.8 and the zone's own Cloudflare nameserver. It is a well-formed 1024-bit RSA public key.
+- It was not compared with the value on Postmark's domain page, which needs the Postmark login. Postmark's Verified status is that comparison.
+- The SES records answer as before: `mail.uncost.org` still has its MX and SPF. The apex SPF and `_dmarc` (`p=none`) are unchanged.
 
 No `_dmarc` record is added. The apex record stays Cloudflare-managed at `p=none` (`docs/INFRA-DOMAINS.md`), and DMARC aligns through DKIM `d=uncost.org`.
 
@@ -35,7 +43,7 @@ Postmark's bounce, spam-complaint and subscription-change webhooks post to `/api
 
 - **Authentication:** HTTP Basic, username `postmark`, password `POSTMARK_WEBHOOK_SECRET`, compared in constant time in the Worker. Postmark does not sign its webhooks; Basic auth is what its documentation recommends. A wrong or missing password gets 401 and changes nothing.
 - **Limits:** the body is capped at 256 KB. The route answers 200, 400 or 401 with no body, and is dark (404) unless the Pages environment switches sign-ups on.
-- **On the preview:** Cloudflare Access needs a Bypass policy for this path, as it has for `/api/signup/ses-events`.
+- **On the preview:** Cloudflare Access has a Bypass policy for this path, as it has for `/api/signup/ses-events`. With it in place, a request with no password or the wrong one gets 401 on the preview (1 Nov 2026).
 
 | Event | Suppression |
 |---|---|
@@ -73,12 +81,43 @@ The contact form is unchanged; it sends through Cloudflare Email Routing.
 ## Conflicts, listed and not resolved
 
 - **The deletion copy.** /signup/deleted/ and the delete confirm page say "We keep only a scrambled record…". The email Postmark sent, with the plain address, stays there for 45 days, and a hard-bounced or complaining address stays on Postmark's own list, with no stated limit. /privacy/ §7 and §11 now say so. Those two pages are not changed here; the brief covers the notice. They render only with the forms on, so this needs settling before go-live.
-- **`docs/INFRA-DOMAINS.md`.** It names `mail.uncost.org` (SES) as the transactional identity. It is not changed here, because no Postmark record exists yet; it changes when the records are published.
 - **POL-002 Rule 6 and its "adequate written terms".** The founder confirms Postmark's DPA applies to the account. Whether the transfer wording is right remains for counsel, as with the rest of /privacy/ 0.4.
 
 ## Re-test result
 
-To be filled in after CHG-009's preview test is re-run through Postmark.
+**Result: not a full pass yet.** The founder ran CHG-009's nine steps through Postmark on 1 Nov 2026, 19:45–19:57 ICT, and reports them finished. The Worker log and the D1 rows bear out most of it, but three actions do not appear in either, so those three still need showing.
+
+- **Tested:** `signups-test` (deployment `4edcc28f`, this PR at `e9e27f0`), against the Worker `uncost-signups` version `024d868f` (uncost-api `48d1fb4`, with the founder's secrets).
+- **Evidence:** the log of every Worker request, and D1 rows read without addresses. By the founder's decision, D1 rows replace step 6's admin export. What a page or an inbox showed rests on the founder's report.
+- **Failures:** none logged. Across the test there were no send failures and no exceptions.
+
+| Step | What the log and D1 show | Result |
+|---|---|---|
+| 1. Sign | `/v1/pledge` 202 at 19:45:45. | Shown |
+| 2. Confirm | `/v1/confirm` 200 at 19:46:29, with `confirm_pledge` and `confirm_updates` in the audit. Only one `/v1/confirm` request, so the second press is not there. | First press shown; **second press not shown** |
+| 3. Sign again | `/v1/pledge` 202 at 19:48:49. That "no email" went out rests on the founder's report: step 6 removed the subject and its tokens. | Shown, on the founder's report |
+| 4. Updates only | `/v1/updates` 202 at 19:51:39. Its `updates_confirm` token is unused, there is no `confirmed_at`, and no `/v1/confirm` request follows. | **Confirm not shown** |
+| 5. Unsubscribe | `/v1/unsubscribe` 200 at 19:52:04, an `unsubscribe` row, and that subscription `unsubscribed`. No later `/v1/updates` request, so signing up again is not there. | Unsubscribe shown; **second sign-up not shown** |
+| 6. Delete | `/v1/delete` 200 at 19:52:24, audit `delete` via link, a `deletion` row, and step 1's subject gone. | Shown |
+| 7. Without JS | `/v1/pledge` 202 at 19:54:00, `/v1/confirm` 200 at 19:54:32, pledge `accepted_unique`, updates `confirmed`. The Worker cannot see whether JavaScript was off. | Shown, on the founder's report |
+| 8. Bounce | Signed as `hardbounce@bounce-testing.postmarkapp.com` at 19:54:50. A `hard_bounce` row at 19:57:16, and that subscription `unsubscribed`. | Shown; **2 min 26 s**, not CHG-009's "within a minute" |
+| 9. Spam notification | Signed as `spamnotification@bounce-testing.postmarkapp.com` at 19:55:05. One webhook 200 at 19:57:12 with no audit row, and no suppression. The log does not name the event type, so linking the two is an inference. | Shown as expected, see below |
+
+**Step 9 could not test a complaint.** [Postmark's test addresses do not cover spam complaints](https://postmarkapp.com/support/article/1239-how-to-test-bounces) ("will default to a Hard Bounce"; [also here](https://postmarkapp.com/developer/user-guide/sandbox-mode/generate-fake-bounces); both read 1 Nov 2026). A spam notification is a different event, and the code rightly adds no suppression for it. The `complaint` path rests on:
+- the unit tests;
+- one `complaint` row at 19:37:11 from a webhook event that carried the right password, before the test started. It is taken to be the founder's test event from Postmark; the log had not started, so this is not confirmed.
+
+No real complaint has come through Postmark.
+
+**Also seen:**
+- The hard bounce produced two `suppress` audit rows a second apart, and one suppression row. The audit count can run above the row count, with no effect on who is suppressed.
+- The preview's D1 database has more test rows now. CHG-009's follow-up stands: recreate it before production.
+
+**Still to show (founder, with a new address):**
+1. Sign up for updates, open the link and press Confirm: /updates/confirmed/. Press it again: the same page.
+2. Unsubscribe with that address, sign up for updates again: no email.
+
+The result here gets updated when that is done.
 
 ## Affected surfaces
 
@@ -88,7 +127,8 @@ To be filled in after CHG-009's preview test is re-run through Postmark.
   - `website/functions/api/signup/postmark-events.js` (new);
   - `website/lib/signup.js` (`forward()` can pass on `Authorization`, for this route only);
   - `website/src/privacy.njk`, `tools/post_patch_pages.py` (the same text), `tools/signup_check.py`;
-  - CHG-009 (one line under its setup heading).
+  - CHG-009 (one line under its setup heading);
+  - `docs/INFRA-DOMAINS.md` (the Postmark records, the mail posture, the change log).
 
 ## Provenance
 

@@ -1,6 +1,6 @@
 # Domain and DNS policy — uncost.org
 
-Updated: 2026-08-02
+Updated: 2026-11-01
 
 Authoritative policy for how the `uncost.org` domain and its subdomains are used,
 plus a dated log of every DNS change. This is documentation and policy only;
@@ -17,7 +17,8 @@ and supersedes the parts of that document listed under
 | Name | Role | Sends mail? | Status |
 |---|---|---|---|
 | **`uncost.org`** (apex) | The website and **all** content routes; also the inbound human mailbox (`contact@`). | Inbound only (Cloudflare Email Routing). Never bulk. | Live |
-| **`mail.uncost.org`** | Amazon SES **custom MAIL FROM** for **transactional** mail only (pledge/verification/receipts/withdrawal links). | Transactional only. | Exists — SES, `us-east-1`, Easy DKIM |
+| **`pm-bounces.uncost.org`** | Postmark **Return-Path** for **transactional** mail only (pledge/verification/receipts/withdrawal links), with DKIM at `20261101110558pm._domainkey.uncost.org`. CHG-012. | Transactional only. | Exists since 2026-11-01 — Postmark. Sign-ups are off in production. |
+| **`mail.uncost.org`** | Amazon SES **custom MAIL FROM**, the earlier transactional identity. | No longer used. | Exists — SES, `us-east-1`, Easy DKIM. Left configured but unused (CHG-012), to be removed after go-live. |
 | `news.uncost.org` *(or `marketing.`)* | Bulk email — the newsletter / email-updates stream. Its **own** SPF/DKIM. | Bulk only. | **RESERVED** — create only when the system exists |
 | `api.uncost.org` | Application/API endpoint. | No | **RESERVED** — create only when the system exists |
 | `docs.uncost.org` | Documentation site. | No | **RESERVED** — create only when the system exists |
@@ -44,8 +45,9 @@ future `join.` **redirect** to `/pledge`, which serves no content of its own.
 
 - **Inbound (`contact@uncost.org`)** — Cloudflare Email Routing to the founder
   inbox. Working since 2026-07-21.
-- **Transactional (`mail.uncost.org`)** — Amazon SES custom MAIL FROM in
-  `us-east-1` with **Easy DKIM**. Transactional mail only.
+- **Transactional (`pm-bounces.uncost.org`)** — Postmark, with DKIM on
+  `uncost.org` (CHG-012). Transactional mail only. The earlier Amazon SES identity
+  (`mail.uncost.org`) stays configured but unused.
 - **Bulk / marketing** — must send from its own reserved subdomain
   (`news.`/`marketing.`) with its **own** SPF and DKIM. **Bulk mail is never
   sent from the apex, and never from the transactional identity** — a complaint
@@ -60,23 +62,23 @@ and receives the aggregate reports). Do **not** hand-publish a second `_dmarc`
 record — only one `_dmarc` TXT per name is valid.
 
 - **Today: `p=none`** (monitoring). Hold here.
-- **Tighten to `p=quarantine` then `p=reject` only after SES sending is stable**
+- **Tighten to `p=quarantine` then `p=reject` only after Postmark sending is stable**
   and the aggregate (`rua`) reports show no legitimate mail failing alignment.
-  This is a founder decision and must not run ahead of live, aligned SES sending.
+  This is a founder decision and must not run ahead of live, aligned Postmark sending.
 
 ## Relationship to EMAIL_DNS.md
 
 `docs/EMAIL_DNS.md` (2026-07-21) predates SES selection and is **superseded in
 part** by this policy:
 
-- **Transactional identity:** EMAIL_DNS.md plans `t.uncost.org`; the live
-  transactional identity is **`mail.uncost.org`** (SES custom MAIL FROM). Treat
-  `mail.` as the transactional name.
+- **Transactional identity:** EMAIL_DNS.md plans `t.uncost.org`; the transactional
+  identity is **`pm-bounces.uncost.org`** (Postmark Return-Path, CHG-012). Treat
+  `pm-bounces.` as the transactional name.
 - **ESP:** EMAIL_DNS.md leaves the ESP unselected (`<...>` tokens). The ESP is
-  **Amazon SES** (`us-east-1`, Easy DKIM).
+  **Postmark** (CHG-012), replacing Amazon SES (`us-east-1`, Easy DKIM).
 - **DMARC:** EMAIL_DNS.md targets **per-subdomain** `_dmarc.t` / `_dmarc.news` at
   `p=reject`; current policy is **one apex DMARC** (`sp=` governs subdomains),
-  held at `p=none` until SES sending is stable.
+  held at `p=none` until Postmark sending is stable.
 - **Unchanged and still governing:** the apex inbound routing, root SPF (`~all`)
   and DKIM via Cloudflare Email Routing, the transactional/marketing separation
   principle, disabling ESP open/click tracking (POL-002), and the launch
@@ -84,7 +86,8 @@ part** by this policy:
 
 The exact SES records (MAIL FROM MX + SPF TXT, Easy DKIM CNAMEs) should be
 captured in EMAIL_DNS.md when published; this file records that the change
-happened and when.
+happened and when. The exact Postmark records are in
+[CHG-012](../records/changes/CHG-012-postmark.md).
 
 ## DNS change log
 
@@ -93,6 +96,8 @@ Entries newest first.
 
 | Date | Name / record | Change | Notes |
 |---|---|---|---|
+| 2026-11-01 | `20261101110558pm._domainkey.uncost.org` (TXT) | Postmark DKIM key added (CHG-012). | Founder action. Verified in Postmark, as the founder reports; same value from two public resolvers and the zone's nameserver. No `_dmarc` or SPF change. SES records left in place. |
+| 2026-11-01 | `pm-bounces.uncost.org` (CNAME) | Postmark Return-Path added, → `pm.mtasv.net` (CHG-012). | Founder action. Verified in Postmark, as the founder reports. |
 | 2026-08-02 | — | This policy documented; `mail.uncost.org` SES transactional identity recorded as existing. | Baseline. Exact SES-record creation dates predate this doc and are to be confirmed against the SES console / Cloudflare DNS history. |
 | ≤2026-08-02 | `mail.uncost.org` | Amazon SES custom MAIL FROM established (`us-east-1`, Easy DKIM); transactional identity. | Exists per founder; exact date to confirm. |
 | 2026-07-21 | `_dmarc.uncost.org` (TXT) | Cloudflare DMARC Management enabled, `p=none`, aggregate reports to dashboard. | Founder action. |
