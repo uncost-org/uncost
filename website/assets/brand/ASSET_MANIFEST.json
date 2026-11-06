@@ -2947,6 +2947,74 @@
     "total": 86
   },
   "created_utc": "2026-07-17T16:02:34.742754+00:00",
+  "derived_copies": [
+    {
+      "alpha_max": 255,
+      "alpha_min": 255,
+      "alt_text": "uncost.org",
+      "bytes": 10407,
+      "class": "email_copy",
+      "derivation": "Flattened on #FAF7F0, Lanczos resize to 224px wide, 64 colours (Pillow)",
+      "derived_from": "website/assets/brand/logos/logo-tight-light.png",
+      "derived_from_sha256": "13e05467a57b8582f68df6fb91547049e58a66c4fcaedc634f44f936e09d823d",
+      "has_alpha": false,
+      "height": 155,
+      "license_scope": "RESERVED_BRAND_ASSET_EXCLUDED_FROM_OPEN_CONTENT_LICENSE",
+      "mode": "P",
+      "nontransparent_bbox": [
+        0,
+        0,
+        224,
+        155
+      ],
+      "path": "website/email/logo.png",
+      "record": "records/changes/CHG-013-signups-go-live-prep.md",
+      "rights_status": "FOUNDER_ASSERTED_OWNED_AND_AUTHORIZED_FOR_UNCOST_USE",
+      "semtransparent_pixel_count": 0,
+      "sha256": "ac8d747f51c9f01c0828ee8b0f3006aef4a0994e1896c4d6005a62c8425f19d4",
+      "status": "DERIVED_EMAIL_COPY_CHG_013",
+      "touches_canvas_edge": true,
+      "transparent_pixel_count": 0,
+      "visual_qa_backgrounds": [
+        "#FAF7F0",
+        "#1F1F1F"
+      ],
+      "width": 224
+    },
+    {
+      "alpha_max": 255,
+      "alpha_min": 0,
+      "alt_text": "",
+      "bytes": 4927,
+      "class": "email_copy",
+      "derivation": "Lanczos resize to 144px wide, 128 colours, transparency kept (Pillow)",
+      "derived_from": "website/assets/brand/robots/06_thumbs_up_transparent.png",
+      "derived_from_sha256": "058bd0e1837a77e201511bf57dccf85d0620fb9879341252f8dd36bd82b29a11",
+      "has_alpha": true,
+      "height": 192,
+      "license_scope": "RESERVED_BRAND_ASSET_EXCLUDED_FROM_OPEN_CONTENT_LICENSE",
+      "mode": "P",
+      "nontransparent_bbox": [
+        25,
+        5,
+        119,
+        175
+      ],
+      "path": "website/email/robot-thumbs-up.png",
+      "record": "records/changes/CHG-013-signups-go-live-prep.md",
+      "rights_status": "FOUNDER_ASSERTED_OWNED_AND_AUTHORIZED_FOR_UNCOST_USE",
+      "semtransparent_pixel_count": 7926,
+      "sha256": "5c2447f8cd6f598f6acf4dc4532a90022247082eed54cd065d48e5cd6752a333",
+      "status": "DERIVED_EMAIL_COPY_CHG_013",
+      "touches_canvas_edge": false,
+      "transparent_pixel_count": 19553,
+      "visual_qa_backgrounds": [
+        "#FAF7F0",
+        "#1F1F1F"
+      ],
+      "width": 144
+    }
+  ],
   "exact_duplicates": [
     [
       "website/assets/brand/logos/logo-final-light.png",
@@ -2954,7 +3022,7 @@
     ]
   ],
   "license_boundary": "Brand identifiers and artwork are reserved and excluded from this repository\u2019s open-content licence; see NOTICE.md and website/assets/brand/RIGHTS.md. The published images, and the favicon source, are licensed to Uncost by Dafuq Industries LLC, which keeps ownership: LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt (CHG-007).",
-  "publication_scope": "Published on uncost.org since the public soft launch (CHG-004, 2026-10-19), under the artwork licence from Dafuq Industries LLC (LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt; CHG-007, 2026-10-20). Published: logos/logo-tight-light.png, logos/logo-tight-dark.png, logos/mark-only-final-light.png (the Open Graph image), six robots (07_pointing, 08_shrugging, 10_building, 19_presenting, 21_holding_globe, 40_arms_crossed) and the fifteen sector images; robots/robot_01_front_transparent.png is the source of the favicon and app icons. The other 61 images are in the repository only.",
+  "publication_scope": "Published on uncost.org since the public soft launch (CHG-004, 2026-10-19), under the artwork licence from Dafuq Industries LLC (LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt; CHG-007, 2026-10-20). Published: logos/logo-tight-light.png, logos/logo-tight-dark.png, logos/mark-only-final-light.png (the Open Graph image), seven robots (07_pointing, 08_shrugging, 10_building, 19_presenting, 21_holding_globe, 40_arms_crossed and, since CHG-013, 06_thumbs_up) and the fifteen sector images; robots/robot_01_front_transparent.png is the source of the favicon and app icons. Since CHG-013 (2026-11-01; live once that change is deployed), two copies are published for the sign-up emails: website/email/logo.png and website/email/robot-thumbs-up.png, listed under derived_copies. The other 60 images are in the repository only.",
   "qa": {
     "backgrounds": {
       "coral": "#D64A1E",

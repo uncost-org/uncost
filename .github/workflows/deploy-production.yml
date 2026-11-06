@@ -37,6 +37,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # The sign-ups build switch (CHG-013), from the repository variable
+    # UNCOST_FORMS_OPEN. Unset, or anything but "on", builds with the forms off.
+    # Build and both checks read this one value. It changes only what is built:
+    # the run still waits for the founder's approval, and the handlers stay dark
+    # until the project `uncost` has the SIGNUPS binding and UNCOST_SIGNUPS_OPEN.
+    env:
+      UNCOST_FORMS_OPEN: ${{ vars.UNCOST_FORMS_OPEN == 'on' && 'on' || '' }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -51,12 +58,12 @@ jobs:
           cache-dependency-path: website/package-lock.json
       - run: npm ci
         working-directory: website
-      # The production build of CHG-004 and CHG-005: every other switch unset,
-      # only the contact form on. The two checks run with the same value, so
-      # they expect exactly what was built.
+      # The production build of CHG-004 and CHG-005: the contact form on, the
+      # sign-ups switch as set above, and every other switch unset. The two
+      # checks run with the same values, so they expect exactly what was built.
       - name: Build
         working-directory: website
-        run: env -u SITE_ORIGIN -u UNCOST_FORMS_OPEN -u UNCOST_DONATIONS_OPEN -u UNCOST_SIGNATURE_COUNTER -u UNCOST_FOUNDING_SIGNERS -u UNCOST_SEARCH_ENABLED -u UNCOST_TODAY UNCOST_CONTACT_FORM_OPEN=on npm run build
+        run: env -u SITE_ORIGIN -u UNCOST_DONATIONS_OPEN -u UNCOST_SIGNATURE_COUNTER -u UNCOST_FOUNDING_SIGNERS -u UNCOST_SEARCH_ENABLED -u UNCOST_TODAY UNCOST_CONTACT_FORM_OPEN=on npm run build
       - name: Content audit of the build
         working-directory: website
         env:

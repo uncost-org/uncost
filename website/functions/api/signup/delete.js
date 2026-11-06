@@ -11,7 +11,9 @@ export async function onRequestGet({ request, env }) {
     title: "Delete my data", eyebrow: "Your data", heading: "Delete your data?",
     paragraphs: [
       "This deletes your email address, your name if you gave one, your pledge signature and your email updates.",
-      "We keep only a scrambled record that this address asked not to be emailed, which cannot be turned back into the address, and a dated note that a deletion happened. It can’t be undone.",
+      "We keep only a scrambled record that this address asked not to be emailed, which cannot be turned back into the address, and a dated note that a deletion happened.",
+      "Postmark, which sends our emails, keeps its copy of the emails it sent you for up to 45 days, its default. If an email to you hard-bounced or you reported one as spam, your address also stays on Postmark’s own list, so that it won’t send to it.",
+      "It can’t be undone.",
     ],
     action: "/api/signup/delete", token: tokenFrom(request), button: "Delete my data",
   });

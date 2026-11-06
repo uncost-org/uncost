@@ -29,7 +29,12 @@ Checks — each an ERROR, never a skipped line (standing rule 1):
      type="search" box (the site search and the keyword filters) — except,
      in a build made with UNCOST_CONTACT_FORM_OPEN=on, the live contact form
      on /contact/ and nowhere else (CHG-005). Its two confirmation pages,
-     /contact/sent/ and /contact/not-sent/, are then expected noindex;
+     /contact/sent/ and /contact/not-sent/, are then expected noindex — and,
+     in a build made with UNCOST_FORMS_OPEN=on, the live updates form on any
+     page and the live Pledge form on /pledge/ and /pledge/resent/ only, as
+     scripts/audit_website.py allows them (CHG-013). /pledge/ must then have
+     the Pledge form and / the updates form, and the sign-up result pages are
+     expected noindex;
   6. THIRD-PARTY: no asset URL (src, srcset, <link href>, url(), poster) points
      off uncost.org — the rule scripts/audit_website.py enforces in built
      mode, repeated here as a count. The one exception is the Cloudflare Web
@@ -80,6 +85,10 @@ EXPECTED_NOINDEX = ["/404.html", "/500.html", "/press/", "/quiz/", "/share/", "/
 FORM_FLOW_PAGES = ["/pledge/check-email/", "/pledge/verify/", "/pledge/resent/", "/pledge/thanks/"]
 # Contact form (CHG-005): only in a build with UNCOST_CONTACT_FORM_OPEN=on.
 CONTACT_RESULT_PAGES = ["/contact/sent/", "/contact/not-sent/"]
+# Sign-ups (CHG-009, CHG-013): only in a build with UNCOST_FORMS_OPEN=on.
+SIGNUP_RESULT_PAGES = ["/signup/deleted/", "/signup/link-expired/", "/signup/not-sent/", "/signup/unsubscribed/",
+                       "/updates/check-email/", "/updates/confirmed/"]
+PLEDGE_FORM_ROUTES = ("/pledge/", "/pledge/resent/")
 # The one third-party request (Cloudflare Web Analytics), and what the CSP may
 # name: the beacon script, and its report endpoint for connect-src.
 BEACON_SCRIPT = "https://static.cloudflareinsights.com/beacon.min.js"
@@ -90,6 +99,8 @@ def expected_noindex_default(env=os.environ):
     exp = list(EXPECTED_NOINDEX)
     if env.get("UNCOST_FORMS_OPEN") != "on":
         exp += FORM_FLOW_PAGES
+    else:
+        exp += SIGNUP_RESULT_PAGES
     if env.get("UNCOST_CONTACT_FORM_OPEN") == "on":
         exp += CONTACT_RESULT_PAGES
     return exp
@@ -250,11 +261,17 @@ def route_of(rel: str) -> str:
     return "/" + rel
 
 
-def check(built: pathlib.Path, expected_noindex=None, contact_open=None) -> dict:
+def live_signup_form(kind: str) -> re.Pattern:
+    return re.compile(rf'<form\b[^>]*data-form="{kind}"[^>]*data-live[^>]*action="/api/signup/{kind}"[^>]*>.*?</form>', re.S)
+
+
+def check(built: pathlib.Path, expected_noindex=None, contact_open=None, signups_open=None) -> dict:
     if expected_noindex is None:
         expected_noindex = expected_noindex_default()
     if contact_open is None:
         contact_open = os.environ.get("UNCOST_CONTACT_FORM_OPEN") == "on"
+    if signups_open is None:
+        signups_open = os.environ.get("UNCOST_FORMS_OPEN") == "on"
     errors, facts = [], {}
 
     robots_path = built / "robots.txt"
@@ -321,6 +338,15 @@ def check(built: pathlib.Path, expected_noindex=None, contact_open=None) -> dict
                 html_forms = html[: live.start()] + html[live.end():]
         else:
             html_forms = html
+        if signups_open:
+            html_forms, updates_forms = live_signup_form("updates").subn("", html_forms)
+            pledge_forms = 0
+            if route in PLEDGE_FORM_ROUTES:
+                html_forms, pledge_forms = live_signup_form("pledge").subn("", html_forms)
+            if route == "/" and not updates_forms:
+                errors.append("FORM: / has no live updates form, but UNCOST_FORMS_OPEN is on")
+            if route == "/pledge/" and not pledge_forms:
+                errors.append("FORM: /pledge/ has no live Pledge form, but UNCOST_FORMS_OPEN is on")
         for m in TAG_RE.finditer(html_forms):
             tag, attrs = m.group(1).lower(), m.group(2)
             if tag == "input" and re.search(r'\btype\s*=\s*"search"', attrs, re.I):
@@ -419,8 +445,19 @@ def selftest() -> int:
     fsvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" fill="#D64A1E"/></svg>'
     sm = f"<urlset><url><loc>{ORIGIN}/</loc></url><url><loc>{ORIGIN}/about/</loc></url></urlset>"
     smc = sm.replace("</urlset>", f"<url><loc>{ORIGIN}/contact/</loc></url></urlset>")
+    updates_form = '<form class="ft-form" data-form="updates" data-live action="/api/signup/updates" method="post"><input type="email"></form>'
+    pledge_form = '<form class="pl-form" data-form="pledge" data-live action="/api/signup/pledge" method="post"><input type="email"></form>'
+    signups = {"index.html": page(updates_form, "/"), "pledge/index.html": page(pledge_form + updates_form, "/pledge/"),
+               "sitemap.xml": sm.replace("</urlset>", f"<url><loc>{ORIGIN}/pledge/</loc></url></urlset>")}
+    signups_on_cases = ("signups-on", "signups-pledge-elsewhere", "signups-updates-missing", "signups-pledge-missing", "signups-other-form")
     cases = {
         "good": ({}, set()),
+        "signups-off": (signups, {"FORM"}),
+        "signups-on": (signups, set()),
+        "signups-pledge-elsewhere": ({**signups, "about/index.html": page(pledge_form, "/about/")}, {"FORM"}),
+        "signups-updates-missing": ({**signups, "index.html": page("<p>Home</p>", "/")}, {"FORM"}),
+        "signups-pledge-missing": ({**signups, "pledge/index.html": page(updates_form, "/pledge/")}, {"FORM"}),
+        "signups-other-form": ({**signups, "about/index.html": page('<form action="/x"><input type="email"></form>', "/about/")}, {"FORM"}),
         "disallow": ({"robots.txt": f"User-agent: *\nDisallow: /\nSitemap: {ORIGIN}/sitemap.xml\n"}, {"ROBOTS"}),
         "preview-sitemap": ({"robots.txt": "User-agent: *\nAllow: /\nSitemap: https://x.pages.dev/sitemap.xml\n"}, {"ROBOTS"}),
         "x-robots": ({"_headers": ("/*\n  X-Robots-Tag: noindex, nofollow\n  Content-Security-Policy: default-src 'self'; "
@@ -481,10 +518,16 @@ def selftest() -> int:
             site(pathlib.Path(tmp), **over)
             on = name in ("contact-form-on", "contact-form-elsewhere")
             got = check(pathlib.Path(tmp), expected_noindex=["/press/"] + (
-                ["/pledge/thanks/"] if name == "form-flow-indexed" else []), contact_open=on)
+                ["/pledge/thanks/"] if name == "form-flow-indexed" else []), contact_open=on, signups_open=name in signups_on_cases)
         kinds = {e.split(":")[0] for e in got["errors"]}
         if kinds != want:
             failures.append({"case": name, "expected": sorted(want), "got": sorted(kinds), "errors": got["errors"][:4]})
+    on_noindex = expected_noindex_default({"UNCOST_FORMS_OPEN": "on"})
+    off_noindex = expected_noindex_default({})
+    if not set(SIGNUP_RESULT_PAGES) <= set(on_noindex) or set(FORM_FLOW_PAGES) & set(on_noindex):
+        failures.append({"case": "noindex-forms-on", "got": on_noindex})
+    if set(SIGNUP_RESULT_PAGES) & set(off_noindex) or not set(FORM_FLOW_PAGES) <= set(off_noindex):
+        failures.append({"case": "noindex-forms-off", "got": off_noindex})
     print(json.dumps({"ok": not failures, "selftest_cases": len(cases), "failures": failures}, indent=2))
     return 0 if not failures else 1
 
