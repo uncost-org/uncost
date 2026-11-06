@@ -2952,67 +2952,67 @@
       "alpha_max": 255,
       "alpha_min": 0,
       "alt_text": "uncost.org",
-      "bytes": 40533,
+      "bytes": 71241,
       "class": "email_copy",
-      "derivation": "Flattened on #FAF7F0, Lanczos resize to 224px wide, full colour, then set on a 288x219 #FAF7F0 rounded rectangle (32px margin, 29px corner radius) with transparent corners (RGBA, Pillow); badge added by CHG-015",
+      "derivation": "Flattened on #FAF7F0, Lanczos resize to 336px wide, full colour, then set on a 432x329 #FAF7F0 rounded rectangle (48px margin, 43px corner radius) with transparent corners (RGBA, Pillow); badge added by CHG-015, 3x display width since CHG-016",
       "derived_from": "website/assets/brand/logos/logo-tight-light.png",
       "derived_from_sha256": "13e05467a57b8582f68df6fb91547049e58a66c4fcaedc634f44f936e09d823d",
       "has_alpha": true,
-      "height": 219,
+      "height": 329,
       "license_scope": "RESERVED_BRAND_ASSET_EXCLUDED_FROM_OPEN_CONTENT_LICENSE",
       "mode": "RGBA",
       "nontransparent_bbox": [
         0,
         0,
-        288,
-        219
+        432,
+        329
       ],
       "path": "website/email/logo.png",
-      "record": "records/changes/CHG-015-email-badge.md",
+      "record": "records/changes/CHG-016-email-sharper.md",
       "rights_status": "FOUNDER_ASSERTED_OWNED_AND_AUTHORIZED_FOR_UNCOST_USE",
-      "semtransparent_pixel_count": 212,
-      "sha256": "16d56e2d579d813d624b66c4b10445b13a6c66c2c8c6530715e6453b6150e8be",
+      "semtransparent_pixel_count": 276,
+      "sha256": "cbbd08f3a6d2eb762bb012c8ee6bd5178eecc39bc8ef12e7bdfe41c00ccfee6d",
       "status": "DERIVED_EMAIL_COPY_CHG_013",
       "touches_canvas_edge": true,
-      "transparent_pixel_count": 632,
+      "transparent_pixel_count": 1464,
       "visual_qa_backgrounds": [
         "#FAF7F0",
         "#1F1F1F"
       ],
-      "width": 288
+      "width": 432
     },
     {
       "alpha_max": 255,
       "alpha_min": 0,
       "alt_text": "",
-      "bytes": 97869,
+      "bytes": 185911,
       "class": "email_copy",
-      "derivation": "Lanczos resize to 360px wide in premultiplied alpha, full colour with transparency (RGBA, Pillow); re-exported by CHG-015",
+      "derivation": "Lanczos resize to 540px wide in premultiplied alpha, full colour with transparency (RGBA, Pillow); 3x display width, re-exported by CHG-016",
       "derived_from": "website/assets/brand/robots/06_thumbs_up_transparent.png",
       "derived_from_sha256": "058bd0e1837a77e201511bf57dccf85d0620fb9879341252f8dd36bd82b29a11",
       "has_alpha": true,
-      "height": 480,
+      "height": 720,
       "license_scope": "RESERVED_BRAND_ASSET_EXCLUDED_FROM_OPEN_CONTENT_LICENSE",
       "mode": "RGBA",
       "nontransparent_bbox": [
-        61,
-        12,
-        298,
-        440
+        93,
+        19,
+        445,
+        658
       ],
       "path": "website/email/robot-thumbs-up.png",
-      "record": "records/changes/CHG-015-email-badge.md",
+      "record": "records/changes/CHG-016-email-sharper.md",
       "rights_status": "FOUNDER_ASSERTED_OWNED_AND_AUTHORIZED_FOR_UNCOST_USE",
-      "semtransparent_pixel_count": 7613,
-      "sha256": "87af0c02132fd942fa097927221b2313e4595b5e2712460fbd29072795b2f3c9",
+      "semtransparent_pixel_count": 11593,
+      "sha256": "ee6c4e6fc84c974d2e3c91114dbdc899bc6c068a3ecca47cd67c5cbec2d1e6d7",
       "status": "DERIVED_EMAIL_COPY_CHG_013",
       "touches_canvas_edge": false,
-      "transparent_pixel_count": 122200,
+      "transparent_pixel_count": 277603,
       "visual_qa_backgrounds": [
         "#FAF7F0",
         "#1F1F1F"
       ],
-      "width": 360
+      "width": 540
     }
   ],
   "exact_duplicates": [
@@ -3022,7 +3022,7 @@
     ]
   ],
   "license_boundary": "Brand identifiers and artwork are reserved and excluded from this repository\u2019s open-content licence; see NOTICE.md and website/assets/brand/RIGHTS.md. The published images, and the favicon source, are licensed to Uncost by Dafuq Industries LLC, which keeps ownership: LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt (CHG-007).",
-  "publication_scope": "Published on uncost.org since the public soft launch (CHG-004, 2026-10-19), under the artwork licence from Dafuq Industries LLC (LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt; CHG-007, 2026-10-20). Published: logos/logo-tight-light.png, logos/logo-tight-dark.png, logos/mark-only-final-light.png (the Open Graph image), seven robots (07_pointing, 08_shrugging, 10_building, 19_presenting, 21_holding_globe, 40_arms_crossed and, since CHG-013, 06_thumbs_up) and the fifteen sector images; robots/robot_01_front_transparent.png is the source of the favicon and app icons. Since CHG-013 (2026-11-01; live since its production deploy of 2026-11-06, re-exported in full colour by CHG-014, and re-exported by CHG-015 as a logo badge and a 360px robot), two copies are published for the sign-up emails: website/email/logo.png and website/email/robot-thumbs-up.png, listed under derived_copies. The other 60 images are in the repository only.",
+  "publication_scope": "Published on uncost.org since the public soft launch (CHG-004, 2026-10-19), under the artwork licence from Dafuq Industries LLC (LICENSES/LicenseRef-Dafuq-Industries-Uncost-Art.txt; CHG-007, 2026-10-20). Published: logos/logo-tight-light.png, logos/logo-tight-dark.png, logos/mark-only-final-light.png (the Open Graph image), seven robots (07_pointing, 08_shrugging, 10_building, 19_presenting, 21_holding_globe, 40_arms_crossed and, since CHG-013, 06_thumbs_up) and the fifteen sector images; robots/robot_01_front_transparent.png is the source of the favicon and app icons. Since CHG-013 (2026-11-01; live since its production deploy of 2026-11-06, re-exported in full colour by CHG-014, as a logo badge and a 360px robot by CHG-015, and at 3x display width by CHG-016), two copies are published for the sign-up emails: website/email/logo.png and website/email/robot-thumbs-up.png, listed under derived_copies. The other 60 images are in the repository only.",
   "qa": {
     "backgrounds": {
       "coral": "#D64A1E",

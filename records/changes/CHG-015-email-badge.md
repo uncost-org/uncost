@@ -5,6 +5,7 @@
 - **Date:** 2026-11-07
 - **Amends:** [CHG-014](CHG-014-email-fixes.md), for the logo's badge, the robot's size and the lead line's underline. Its history stands as written.
 - **Changed claim:** with the switch off, the two files at `/email/` are replaced, and nothing else differs.
+- **Amended by:** [CHG-016](CHG-016-email-sharper.md) (2026-11-07), for both images at 3× their display width, the centring, the space under the badge, and the size of "One last step:".
 - **Source:** the founder's re-check of the Pledge email from the preview, read in Spark on the Mac in dark mode on 2026-11-06 (CHG-014, "Email preview result"). No AI decision; this file records what the founder set.
 
 ## What the founder set
@@ -62,7 +63,17 @@ The pull request lists the counts.
 
 ## Email preview result
 
-To be filled in after the founder's next check, once this change is deployed: a new Pledge sign-up on the preview, read in Spark (light and dark) and in Gmail on the phone.
+The founder's check, 2026-11-06. It comes from the Worker's log and the sign-ups database; no address is recorded here.
+- **Deployed first:** this change's production deploy finished at 17:32:41 UTC, so `/email/` served the badge and the 360px robot before the sign-up. The served files match the hashes above. The Worker ran uncost-api `34b9be0`.
+- **17:33:24 UTC, a Pledge on the preview with a new address, with updates ticked:**
+  - the intake answered 202;
+  - it wrote one pending signature, one pending updates subscription, and one confirmation link that covers both;
+  - the email was sent, with no send failure logged;
+  - no bounce or other Postmark event followed, up to 17:44 UTC;
+  - the link had not been used by then, so the signature was still pending.
+- **The founder's read:** it looks right in Spark. On Android the robot is a little blurry. That led to [CHG-016](CHG-016-email-sharper.md), which re-exports both images at 3× their display width. It also centres them, adds space under the badge and enlarges "One last step:".
+
+The check after CHG-016 is recorded there.
 
 ## Affected surfaces
 
