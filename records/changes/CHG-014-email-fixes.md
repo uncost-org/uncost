@@ -5,6 +5,7 @@
 - **Date:** 2026-11-06
 - **Amends:** [CHG-013](CHG-013-signups-go-live-prep.md), for the two email images, the robot's size, the email wording and dark mode. Its history stands as written.
 - **Changed claim:** with the switch off, the two files at `/email/` are replaced, and nothing else differs.
+- **Amended by:** [CHG-015](CHG-015-email-badge.md) (2026-11-07), for the logo's badge, the robot's size and the underline on "One last step:".
 - **Source:** the founder's review of the test email from the preview, 2026-11-06. No AI decision; this file records what the founder set.
 
 ## What the review found
@@ -74,7 +75,18 @@ The pull request lists the counts.
 
 ## Email preview result
 
-To be filled in after the founder's re-check, once this change is deployed: a new Pledge sign-up on the preview, read in Gmail on the phone (light and dark) and in Spark.
+The founder's re-check, 2026-11-06. It comes from the Worker's log and the sign-ups database; no address is recorded here.
+- **Deployed first:** this change's production deploy finished at 16:47:23 UTC, so `/email/` served the new images before the sign-up. The Worker ran uncost-api `525cacf`.
+- **16:48:22 UTC, a Pledge on the preview with a new address, with updates ticked:**
+  - the intake answered 202;
+  - it wrote one pending signature, one pending updates subscription, and one confirmation link that covers both;
+  - the email was sent, with no send failure logged;
+  - no bounce or other Postmark event followed, up to 17:01 UTC;
+  - the link had not been used by then, so the signature was still pending.
+- **Read in Spark on the Mac, in dark mode:** the email arrived. The logo tile's 8px padding and 6px radius did not render. That led to [CHG-015](CHG-015-email-badge.md), which bakes the badge into the image, shows the robot at 180px and underlines "One last step:".
+- **Gmail on the phone:** not part of the founder's report.
+
+The check after CHG-015 is recorded there.
 
 ## Affected surfaces
 
