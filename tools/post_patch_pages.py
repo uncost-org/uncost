@@ -838,7 +838,9 @@ else:
 # and carry noindex until each has real content, so they also drop out of
 # sitemap.xml and the search index. Not deleted. gen_static_pages.py writes
 # their front matter, so the flag is restated in it.
-for f in ("press", "quiz", "share", "community", "case/dashboard", "case/tracker"):
+# /quiz/ left this list with CHG-019: it has real content (the cost-of-living
+# quiz), is repo-authored, and is indexed.
+for f in ("press", "share", "community", "case/dashboard", "case/tracker"):
     patch(f"website/src/{f}.njk", r'\A(---\n(?:[^\n]*\n)*?)(---\n)', r'\1noindex: true\n\2',
           f"J {f}: noindex until it has real content", guard="\nnoindex: true\n")
 
@@ -1588,5 +1590,20 @@ SHARE_ROW = (
 patch("website/src/pledge/thanks.njk", r'  <div class="srow">\n.*?\n  </div>\n', SHARE_ROW.replace("\\", "\\\\"),
       "SB-1 pledge/thanks share row: Copy link, Facebook, X, Bluesky, LinkedIn, Email, Share…",
       guard='<button type="button" class="share-copy" hidden>')
+
+# ---------------------------------------------------------------------------
+# The cost-of-living quiz 2026-11-07 (founder brief; CHG-019). Re-derived
+# template only: join.njk. quiz.njk is repo-authored (gen_static_pages.py
+# no longer writes it).
+# ---------------------------------------------------------------------------
+print("Quiz 2026-11-07:")
+
+# QZ-1 — /join/: the quiz row links to /quiz/ and loses its "Planned" chip
+# (CHG-019, 2026-11-07): the cost-of-living quiz now exists. join.njk is
+# re-derived from the export, so the edit is restated here.
+literal("website/src/join.njk",
+        '</svg></span> Take the cost-of-living quiz <span class="u-80 status status--planned">Planned</span></div>',
+        '</svg></span> <a href="/quiz/">Take the cost-of-living quiz</a></div>',
+        "QZ-1 join: the quiz row links to /quiz/, no Planned chip")
 
 print("done")

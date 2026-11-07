@@ -3264,3 +3264,51 @@ body[data-page="pledge-thanks"] .share-status { position: absolute; left: 0; rig
   .hd-actions { gap: 8px; }
   .hd .cta-btn { padding-left: 16px; padding-right: 16px; }
 }
+
+/* 150. The cost-of-living quiz at /quiz/ (2026-11-07; CHG-019; CANVAS-SYNC
+ *      191). The export drew /quiz/ as one centred placeholder card
+ *      (sections.css, PAGE: later/quiz: .titleband, .sys, .card with .cap,
+ *      .bd, .eq, h2, p and .actions). The quiz is composed from those same
+ *      parts, one card per question, plus the R3 figure card (item 55) and
+ *      the privacy page's version table (.vhist, restated below as for the
+ *      policies pages). These rules only stack the parts, keep the figure card
+ *      as R3 draws it inside the centred card, and size the two guess
+ *      controls. No new colour, font or one-off value: tokens and existing
+ *      declarations only. Carry back to the canvas. */
+body[data-page="later-quiz"] .sys { flex-direction: column; align-items: stretch; gap: var(--s-5); }
+body[data-page="later-quiz"] .sys > .card,
+body[data-page="later-quiz"] .quiz-list > .card { margin-left: auto; margin-right: auto; }
+body[data-page="later-quiz"] .quiz-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s-5); }
+body[data-page="later-quiz"] .quiz-cap { margin: 0; font-weight: 600; }
+/* A question is a component heading: one step below the section headline
+ * (tools/type_audit.py), the --fs-h3 token. */
+body[data-page="later-quiz"] .quiz-q .bd h2 { font-size: var(--fs-h3); }
+/* [hidden] must win over the design's display rules (.actions is flex), as
+ * item 66 found for .cards .card: the quiz hides and shows its parts with it. */
+body[data-page="later-quiz"] [hidden] { display: none; }
+/* The R3 figure card, one to a row, as R3 draws it: not the placeholder's
+ * centred, framed, 620px card. */
+body[data-page="later-quiz"] .cards { grid-template-columns: 1fr; margin: var(--s-4) 0; text-align: left; }
+body[data-page="later-quiz"] .cards .card { max-width: none; border: 0; text-align: left; }
+body[data-page="later-quiz"] .quiz-reveal h3,
+body[data-page="later-quiz"] .quiz-end h3 { font-family: var(--font-display); font-weight: 700; font-size: 24px; margin: var(--s-6) 0 var(--s-3); }
+body[data-page="later-quiz"] .quiz-verdict { font-weight: 700; color: var(--ink); }
+body[data-page="later-quiz"] .quiz-src { font-size: 14px; }
+/* The guess: a full-width slider at least 24px tall, and a number input. */
+body[data-page="later-quiz"] .quiz-label { display: block; font-weight: 600; margin: var(--s-5) 0 var(--s-2); }
+body[data-page="later-quiz"] .quiz-range { display: block; width: 100%; height: var(--s-5); margin: 0; accent-color: var(--ink); }
+body[data-page="later-quiz"] .quiz-num { display: flex; gap: var(--s-2); align-items: center; justify-content: center; margin-top: var(--s-4); font-weight: 600; }
+body[data-page="later-quiz"] .quiz-num input { width: 7em; min-height: 44px; padding: 0 var(--s-3); border: 2px solid var(--ink); background: transparent; color: var(--ink); font: inherit; font-size: 18px; }
+body[data-page="later-quiz"] .quiz-range:disabled,
+body[data-page="later-quiz"] .quiz-num input:disabled { opacity: 1; }
+/* The summary: the privacy page's version table. */
+body[data-page="later-quiz"] .vhist { width: 100%; border-collapse: collapse; border: 2px solid var(--ink); margin-top: 6px; text-align: left; }
+body[data-page="later-quiz"] .vhist th { background: var(--ink); color: var(--cream); font-size: 12px; letter-spacing: .05em; text-transform: uppercase; text-align: left; padding: 10px 14px; font-family: var(--font-display); font-weight: 700; }
+body[data-page="later-quiz"] .vhist td,
+body[data-page="later-quiz"] .vhist tbody th { border-top: 2px solid var(--ink); padding: 11px 14px; font-size: 14px; vertical-align: top; }
+body[data-page="later-quiz"] .vhist tbody th { background: transparent; color: var(--ink); text-transform: none; letter-spacing: 0; font-family: inherit; }
+@media (max-width: 680px) {
+  body[data-page="later-quiz"] .sys { padding-left: var(--s-4); padding-right: var(--s-4); }
+  body[data-page="later-quiz"] .vhist th,
+  body[data-page="later-quiz"] .vhist td { padding: 8px 8px; }
+}

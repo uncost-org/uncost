@@ -3,25 +3,90 @@ layout: layouts/base.njk
 permalink: "/quiz/"
 pageId: "later-quiz"
 title: "The Quiz"
-description: "Planned — the guess-the-cost quiz"
-noindex: true
+description: "Guess how much living costs went up this year, then see the sourced figures."
 ---
-{#- Markup taken verbatim from design-source/pages/later/quiz.html. CONTENT.md marks this
-    page's copy "inline (draft)", so the export supplies both; only asset
-    references and routes are rewritten. Do not re-author. -#}
-<!-- SECTION: later/quiz.Quiz — title -->
+{#- The cost-of-living quiz (records/changes/CHG-019). Repo-authored since
+    CHG-019: tools/gen_static_pages.py no longer writes this file from the
+    export's placeholder. pageId stays "later-quiz" because sections.css styles
+    the page by it.
+
+    Every answer comes from sources/register.csv through _data/quiz.js and
+    _data/register.js, rendered by partials/figure.njk inside its data-source.
+    No figure is typed here, in js/quiz.js or in the copy; the questions are the
+    only fixed text, and _data/quiz.js holds them.
+
+    Without JavaScript this is the page: the five questions with their sourced
+    answers as a plain list, then the end block. js/quiz.js turns it into one
+    question at a time. It makes no network call and stores nothing: the
+    guesses never leave the browser. -#}
+{% import "partials/figure.njk" as fig %}
+<!-- SECTION: quiz — title -->
 <div class="titleband" data-screen-label="Quiz — title"><h1>The <span class="u-1">Quiz</span></h1></div>
-<div class="sys">
-  <!-- SECTION: later/quiz.Quiz -->
-  <div class="card" data-screen-label="Quiz">
-    <div class="cap"><span class="status status--planned">Planned</span></div>
+<div class="sys" data-quiz data-quiz-url="{{ site.origin }}{{ page.url }}" data-quiz-text="{{ description }}">
+  <!-- SECTION: quiz — intro -->
+  <div class="card quiz-intro" data-screen-label="Quiz — intro">
+    <div class="cap"><p class="quiz-cap">The cost-of-living quiz</p></div>
     <div class="bd">
-      <div class="eq">Planned tool · The Movement</div>
-      <h2>The Quiz is on the way.</h2>
-      <p>A short, surprising &ldquo;guess what living actually costs&rdquo; quiz — compare your guesses to sourced figures, and see the full breakdown when you join.</p>
-      <p>It&rsquo;s one of the first things we&rsquo;ll build to turn curiosity into participation.</p>
-      <div class="whenrow"><b>When</b><span>Near launch — an early engagement tool</span></div>
-      <div class="actions"><a href="/pledge/" class="u-btn u-btn--primary">Sign the Pledge</a><a href="/case/" class="u-btn u-btn--ghost">Read The Case</a></div>
+      <div class="eq">Guess, then check the record</div>
+      <h2>How much did living costs go up this year?</h2>
+      <p>{{ quiz.total }} questions about prices over the past year. Make a guess, then see the sourced figure and how close you were.</p>
+      <p>Your guesses stay in this browser. Nothing is sent, stored or tracked.</p>
     </div>
   </div>
+  <!-- SECTION: quiz — questions -->
+  <ol class="quiz-list" data-quiz-list>
+{% for q in quiz.questions %}
+    <li class="card quiz-q" data-quiz-q data-screen-label="Quiz — question {{ q.n }}">
+      <div class="cap"><p class="quiz-cap">Question {{ q.n }} of {{ quiz.total }}</p></div>
+      <div class="bd">
+        <div class="eq">{{ q.sector }}</div>
+        <h2 id="qz-{{ q.n }}-h" tabindex="-1">{{ q.question }}</h2>
+        {#- The slider and its linked number input are built by js/quiz.js from
+            these attributes: they only work with JavaScript, and a page built with
+            the forms off may ship no form control at all (audit_website.py,
+            form-rendered, "never allowlisted"). The no-JS view needs neither. -#}
+        <div class="quiz-guess" data-quiz-guess data-quiz-n="{{ q.n }}" data-min="-5" data-max="25" data-step="0.5" data-start="0" data-label="Your guess, as a percent change" data-num-label="Or type it" hidden>
+          <div class="actions"><button type="button" class="u-btn u-btn--primary" data-quiz-check>Check my guess</button></div>
+        </div>
+        <div class="quiz-reveal" data-quiz-reveal data-source="{{ q.id }}" data-quiz-value="{{ q.value }}" data-quiz-display="{{ q.row.display_value }}">
+          <h3 id="qz-{{ q.n }}-rh" tabindex="-1">The record</h3>
+          <p class="quiz-verdict" data-quiz-verdict hidden></p>
+          <div class="cards">
+      {{ fig.card(q.row) }}
+          </div>
+          <p class="quiz-src">{{ q.row.data_period }} · {{ q.row.region }} · Source: <a href="{{ q.row.url }}" target="_blank" rel="noopener">{{ q.row.source_line }}</a></p>
+          <div class="actions" data-quiz-next-wrap hidden><button type="button" class="u-btn u-btn--ink" data-quiz-next>Next question</button></div>
+        </div>
+      </div>
+    </li>
+{% endfor %}
+  </ol>
+  <!-- SECTION: quiz — end -->
+  <div class="card quiz-end" data-quiz-end data-screen-label="Quiz — end">
+    <div class="cap"><p class="quiz-cap">Your results</p></div>
+    <div class="bd">
+      <h2 id="qz-end-h" tabindex="-1">Your guesses vs. the record</h2>
+      <p class="quiz-nojs" data-quiz-nojs>Each answer is above, with its source. With JavaScript on, you can guess first and compare.</p>
+      <table class="vhist quiz-sum" data-quiz-summary hidden>
+        <thead><tr><th scope="col">Question</th><th scope="col">Your guess</th><th scope="col">The record</th><th scope="col">Difference</th></tr></thead>
+        <tbody>
+{% for q in quiz.questions %}
+          <tr data-quiz-sum-row><th scope="row">{{ q.sector }}</th><td data-quiz-sum-guess></td><td data-source="{{ q.id }}">{{ q.row.display_value }}</td><td data-quiz-sum-diff></td></tr>
+{% endfor %}
+        </tbody>
+      </table>
+      <h3>The full breakdown, by email</h3>
+      <p>Get the full breakdown each month: what changed, by how much, and the source.</p>
+      {% include "partials/forms/updates.njk" %}
+      <div class="actions">
+        <a href="/case/" class="u-btn u-btn--ghost">Read The Case</a>
+        <a href="/sectors/" class="u-btn u-btn--ghost">Explore the sectors</a>
+        <a href="/pledge/" class="u-btn u-btn--primary">Sign the Pledge</a>
+      </div>
+      <div class="actions" data-quiz-share-wrap hidden><button type="button" class="u-btn u-btn--ink" data-quiz-share>Share the quiz</button></div>
+      <p class="quiz-note" data-quiz-share-note role="status" aria-live="polite"></p>
+    </div>
+  </div>
+  <p class="skip-link" data-quiz-live aria-live="polite"></p>
 </div>
+<script src="/js/quiz.js" defer></script>
