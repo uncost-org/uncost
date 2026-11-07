@@ -1,9 +1,9 @@
 # CHG-009 — The Pledge and email updates sign-ups, built and switched off (amends CHG-007)
 
-**Status:** drafted from the founder's sign-ups brief (2026-10-21). The sign-ups are built and tested, and they stay **off in production**. Nothing in this record turns them on: that is founder decision 1 below, still open. One founder decision is recorded as made (the postal address). Amends [CHG-007](CHG-007-rights-and-transfer-safeguard.md), the latest privacy record, and follows [CHG-008](CHG-008-icon-and-pdf-licences.md).
+**Status:** drafted from the founder's sign-ups brief (2026-10-21). The sign-ups are built and tested, and they stay **off in production**. Nothing in this record turns them on: that is founder decision 1 below, dated 2026-11-07 by [CHG-017](CHG-017-signups-live.md). One founder decision is recorded as made (the postal address). Amends [CHG-007](CHG-007-rights-and-transfer-safeguard.md), the latest privacy record, and follows [CHG-008](CHG-008-icon-and-pdf-licences.md).
 
 - **Date:** 2026-10-21
-- **Amended by:** [CHG-012](CHG-012-postmark.md) (Postmark) and [CHG-013](CHG-013-signups-go-live-prep.md) (branded emails, deletion wording, the go-live checklist).
+- **Amended by:** [CHG-012](CHG-012-postmark.md) (Postmark), [CHG-013](CHG-013-signups-go-live-prep.md) (branded emails, deletion wording, the go-live checklist) and [CHG-017](CHG-017-signups-live.md) (the go-live: decisions 1 and 3, the production database).
 - **Amends:** [CHG-007](CHG-007-rights-and-transfer-safeguard.md), whose §5 transfer safeguard names Cloudflare and Google only. It also partly closes UNP-73 question 4 ([CHG-006](CHG-006-privacy-notice-and-records.md), "Sign-up providers") and settles nothing else in CHG-006's open list.
 - **Changed claims:** none while sign-ups are off. With the build switch off, every page the site serves is byte-identical to the build before this change. Only `/js/ui.js` and `/css/integration.css` differ; `/sitemap.xml` is unchanged (byte-identical). With the switch on, /privacy/ becomes version 0.4 (below) and the forms post to working handlers.
 - **Source:** the founder's sign-ups brief (2026-10-21). The governing spec is UNP-57 revision 5 (`d55be3b5`) and the UNP-63 build plan; where the brief is narrower, the brief wins, and what it leaves out is listed below. No AI decision; this file records what the founder set and what was built.
@@ -63,13 +63,13 @@ The Content-Security-Policy does not change: `form-action 'self'` and `connect-s
 
 ## Founder decisions (each dated by the founder)
 
-Decisions 2, 4 and 5 are dated. Decisions 1 and 3 are still open.
+All five are dated: decisions 2, 4 and 5 through CHG-013, and decisions 1 and 3 through [CHG-017](CHG-017-signups-live.md).
 
-1. **Turning sign-ups on in production** — YYYY-MM-DD. This includes setting `noticeEffective` in `_data/signups.json`, the effective date of /privacy/ version 0.4, which renders "date to be set" until then.
+1. **Turning sign-ups on in production** — 2026-11-07. This includes setting `noticeEffective` in `_data/signups.json`, the effective date of /privacy/ version 0.4, which renders "date to be set" until then; it is now "7 November 2026" (CHG-017).
 2. **Datastore: Cloudflare D1 instead of Neon** (the UNP-63 plan) — 2026-10-20.
    - Location hint `enam` (eastern North America).
    - D1 Time Travel restores to any minute in the last **30 days on Workers Paid and 7 days on Workers Free**, in place, overwriting the database. Source: Cloudflare's D1 Time Travel and limits pages (last updated 2026-04-21), read on 2026-10-21. This is UNP-66 condition 3.
-3. **Code home: `uncost-org/uncost-api`** — YYYY-MM-DD. This closes CHG-005 decision 4, which accepted the contact form's backend in this repository "to be revisited when any data system is built". The contact form stays where it is.
+3. **Code home: `uncost-org/uncost-api`** — 2026-11-07. This closes CHG-005 decision 4, which accepted the contact form's backend in this repository "to be revisited when any data system is built". The contact form stays where it is.
 4. **Retention rule for sign-ups** — 2026-10-25. Shown in /privacy/ §7 only while the switch is on:
    - unconfirmed sign-ups and their links: deleted after 7 days;
    - a Pledge signature: kept until the person asks for deletion;
