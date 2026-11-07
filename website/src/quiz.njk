@@ -104,7 +104,7 @@ description: "Quick questions on prices, rent and wealth in the United States: p
         <thead><tr><th scope="col">Question</th><th scope="col">Your answer</th><th scope="col">The record</th><th scope="col">Right?</th></tr></thead>
         <tbody>
 {% for q in quiz.questions %}
-          <tr data-quiz-sum-row><th scope="row">{{ q.topic }}</th><td data-quiz-sum-answer></td><td data-source="{{ q.row.source_id }}">{{ q.summaryText }}</td><td data-quiz-sum-right></td></tr>
+          <tr data-quiz-sum-row><th scope="row">{{ q.topic }}</th><td data-label="Your answer" data-quiz-sum-answer></td><td data-label="The record" data-source="{{ q.row.source_id }}">{{ q.summaryText }}</td><td data-label="Right" data-quiz-sum-right></td></tr>
 {% endfor %}
         </tbody>
       </table>

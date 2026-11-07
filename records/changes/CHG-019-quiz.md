@@ -82,6 +82,7 @@ So the end screen can say "You got 7 of 10 right. The average is 5.8 from 1,240 
 
 - **Money and count choices are rounded** (#3, #7, #8, #10): the four choices are rounded alike, to two significant figures of the largest, and read "About …" (for example "About $18,000 · About $27,000 · About $40,000 · About $61,000"), because exact wrong choices such as $17,995 looked like real data. The reveal card, the no-JS answer, the announcement and the summary keep the exact register figure. Percent questions are unchanged.
 - **SRC-018 in the summary** shows the row's whole `display_caption`, so its two halves (the total fell; chronic homelessness reached a record high) travel together, as the row's notes require (`summary: "caption"` in `_data/quiz.js`).
+- **The summary table fits a phone.** With the caption in it, the four-column table was wider than the card, and the page scrolled sideways, at 414px and below (found by a new end-screen width check; the overflow sweep sees only the page as it opens). Up to 480px each answer now stacks, as the sector ledger (`.lg`) collapses its rows: the question, then "Your answer", "The record" and "Right", each named by its cell's `data-label`. It fits from 320px up.
 
 ## Files
 

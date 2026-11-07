@@ -3356,3 +3356,22 @@ body[data-page="later-quiz"] .vhist tbody th { background: transparent; color: v
   body[data-page="later-quiz"] .vhist th,
   body[data-page="later-quiz"] .vhist td { padding: 8px 8px; }
 }
+/* The summary on a phone: four columns, one of them SRC-018's whole caption,
+ * are wider than a 480px screen, so each answer stacks, as the sector ledger
+ * (.lg) collapses its rows: the question, then "Your answer", "The record" and
+ * "Right", each named by its cell's data-label. */
+@media (max-width: 480px) {
+  body[data-page="later-quiz"] .quiz-sum thead { display: none; }
+  body[data-page="later-quiz"] .quiz-sum:not([hidden]),
+  body[data-page="later-quiz"] .quiz-sum tbody,
+  body[data-page="later-quiz"] .quiz-sum tr,
+  body[data-page="later-quiz"] .quiz-sum tbody th,
+  body[data-page="later-quiz"] .quiz-sum td { display: block; width: 100%; box-sizing: border-box; }
+  body[data-page="later-quiz"] .quiz-sum tr { border-top: 2px solid var(--ink); padding: 12px 14px; }
+  body[data-page="later-quiz"] .quiz-sum tr:first-child { border-top: 0; }
+  body[data-page="later-quiz"] .quiz-sum tbody th,
+  body[data-page="later-quiz"] .quiz-sum td { border-top: 0; padding: 2px 0; }
+  body[data-page="later-quiz"] .quiz-sum tbody th { font-weight: 700; padding-bottom: 6px; }
+  body[data-page="later-quiz"] .quiz-sum td::before { content: attr(data-label) ": "; font-weight: 600; }
+  body[data-page="later-quiz"] .quiz-sum .quiz-share { display: inline; margin-left: 6px; }
+}
