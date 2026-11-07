@@ -74,7 +74,11 @@ For the go-live day, drawn from CHG-009's production steps and CHG-012. It repla
 1. Date decisions 1 and 3 in CHG-009, and set `noticeEffective`, in one PR. Merge it.
 2. Recreate the D1 database `uncost-signups` empty and apply the migrations, so no test row or test suppression goes live. Keep every `HMAC_KEY_V<n>`.
 3. Confirm that the Worker runs main and that `LINK_ORIGINS` covers `https://uncost.org`.
-4. Confirm that the Postmark account is approved and that its DPA applies, and add the private register rows.
+4. Confirm that the Postmark account is approved. Its DPA and the private register rows are done:
+   - the founder accepted Postmark's DPA at sign-up on 2026-11-01 and checked it on 2026-11-06;
+   - Postmark was added to CHG-006's private processor register and data inventory on 2026-11-07.
+
+   In those records, remove the AWS SES and SNS entries, which are marked unused.
 5. Point Postmark's webhook at `https://uncost.org/api/signup/postmark-events`, with the same Basic auth.
 6. Confirm that the rate-limiting rule covers `/api/signup/pledge` and `/api/signup/updates` (CHG-009, Cloudflare step 6).
 7. On the production project `uncost`: the Service binding `SIGNUPS` → `uncost-signups`, and `UNCOST_SIGNUPS_OPEN=on`. Pages applies these to new deployments only.
@@ -94,7 +98,9 @@ For speed, the dashboard's rollback to the previous deployment restores the earl
 
 ## Conflicts, listed and not resolved
 
-- **POL-002 Rule 6 and its "adequate written terms".** CHG-012 left the founder's confirmation of Postmark's DPA, and counsel's view of the transfer wording, open. Closing the AWS question does not close those.
+- **POL-002 Rule 6 and its "adequate written terms".** CHG-012 left two things open:
+  - **The founder's confirmation of Postmark's DPA: closed (2026-11-07).** The founder accepted the DPA at sign-up on 2026-11-01 and checked it on 2026-11-06 (go-live step 4).
+  - **Counsel's view of the transfer wording: open.** Closing the AWS question and the DPA confirmation does not close it.
 
 ## Email preview result
 
