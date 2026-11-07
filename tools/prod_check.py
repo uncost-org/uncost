@@ -75,9 +75,10 @@ import tempfile
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 DIST = ROOT / "website" / "dist"
 ORIGIN = "https://uncost.org"
-# The six unlinked "on the way" placeholders (CANVAS-SYNC 162) and the two
-# error pages. Anything else carrying noindex, or any of these losing it, fails.
-EXPECTED_NOINDEX = ["/404.html", "/500.html", "/press/", "/quiz/", "/share/", "/community/",
+# The five unlinked "on the way" placeholders (CANVAS-SYNC 162; /quiz/ left
+# with CHG-019, CANVAS-SYNC 191) and the two error pages. Anything else
+# carrying noindex, or any of these losing it, fails.
+EXPECTED_NOINDEX = ["/404.html", "/500.html", "/press/", "/share/", "/community/",
                     "/case/dashboard/", "/case/tracker/"]
 # Pledge-flow pages: noindex while formsOpen is off (formFlow: true in their
 # front matter; layouts/base.njk). The build reads UNCOST_FORMS_OPEN, so the

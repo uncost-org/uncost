@@ -499,6 +499,17 @@ def scan_lines(
                         record("WARN", rule, number)
 
 
+# The quiz's wrong choices (CHG-019, 2026-11-08). /quiz/ lists each question's
+# choices as text marked data-quiz-choice; three of every four are numbers made
+# at build time that are not in the register, by design. Their text is exempt
+# from the WARN figure rules there and nowhere else: only inside an element
+# carrying data-quiz-choice, only on the page whose <body data-page> is this
+# one. The FAIL rules still read it, and the same markup on any other page is
+# audited as usual. CANVAS-SYNC 191.
+QUIZ_CHOICE_PAGE = "later-quiz"
+QUIZ_CHOICE_ATTR = "data-quiz-choice"
+
+
 class BuiltPageParser(HTMLParser):
     """Extracts visible text and attributes with registered data-source ancestry."""
 
@@ -517,11 +528,16 @@ class BuiltPageParser(HTMLParser):
         self.element_text: List[Tuple[int, str]] = []
         self._source_depth = 0
         self._source_ids: List[str] = []
-        self._stack: List[Tuple[str, bool, List[str], int]] = []
+        self._page = ""
+        self._choice_depth = 0
+        self._stack: List[Tuple[str, bool, List[str], int, bool]] = []
 
     def handle_starttag(self, tag: str, attrs: List[Tuple[str, Optional[str]]]) -> None:
         attrs_dict = {name: value or "" for name, value in attrs}
+        if tag == "body":
+            self._page = attrs_dict.get("data-page", "").strip()
         cited_here = self.valid_source(attrs_dict.get("data-source", "").strip())
+        choice_here = self._page == QUIZ_CHOICE_PAGE and QUIZ_CHOICE_ATTR in attrs_dict
         line = self.getpos()[0]
         effective_cited = self._source_depth > 0 or cited_here
         source_here = attrs_dict.get("data-source", "").strip() if cited_here else (
@@ -537,7 +553,9 @@ class BuiltPageParser(HTMLParser):
         if cited_here:
             self._source_depth += 1
             self._source_ids.append(source_here)
-        self._stack.append((tag, cited_here, [], line))
+        if choice_here:
+            self._choice_depth += 1
+        self._stack.append((tag, cited_here, [], line, choice_here))
 
     def handle_endtag(self, tag: str) -> None:
         if tag in VOID_ELEMENTS:
@@ -545,10 +563,12 @@ class BuiltPageParser(HTMLParser):
         if not any(entry[0] == tag for entry in self._stack):
             return
         while self._stack:
-            open_tag, cited, texts, line = self._stack.pop()
+            open_tag, cited, texts, line, choice = self._stack.pop()
             if cited:
                 self._source_depth -= 1
                 self._source_ids.pop()
+            if choice:
+                self._choice_depth -= 1
             if open_tag == tag:
                 direct = " ".join(t.strip() for t in texts if t.strip()).strip()
                 if direct:
@@ -558,7 +578,10 @@ class BuiltPageParser(HTMLParser):
     def handle_data(self, data: str) -> None:
         if not data.strip():
             return
-        self.chunks.append((self.getpos()[0], data, self._source_depth > 0))
+        # The third field means "skip the WARN figure rules": cited text, or a
+        # quiz choice on /quiz/ (QUIZ_CHOICE_PAGE). Only cited text counts as a
+        # citation below.
+        self.chunks.append((self.getpos()[0], data, self._source_depth > 0 or self._choice_depth > 0))
         if self._source_depth > 0:
             self.cited_chunks.append((self.getpos()[0], data, self._source_ids[-1]))
         if self._stack:
@@ -1114,6 +1137,31 @@ def selftest() -> int:
     expect("status-badge-bare" in rules_found, "badge after void element fires")
     dollar_warns = [f for f in findings if f.rule == "figure-dollar"]
     expect(len(dollar_warns) == 2, "void/empty data-source do not suppress; registered ancestor does")
+
+    # The quiz-choice exemption (CHG-019): data-quiz-choice text on /quiz/ only.
+    def quiz_findings(body_attrs: str, inner: str) -> Tuple[List[str], Dict[str, Dict[str, int]]]:
+        found: List[Finding] = []
+        probe: Dict[str, Dict[str, int]] = {}
+        with tempfile.TemporaryDirectory() as tmp:
+            page = Path(tmp) / "index.html"
+            page.write_text(f"<html><body{body_attrs}>{inner}</body></html>", encoding="utf-8")
+            scan_built_html(page, "index.html", found, {}, {"SRC-001"}, probe)
+        return [f.rule for f in found], probe
+
+    choices = ('<ul hidden><li data-quiz-choice>$99</li><li data-quiz-choice><span>48.8%</span></li>'
+               '<li data-quiz-choice data-quiz-correct>1,118,480</li></ul>')
+    rules, probe = quiz_findings(' data-page="later-quiz"', choices + "<p>$98 outside</p>")
+    expect(rules == ["figure-dollar"], "on /quiz/ only the figure outside a choice warns (nested choice text too)")
+    expect(probe == {}, "a quiz choice is exempt, not cited: it adds nothing to cited_figures")
+    rules, _ = quiz_findings(' data-page="faq"', choices)
+    expect(sorted(rules) == ["figure-count", "figure-dollar", "figure-percent"],
+           "the same choices on any other page warn as usual")
+    rules, _ = quiz_findings("", choices)
+    expect(len(rules) == 3, "a page with no data-page gets no exemption")
+    rules, _ = quiz_findings(' data-page="later-quiz"', '<li data-quiz-choice>the treasury wallet</li>')
+    expect(rules == ["crypto-wallet"], "the FAIL rules still read quiz choice text")
+    rules, _ = quiz_findings(' data-page="later-quiz"', '<li data-quiz-choice>$5</li><p>$6 after</p>')
+    expect(rules == ["figure-dollar"], "the exemption ends with the choice element")
 
     texts = [("crypto-token", normalize("7. **Banking:** no cash handling and no cryptocurrency, token, or treasury of any kind."))]
     expect(

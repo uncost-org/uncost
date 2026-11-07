@@ -3264,3 +3264,84 @@ body[data-page="pledge-thanks"] .share-status { position: absolute; left: 0; rig
   .hd-actions { gap: 8px; }
   .hd .cta-btn { padding-left: 16px; padding-right: 16px; }
 }
+
+/* 150. The cost-of-living quiz at /quiz/ (2026-11-07; CHG-019; CANVAS-SYNC
+ *      191; multiple choice since 2026-11-08). The export drew /quiz/ as one
+ *      centred placeholder card (sections.css, PAGE: later/quiz: .titleband,
+ *      .sys, .card with .cap, .bd, .eq, h2, p and .actions). The quiz is
+ *      composed from those same parts, one card per question, under the
+ *      standard page header (.titleband, then .introband), plus the R3 figure
+ *      card (item 55) and the privacy page's version table (.vhist, restated
+ *      below as for the policies pages). Each question's choices are a native
+ *      radio group drawn as the pledge form's consent box and rows (.consents,
+ *      .crow), restated here as the pledge-resend rules restate them. No new
+ *      colour, font or one-off value: tokens and existing declarations only.
+ *      Carry back to the canvas. */
+body[data-page="later-quiz"] .sys { flex-direction: column; align-items: stretch; gap: var(--s-5); }
+body[data-page="later-quiz"] .sys > .card,
+body[data-page="later-quiz"] .quiz-list > .card { margin-left: auto; margin-right: auto; }
+body[data-page="later-quiz"] .quiz-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--s-5); }
+body[data-page="later-quiz"] .quiz-cap { margin: 0; font-weight: 600; }
+/* The header. sections.css draws the introband page by page and has none for
+ * /quiz/, so its declarations are restated here as /faq/ has them, minus what
+ * this file already sets for every introband: the bottom rule (item 40) and
+ * the headline's scale and measure (C3, C4). The second line is the smaller
+ * secondary line. The quiz below is the next band, so it owns the boundary. */
+body[data-page="later-quiz"] .introband { padding: 32px clamp(24px,6vw,80px); }
+body[data-page="later-quiz"] .introband h2 { margin: 0 0 12px; }
+body[data-page="later-quiz"] .introband p { font-size: 18px; line-height: 1.6; margin: 0; color: var(--fg-2); }
+body[data-page="later-quiz"] .introband p + p { font-size: 15px; margin-top: 12px; }
+body[data-page="later-quiz"] .introband + .sys { border-top: 4px solid var(--coral); }
+/* A question is a component heading: one step below the section headline
+ * (tools/type_audit.py), the --fs-h3 token. */
+body[data-page="later-quiz"] .quiz-q .bd h2 { font-size: var(--fs-h3); }
+/* [hidden] must win over the design's display rules (.actions is flex), as
+ * item 66 found for .cards .card: the quiz hides and shows its parts with it. */
+body[data-page="later-quiz"] [hidden] { display: none; }
+/* Before js/quiz.js has run: js/quiz-early.js (loaded without defer, before
+ * the questions) marks <html> with .quiz-js, so the answers, the end block and
+ * every question after the first stay hidden while the deferred script
+ * loads. js/quiz.js removes the mark once its own `hidden` state is set;
+ * without JavaScript there is no mark and the plain list shows. */
+.quiz-js body[data-page="later-quiz"] [data-quiz-reveal],
+.quiz-js body[data-page="later-quiz"] [data-quiz-end],
+.quiz-js body[data-page="later-quiz"] [data-quiz-q] ~ [data-quiz-q] { display: none; }
+/* The choices: a fieldset whose legend is the question, the pledge form's
+ * consent box (.consents) round the rows (.crow), and a native radio sized as
+ * the contact form's consent box is. The marks ("Your answer", "The record")
+ * are words under the choice, in the .eq eyebrow's type, in ink. */
+body[data-page="later-quiz"] .quiz-choices { border: 0; margin: 0; padding: 0; min-width: 0; }
+body[data-page="later-quiz"] .quiz-legend { padding: 0; width: 100%; }
+body[data-page="later-quiz"] .quiz-options { border: 2px solid var(--ink); margin-top: 16px; text-align: left; }
+body[data-page="later-quiz"] .quiz-choice { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-top: 1px solid var(--rule-soft); font-size: 18px; line-height: 1.5; color: var(--ink); cursor: pointer; }
+body[data-page="later-quiz"] .quiz-choice:first-child { border-top: 0; }
+body[data-page="later-quiz"] .quiz-choice input { flex: 0 0 auto; width: 20px; height: 20px; margin: 4px 0 0; accent-color: var(--ink); cursor: pointer; }
+body[data-page="later-quiz"] .quiz-choices:disabled .quiz-choice,
+body[data-page="later-quiz"] .quiz-choices:disabled .quiz-choice input { cursor: default; }
+body[data-page="later-quiz"] .quiz-mark { display: block; font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); margin-top: 4px; }
+body[data-page="later-quiz"] [data-quiz-right] .quiz-choice-text { font-weight: 700; }
+/* "Check my answer" waits for a choice: until then it is drawn as the ghost
+ * button, not the filled one, so it never looks ready when it is not. */
+body[data-page="later-quiz"] [data-quiz-check]:disabled { background: transparent; color: var(--ink); border-color: var(--ink); cursor: not-allowed; }
+/* The R3 figure card, one to a row, as R3 draws it: not the placeholder's
+ * centred, framed, 620px card. */
+body[data-page="later-quiz"] .cards { grid-template-columns: 1fr; margin: var(--s-4) 0; text-align: left; }
+body[data-page="later-quiz"] .cards .card { max-width: none; border: 0; text-align: left; }
+body[data-page="later-quiz"] .quiz-reveal h3,
+body[data-page="later-quiz"] .quiz-end h3 { font-family: var(--font-display); font-weight: 700; font-size: 24px; margin: var(--s-6) 0 var(--s-3); }
+body[data-page="later-quiz"] .quiz-verdict { font-weight: 700; color: var(--ink); }
+body[data-page="later-quiz"] .quiz-others { list-style: none; margin: var(--s-4) 0; padding: 0; text-align: left; font-size: 14px; }
+body[data-page="later-quiz"] .quiz-others li + li { margin-top: var(--s-2); }
+body[data-page="later-quiz"] .quiz-src { font-size: 14px; }
+body[data-page="later-quiz"] .quiz-score { font-family: var(--font-display); font-weight: 700; font-size: 24px; color: var(--ink); }
+/* The summary: the privacy page's version table. */
+body[data-page="later-quiz"] .vhist { width: 100%; border-collapse: collapse; border: 2px solid var(--ink); margin-top: 6px; text-align: left; }
+body[data-page="later-quiz"] .vhist th { background: var(--ink); color: var(--cream); font-size: 12px; letter-spacing: .05em; text-transform: uppercase; text-align: left; padding: 10px 14px; font-family: var(--font-display); font-weight: 700; }
+body[data-page="later-quiz"] .vhist td,
+body[data-page="later-quiz"] .vhist tbody th { border-top: 2px solid var(--ink); padding: 11px 14px; font-size: 14px; vertical-align: top; }
+body[data-page="later-quiz"] .vhist tbody th { background: transparent; color: var(--ink); text-transform: none; letter-spacing: 0; font-family: inherit; }
+@media (max-width: 680px) {
+  body[data-page="later-quiz"] .sys { padding-left: var(--s-4); padding-right: var(--s-4); }
+  body[data-page="later-quiz"] .vhist th,
+  body[data-page="later-quiz"] .vhist td { padding: 8px 8px; }
+}

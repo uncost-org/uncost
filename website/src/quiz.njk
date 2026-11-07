@@ -3,25 +3,112 @@ layout: layouts/base.njk
 permalink: "/quiz/"
 pageId: "later-quiz"
 title: "The Quiz"
-description: "Planned — the guess-the-cost quiz"
-noindex: true
+description: "Quick questions on prices, rent and wealth in the United States: pick an answer, then see the sourced figure."
 ---
-{#- Markup taken verbatim from design-source/pages/later/quiz.html. CONTENT.md marks this
-    page's copy "inline (draft)", so the export supplies both; only asset
-    references and routes are rewritten. Do not re-author. -#}
-<!-- SECTION: later/quiz.Quiz — title -->
+{#- The cost-of-living quiz (records/changes/CHG-019). Repo-authored since
+    CHG-019: tools/gen_static_pages.py no longer writes this file from the
+    export's placeholder. pageId stays "later-quiz" because sections.css styles
+    the page by it.
+
+    Multiple choice (CHG-019 v2, 2026-11-08). _data/quiz.js holds the ten
+    questions and makes every choice from sources/register.csv through
+    _data/register.js; the answers render through partials/figure.njk inside
+    their data-source. No figure is typed here, in js/quiz.js or in the copy.
+    A question that states a number renders inside its row's data-source, and
+    _data/quiz.js fails the build if that number is not in the row's caption
+    or receipt.
+
+    The choices are listed here as plain text (data-quiz-choice), hidden: the
+    content audit's form-rendered rule allows no form control in the built
+    page, so js/quiz.js builds each radio group from them at runtime. The wrong
+    choices are not register figures; scripts/audit_website.py exempts
+    data-quiz-choice text on this page only (CHG-019; CANVAS-SYNC 191).
+
+    Without JavaScript this is the page: the ten questions with their sourced
+    answers as a plain list, then the end block; no choices show. js/quiz.js
+    turns it into one question at a time. It makes no network call and stores
+    nothing: the answers never leave the browser. -#}
+{% import "partials/figure.njk" as fig %}
+<!-- SECTION: quiz — title -->
 <div class="titleband" data-screen-label="Quiz — title"><h1>The <span class="u-1">Quiz</span></h1></div>
-<div class="sys">
-  <!-- SECTION: later/quiz.Quiz -->
-  <div class="card" data-screen-label="Quiz">
-    <div class="cap"><span class="status status--planned">Planned</span></div>
+<!-- SECTION: quiz — intro -->
+<div class="introband" data-screen-label="Quiz — intro">
+  <h2>How well do you know what living costs?</h2>
+  <p>{{ quiz.total }} quick questions on prices, rent and wealth in the United States. Pick an answer, then see the sourced figure.</p>
+  <p>Your answers stay in this browser.</p>
+</div>
+<div class="sys" data-quiz data-quiz-url="{{ site.origin }}{{ page.url }}" data-quiz-text="{{ description }}">
+  {#- No defer, and before the questions: js/quiz-early.js runs before the
+      parser reaches the answers, so a slow js/quiz.js (deferred) never lets
+      them show first. It sits inside .sys so the bands stay adjacent
+      (.introband + .sys). It marks <html> with .quiz-js, which
+      integration.css item 150 reads; js/quiz.js removes the mark once it has
+      set its own state. The layout has no per-page <head> slot. #}
+  <script src="/js/quiz-early.js"></script>
+  <!-- SECTION: quiz — questions -->
+  <ol class="quiz-list" data-quiz-list>
+{% for q in quiz.questions %}
+    <li class="card quiz-q" data-quiz-q data-quiz-kind="{{ q.kind }}" data-screen-label="Quiz — question {{ q.n }}">
+      <div class="cap"><p class="quiz-cap">Question {{ q.n }} of {{ quiz.total }}</p></div>
+      <div class="bd">
+        <div class="eq">{{ q.topic }}</div>
+        <h2 id="qz-{{ q.n }}-h" tabindex="-1"{% if q.sourceId %} data-source="{{ q.sourceId }}"{% endif %}>{{ q.question }}</h2>
+        <div class="quiz-guess" data-quiz-guess data-quiz-n="{{ q.n }}" hidden>
+          <ul class="quiz-source-list" data-quiz-choices>
+{% for c in q.choices %}
+            <li data-quiz-choice{% if c.correct %} data-quiz-correct{% endif %}>{{ c.text }}</li>
+{% endfor %}
+          </ul>
+          <div class="actions"><button type="button" class="u-btn u-btn--primary" data-quiz-check disabled>Check my answer</button></div>
+        </div>
+        <div class="quiz-reveal" data-quiz-reveal>
+          <h3 id="qz-{{ q.n }}-rh" tabindex="-1">The record</h3>
+          <p class="quiz-verdict" data-quiz-verdict hidden></p>
+          <p class="quiz-answer" data-quiz-nojs data-source="{{ q.row.source_id }}">The answer: {{ q.answerText }}.</p>
+          <div class="cards">
+      {{ fig.card(q.row) }}
+          </div>
+{% if q.others.length %}
+          <ul class="quiz-others">
+{% for r in q.others %}
+            <li>{{ fig.line(r) }}</li>
+{% endfor %}
+          </ul>
+{% endif %}
+          <p class="quiz-src">{{ q.row.data_period }} · {{ q.row.region }} · Source: <a href="{{ q.row.url }}" target="_blank" rel="noopener">{{ q.row.source_line }}</a></p>
+          <div class="actions" data-quiz-next-wrap hidden><button type="button" class="u-btn u-btn--ink" data-quiz-next>Next question</button></div>
+        </div>
+      </div>
+    </li>
+{% endfor %}
+  </ol>
+  <!-- SECTION: quiz — end -->
+  <div class="card quiz-end" data-quiz-end data-screen-label="Quiz — end">
+    <div class="cap"><p class="quiz-cap">Your results</p></div>
     <div class="bd">
-      <div class="eq">Planned tool · The Movement</div>
-      <h2>The Quiz is on the way.</h2>
-      <p>A short, surprising &ldquo;guess what living actually costs&rdquo; quiz — compare your guesses to sourced figures, and see the full breakdown when you join.</p>
-      <p>It&rsquo;s one of the first things we&rsquo;ll build to turn curiosity into participation.</p>
-      <div class="whenrow"><b>When</b><span>Near launch — an early engagement tool</span></div>
-      <div class="actions"><a href="/pledge/" class="u-btn u-btn--primary">Sign the Pledge</a><a href="/case/" class="u-btn u-btn--ghost">Read The Case</a></div>
+      <h2 id="qz-end-h" tabindex="-1">Your answers vs. the record</h2>
+      <p class="quiz-nojs" data-quiz-nojs>Each answer is above, with its source. With JavaScript on, you can pick an answer first and compare.</p>
+      <p class="quiz-score" data-quiz-score hidden>You got <span data-quiz-score-n></span> of {{ quiz.total }} right.</p>
+      <table class="vhist quiz-sum" data-quiz-summary hidden>
+        <thead><tr><th scope="col">Question</th><th scope="col">Your answer</th><th scope="col">The record</th><th scope="col">Right?</th></tr></thead>
+        <tbody>
+{% for q in quiz.questions %}
+          <tr data-quiz-sum-row><th scope="row">{{ q.topic }}</th><td data-quiz-sum-answer></td><td data-source="{{ q.row.source_id }}">{{ q.answerText }}</td><td data-quiz-sum-right></td></tr>
+{% endfor %}
+        </tbody>
+      </table>
+      <h3>Get updates by email</h3>
+      <p>Get Uncost updates by email: new figures, what they mean, and their sources.</p>
+      {% include "partials/forms/updates.njk" %}
+      <div class="actions">
+        <a href="/case/" class="u-btn u-btn--ghost">Read The Case</a>
+        <a href="/sectors/" class="u-btn u-btn--ghost">Explore the sectors</a>
+        <a href="/pledge/" class="u-btn u-btn--primary">Sign the Pledge</a>
+      </div>
+      <div class="actions" data-quiz-share-wrap hidden><button type="button" class="u-btn u-btn--ink" data-quiz-share>Share the quiz</button></div>
+      <p class="quiz-note" data-quiz-share-note role="status" aria-live="polite"></p>
     </div>
   </div>
+  <p class="skip-link" data-quiz-live aria-live="polite"></p>
 </div>
+<script src="/js/quiz.js" defer></script>
