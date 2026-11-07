@@ -1,1 +1,3 @@
 .lighthouseci/
+# Written by every build (eleventy.config.js) for the Pages Functions; CHG-019.
+functions/_generated/

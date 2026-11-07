@@ -1,8 +1,10 @@
 {
-  "_comment": "The sign-up forms' consent texts and minimum age (CHG-009). The templates render these exact texts, and the Pages Functions (website/lib/signup.js) hash the same texts into each consent event, so the two can never drift. minAge is a founder and counsel decision that is still open (UNP-73 CF-1); 18 is the default. Change a text and the policyVersion together. noticeEffective is the effective date of privacy notice version 0.4, which /privacy/ shows only while formsOpen is on; it is the founder's to set before sign-ups open in production (empty renders \"date to be set\").",
+  "_comment": "The sign-up forms' consent texts and minimum age (CHG-009). The templates render these exact texts, and the Pages Functions (website/lib/signup.js) hash the same texts into each consent event, so the two can never drift. minAge is a founder and counsel decision that is still open (UNP-73 CF-1); 18 is the default. Change a text and the policyVersion together. noticeEffective is the effective date of privacy notice version 0.4, which /privacy/ shows only while formsOpen is on; it is the founder's to set before sign-ups open in production (empty renders \"date to be set\"). policyVersionQuizStats and quizNoticeEffective are the same pair for privacy notice version 0.6, shown only while features.quizStatsOpen is on (the quiz's anonymous score tally, CHG-019): in that build the sign-up handlers record policyVersionQuizStats instead, through functions/_generated/build.json, so a consent event always names the notice the page showed. quizNoticeEffective is the founder's to set when the tally is turned on.",
   "minAge": 18,
   "policyVersion": "privacy-notice-0.5",
   "noticeEffective": "7 November 2026",
+  "policyVersionQuizStats": "privacy-notice-0.6",
+  "quizNoticeEffective": "",
   "texts": {
     "signing": "I agree with the pledge above. My signature counts once I confirm by email, and my name, if I give one, is never shown.",
     "email_updates_pledge": "Also email me occasional Uncost updates. This is optional and separate from signing, and I can unsubscribe anytime.",

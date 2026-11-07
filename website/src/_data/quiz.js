@@ -14,13 +14,15 @@
 //            three wrong choices are made here, at build time, by one fixed
 //            rule (no randomness, so every build is the same): a ladder of
 //            four values, each LADDER times the one below, with the record on
-//            one rung. They are rounded to the record's own precision —
-//            percents to its decimal places, money and counts to its decimal
-//            places when it shows cents and otherwise to its significant
-//            figures — and written in the record's own style. Choices are shown
-//            low to high, so the record's rung is its position: each question
-//            starts from the next rung in RANK_ORDER, and moves to the next
-//            rung only when a rule below fails there.
+//            one rung. Percent choices are rounded to the record's own decimal
+//            places and written in its style. Money and count choices are all
+//            rounded the same way, to two significant figures of the largest,
+//            and read "About …" (founder's call, 2026-11-08: exact wrong
+//            choices such as $17,995 looked like real data); the reveal card,
+//            the no-JS answer and the summary keep the exact register figure.
+//            Choices are shown low to high, so the record's rung is its
+//            position: each question starts from the next rung in RANK_ORDER,
+//            and moves to the next rung only when a rule below fails there.
 //   most     Which rose most? (three or four choices). Every choice is a real
 //            register row; the right one is the row whose percent is highest.
 //   compare  Higher or lower (two choices). The answer is computed from two
@@ -45,6 +47,17 @@
 // and if every question puts the right answer in the same position.
 // checked_by is deliberately NOT required: it is empty on every row today (a
 // finding for the founder, not something to fill in here).
+//
+// `version` is a short hash of the question set — each question's kind, row
+// ids and right answer (the exact register figure) — so the anonymous score
+// tally (functions/api/quiz/) never mixes two sets. A register refresh that
+// changes an answer changes it. eleventy.config.js writes it, with `total`,
+// into functions/_generated/build.json, which the score endpoints import.
+//
+// `summary: "caption"` shows the row's whole caption in the end screen's "The
+// record" column instead of its figure: SRC-018's notes say its two halves
+// (the total fell; chronic homelessness reached a record high) travel together.
+const crypto = require("node:crypto");
 const register = require("./register.js");
 
 const QUESTIONS = [
@@ -78,7 +91,7 @@ const QUESTIONS = [
     // B the base. choices[0] when A > B.
     pattern: /base December 1997=(\d+(?:\.\d+)?): (\d+(?:\.\d+)?) \(September 2026\)/, a: 2, b: 1,
     choices: ["More", "Less"] },
-  { kind: "pick", id: "SRC-018", topic: "Homelessness",
+  { kind: "pick", id: "SRC-018", topic: "Homelessness", summary: "caption",
     question: "On a single night in January 2025, how many people were homeless in the United States?" },
 ];
 
@@ -156,16 +169,33 @@ function formatLike(fig, x) {
 
 const endsInZero = (text) => /0\D*$/.test(text);
 
+// Money and counts: every choice, the record's too, rounded to one step (two
+// significant figures of the largest) and read "About …".
+function about(fig, raw) {
+  const step = Math.pow(10, Math.floor(Math.log10(Math.max(...raw))) - 1);
+  const decimals = step < 1 ? Math.round(-Math.log10(step)) : 0;
+  const values = raw.map((v) => roundTo(Math.round(Number((v / step).toPrecision(12))) * step, decimals));
+  return { values, texts: values.map((v) => "About " + formatLike({ ...fig, decimals }, v)) };
+}
+
 // The four choices on one rung of the ladder, or the reason the rung fails.
 function rung(fig, recordText, rank, share) {
-  const values = [0, 1, 2, 3].map((i) => (i === rank ? fig.value : roundLike(fig, fig.value * Math.pow(LADDER, i - rank))));
-  const texts = values.map((v, i) => (i === rank ? recordText : formatLike(fig, v)));
+  const raw = [0, 1, 2, 3].map((i) => fig.value * Math.pow(LADDER, i - rank));
+  let values, texts;
+  if (fig.kind === "percent") {
+    values = raw.map((v, i) => (i === rank ? fig.value : roundLike(fig, v)));
+    texts = values.map((v, i) => (i === rank ? recordText : formatLike(fig, v)));
+  } else {
+    ({ values, texts } = about(fig, raw));
+  }
   const wrong = values.filter((_, i) => i !== rank);
+  const record = values[rank];
+  if (!(record > 0) && fig.kind !== "percent") return { fail: "the record rounds to nothing" };
   if (share && values.some((v) => v <= 0 || v >= 100)) return { fail: "a share outside the whole" };
   if (fig.kind !== "percent" && wrong.some((v) => v <= 0)) return { fail: "a choice of nothing" };
   if (new Set(texts).size !== 4) return { fail: "two choices read the same" };
-  if (wrong.some((v) => Math.abs(v - fig.value) < MIN_GAP * Math.abs(fig.value))) return { fail: "a wrong choice too close to the record" };
-  if (texts.every((t, i) => i === rank || endsInZero(t) !== endsInZero(recordText))) return { fail: "the record would stand out by its last digit" };
+  if (wrong.some((v) => Math.abs(v - record) < MIN_GAP * Math.abs(record))) return { fail: "a wrong choice too close to the record" };
+  if (texts.every((t, i) => i === rank || endsInZero(t) !== endsInZero(texts[rank]))) return { fail: "the record would stand out by its last digit" };
   return { texts };
 }
 
@@ -186,7 +216,7 @@ function pick(q, row, k, problems) {
   for (let step = 0; step < 4; step++) {
     const rank = (first + step) % 4;
     const r = rung(fig, recordText, rank, q.share);
-    if (r.texts) return { choices: r.texts, answer: rank };
+    if (r.texts) return { choices: r.texts, answer: rank, record: recordText };
     reasons.push(`position ${rank + 1}: ${r.fail}`);
   }
   problems.push(`${q.id}: no position gives four fair choices (${reasons.join("; ")})`);
@@ -217,7 +247,8 @@ function most(q, reg, problems) {
     problems.push(`"${q.topic}": the highest value is tied`);
     return null;
   }
-  return { choices: q.choices.map((c) => c.label), answer: values.indexOf(top) };
+  const answer = values.indexOf(top);
+  return { choices: q.choices.map((c) => c.label), answer, record: q.choices[answer].label };
 }
 
 function compare(q, row, problems) {
@@ -237,7 +268,7 @@ function compare(q, row, problems) {
     problems.push(`${q.id}: the two values are equal, so neither answer is right`);
     return null;
   }
-  return { choices: q.choices.slice(), answer: a > b ? 0 : 1 };
+  return { choices: q.choices.slice(), answer: a > b ? 0 : 1, record: q.choices[a > b ? 0 : 1] };
 }
 
 // Every number the question states must be in the same row's caption or
@@ -282,7 +313,13 @@ function build(reg) {
       sourceId: q.kind === "most" ? "" : q.id,
       choices: made.choices.map((text, j) => ({ text, correct: j === made.answer })),
       answer: made.answer,
-      answerText: made.choices[made.answer],
+      // The right answer as the register gives it: the exact figure for a
+      // pick question (its choice may read "About …"), the row's label for
+      // "most", the answer for "compare". The reveal, the no-JS answer and
+      // the announcement use it.
+      recordText: made.record,
+      // The end screen's "The record" column: the same, or the whole caption.
+      summaryText: q.summary === "caption" ? row.display_caption : made.record,
       row,
       others: q.kind === "most" ? rows.filter((r) => r !== row) : [],
     };
@@ -293,7 +330,9 @@ function build(reg) {
   if (problems.length) {
     throw new Error("Quiz guard failed (no fake numbers) — fix sources/register.csv or _data/quiz.js:\n  - " + problems.join("\n  - "));
   }
-  return { questions, total: questions.length };
+  const set = questions.map((q) => ({ kind: q.kind, ids: q.kind === "most" ? [q.row.source_id, ...q.others.map((r) => r.source_id)].sort() : [q.sourceId], answer: q.recordText }));
+  const version = crypto.createHash("sha256").update(JSON.stringify(set)).digest("hex").slice(0, 12);
+  return { questions, total: questions.length, version };
 }
 
 module.exports = function () {

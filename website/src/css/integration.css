@@ -3306,6 +3306,13 @@ body[data-page="later-quiz"] [hidden] { display: none; }
 .quiz-js body[data-page="later-quiz"] [data-quiz-reveal],
 .quiz-js body[data-page="later-quiz"] [data-quiz-end],
 .quiz-js body[data-page="later-quiz"] [data-quiz-q] ~ [data-quiz-q] { display: none; }
+/* In a build with the anonymous score tally on (CHG-019), a reader with
+ * JavaScript sends their score at the end, so under .quiz-js the intro shows
+ * the tally line instead of "Your answers stay in this browser." from the
+ * first paint; js/quiz.js keeps it so. If js/quiz.js never runs, the mark comes
+ * off at load and the no-JS line is back, which is then true: nothing is sent. */
+.quiz-js body[data-page="later-quiz"] [data-quiz-swap] { display: none; }
+.quiz-js body[data-page="later-quiz"] [data-quiz-tally-note] { display: block; }
 /* The choices: a fieldset whose legend is the question, the pledge form's
  * consent box (.consents) round the rows (.crow), and a native radio sized as
  * the contact form's consent box is. The marks ("Your answer", "The record")
@@ -3334,6 +3341,10 @@ body[data-page="later-quiz"] .quiz-others { list-style: none; margin: var(--s-4)
 body[data-page="later-quiz"] .quiz-others li + li { margin-top: var(--s-2); }
 body[data-page="later-quiz"] .quiz-src { font-size: 14px; }
 body[data-page="later-quiz"] .quiz-score { font-family: var(--font-display); font-weight: 700; font-size: 24px; color: var(--ink); }
+/* The tally's line under the score, and each question's share right in the
+ * summary's last column (CHG-019): the verdict's weight, the source line's size. */
+body[data-page="later-quiz"] .quiz-average { font-weight: 700; color: var(--ink); }
+body[data-page="later-quiz"] .quiz-share { display: block; font-size: 12px; color: var(--fg-2); }
 /* The summary: the privacy page's version table. */
 body[data-page="later-quiz"] .vhist { width: 100%; border-collapse: collapse; border: 2px solid var(--ink); margin-top: 6px; text-align: left; }
 body[data-page="later-quiz"] .vhist th { background: var(--ink); color: var(--cream); font-size: 12px; letter-spacing: .05em; text-transform: uppercase; text-align: left; padding: 10px 14px; font-family: var(--font-display); font-weight: 700; }

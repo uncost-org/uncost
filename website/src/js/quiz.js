@@ -12,10 +12,18 @@
  * _data/quiz.js. No figure is typed in this file. The radios are built here
  * because the content audit allows no form control in the built HTML.
  *
- * Privacy: the answers never leave the browser. This file makes no network
- * request and uses no cookies, localStorage, sessionStorage or analytics. The
- * only data that goes anywhere is what someone types into the updates form,
- * which ui.js handles exactly as on every other page.
+ * Privacy: no cookies, localStorage, sessionStorage or analytics, ever. In a
+ * build with the anonymous score tally off (the default), this file makes no
+ * network request: the answers never leave the browser. In a build with it on
+ * (features.quizStatsOpen; data-quiz-stats on the quiz), and only then, it
+ * sends ONE request when the reader reaches the end screen — POST
+ * /api/quiz/score with the question set's version and a 0 or 1 per question,
+ * nothing else — and, if that is accepted, reads the tally for this question
+ * set (GET /api/quiz/stats) to show the average. Nothing is sent before the
+ * end screen, and nothing twice. If either request fails, or the endpoints are
+ * switched off (404), the reader sees their own score only, never an error.
+ * The only other data that goes anywhere is what someone types into the
+ * updates form, which ui.js handles exactly as on every other page.
  *
  * CSP (website/src/_headers): loaded from 'self'; no inline script, style or
  * on* handler is used or created.
@@ -34,6 +42,8 @@
   // One entry per question once it is checked: the text picked, and whether it
   // was the right choice.
   var answers = [];
+  var statsOn = root.hasAttribute("data-quiz-stats");
+  var sent = false;
 
   function announce(text) {
     if (!live) return;
@@ -100,6 +110,9 @@
     var group = buildGroup(item, n);
     if (!group) return;
     var revealHeading = reveal.querySelector("h3");
+    // The right answer as the register gives it (a pick question's choice may
+    // read "About …"; the record is the exact figure).
+    var record = guess.getAttribute("data-quiz-record");
 
     // Enhanced state: the choices show, the answer waits, one question at a time.
     show(guess, true);
@@ -138,9 +151,10 @@
       show(check.parentNode, false);
       show(reveal, true);
       show(nextWrap, true);
+      var recordText = record || right.text;
       announce(picked === right
-        ? "Right. The record: " + right.text + "."
-        : "Not quite. Your answer: " + picked.text + ". The record: " + right.text + ".");
+        ? "Right. The record: " + recordText + "."
+        : "Not quite. Your answer: " + picked.text + ". The record: " + recordText + ".");
       if (revealHeading) revealHeading.focus();
     });
 
@@ -159,10 +173,12 @@
 
   function finish() {
     var score = 0;
+    var bits = "";
     var rows = end.querySelectorAll("[data-quiz-sum-row]");
     Array.prototype.forEach.call(rows, function (row, i) {
       var a = answers[i];
       if (a && a.correct) score += 1;
+      bits += a && a.correct ? "1" : "0";
       var mine = row.querySelector("[data-quiz-sum-answer]");
       var right = row.querySelector("[data-quiz-sum-right]");
       if (mine) mine.textContent = a ? a.text : "Not answered";
@@ -178,11 +194,70 @@
     announce(line ? line.textContent.replace(/\s+/g, " ").trim() : "Your answers vs. the record.");
     var h = end.querySelector("h2");
     if (h) h.focus();
+    if (items.every(function (_, i) { return !!answers[i]; })) tally(bits, score, rows);
+  }
+
+  // The anonymous tally (only in a build with it on): one POST per page load,
+  // at the end screen, then the tally for this question set. Any failure, or a
+  // 404 from switched-off endpoints, leaves the reader's own score alone.
+  var MIN_COUNT = 30;
+  function getJson(url, init) {
+    return window.fetch(url, init).then(function (r) {
+      if (!r.ok) throw new Error(String(r.status));
+      return r.status === 204 ? null : r.json();
+    });
+  }
+  function tally(bits, score, rows) {
+    if (!statsOn || sent || !window.fetch) return;
+    sent = true;
+    var version = root.getAttribute("data-quiz-version") || "";
+    var stop = window.AbortController ? new AbortController() : null;
+    var timer = stop ? window.setTimeout(function () { stop.abort(); }, 10000) : 0;
+    var init = { credentials: "omit", cache: "no-store", signal: stop ? stop.signal : undefined };
+    getJson("/api/quiz/score", Object.assign({ method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ version: version, answers: bits }) }, init))
+      .then(function () { return getJson("/api/quiz/stats?version=" + encodeURIComponent(version), Object.assign({ method: "GET" }, init)); })
+      .then(function (s) { showStats(s, score, rows); })
+      .catch(function () { /* own score only */ })
+      .then(function () { window.clearTimeout(timer); });
+  }
+  function showStats(s, score, rows) {
+    var line = end.querySelector("[data-quiz-average]");
+    if (!line || !s || typeof s.count !== "number") return;
+    var text;
+    if (s.count < MIN_COUNT || typeof s.mean !== "number") {
+      text = "Not enough players yet to show an average.";
+    } else {
+      var mean = Math.round(s.mean * 10) / 10;
+      text = "The average is " + mean.toFixed(1) + " from " + s.count.toLocaleString("en-US") + " people. " +
+        "You scored " + (score > mean ? "above" : score < mean ? "below" : "the same as") + " the average.";
+      if (Array.isArray(s.perQuestion)) {
+        Array.prototype.forEach.call(rows, function (row, i) {
+          var share = s.perQuestion[i];
+          var cell = row.querySelector("[data-quiz-sum-right]");
+          if (cell && typeof share === "number") {
+            cell.appendChild(el("span", { "class": "quiz-share" }, Math.round(share * 100) + "% got this right"));
+          }
+        });
+      }
+    }
+    line.textContent = text;
+    show(line, true);
+    announce(text);
   }
 
   // The no-JavaScript lines ("The answer: …", the end block's note) and the
   // end block wait: the choices and the summary say the same.
   Array.prototype.forEach.call(root.querySelectorAll("[data-quiz-nojs]"), function (p) { show(p, false); });
+
+  // In a build with the tally on, this reader (with JavaScript) will send
+  // their score at the end, so the intro says so. integration.css already
+  // showed the tally line under .quiz-js; this keeps it once the mark is off.
+  var tallyNote = document.querySelector("[data-quiz-tally-note]");
+  if (statsOn && tallyNote) {
+    show(document.querySelector("[data-quiz-local-note]"), false);
+    show(tallyNote, true);
+  }
   show(end, false);
 
   // js/quiz-early.js hid the answers until now (integration.css item 150).

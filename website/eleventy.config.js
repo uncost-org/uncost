@@ -356,6 +356,30 @@ module.exports = function (eleventyConfig) {
     }
   });
 
+  // What the Pages Functions need from this build (CHG-019), written where the
+  // deploy picks it up: the workflows ship dist/ and functions/ together, and
+  // functions/_generated/ is git-ignored, so it is always this build's.
+  //   quiz           the question set's version and length, for the anonymous
+  //                  score endpoints (functions/api/quiz/), which accept only
+  //                  this version and this many answers;
+  //   policyVersion  the privacy notice version this build's /privacy/ shows
+  //                  while the forms are on, recorded in each sign-up's
+  //                  consent event (lib/signup.js): 0.6 with the quiz tally on,
+  //                  otherwise _data/signups.json's policyVersion, as before.
+  // A JSON file is not a route. A deploy without a build has no file, and the
+  // functions then fail to bundle: closed, never stale.
+  eleventyConfig.on("eleventy.before", async () => {
+    const quiz = require("./src/_data/quiz.js")();
+    const features = require("./src/_data/features.js");
+    const signups = require("./src/_data/signups.json");
+    const out = path.join(__dirname, "functions", "_generated");
+    fs.mkdirSync(out, { recursive: true });
+    fs.writeFileSync(path.join(out, "build.json"), JSON.stringify({
+      quiz: { version: quiz.version, total: quiz.total },
+      policyVersion: features.quizStatsOpen ? signups.policyVersionQuizStats : signups.policyVersion,
+    }, null, 2) + "\n");
+  });
+
   eleventyConfig.on("eleventy.before", async () => {
     await Image(path.join(BRAND_ROOT, "logos", "mark-only-final-light.png"), {
       widths: [1200],

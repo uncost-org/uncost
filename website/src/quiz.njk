@@ -26,25 +26,35 @@ description: "Quick questions on prices, rent and wealth in the United States: p
 
     Without JavaScript this is the page: the ten questions with their sourced
     answers as a plain list, then the end block; no choices show. js/quiz.js
-    turns it into one question at a time. It makes no network call and stores
-    nothing: the answers never leave the browser. -#}
+    turns it into one question at a time. It stores nothing in the browser.
+    With the anonymous score tally off (the default), it makes no network
+    call. With it on (features.quizStatsOpen), it sends one score at the end
+    screen and shows the average (functions/api/quiz/, CHG-019). -#}
 {% import "partials/figure.njk" as fig %}
 <!-- SECTION: quiz — title -->
 <div class="titleband" data-screen-label="Quiz — title"><h1>The <span class="u-1">Quiz</span></h1></div>
 <!-- SECTION: quiz — intro -->
 <div class="introband" data-screen-label="Quiz — intro">
+  {#- No defer, and before the intro's lines and the questions: js/quiz-early.js
+      runs before the parser reaches them, so a slow js/quiz.js (deferred) never
+      lets an answer show first, and a build with the score tally on never shows
+      a reader with JavaScript the no-JS line. It sits inside a band so the
+      bands stay adjacent (.titleband + .introband + .sys). It marks <html> with
+      .quiz-js, which integration.css item 150 reads; js/quiz.js removes the mark
+      once it has set its own state. The layout has no per-page <head> slot. #}
+  <script src="/js/quiz-early.js"></script>
   <h2>How well do you know what living costs?</h2>
   <p>{{ quiz.total }} quick questions on prices, rent and wealth in the United States. Pick an answer, then see the sourced figure.</p>
-  <p>Your answers stay in this browser.</p>
+  {#- With the anonymous score tally on (features.quizStatsOpen; CHG-019), a
+      reader with JavaScript sends their score at the end screen, so they read
+      the tally line. A reader without JavaScript sends nothing, so they keep
+      "Your answers stay in this browser.", which stays true for them. #}
+  <p data-quiz-local-note{% if features.quizStatsOpen %} data-quiz-swap{% endif %}>Your answers stay in this browser.</p>
+{% if features.quizStatsOpen %}
+  <p data-quiz-tally-note hidden>We keep an anonymous tally of scores, with no name, email or IP address, to show the average.</p>
+{% endif %}
 </div>
-<div class="sys" data-quiz data-quiz-url="{{ site.origin }}{{ page.url }}" data-quiz-text="{{ description }}">
-  {#- No defer, and before the questions: js/quiz-early.js runs before the
-      parser reaches the answers, so a slow js/quiz.js (deferred) never lets
-      them show first. It sits inside .sys so the bands stay adjacent
-      (.introband + .sys). It marks <html> with .quiz-js, which
-      integration.css item 150 reads; js/quiz.js removes the mark once it has
-      set its own state. The layout has no per-page <head> slot. #}
-  <script src="/js/quiz-early.js"></script>
+<div class="sys" data-quiz data-quiz-url="{{ site.origin }}{{ page.url }}" data-quiz-text="{{ description }}" data-quiz-version="{{ quiz.version }}"{% if features.quizStatsOpen %} data-quiz-stats{% endif %}>
   <!-- SECTION: quiz — questions -->
   <ol class="quiz-list" data-quiz-list>
 {% for q in quiz.questions %}
@@ -53,7 +63,7 @@ description: "Quick questions on prices, rent and wealth in the United States: p
       <div class="bd">
         <div class="eq">{{ q.topic }}</div>
         <h2 id="qz-{{ q.n }}-h" tabindex="-1"{% if q.sourceId %} data-source="{{ q.sourceId }}"{% endif %}>{{ q.question }}</h2>
-        <div class="quiz-guess" data-quiz-guess data-quiz-n="{{ q.n }}" hidden>
+        <div class="quiz-guess" data-quiz-guess data-quiz-n="{{ q.n }}" data-quiz-record="{{ q.recordText }}" hidden>
           <ul class="quiz-source-list" data-quiz-choices>
 {% for c in q.choices %}
             <li data-quiz-choice{% if c.correct %} data-quiz-correct{% endif %}>{{ c.text }}</li>
@@ -64,7 +74,7 @@ description: "Quick questions on prices, rent and wealth in the United States: p
         <div class="quiz-reveal" data-quiz-reveal>
           <h3 id="qz-{{ q.n }}-rh" tabindex="-1">The record</h3>
           <p class="quiz-verdict" data-quiz-verdict hidden></p>
-          <p class="quiz-answer" data-quiz-nojs data-source="{{ q.row.source_id }}">The answer: {{ q.answerText }}.</p>
+          <p class="quiz-answer" data-quiz-nojs data-source="{{ q.row.source_id }}">The answer: {{ q.recordText }}.</p>
           <div class="cards">
       {{ fig.card(q.row) }}
           </div>
@@ -89,11 +99,12 @@ description: "Quick questions on prices, rent and wealth in the United States: p
       <h2 id="qz-end-h" tabindex="-1">Your answers vs. the record</h2>
       <p class="quiz-nojs" data-quiz-nojs>Each answer is above, with its source. With JavaScript on, you can pick an answer first and compare.</p>
       <p class="quiz-score" data-quiz-score hidden>You got <span data-quiz-score-n></span> of {{ quiz.total }} right.</p>
+      <p class="quiz-average" data-quiz-average hidden></p>
       <table class="vhist quiz-sum" data-quiz-summary hidden>
         <thead><tr><th scope="col">Question</th><th scope="col">Your answer</th><th scope="col">The record</th><th scope="col">Right?</th></tr></thead>
         <tbody>
 {% for q in quiz.questions %}
-          <tr data-quiz-sum-row><th scope="row">{{ q.topic }}</th><td data-quiz-sum-answer></td><td data-source="{{ q.row.source_id }}">{{ q.answerText }}</td><td data-quiz-sum-right></td></tr>
+          <tr data-quiz-sum-row><th scope="row">{{ q.topic }}</th><td data-quiz-sum-answer></td><td data-source="{{ q.row.source_id }}">{{ q.summaryText }}</td><td data-quiz-sum-right></td></tr>
 {% endfor %}
         </tbody>
       </table>

@@ -58,6 +58,9 @@ WEBSITE = ROOT / "website"
 FUNCTIONS = WEBSITE / "functions" / "api" / "signup"
 LIB = WEBSITE / "lib" / "signup.js"
 DATA = WEBSITE / "src" / "_data" / "signups.json"
+# Written by every build (eleventy.config.js; CHG-019): the privacy notice
+# version this build's /privacy/ shows, which lib/signup.js records.
+GENERATED = WEBSITE / "functions" / "_generated" / "build.json"
 
 UNIT_JS = r"""
 import { readFileSync } from "node:fs";
@@ -69,6 +72,7 @@ import * as del from "./functions/api/signup/delete.js";
 import * as ses from "./functions/api/signup/ses-events.js";
 import * as postmark from "./functions/api/signup/postmark-events.js";
 const data = JSON.parse(readFileSync(new URL("./src/_data/signups.json", import.meta.url), "utf8"));
+const build = JSON.parse(readFileSync(new URL("./functions/_generated/build.json", import.meta.url), "utf8"));
 const errors = [], results = [];
 const ORIGIN = "https://uncost.org";
 const age = data.texts.age.replace("{minAge}", String(data.minAge));
@@ -131,7 +135,7 @@ check("pledge: valid", { status: r.status, body: r.body, path: w.calls[0] && w.c
   updatesHash: sent.consent && sent.consent.texts.email_updates || null, surface: sent.consent && sent.consent.surface,
   policyVersion: sent.consent && sent.consent.policyVersion, origin: sent.origin, fields: sent.fields },
   { status: 202, body: { ok: true }, path: "/v1/pledge", signing: await sha(data.texts.signing + "\n" + age), updatesHash: null,
-    surface: "pledge", policyVersion: data.policyVersion, origin: ORIGIN, fields: goodPledge });
+    surface: "pledge", policyVersion: build.policyVersion, origin: ORIGIN, fields: goodPledge });
 w = worker(); r = await call(pledge.onRequestPost, post("/api/signup/pledge", { ...goodPledge, updates: "yes" }), env(w));
 sent = w.calls[0] ? JSON.parse(w.calls[0].body) : {};
 check("pledge: with updates", { status: r.status, updatesHash: sent.consent && sent.consent.texts.email_updates },
@@ -452,10 +456,14 @@ const data = JSON.parse(process.argv[4]);
 
 
 def unit() -> dict:
+    if not GENERATED.exists():
+        return {"errors": [f"UNIT: {GENERATED.relative_to(ROOT)} is missing — run the build first (npm run build)"], "results": []}
     tmp = pathlib.Path(tempfile.mkdtemp(prefix="uncost-signup-"))
     try:
         (tmp / "functions" / "api").mkdir(parents=True)
         shutil.copytree(FUNCTIONS, tmp / "functions" / "api" / "signup")
+        (tmp / "functions" / "_generated").mkdir()
+        shutil.copy(GENERATED, tmp / "functions" / "_generated" / "build.json")
         (tmp / "lib").mkdir()
         shutil.copy(LIB, tmp / "lib" / "signup.js")
         (tmp / "src" / "_data").mkdir(parents=True)

@@ -1445,7 +1445,10 @@ add_items_after('Cloudflare&rsquo;s privacy policy</a>.',
                  'into it, kept for as long as we must honour your unsubscribe or deletion, and reviewed every year.',
                  '<b>Sign-up notes</b> — dated notes that a sign-up was confirmed, unsubscribed or deleted. They hold '
                  'no email address.'],
-                "CP-4 privacy §7: sign-up retention (proposed; CHG-009)")
+                "CP-4 privacy §7: sign-up retention (proposed; CHG-009)",
+                # CP-6 adds the quiz scores after this list's last item, so the
+                # list is recognised by its own first item, not its end.
+                guard='<b>Sign-ups you don&rsquo;t confirm</b> — deleted, with their links')
 add_after('and we answer within one month.',
           ' For the Pledge and email updates, every email we send has a one-click unsubscribe link and a link to '
           'delete your data; neither needs a login.',
@@ -1536,6 +1539,58 @@ literal(PRIVACY, '(CHG-009, CHG-012).</td>' + END + '</tr>',
         'often the forms can be used also covers the Pledge and email-updates forms (sections 2 and 3; CHG-018).</td>'
         + END + '</tr>',
         "CP-5 privacy §12: version row 0.5 while forms are open", guard='<tr><td>0.5</td>')
+
+# CP-6 — /privacy/ version 0.6, shown only while features.quizStatsOpen is on
+# (the quiz's anonymous score tally; CHG-019, 2026-11-08; a founder decision,
+# counsel questions under UNP-73). quizStatsOpen needs formsOpen (features.js),
+# so 0.6 always builds on 0.5. §2, §3, §6 and §7 gain the tally; the plain-
+# language summary says so; §12 gains the 0.6 row; the header reads 0.6 with
+# the effective date from _data/signups.json (quizNoticeEffective, the
+# founder's to set; empty renders "date to be set"). Consent events then record
+# policyVersionQuizStats (eleventy.config.js -> functions/_generated/build.json
+# -> lib/signup.js). With the tally off, every page is unchanged (0.5 with the
+# forms on, 0.3 off). Tags sit mid-line, as above; the header patches are
+# guarded on the 0.6 row, so a re-run undoes nothing.
+Q_ON = "{% if features.quizStatsOpen %}"
+CP6_EFFECTIVE = '{{ signups.quizNoticeEffective or "date to be set" }}'
+literal(PRIVACY, '<span class="m">Version ' + ON + '0.5' + ELSE + '0.3' + END + '</span>',
+        '<span class="m">Version ' + ON + Q_ON + '0.6' + ELSE + '0.5' + END + ELSE + '0.3' + END + '</span>',
+        "CP-6 privacy header: version 0.6 while the quiz tally is on", guard='<tr><td>0.6</td>')
+literal(PRIVACY, '<span class="m">Effective ' + ON + CP5_DATE + ELSE,
+        '<span class="m">Effective ' + ON + Q_ON + CP6_EFFECTIVE + ELSE + CP5_DATE + END + ELSE,
+        "CP-6 privacy header: effective date of version 0.6 while the quiz tally is on", guard='<tr><td>0.6</td>')
+literal(PRIVACY, 'and use it only for that.' + END,
+        'and use it only for that.' + END + Q_ON + ' If you finish the quiz, we keep your score in an anonymous '
+        'tally that holds nothing that identifies you.' + END,
+        "CP-6 privacy summary: the quiz tally while it is on")
+literal(PRIVACY, 'and when you confirmed (section&nbsp;11).' + END + '</li>',
+        'and when you confirmed (section&nbsp;11).' + END + Q_ON + '</li>\n      <li><b>Quiz scores</b> — if you '
+        'finish the cost-of-living quiz with JavaScript on: which questions you got right (a 1 or a 0 for each), '
+        'your score, which set of questions you answered, and the date (the day only). That is all. We keep no '
+        'name, email address, IP address, browser details, cookie or other identifier with it, so a score '
+        'can&rsquo;t be traced back to you, and we can&rsquo;t find, show or delete one person&rsquo;s score. Your '
+        'browser sends it once, when you reach the end of the quiz; with JavaScript off, nothing is sent.' + END + '</li>',
+        "CP-6 privacy §2: quiz scores while the tally is on")
+literal(PRIVACY, 'which pages are read, without identifying anyone.</li>',
+        'which pages are read, without identifying anyone.' + Q_ON + '</li>\n      <li><b>Showing how others did '
+        'on the quiz</b> — our legitimate interest in showing readers the average score and how many people got '
+        'each question right, from a tally that identifies no one.' + END + '</li>',
+        "CP-6 privacy §3: the quiz average while the tally is on")
+literal(PRIVACY, 'stores them (Workers and D1, a database in eastern North America);' + END,
+        'stores them (Workers and D1, a database in eastern North America);' + END + Q_ON + ' keeps the '
+        'quiz&rsquo;s anonymous tally of scores (Pages Functions and D1);' + END,
+        "CP-6 privacy §6: Cloudflare keeps the quiz tally while it is on")
+literal(PRIVACY, 'They hold no email address.' + END + '</li>',
+        'They hold no email address.' + END + Q_ON + '</li>\n      <li><b>Quiz scores</b> — kept for the current '
+        'set of questions and the one before it. When the questions change (at most about once a month, when a '
+        'figure in them is refreshed), the scores for any older set are deleted.' + END + '</li>',
+        "CP-6 privacy §7: quiz score retention while the tally is on")
+literal(PRIVACY, '(sections 2 and 3; CHG-018).</td>' + END + '</tr>',
+        '(sections 2 and 3; CHG-018).</td>' + Q_ON + '</tr>\n        <tr><td>0.6</td><td>'
+        '{{ signups.quizNoticeEffective or "Date to be set" }}</td><td>Adds the quiz&rsquo;s anonymous tally of '
+        'scores: what it keeps, why, who provides it and for how long (sections 2, 3, 6 and 7; CHG-019).</td>'
+        + END + END + '</tr>',
+        "CP-6 privacy §12: version row 0.6 while the quiz tally is on", guard='<tr><td>0.6</td>')
 
 # SU-1 — /pledge/check-email/: a confirmation link opens a page with a Confirm
 # button (the confirm link asks before it confirms, so a mail scanner that

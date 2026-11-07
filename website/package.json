@@ -9,6 +9,7 @@
     "build": "eleventy",
     "serve": "eleventy --serve",
     "audit:built": "python3 ../scripts/audit_website.py --built dist",
+    "test": "node --test test/*.test.mjs",
     "report:a11y": "node scripts/a11y-report.cjs",
     "report:lighthouse": "lhci autorun"
   },
