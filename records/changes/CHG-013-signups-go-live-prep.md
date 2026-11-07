@@ -98,7 +98,9 @@ For speed, the dashboard's rollback to the previous deployment restores the earl
 
 ## Conflicts, listed and not resolved
 
-- **POL-002 Rule 6 and its "adequate written terms".** CHG-012 left the founder's confirmation of Postmark's DPA, and counsel's view of the transfer wording, open. Closing the AWS question does not close those.
+- **POL-002 Rule 6 and its "adequate written terms".** CHG-012 left two things open:
+  - **The founder's confirmation of Postmark's DPA: closed (2026-11-07).** The founder accepted the DPA at sign-up on 2026-11-01 and checked it on 2026-11-06 (go-live step 4).
+  - **Counsel's view of the transfer wording: open.** Closing the AWS question and the DPA confirmation does not close it.
 
 ## Email preview result
 
