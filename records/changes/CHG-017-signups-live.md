@@ -103,7 +103,10 @@ The founder did these on 2026-11-07, then re-ran the production deploy with the 
 1. **When Postmark refuses an inactive address (ErrorCode 406), no local suppression row is added.** The Worker logs "not sent" and nothing more. Postmark still blocks the address, but our own do-not-email list doesn't know about it, and the sign-up waits for the retention job. One possible fix in `uncost-org/uncost-api` is to treat 406 as a hard bounce for that address. Founder's call. Done in [uncost-org/uncost-api#5](https://github.com/uncost-org/uncost-api/pull/5), deployed 2026-11-07 as `2a9661be` (above).
 2. **Delete the test database `uncost-signups` on or after 2026-12-07.**
 3. **The rate limit in /privacy/:** §2 and §3 name the rate limit only for the contact form. Since 2026-11-07 it also covers the two sign-up forms. Changing that wording is a notice change (POL-002), so it is listed here, not made. Done in [CHG-018](CHG-018-privacy-rate-limit.md).
-4. **Preview deployments made before the preview's `SIGNUPS` binding was removed keep it.** They are behind Access, but a sign-up on one would still reach the production database until they are redeployed or deleted.
+4. **Preview deployments made before the preview's `SIGNUPS` binding was removed keep it.** They are behind Access, but a sign-up on one would still reach the production database until they are redeployed or deleted. Done on 2026-11-07, with the founder's approval:
+   - **Deleted, at about 13:33 UTC:** all 24 preview deployments made before 12:35 UTC that day, when the binding was removed. 24 deleted, 0 failed, and every command named the project `uncost-site-preview`.
+   - **The 24:** 15 were known to carry the binding, 4 might have, and 5 predated it.
+   - **What's left:** the deployments made after 12:35 UTC, and older ones from 17–21 October. The older ones predate the binding, which was added between 22 and 24 October. That is judged from their dates; each deployment's settings were not read.
 5. **The remaining AWS setup** (the SES identity and DNS, the SNS topic, the IAM user) is removed later (CHG-012). Done by the founder on 2026-11-07 (above).
 6. **The SES code and settings are still in place, unused.**
    - **What's left:**
