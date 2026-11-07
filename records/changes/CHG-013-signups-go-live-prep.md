@@ -3,7 +3,7 @@
 **Status:** founder decision, dated by the founder (2026-11-01). Drafted from the founder's go-live brief, part 1. It takes effect when this record is merged. **Sign-ups stay off in production:** nothing here turns them on. That is still decision 1 in [CHG-009](CHG-009-signups.md).
 
 - **Date:** 2026-11-01
-- **Amended by:** [CHG-014](CHG-014-email-fixes.md) (2026-11-06), for the two email images, the robot's size, the wording and dark mode.
+- **Amended by:** [CHG-014](CHG-014-email-fixes.md) (2026-11-06), for the two email images, the robot's size, the wording and dark mode; [CHG-017](CHG-017-signups-live.md) (2026-11-07), for the go-live itself, where the founder's go-live brief, part 2, differs from the checklist below.
 - **Amends:** [CHG-009](CHG-009-signups.md), for the email design, its dated decisions and the production steps; [CHG-012](CHG-012-postmark.md), for the deletion copy; and the artwork licence of [CHG-007](CHG-007-rights-and-transfer-safeguard.md), for the email robot. Their history stands as written.
 - **Changed claim:** with the switch off, the site serves two new image files at `/email/`, and nothing else differs. With it on, the deletion pages also say what stays with Postmark.
 - **Source:** the founder's go-live brief (2026-11-01). No AI decision; this file records what the founder set.
