@@ -9,7 +9,7 @@
 
 ## Why
 
-- **The Movement Plan** lists "the cost-of-living quiz" as an early engagement tool: a short interactive "guess what living actually costs" test that draws people into the site, teaches something surprising, and offers the full breakdown when you join.
+- **The Movement Plan** lists "the cost-of-living quiz" as an early engagement tool: a short interactive "guess what living actually costs" test that draws people into the site, teaches something surprising, and offers the full breakdown when you join. The quiz offers the existing updates list instead, with no promise of a breakdown or a frequency (see "The end screen" below).
 - **UNP-39 §5.5 and UNP-50** set it as post-launch ("quiz later", no fake data). The site launched on 2026-10-19.
 
 ## What changed
@@ -18,7 +18,8 @@
   - Five questions, one per register row, in this order: SRC-025 (all items), SRC-019 (shelter), SRC-026 (food), SRC-027 (energy), SRC-003 (water).
   - **The guess:** a slider (−5 to +25, step 0.5) with a linked number input. `js/quiz.js` builds both from attributes in the template, because they only work with JavaScript and a page built with the forms off may ship no form control (`audit_website.py`, form-rendered, never allowlisted).
   - **"Check my guess" reveals the record:** the row's figure and caption through `partials/figure.njk` (inside its `data-source`), its period and region, its source line linked to its URL, and "You guessed X%. The record says Y%." with "within 1 point", "under by …" or "over by …".
-  - **The end screen:** the five guesses against the record, then the full breakdown by email, links to The Case, the sectors and the Pledge, and a "Share the quiz" button.
+  - **The end screen:** the five guesses against the record, then "Get updates by email" with the existing updates form, links to The Case, the sectors and the Pledge, and a "Share the quiz" button.
+  - **No new promise about the updates list:** the line is "Get Uncost updates by email: new figures, what they mean, and their sources." It names no frequency. Nothing on the site, in the sign-up emails or in the privacy notice says the list sends a monthly breakdown, so the quiz does not say so either (review fix, 2026-11-07).
 - **No fake numbers:**
   - Every answer comes from `sources/register.csv` through `_data/register.js` and `_data/quiz.js`, which holds the five row ids and the question texts and nothing else. The Friday review and the monthly refresh change the answers by updating the register.
   - **A build guard in `_data/quiz.js`** fails the build if any quiz row is missing, or has an empty `display_value`, `display_caption`, `data_period`, `source_line` or `url`, or a `display_value` that does not parse as a percent.
@@ -29,19 +30,20 @@
   - **With `formsOpen` off,** the partial shows its "open soon" message, as everywhere.
   - **Sharing** shares the page's URL and description, never a score.
 - **Without JavaScript,** the page is the five questions with their sourced answers as a plain list, then the end block. **With it,** one question at a time, "Question 2 of 5".
+- **No answer shows before the script runs** (review fix, 2026-11-07). `js/quiz.js` is deferred, so on a slow connection the plain list could show first. `js/quiz-early.js`, loaded without `defer` just before the quiz, marks `<html>` with `.quiz-js`; integration.css item 150 then hides the answers, the end block and questions 2 to 5. `js/quiz.js` removes the mark once its own `hidden` state is set. If `js/quiz.js` never arrives, the mark comes off at the load event and the plain list shows. The layout has no per-page `<head>` slot, so the script sits in the page, before the quiz, and no other page changes.
 - **Accessibility:**
   - Every control is labelled, and the slider and number input stay in step, both by keyboard.
   - Each reveal is announced in a polite live region. Focus moves to the reveal heading, then to the next question.
   - The comparison is in words, not colour.
   - Targets are at least 24px, and there is no motion.
-- **CSP** (`script-src 'self'`, `style-src 'self'`): the behaviour is in `js/quiz.js`, loaded from the site. There is no inline script, style or handler.
+- **CSP** (`script-src 'self'`, `style-src 'self'`): the behaviour is in `js/quiz.js` and `js/quiz-early.js`, loaded from the site. There is no inline script, style or handler.
 
 ## Files
 
 - **The quiz:**
   - `website/src/quiz.njk`. It is repo-authored now; `pageId` stays `later-quiz` because `sections.css` styles the page by it.
-  - `website/src/_data/quiz.js` and `website/src/js/quiz.js`.
-- **Styles:** `website/src/css/integration.css` item 150 (CANVAS-SYNC 191). It stacks the export's own quiz-page parts, keeps the R3 figure card as R3 draws it, sets the questions at `--fs-h3` (component headings, `type_audit.py`), sizes the two guess controls, and lets `[hidden]` win over `.actions`. Tokens and existing declarations only.
+  - `website/src/_data/quiz.js`, `website/src/js/quiz.js` and `website/src/js/quiz-early.js`.
+- **Styles:** `website/src/css/integration.css` item 150 (CANVAS-SYNC 191). It stacks the export's own quiz-page parts, keeps the R3 figure card as R3 draws it, sets the questions at `--fs-h3` (component headings, `type_audit.py`), sizes the two guess controls, lets `[hidden]` win over `.actions`, and hides the answers under `.quiz-js` until `js/quiz.js` has run. Tokens and existing declarations only.
 - **`/join/`:** `website/src/join.njk`, restated as QZ-1 in `tools/post_patch_pages.py`.
 - **`/quiz/` is no longer a placeholder:**
   - `tools/gen_static_pages.py` no longer writes `quiz.njk` from the export's placeholder;

@@ -22,6 +22,12 @@ description: "Guess how much living costs went up this year, then see the source
 {% import "partials/figure.njk" as fig %}
 <!-- SECTION: quiz — title -->
 <div class="titleband" data-screen-label="Quiz — title"><h1>The <span class="u-1">Quiz</span></h1></div>
+{#- No defer, and before the quiz: js/quiz-early.js runs before the parser
+    reaches the answers, so a slow js/quiz.js (deferred) never lets them show
+    first. The layout has no per-page <head> slot, and this keeps every other
+    page unchanged. It marks <html> with .quiz-js, which integration.css item
+    150 reads; js/quiz.js removes the mark once it has set its own state. #}
+<script src="/js/quiz-early.js"></script>
 <div class="sys" data-quiz data-quiz-url="{{ site.origin }}{{ page.url }}" data-quiz-text="{{ description }}">
   <!-- SECTION: quiz — intro -->
   <div class="card quiz-intro" data-screen-label="Quiz — intro">
@@ -75,8 +81,8 @@ description: "Guess how much living costs went up this year, then see the source
 {% endfor %}
         </tbody>
       </table>
-      <h3>The full breakdown, by email</h3>
-      <p>Get the full breakdown each month: what changed, by how much, and the source.</p>
+      <h3>Get updates by email</h3>
+      <p>Get Uncost updates by email: new figures, what they mean, and their sources.</p>
       {% include "partials/forms/updates.njk" %}
       <div class="actions">
         <a href="/case/" class="u-btn u-btn--ghost">Read The Case</a>

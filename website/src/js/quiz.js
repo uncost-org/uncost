@@ -182,6 +182,11 @@
   // The end block waits until the last question.
   show(end, false);
 
+  // js/quiz-early.js hid the answers until now (integration.css item 150).
+  // Every part now carries its own `hidden` state, so the mark comes off and
+  // that state decides from here on.
+  document.documentElement.classList.remove("quiz-js");
+
   // Share the quiz, never the score: the shared text is the page's own
   // description and URL, with nothing about the reader's guesses.
   var share = root.querySelector("[data-quiz-share]");

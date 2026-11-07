@@ -3286,6 +3286,14 @@ body[data-page="later-quiz"] .quiz-q .bd h2 { font-size: var(--fs-h3); }
 /* [hidden] must win over the design's display rules (.actions is flex), as
  * item 66 found for .cards .card: the quiz hides and shows its parts with it. */
 body[data-page="later-quiz"] [hidden] { display: none; }
+/* Before js/quiz.js has run: js/quiz-early.js (loaded without defer, before
+ * the quiz) marks <html> with .quiz-js, so the answers, the end block and
+ * every question after the first stay hidden while the deferred script
+ * loads. js/quiz.js removes the mark once its own `hidden` state is set;
+ * without JavaScript there is no mark and the plain list shows. */
+.quiz-js body[data-page="later-quiz"] [data-quiz-reveal],
+.quiz-js body[data-page="later-quiz"] [data-quiz-end],
+.quiz-js body[data-page="later-quiz"] [data-quiz-q] ~ [data-quiz-q] { display: none; }
 /* The R3 figure card, one to a row, as R3 draws it: not the placeholder's
  * centred, framed, 620px card. */
 body[data-page="later-quiz"] .cards { grid-template-columns: 1fr; margin: var(--s-4) 0; text-align: left; }
