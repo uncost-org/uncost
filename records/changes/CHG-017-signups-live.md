@@ -24,7 +24,15 @@ Dated by the founder, 2026-11-07:
 
 - **Database binding:** [uncost-org/uncost-api#4](https://github.com/uncost-org/uncost-api/pull/4) points the binding `DB` at `uncost-signups-live`. After #4 was merged, the Worker was deployed by hand from `main` (`9ac9dd0`) on 2026-11-07 at 12:22:52 UTC, with the founder's approval: version `caa69997-e9ee-4713-a357-06cdc484202e`, read back with `DB` bound to `uncost-signups-live`. Code and `LINK_ORIGINS` (which covers `https://uncost.org`) are as on `main` (CHG-013 step 3).
 - **AWS secrets removed (2026-11-07):** `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`, since Postmark sends the email (CHG-012). The Worker keeps its HMAC key, its email key and the two Postmark secrets.
-- **AWS (the founder, 2026-11-07):** the IAM user `uncost-signups-worker`'s access key was deactivated, then deleted, in the AWS console. The SES identity and its DNS records stay for now.
+- **AWS (the founder, 2026-11-07):** the IAM user `uncost-signups-worker`'s access key was deactivated, then deleted, in the AWS console. The SES identity and its DNS records stayed until later that day (next item).
+- **AWS removed (the founder, 2026-11-07; reported at 17:28 UTC), follow-up 5:**
+  - **In AWS:** the SES configuration set, the SNS subscription and topic, the SES identities and the IAM user are deleted.
+  - **In Cloudflare DNS:** the five records SES used are deleted, namely the three Easy DKIM CNAMEs and `mail.uncost.org`'s MX and TXT.
+  - **Read back at about 17:30 UTC:** `mail.uncost.org` answers NXDOMAIN from two public resolvers and from the zone's nameserver. Postmark's records, the apex MX and SPF, and `_dmarc` answer as before.
+  - **Not read back:** the DKIM selector names aren't recorded in this repository, so those three records weren't checked. The AWS side is the founder's report.
+- **Postmark's inactive addresses (follow-up 1):** [uncost-org/uncost-api#5](https://github.com/uncost-org/uncost-api/pull/5) adds a local suppression row, reason `hard_bounce`, when Postmark refuses an address as inactive (HTTP 422, ErrorCode 406), as the webhook does for a hard bounce.
+  - **Deployed:** after #5 was merged (`d127d26`), the Worker was deployed by hand from `main` on 2026-11-07 at 17:15:55 UTC, with the founder's approval. The new version is `2a9661be-15d4-4afc-a01e-4bf3b1436cbb`; the previous one was `caa69997-e9ee-4713-a357-06cdc484202e`.
+  - **Read back:** `DB` is bound to `uncost-signups-live`. The four secrets and eight plain variables are the same as on `caa69997`, with unchanged values. The daily cron `17 3 * * *` is kept.
 
 ## Production steps (the founder, in the dashboards)
 
@@ -92,11 +100,18 @@ The founder did these on 2026-11-07, then re-ran the production deploy with the 
 
 ## Follow-ups
 
-1. **When Postmark refuses an inactive address (ErrorCode 406), no local suppression row is added.** The Worker logs "not sent" and nothing more. Postmark still blocks the address, but our own do-not-email list doesn't know about it, and the sign-up waits for the retention job. One possible fix in `uncost-org/uncost-api` is to treat 406 as a hard bounce for that address. Founder's call.
+1. **When Postmark refuses an inactive address (ErrorCode 406), no local suppression row is added.** The Worker logs "not sent" and nothing more. Postmark still blocks the address, but our own do-not-email list doesn't know about it, and the sign-up waits for the retention job. One possible fix in `uncost-org/uncost-api` is to treat 406 as a hard bounce for that address. Founder's call. Done in [uncost-org/uncost-api#5](https://github.com/uncost-org/uncost-api/pull/5), deployed 2026-11-07 as `2a9661be` (above).
 2. **Delete the test database `uncost-signups` on or after 2026-12-07.**
 3. **The rate limit in /privacy/:** §2 and §3 name the rate limit only for the contact form. Since 2026-11-07 it also covers the two sign-up forms. Changing that wording is a notice change (POL-002), so it is listed here, not made. Done in [CHG-018](CHG-018-privacy-rate-limit.md).
 4. **Preview deployments made before the preview's `SIGNUPS` binding was removed keep it.** They are behind Access, but a sign-up on one would still reach the production database until they are redeployed or deleted.
-5. **The remaining AWS setup** (the SES identity and DNS, the SNS topic, the IAM user) is removed later (CHG-012).
+5. **The remaining AWS setup** (the SES identity and DNS, the SNS topic, the IAM user) is removed later (CHG-012). Done by the founder on 2026-11-07 (above).
+6. **The SES code and settings are still in place, unused.**
+   - **What's left:**
+     - in uncost-api: the SES sending path, `/v1/ses-events`, and the variables `SES_REGION`, `SES_CONFIGURATION_SET` and `SNS_TOPIC_ARN`;
+     - in this site: `website/functions/api/signup/ses-events.js`.
+   - **Why nothing uses them:** they name AWS resources that no longer exist. `MAIL_PROVIDER` is `postmark`, so nothing sends through SES. `/v1/ses-events` accepts only a message that AWS signed for the deleted topic.
+   - **Switching back to SES is no longer one line** (CHG-012). It would need a new identity, DNS records, configuration set, topic and IAM user.
+   - **Removing them** is a code change in both repositories. Founder's call.
 
 ## Rollback
 
@@ -131,3 +146,5 @@ On this branch, against `main` at `3dd9f3f`. The pull request lists the counts.
 ## Provenance
 
 The founder's go-live brief, part 2, 2026-11-07. Drafted by Claude Code as `uncost-admin`.
+
+Updated on 2026-11-07 (UTC). The source for the AWS and DNS removal is the founder's report. The source for the `2a9661be` deploy is Claude Code's read-back with wrangler. Drafted by Claude Code as `uncost-admin`.
