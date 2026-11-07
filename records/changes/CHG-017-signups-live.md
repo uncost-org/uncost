@@ -3,6 +3,7 @@
 **Status:** founder decision (2026-11-07). Drafted from the founder's go-live brief, part 2. **Sign-ups are live in production since 2026-11-07 12:47 UTC**, when the founder approved the forms-on deploy (Pages deployment `07fc3f05-d0d8-426a-8aa9-bb768f6ecd6c`). The live check passed except for one test, and one follow-up is open (below).
 
 - **Date:** 2026-11-07
+- **Amended by:** [CHG-018](CHG-018-privacy-rate-limit.md) (2026-11-07), for follow-up 3: /privacy/ version 0.5.
 - **Amends:** [CHG-009](CHG-009-signups.md), whose decisions 1 (turning on) and 3 (code home) it dates, and whose database it replaces; [CHG-013](CHG-013-signups-go-live-prep.md), whose go-live checklist the brief governs where they differ (listed below). Their history stands as written.
 - **Changed claim:** with the forms-on build deployed, the Pledge and the email updates take sign-ups on uncost.org, and /privacy/ version 0.4 is effective from 7 November 2026. With the switch off, every page is unchanged by this record.
 - **Source:** the founder's go-live brief, part 2 (2026-11-07). No AI decision; this file records what the founder set.
@@ -93,7 +94,7 @@ The founder did these on 2026-11-07, then re-ran the production deploy with the 
 
 1. **When Postmark refuses an inactive address (ErrorCode 406), no local suppression row is added.** The Worker logs "not sent" and nothing more. Postmark still blocks the address, but our own do-not-email list doesn't know about it, and the sign-up waits for the retention job. One possible fix in `uncost-org/uncost-api` is to treat 406 as a hard bounce for that address. Founder's call.
 2. **Delete the test database `uncost-signups` on or after 2026-12-07.**
-3. **The rate limit in /privacy/:** §2 and §3 name the rate limit only for the contact form. Since 2026-11-07 it also covers the two sign-up forms. Changing that wording is a notice change (POL-002), so it is listed here, not made.
+3. **The rate limit in /privacy/:** §2 and §3 name the rate limit only for the contact form. Since 2026-11-07 it also covers the two sign-up forms. Changing that wording is a notice change (POL-002), so it is listed here, not made. Done in [CHG-018](CHG-018-privacy-rate-limit.md).
 4. **Preview deployments made before the preview's `SIGNUPS` binding was removed keep it.** They are behind Access, but a sign-up on one would still reach the production database until they are redeployed or deleted.
 5. **The remaining AWS setup** (the SES identity and DNS, the SNS topic, the IAM user) is removed later (CHG-012).
 
