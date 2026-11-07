@@ -993,9 +993,10 @@ patch("website/src/contact.njk",
 print("Pre-launch 2026-10:")
 
 
-def literal(path, old, new, label):
-    """Replace one exact export string; idempotent on the new string."""
-    patch(path, re.escape(old), new.replace("\\", "\\\\"), label, guard=new)
+def literal(path, old, new, label, guard=None):
+    """Replace one exact export string; idempotent on the new string, or on
+    `guard` when a later patch rewrites part of the new string."""
+    patch(path, re.escape(old), new.replace("\\", "\\\\"), label, guard=new if guard is None else guard)
 
 
 # PL-1 — /contribute/: no "register an intention to give". Donations are not
@@ -1378,19 +1379,19 @@ def add_after(anchor, extra, label):
     literal(PRIVACY, anchor, anchor + ON + extra + END, label)
 
 
-def add_items_after(item_end, items, label):
+def add_items_after(item_end, items, label, guard=None):
     """Add list items after the item ending in `item_end` while formsOpen is on."""
     literal(PRIVACY, item_end + "</li>",
-            item_end + ON + "</li>\n      <li>" + "</li>\n      <li>".join(items) + END + "</li>", label)
+            item_end + ON + "</li>\n      <li>" + "</li>\n      <li>".join(items) + END + "</li>", label, guard=guard)
 
 
 literal(PRIVACY, '<span class="m">Version 0.3</span>',
         '<span class="m">Version ' + ON + '0.4' + ELSE + '0.3' + END + '</span>',
-        "CP-4 privacy header: version 0.4 while forms are open")
+        "CP-4 privacy header: version 0.4 while forms are open", guard='<tr><td>0.4</td>')
 literal(PRIVACY, '<span class="m">Effective 20 October 2026</span>',
         '<span class="m">Effective ' + ON + '{{ signups.noticeEffective or "date to be set" }}' + ELSE
         + '20 October 2026' + END + '</span>',
-        "CP-4 privacy header: effective date while forms are open")
+        "CP-4 privacy header: effective date while forms are open", guard='<tr><td>0.4</td>')
 literal(PRIVACY, '<a href="#s11">11 · When sign-ups open</a>',
         '<a href="#s11">11 · ' + ON + 'Sign-ups: the Pledge and email updates' + ELSE + 'When sign-ups open' + END + '</a>',
         "CP-4 privacy contents: §11 title while forms are open")
@@ -1402,7 +1403,7 @@ add_items_after('limit how often the contact form can be used.',
                 ['<b>The Pledge and email updates</b> — if you sign up: your email address, your name if you give it '
                  '(Pledge only), the boxes you ticked, including your confirmation that you are ' + AGE + ' or older, '
                  'and when you confirmed (section&nbsp;11).'],
-                "CP-4 privacy §2: what the sign-ups collect")
+                "CP-4 privacy §2: what the sign-ups collect", guard='<b>The Pledge and email updates</b> — if you sign up')
 switch('<p>The Pledge, the updates list and the Assembly aren&rsquo;t open yet, so nothing on this site asks for '
        'those details (section&nbsp;11).</p>',
        '<p>The Assembly isn&rsquo;t open yet, so nothing on this site asks for its details.</p>',
@@ -1502,7 +1503,37 @@ literal(PRIVACY, '(CHG-007).</td></tr>',
         '</td><td>Opens the Pledge and email updates: what they collect, the legal basis, the providers (Cloudflare '
         'Workers and D1; Postmark), confirming by email, deleting unconfirmed sign-ups after 7 days, '
         'retention, unsubscribing and deleting your data (CHG-009, CHG-012).</td>' + END + '</tr>',
-        "CP-4 privacy §12: version row 0.4 while forms are open")
+        "CP-4 privacy §12: version row 0.4 while forms are open", guard='<tr><td>0.4</td>')
+
+# CP-5 — /privacy/ version 0.5, shown only while features.formsOpen is on
+# (founder brief, 2026-11-07; CHG-018). Since go-live (CHG-017) the
+# rate-limiting rule covers POST /api/signup/pledge and /api/signup/updates as
+# well as /api/contact, so §2 and §3 say the limit also covers the Pledge and
+# updates forms. §12's own rule: a change bumps the version and adds a dated
+# row; consent events record the version, so _data/signups.json's
+# policyVersion moves with it. With the switch off, every page is unchanged
+# (version 0.3). The CP-4 patches these rewrite are guarded on their own rows
+# and items (above), so a re-run undoes nothing; the header patches here are
+# guarded on the 0.5 row the same way.
+CP5_DATE = "7 November 2026"
+CP5_FORMS = "the contact form, the Pledge form and the updates form"
+literal(PRIVACY, 'limit how often the contact form can be used.' + ON + '</li>',
+        'limit how often ' + ON + CP5_FORMS + ELSE + 'the contact form' + END + ' can be used.' + ON + '</li>',
+        "CP-5 privacy §2: the rate limit also covers the sign-up forms while forms are open")
+switch('the contact form can be used —', CP5_FORMS + ' can be used —',
+       "CP-5 privacy §3: the rate limit also covers the sign-up forms while forms are open")
+literal(PRIVACY, '<span class="m">Version ' + ON + '0.4' + ELSE + '0.3' + END + '</span>',
+        '<span class="m">Version ' + ON + '0.5' + ELSE + '0.3' + END + '</span>',
+        "CP-5 privacy header: version 0.5 while forms are open", guard='<tr><td>0.5</td>')
+literal(PRIVACY, '<span class="m">Effective ' + ON + '{{ signups.noticeEffective or "date to be set" }}' + ELSE
+        + '20 October 2026' + END + '</span>',
+        '<span class="m">Effective ' + ON + CP5_DATE + ELSE + '20 October 2026' + END + '</span>',
+        "CP-5 privacy header: effective date of version 0.5 while forms are open", guard='<tr><td>0.5</td>')
+literal(PRIVACY, '(CHG-009, CHG-012).</td>' + END + '</tr>',
+        '(CHG-009, CHG-012).</td></tr>\n        <tr><td>0.5</td><td>' + CP5_DATE + '</td><td>Says that the limit on how '
+        'often the forms can be used also covers the Pledge and email-updates forms (sections 2 and 3; CHG-018).</td>'
+        + END + '</tr>',
+        "CP-5 privacy §12: version row 0.5 while forms are open", guard='<tr><td>0.5</td>')
 
 # SU-1 — /pledge/check-email/: a confirmation link opens a page with a Confirm
 # button (the confirm link asks before it confirms, so a mail scanner that

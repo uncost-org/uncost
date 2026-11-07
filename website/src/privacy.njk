@@ -12,8 +12,8 @@ description: "POL-002 — the privacy notice for uncost.org: what the site colle
 <header class="pol-hd" data-screen-label="Policy header">
   <div class="meta">
     <span class="ref">POL-002</span>
-    <span class="m">Version {% if features.formsOpen %}0.4{% else %}0.3{% endif %}</span>
-    <span class="m">Effective {% if features.formsOpen %}{{ signups.noticeEffective or "date to be set" }}{% else %}20 October 2026{% endif %}</span>
+    <span class="m">Version {% if features.formsOpen %}0.5{% else %}0.3{% endif %}</span>
+    <span class="m">Effective {% if features.formsOpen %}7 November 2026{% else %}20 October 2026{% endif %}</span>
     <span class="m">Public review</span>
   </div>
   <h1>Privacy &amp; Data Protection Policy</h1>
@@ -51,7 +51,7 @@ description: "POL-002 — the privacy notice for uncost.org: what the site colle
       <li><b>The contact form</b> — if you use it: your name (optional), your email address, your message, and your confirmation that you are 18 or older. The form emails them to our inbox; nothing is stored on this site.</li>
       <li><b>Emails you send us</b> — if you write to contact@uncost.org: your email address, your name if your email shows it, and what you write. They reach the same inbox.</li>
       <li><b>Page views</b> — Cloudflare Web Analytics counts visits to our pages without cookies, fingerprinting or advertising profiles (<a class="u-1" href="https://www.cloudflare.com/web-analytics/">Cloudflare&rsquo;s Web Analytics privacy page</a>).</li>
-      <li><b>Security data</b> — like every website, our host receives your IP address and the basic details of each request, such as the page asked for and your browser type, so it can deliver the page, keep the site secure and limit how often the contact form can be used.{% if features.formsOpen %}</li>
+      <li><b>Security data</b> — like every website, our host receives your IP address and the basic details of each request, such as the page asked for and your browser type, so it can deliver the page, keep the site secure and limit how often {% if features.formsOpen %}the contact form, the Pledge form and the updates form{% else %}the contact form{% endif %} can be used.{% if features.formsOpen %}</li>
       <li><b>The Pledge and email updates</b> — if you sign up: your email address, your name if you give it (Pledge only), the boxes you ticked, including your confirmation that you are {{ signups.minAge }} or older, and when you confirmed (section&nbsp;11).{% endif %}</li>
     </ul>{% if features.formsOpen %}<p>The Assembly isn&rsquo;t open yet, so nothing on this site asks for its details.</p>{% else %}<p>The Pledge, the updates list and the Assembly aren&rsquo;t open yet, so nothing on this site asks for those details (section&nbsp;11).</p>{% endif %}</section>
 
@@ -61,7 +61,7 @@ description: "POL-002 — the privacy notice for uncost.org: what the site colle
       <li><b>Keeping a do-not-email record</b> after you unsubscribe or ask us to delete your data, or after an email to you bounces or is reported as spam — our legitimate interest in never emailing you against your wishes.{% endif %}</li>
       <li><b>Replying to emails you send us</b> — our legitimate interest in answering the people who write to us.</li>
       <li><b>Counting page views</b> — our legitimate interest in knowing which pages are read, without identifying anyone.</li>
-      <li><b>Keeping the site secure</b>, including limiting how often the contact form can be used — our legitimate interest in protecting the site and the people who use it from abuse.</li>
+      <li><b>Keeping the site secure</b>, including limiting how often {% if features.formsOpen %}the contact form, the Pledge form and the updates form can be used —{% else %}the contact form can be used —{% endif %} our legitimate interest in protecting the site and the people who use it from abuse.</li>
       <li><b>Answering a request about your data</b> — the legal obligation to do so.</li>
     </ul><p>Where we rely on legitimate interests, you can object (section&nbsp;8).</p></section>
 
@@ -120,7 +120,8 @@ description: "POL-002 — the privacy notice for uncost.org: what the site colle
         <tr><td>0.1</td><td>Pre-launch</td><td>Initial public review draft.</td></tr>
         <tr><td>0.2</td><td>20 October 2026</td><td>Describes what the live site does today: who operates it, the contact form, emails, analytics and security data; the legal basis for each; no cookies; the providers and US processing; complaints and our one-month answer; Do Not Track and Global Privacy Control. Sign-ups move under &ldquo;When sign-ups open&rdquo;. Reference corrected to POL-002 (CHG-006).</td></tr>
         <tr><td>0.3</td><td>20 October 2026</td><td>Names the safeguard for transfers to the United States: Cloudflare and Google take part in the EU-U.S. Data Privacy Framework and its UK Extension (CHG-007).</td>{% if features.formsOpen %}</tr>
-        <tr><td>0.4</td><td>{{ signups.noticeEffective or "Date to be set" }}</td><td>Opens the Pledge and email updates: what they collect, the legal basis, the providers (Cloudflare Workers and D1; Postmark), confirming by email, deleting unconfirmed sign-ups after 7 days, retention, unsubscribing and deleting your data (CHG-009, CHG-012).</td>{% endif %}</tr>
+        <tr><td>0.4</td><td>{{ signups.noticeEffective or "Date to be set" }}</td><td>Opens the Pledge and email updates: what they collect, the legal basis, the providers (Cloudflare Workers and D1; Postmark), confirming by email, deleting unconfirmed sign-ups after 7 days, retention, unsubscribing and deleting your data (CHG-009, CHG-012).</td></tr>
+        <tr><td>0.5</td><td>7 November 2026</td><td>Says that the limit on how often the forms can be used also covers the Pledge and email-updates forms (sections 2 and 3; CHG-018).</td>{% endif %}</tr>
       </tbody></table>
     </section>
 
