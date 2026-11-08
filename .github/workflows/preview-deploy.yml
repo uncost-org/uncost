@@ -50,10 +50,15 @@ jobs:
           UNCOST_QUIZ_STATS_OPEN: ${{ contains(github.event.pull_request.labels.*.name, 'preview-quiz-stats') && 'on' || '' }}
       # The quiz score tally's handlers (CHG-019): lib/quiz.js and
       # functions/api/quiz/, against node:sqlite running the real migration.
-      # After the build, which writes functions/_generated/build.json.
+      # After the build, which writes functions/_generated/build.json. With the
+      # build's own two switches, so the tests expect what was built (the
+      # notice version in build.json follows UNCOST_QUIZ_STATS_OPEN).
       - name: Unit tests
         working-directory: website
         run: npm test
+        env:
+          UNCOST_FORMS_OPEN: ${{ contains(github.event.pull_request.labels.*.name, 'preview-quiz-stats') && 'on' || '' }}
+          UNCOST_QUIZ_STATS_OPEN: ${{ contains(github.event.pull_request.labels.*.name, 'preview-quiz-stats') && 'on' || '' }}
       - name: Enforce preview noindex posture
         run: |
           # Previews disallow all crawling and add a noindex header, on top of
