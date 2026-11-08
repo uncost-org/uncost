@@ -3392,11 +3392,12 @@ body[data-page="later-quiz"] .quiz-go .u-btn:not([hidden]) { display: flex; alig
  * small panel under the four buttons, outside their grid, so the grid keeps
  * its sizes. Each choice is an icon button drawn as the /pledge/thanks/ share
  * row draws its buttons (2px ink border on cream, inverted on hover; its
- * 18px marks, filled, and its stroked copy icon), squared at 44px. Without
+ * 18px marks, filled, and its stroked copy icon), squared at 44px, centred
+ * as the end card's lines are. Without
  * JavaScript the same links show as a plain row under "Share this quiz". */
 body[data-page="later-quiz"] .quiz-share-panel { margin-top: var(--s-4); }
 body[data-page="later-quiz"] .quiz-share-cap { margin: 0 0 8px; font-weight: 600; }
-body[data-page="later-quiz"] .quiz-share-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+body[data-page="later-quiz"] .quiz-share-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
 body[data-page="later-quiz"] .quiz-share-link { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: 44px; height: 44px; margin: 0; padding: 0; border: 2px solid var(--ink); background: var(--cream); color: var(--ink); font: inherit; text-decoration: none; cursor: pointer; }
 body[data-page="later-quiz"] .quiz-share-link:hover { background: var(--ink); color: var(--cream); }
 body[data-page="later-quiz"] .quiz-share-link svg { width: 18px; height: 18px; fill: currentColor; stroke: none; }
