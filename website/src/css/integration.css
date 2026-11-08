@@ -3276,7 +3276,7 @@ body[data-page="pledge-thanks"] .share-status { position: absolute; left: 0; rig
  *      radio group drawn as the pledge form's consent box and rows (.consents,
  *      .crow), restated here as the pledge-resend rules restate them. No new
  *      font or one-off value: tokens and existing declarations only, plus
- *      one new colour token (below). Carry back to the canvas.
+ *      two new colour tokens (below). Carry back to the canvas.
  *
  *      --sage-deep (2026-11-08, the founder's preview review): the verdict
  *      colours. "Correct!" and a right result are green, "Not quite." and a
@@ -3285,9 +3285,15 @@ body[data-page="pledge-thanks"] .share-status { position: absolute; left: 0; rig
  *      2.54:1 on the card's cream and fails AA at any size, so it is the same
  *      hue and saturation, darkened (HSL lightness 54.5% to 34%) until it
  *      clears the 4.5:1 that the 14px result cells need: #4E6C41 is 5.54:1 on
- *      --cream (5.07:1 on --cream-2), level with --coral-deep's 5.59:1. The
- *      red is --coral-deep, the existing AA text shade of the site's coral. */
-:root { --sage-deep: #4E6C41; }
+ *      --cream (5.07:1 on --cream-2), level with --coral-deep's 5.59:1.
+ *
+ *      --red-deep (2026-11-08, the founder's follow-ups): "Not quite." and a
+ *      wrong result, a deeper red than --coral-deep (#B23A14, which they had
+ *      until then). No token is darker in that family (--clay is lighter),
+ *      so it is the coral moved towards red (hue 14 to 5 degrees, the same
+ *      saturation) and darkened (lightness 39% to 34%): #9E1C10 is 7.47:1 on
+ *      --cream and 6.84:1 on --cream-2, past AA at any size. */
+:root { --sage-deep: #4E6C41; --red-deep: #9E1C10; }
 body[data-page="later-quiz"] .sys { flex-direction: column; align-items: stretch; gap: var(--s-5); }
 body[data-page="later-quiz"] .sys > .card,
 body[data-page="later-quiz"] .quiz-list > .card { margin-left: auto; margin-right: auto; }
@@ -3326,7 +3332,7 @@ body[data-page="later-quiz"] [hidden] { display: none; }
 .quiz-js body[data-page="later-quiz"] [data-quiz-tally-note] { display: block; }
 /* The choices: a fieldset whose legend is the question, the pledge form's
  * consent box (.consents) round the rows (.crow), and a native radio sized as
- * the contact form's consent box is. The marks ("Your answer", "The record")
+ * the contact form's consent box is. The marks ("Your answer", "Correct answer")
  * are words under the choice, in the .eq eyebrow's type, in ink. */
 body[data-page="later-quiz"] .quiz-choices { border: 0; margin: 0; padding: 0; min-width: 0; }
 body[data-page="later-quiz"] .quiz-legend { padding: 0; width: 100%; }
@@ -3345,16 +3351,28 @@ body[data-page="later-quiz"] [data-quiz-check]:disabled { background: transparen
  * centred, framed, 620px card. */
 body[data-page="later-quiz"] .cards { grid-template-columns: 1fr; margin: var(--s-4) 0; text-align: left; }
 body[data-page="later-quiz"] .cards .card { max-width: none; border: 0; text-align: left; }
+/* At 320px a long period chip ("Period: January 2019 – September 2026",
+ * SRC-023) is wider than the card: the chip is nowrap and flex: 0 0 auto, so
+ * it cannot shrink, though item 85d lets its value wrap. Here the chip may
+ * shrink to the row and the value wraps, as 85d intends (found by the 320px
+ * check of the founder's follow-ups, 2026-11-08; /case/ and /receipts/ have
+ * the same overflow below 360px, which is a separate change). */
+body[data-page="later-quiz"] .cards .card .foot .row span.m { max-width: 100%; box-sizing: border-box; }
+body[data-page="later-quiz"] .cards .card .foot .row span.m .v { min-width: 0; }
 /* The reveal has no heading since 2026-11-08: the verdict line (with
  * JavaScript) or "The answer: …" (without) opens it, with the space the
- * heading had above it. "Correct!" is larger, in the display face; "Not
- * quite." keeps the body size. Both bold, in --sage-deep or --coral-deep. */
+ * heading had above it. Both verdicts are bold, in the display face, each
+ * at 150% of its size before the founder's follow-ups (2026-11-08):
+ * "Correct!" at 150% of --fs-h4 (22px to 33px), "Not quite." at the score
+ * block's 24px (from the body's 16px). "Correct!" stays the larger. Green
+ * --sage-deep or red --red-deep; the summary's Result cells take the same
+ * colours at their own 14px. */
 body[data-page="later-quiz"] .quiz-verdict,
 body[data-page="later-quiz"] .quiz-answer { margin-top: var(--s-6); }
-body[data-page="later-quiz"] .quiz-verdict { font-weight: 700; color: var(--ink); }
-body[data-page="later-quiz"] .quiz-verdict[data-quiz-result="right"] { font-family: var(--font-display); font-size: var(--fs-h4); line-height: 1.2; }
+body[data-page="later-quiz"] .quiz-verdict { font-family: var(--font-display); font-weight: 700; font-size: 24px; line-height: 1.2; color: var(--ink); }
+body[data-page="later-quiz"] .quiz-verdict[data-quiz-result="right"] { font-size: calc(var(--fs-h4) * 1.5); }
 body[data-page="later-quiz"] [data-quiz-result="right"] { color: var(--sage-deep); }
-body[data-page="later-quiz"] [data-quiz-result="wrong"] { color: var(--coral-deep); }
+body[data-page="later-quiz"] [data-quiz-result="wrong"] { color: var(--red-deep); }
 body[data-page="later-quiz"] .quiz-result { font-weight: 700; white-space: nowrap; }
 body[data-page="later-quiz"] .quiz-others { list-style: none; margin: var(--s-4) 0; padding: 0; text-align: left; font-size: 14px; }
 body[data-page="later-quiz"] .quiz-others li + li { margin-top: var(--s-2); }
@@ -3370,6 +3388,19 @@ body[data-page="later-quiz"] .quiz-share { display: block; font-size: 12px; colo
 body[data-page="later-quiz"] .quiz-close { margin-top: var(--s-6); }
 body[data-page="later-quiz"] .quiz-go { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 12px; margin-top: var(--s-4); }
 body[data-page="later-quiz"] .quiz-go .u-btn:not([hidden]) { display: flex; align-items: center; justify-content: center; text-align: center; margin: 0; min-width: 0; }
+/* Share (the founder's follow-ups, 2026-11-08). "Share this quiz" opens a
+ * small panel under the four buttons, outside their grid, so the grid keeps
+ * its sizes. Each choice is an icon button drawn as the /pledge/thanks/ share
+ * row draws its buttons (2px ink border on cream, inverted on hover; its
+ * 18px marks, filled, and its stroked copy icon), squared at 44px. Without
+ * JavaScript the same links show as a plain row under "Share this quiz". */
+body[data-page="later-quiz"] .quiz-share-panel { margin-top: var(--s-4); }
+body[data-page="later-quiz"] .quiz-share-cap { margin: 0 0 8px; font-weight: 600; }
+body[data-page="later-quiz"] .quiz-share-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+body[data-page="later-quiz"] .quiz-share-link { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; width: 44px; height: 44px; margin: 0; padding: 0; border: 2px solid var(--ink); background: var(--cream); color: var(--ink); font: inherit; text-decoration: none; cursor: pointer; }
+body[data-page="later-quiz"] .quiz-share-link:hover { background: var(--ink); color: var(--cream); }
+body[data-page="later-quiz"] .quiz-share-link svg { width: 18px; height: 18px; fill: currentColor; stroke: none; }
+body[data-page="later-quiz"] .quiz-share-link[data-quiz-copy] svg { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 /* The summary: the privacy page's version table. */
 body[data-page="later-quiz"] .vhist { width: 100%; border-collapse: collapse; border: 2px solid var(--ink); margin-top: 6px; text-align: left; }
 body[data-page="later-quiz"] .vhist th { background: var(--ink); color: var(--cream); font-size: 12px; letter-spacing: .05em; text-transform: uppercase; text-align: left; padding: 10px 14px; font-family: var(--font-display); font-weight: 700; }
@@ -3384,8 +3415,9 @@ body[data-page="later-quiz"] .vhist tbody th { background: transparent; color: v
   body[data-page="later-quiz"] .vhist th,
   body[data-page="later-quiz"] .vhist td { padding: 8px 8px; }
 }
-/* The summary on a phone: four columns, one of them SRC-018's whole caption,
- * are wider than a 480px screen, so each answer stacks, as the sector ledger
+/* The summary on a phone: four columns (SRC-018's whole caption among them
+ * until the founder's follow-ups) are too tight for a 480px screen, so each
+ * answer stacks, as the sector ledger
  * (.lg) collapses its rows: the question, then "Your answer", "Correct answer"
  * and "Result", each named by its cell's data-label. */
 @media (max-width: 480px) {

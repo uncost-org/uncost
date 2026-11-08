@@ -139,10 +139,13 @@ ALLOWED_NAV_HOSTS = {
     "youtube.com",
     "www.reddit.com",  # the subreddit, www.reddit.com/r/Uncost_org/ (2026-10-18)
     "tiktok.com",
-    # Share intents on /pledge/thanks/ only (founder, 2026-10-24). Uncost has
-    # no account on either, so neither is in chrome.json social[].
+    # Share intents on /pledge/thanks/ (founder, 2026-10-24) and the /quiz/
+    # share panel (founder, 2026-11-08; CHG-019). Uncost has no account on
+    # any of these, so none is in chrome.json social[]. wa.me is WhatsApp's
+    # own share link, for /quiz/ only.
     "www.facebook.com",
     "www.linkedin.com",
+    "wa.me",
     # /privacy/ §2 links Cloudflare's own Web Analytics privacy page, as the
     # founder asked (contact-form batch, 2026-10-19; CHG-005).
     "www.cloudflare.com",

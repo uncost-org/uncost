@@ -19,20 +19,22 @@
 //            four values, each LADDER times the one below, with the record on
 //            one rung. Percent choices are rounded to the record's own decimal
 //            places and written in its style. Money and count choices are all
-//            rounded the same way, to two significant figures of the largest,
-//            and read "About …" (founder's call, 2026-11-08: exact wrong
-//            choices such as $17,995 looked like real data); the reveal card,
-//            the no-JS answer and the announcement keep the exact register
-//            figure. A `change` question asks which way and how far a figure
+//            rounded the same way, to two significant figures of the largest
+//            (or to the question's own `step`), and read "About …" (founder's
+//            call, 2026-11-08: exact wrong choices such as $17,995 looked like
+//            real data); the reveal card, the no-JS answer and the
+//            announcement keep the exact register figure. A `change` question asks which way and how far a figure
 //            moved: its right choice reads "Down about 15%" or "Up about 15%",
 //            the size from the row's display_value and the direction from two
 //            numbers read out of its receipt by `change.pattern`.
-//            Choices are shown low to high, so the record's place among them
-//            is its position. A ladder question starts from the next rung in
-//            RANK_ORDER (counting ladder questions only), and moves to the
+//            Choices are shown low to high, so the right answer's place among
+//            them is its position. A ladder question starts from the next rung
+//            in RANK_ORDER (counting ladder questions only), and moves to the
 //            next rung only when a rule below fails there. RANK_ORDER is
-//            [1, 3, 2] since four questions took listed choices (2026-11-08):
-//            it keeps every ladder question's choices as they were.
+//            [0, 3, 2] since the founder's follow-ups (2026-11-08): with the
+//            listed questions' own places, the right answer is first in two
+//            questions and in each of the four positions at least twice
+//            (MIN_PER_POSITION, guarded below).
 //   most     Which rose most? (three or four choices). Every choice is a real
 //            register row; the right one is the row whose percent is highest.
 //   compare  Higher or lower (two choices). The answer is computed from two
@@ -64,7 +66,8 @@
 //   - most: a value is not a single percent, the data periods are not the same
 //     period, or the highest value is tied;
 //   - compare: the two values cannot be read, or they are equal;
-// and if every question puts the right answer in the same position.
+// and if any of positions 1 to 4 holds the right answer in fewer than
+// MIN_PER_POSITION questions.
 // checked_by is deliberately NOT required: it is empty on every row today (a
 // finding for the founder, not something to fill in here).
 //
@@ -75,9 +78,9 @@
 // into functions/_generated/build.json, which the score endpoints import.
 //
 // The end screen's "Correct answer" column shows the right choice as the
-// reader saw it ("About $7", "Down about 15%"). `summary: "caption"` shows the
-// row's whole caption there instead: SRC-018's notes say its two halves (the
-// total fell; chronic homelessness reached a record high) travel together.
+// reader saw it ("About 745,000", "Down about 15%"). `summary: "exact"` adds
+// the register figure after it, "About $7 ($6.79)": SRC-023's notes say to
+// print the level to the cent.
 const crypto = require("node:crypto");
 const register = require("./register.js");
 
@@ -104,7 +107,7 @@ const QUESTIONS = [
     // display_value "A versus B": rent (part 0), then income (the 9%).
     question: "Between 2001 and 2024, after adjusting for inflation, the median renter's income grew 9%. How much did the median rent grow?",
     wrong: [18, 22, 41] },
-  { kind: "pick", id: "SRC-023", topic: "Ground beef",
+  { kind: "pick", id: "SRC-023", topic: "Ground beef", summary: "exact",
     question: "What did a pound of ground beef cost in September 2026?",
     wrong: [5, 10, 15] },
   { kind: "pick", id: "SRC-006", topic: "Family health coverage",
@@ -116,7 +119,10 @@ const QUESTIONS = [
     // display_value; the direction is the latest level against the base.
     change: { pattern: /base December 1997=(\d+(?:\.\d+)?): (\d+(?:\.\d+)?) \(September 2026\)/, from: 1, to: 2 },
     wrong: [-25, 5, 20] },
-  { kind: "pick", id: "SRC-018", topic: "Homelessness", summary: "caption",
+  // Every choice to the nearest 5,000 (founder, 2026-11-08: "About 745,000";
+  // 745,652 to the nearest 1,000 would read 746,000). The figure card keeps
+  // the exact count and both halves of the caption.
+  { kind: "pick", id: "SRC-018", topic: "Homelessness", step: 5000,
     question: "On a single night in January 2025, how many people were homeless in the United States?" },
 ];
 
@@ -134,7 +140,8 @@ const STATED = /\$?\d(?:[\d,]*\d)?(?:\.\d+)?(?:\s?%|\s(?:percent|trillion|billio
 const LADDER = 1.5;
 const MIN_GAP = 0.2;
 const MIN_GAP_LISTED = 0.15;
-const RANK_ORDER = [1, 3, 2];
+const RANK_ORDER = [0, 3, 2];
+const MIN_PER_POSITION = 2;
 
 function rowProblems(id, row) {
   if (!row) return [`${id}: not in sources/register.csv`];
@@ -196,23 +203,24 @@ function formatLike(fig, x) {
 const endsInZero = (text) => /0\D*$/.test(text);
 
 // Money and counts: every choice, the record's too, rounded to one step (two
-// significant figures of the largest) and read "About …".
-function about(fig, raw) {
-  const step = Math.pow(10, Math.floor(Math.log10(Math.max(...raw))) - 1);
+// significant figures of the largest, or the question's own `step`) and read
+// "About …".
+function about(fig, raw, own) {
+  const step = own || Math.pow(10, Math.floor(Math.log10(Math.max(...raw))) - 1);
   const decimals = step < 1 ? Math.round(-Math.log10(step)) : 0;
   const values = raw.map((v) => roundTo(Math.round(Number((v / step).toPrecision(12))) * step, decimals));
   return { values, texts: values.map((v) => "About " + formatLike({ ...fig, decimals }, v)) };
 }
 
 // The four choices on one rung of the ladder, or the reason the rung fails.
-function rung(fig, recordText, rank, share) {
+function rung(fig, recordText, rank, share, step) {
   const raw = [0, 1, 2, 3].map((i) => fig.value * Math.pow(LADDER, i - rank));
   let values, texts;
   if (fig.kind === "percent") {
     values = raw.map((v, i) => (i === rank ? fig.value : roundLike(fig, v)));
     texts = values.map((v, i) => (i === rank ? recordText : formatLike(fig, v)));
   } else {
-    ({ values, texts } = about(fig, raw));
+    ({ values, texts } = about(fig, raw, step));
   }
   const wrong = values.filter((_, i) => i !== rank);
   const record = values[rank];
@@ -237,6 +245,10 @@ function figureOf(q, row, problems) {
   }
   if (formatLike(fig, fig.value) !== recordText) {
     problems.push(`${q.id}: "${recordText}" cannot be rebuilt from its value, so its choices could not share its style`);
+    return null;
+  }
+  if (q.step !== undefined && (fig.kind === "percent" || !(q.step > 0) || !Number.isInteger(q.step) || q.step >= fig.value)) {
+    problems.push(`${q.id}: its step must be a whole number above nothing and below the figure, on a money or count question`);
     return null;
   }
   return { fig, recordText };
@@ -294,7 +306,7 @@ function listed(q, row, problems) {
     texts = items.map((it) => (it.right ? recordText : formatLike(fig, it.v)));
     shown = items.map((it) => (it.right ? it.v : roundTo(it.v, fig.decimals)));
   } else {
-    const a = about(fig, items.map((it) => it.v));
+    const a = about(fig, items.map((it) => it.v), q.step);
     texts = a.texts;
     shown = items.map((it, i) => (it.right ? it.v : a.values[i]));
     if (items.some((it) => !(it.v > 0))) problems.push(`${q.id}: a listed money or count choice of nothing`);
@@ -320,7 +332,7 @@ function pick(q, row, k, problems) {
   const reasons = [];
   for (let step = 0; step < 4; step++) {
     const rank = (first + step) % 4;
-    const r = rung(fig, recordText, rank, q.share);
+    const r = rung(fig, recordText, rank, q.share, q.step);
     if (r.texts) return { choices: r.texts, answer: rank, record: recordText };
     reasons.push(`position ${rank + 1}: ${r.fail}`);
   }
@@ -426,14 +438,17 @@ function build(reg) {
       // reveal, the no-JS answer and the announcement use it.
       recordText: made.record,
       // The end screen's "Correct answer" column: the right choice as the
-      // reader saw it, or the whole caption.
-      summaryText: q.summary === "caption" ? row.display_caption : made.choices[made.answer],
+      // reader saw it, with the register figure after it for `summary: "exact"`.
+      summaryText: q.summary === "exact" && made.record !== made.choices[made.answer]
+        ? `${made.choices[made.answer]} (${made.record})`
+        : made.choices[made.answer],
       row,
       others: q.kind === "most" ? rows.filter((r) => r !== row) : [],
     };
   });
-  if (!problems.length && new Set(questions.map((q) => q.answer)).size < 2) {
-    problems.push("every question puts the right answer in the same position");
+  if (!problems.length) {
+    const thin = [0, 1, 2, 3].filter((p) => questions.filter((q) => q.answer === p).length < MIN_PER_POSITION);
+    if (thin.length) problems.push(`the right answer is in position ${thin.map((p) => p + 1).join(", ")} in fewer than ${MIN_PER_POSITION} questions (positions: ${questions.map((q) => q.answer + 1).join(", ")})`);
   }
   if (problems.length) {
     throw new Error("Quiz guard failed (no fake numbers) — fix sources/register.csv or _data/quiz.js:\n  - " + problems.join("\n  - "));
@@ -446,4 +461,4 @@ function build(reg) {
 module.exports = function () {
   return build(register());
 };
-Object.assign(module.exports, { QUESTIONS, REQUIRED, PERCENT, LADDER, MIN_GAP, MIN_GAP_LISTED, RANK_ORDER, parseFigure, roundLike, formatLike, build });
+Object.assign(module.exports, { QUESTIONS, REQUIRED, PERCENT, LADDER, MIN_GAP, MIN_GAP_LISTED, RANK_ORDER, MIN_PER_POSITION, parseFigure, roundLike, formatLike, build });

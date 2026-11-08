@@ -5,7 +5,8 @@
  * one question at a time as multiple choice: a native radio group (a fieldset
  * whose legend is the question), "Check my answer" once a choice is picked,
  * then the verdict ("Correct!" or "Not quite.", in words, never by colour
- * alone) and the record.
+ * alone) and the sourced figure. The choices are tagged "Your answer" and
+ * "Correct answer"; the announcement uses the same words.
  *
  * Every choice and every number shown comes from the page: quiz.njk lists each
  * question's choices (data-quiz-choice, the right one marked
@@ -25,6 +26,9 @@
  * switched off (404), the reader sees their own score only, never an error.
  * The only other data that goes anywhere is what someone types into the
  * site footer's updates form, which ui.js handles as on every other page.
+ * The share panel's links are navigation the reader chooses, to a network's
+ * own share page, carrying the quiz's address and share text only (as the
+ * /pledge/thanks/ share row does); nothing from any network loads here.
  *
  * CSP (website/src/_headers): loaded from 'self'; no inline script, style or
  * on* handler is used or created.
@@ -111,7 +115,7 @@
     var group = buildGroup(item, n);
     if (!group) return;
     // The right answer as the register gives it (a pick question's choice may
-    // read "About …"; the record is the exact figure).
+    // read "About …"; this is the exact figure, as the figure card shows it).
     var record = guess.getAttribute("data-quiz-record");
 
     // Enhanced state: the choices show, the answer waits, one question at a time.
@@ -133,10 +137,10 @@
       });
       if (!picked || !right) return;
       // Marked in words, never by colour alone.
-      picked.mark.textContent = picked === right ? "Your answer · The record" : "Your answer";
+      picked.mark.textContent = picked === right ? "Your answer · Correct answer" : "Your answer";
       show(picked.mark, true);
       if (picked !== right) {
-        right.mark.textContent = "The record";
+        right.mark.textContent = "Correct answer";
         show(right.mark, true);
       }
       group.choices.forEach(function (c) {
@@ -156,8 +160,8 @@
       show(nextWrap, true);
       var recordText = record || right.text;
       announce(picked === right
-        ? "Correct! The record: " + recordText + "."
-        : "Not quite. Your answer: " + picked.text + ". The record: " + recordText + ".");
+        ? "Correct! Your answer: " + picked.text + ". Correct answer: " + recordText + "."
+        : "Not quite. Your answer: " + picked.text + ". Correct answer: " + recordText + ".");
       said.focus();
     });
 
@@ -198,7 +202,7 @@
     show(end.querySelector("[data-quiz-share]"), true);
     show(end, true);
     var line = end.querySelector("[data-quiz-score]");
-    announce(line ? line.textContent.replace(/\s+/g, " ").trim() : "Your answers vs. the record.");
+    announce(line ? line.textContent.replace(/\s+/g, " ").trim() : "Your answers.");
     var h = end.querySelector("h2");
     if (h) h.focus();
     if (items.every(function (_, i) { return !!answers[i]; })) tally(bits, score, rows);
@@ -280,19 +284,54 @@
   // that state decides from here on.
   document.documentElement.classList.remove("quiz-js");
 
-  // Share the quiz, never the score: the shared text is the page's own
-  // description and URL, with nothing about the reader's answers.
+  // Share the quiz, never the score: the panel's links (quiz.njk) carry the
+  // page's own address and share text, with nothing about the reader's
+  // answers, and so does the system share sheet. Where the browser has one
+  // and the screen is a phone's (600px and below, as /pledge/thanks/ decides),
+  // "Share this quiz" opens the sheet; everywhere else, or if the sheet fails,
+  // it opens the panel. Escape closes the panel and puts focus back on the
+  // button.
   var share = root.querySelector("[data-quiz-share]");
+  var panel = root.querySelector("[data-quiz-share-panel]");
+  var copy = root.querySelector("[data-quiz-copy]");
   var note = root.querySelector("[data-quiz-share-note]");
+  var url = root.getAttribute("data-quiz-url");
+  var said = function (t) { if (note) note.textContent = t; };
+  function setPanel(open, refocus) {
+    if (!panel || !share) return;
+    show(panel, open);
+    share.setAttribute("aria-expanded", open ? "true" : "false");
+    if (open) {
+      var first = panel.querySelector("a, button");
+      if (first) first.focus();
+    } else if (refocus) {
+      share.focus();
+    }
+  }
+  if (panel) {
+    show(panel, false);
+    show(root.querySelector("[data-quiz-copy-wrap]"), true);
+    panel.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !panel.hidden) { e.preventDefault(); setPanel(false, true); }
+    });
+  }
   if (share) {
+    share.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && panel && !panel.hidden) { e.preventDefault(); setPanel(false, true); }
+    });
     share.addEventListener("click", function () {
-      var url = root.getAttribute("data-quiz-url");
-      var data = { title: document.title, text: root.getAttribute("data-quiz-text") || "", url: url };
-      if (navigator.share) {
-        navigator.share(data).catch(function () { /* cancelled: nothing to do */ });
+      if (panel && !panel.hidden) { setPanel(false, false); return; }
+      var phone = window.matchMedia && window.matchMedia("(max-width: 600px)").matches;
+      if (navigator.share && phone) {
+        navigator.share({ title: document.title, text: root.getAttribute("data-quiz-text") || "", url: url })
+          .catch(function (err) { if (!err || err.name !== "AbortError") setPanel(true); });
         return;
       }
-      var said = function (t) { if (note) note.textContent = t; };
+      setPanel(true);
+    });
+  }
+  if (copy) {
+    copy.addEventListener("click", function () {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(url).then(
           function () { said("Link copied."); },

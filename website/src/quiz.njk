@@ -4,6 +4,7 @@ permalink: "/quiz/"
 pageId: "later-quiz"
 title: "The Quiz"
 description: "Quick questions on prices, rent and wealth in the United States: pick an answer, then see the sourced figure."
+shareText: "How well do you know the cost of living? Take the Uncost quiz."
 ---
 {#- The cost-of-living quiz (records/changes/CHG-019). Repo-authored since
     CHG-019: tools/gen_static_pages.py no longer writes this file from the
@@ -31,6 +32,9 @@ description: "Quick questions on prices, rent and wealth in the United States: p
     call. With it on (features.quizStatsOpen), it sends one score at the end
     screen and shows the average (functions/api/quiz/, CHG-019). -#}
 {% import "partials/figure.njk" as fig %}
+{% import "partials/social-icons.njk" as socialIcon %}
+{% set shareUrl = site.origin + page.url %}
+{% set shareLine = shareText + " " + shareUrl %}
 <!-- SECTION: quiz — title -->
 <div class="titleband" data-screen-label="Quiz — title"><h1>The <span class="u-1">Quiz</span></h1></div>
 <!-- SECTION: quiz — intro -->
@@ -54,7 +58,7 @@ description: "Quick questions on prices, rent and wealth in the United States: p
   <p data-quiz-tally-note hidden>We keep an anonymous tally of scores, with no name, email or IP address, so you can see how you did compared with the average.</p>
 {% endif %}
 </div>
-<div class="sys" data-quiz data-quiz-url="{{ site.origin }}{{ page.url }}" data-quiz-text="{{ description }}" data-quiz-version="{{ quiz.version }}"{% if features.quizStatsOpen %} data-quiz-stats{% endif %}>
+<div class="sys" data-quiz data-quiz-url="{{ site.origin }}{{ page.url }}" data-quiz-text="{{ shareText }}" data-quiz-version="{{ quiz.version }}"{% if features.quizStatsOpen %} data-quiz-stats{% endif %}>
   <!-- SECTION: quiz — questions -->
   <ol class="quiz-list" data-quiz-list>
 {% for q in quiz.questions %}
@@ -98,7 +102,7 @@ description: "Quick questions on prices, rent and wealth in the United States: p
   <div class="card quiz-end" data-quiz-end data-screen-label="Quiz — end">
     <div class="cap"><p class="quiz-cap">Your results</p></div>
     <div class="bd">
-      <h2 id="qz-end-h" tabindex="-1">Your answers vs. the record</h2>
+      <h2 id="qz-end-h" tabindex="-1">Your answers</h2>
       <p class="quiz-nojs" data-quiz-nojs>Each answer is above, with its source. With JavaScript on, you can pick an answer first and compare.</p>
       {#- One block: the score, then (in a build with the tally on, from 30
           scores) the average and how this reader compares, or "Not enough
@@ -114,14 +118,38 @@ description: "Quick questions on prices, rent and wealth in the United States: p
       </table>
       {#- No updates form here (founder, 2026-11-08): the site footer, directly
           below, has the same one. Four equal buttons, two by two (one column
-          on narrow phones, same order). Share needs JavaScript, so it stays
-          hidden without it. #}
+          on narrow phones, same order). The Share button needs JavaScript, so
+          it stays hidden without it; the share links below show instead. #}
       <p class="quiz-close">Cost of living pressures keep rising. Help the cause, or learn more:</p>
       <div class="quiz-go">
-        <button type="button" class="u-btn u-btn--ink" data-quiz-share hidden>Share this quiz</button>
+        <button type="button" class="u-btn u-btn--ink" data-quiz-share aria-expanded="false" aria-controls="qz-share" hidden>Share this quiz</button>
         <a href="/pledge/" class="u-btn u-btn--primary">Sign the Pledge</a>
         <a href="/case/" class="u-btn u-btn--ghost">Read The Case</a>
         <a href="/sectors/" class="u-btn u-btn--ghost">Explore the sectors</a>
+      </div>
+      {#- The share panel (the founder's follow-ups, 2026-11-08). Plain links to
+          each network's own share page, opening in a new tab, with the quiz's
+          address and shareText (front matter): never the reader's score or
+          answers, and no script, widget or request from any network, so the
+          CSP is unchanged. scripts/audit_website.py allows each host only as
+          a link (ALLOWED_NAV_HOSTS) and fails any address on the host of a
+          social account that chrome.json hides, so Reddit's link is built
+          only while its account is shown. With JavaScript, js/quiz.js hides
+          the panel until "Share this quiz" opens it (Escape closes it) and
+          shows "Copy link"; without it, the links are a plain row. #}
+      <div class="quiz-share-panel" id="qz-share" data-quiz-share-panel role="group" aria-labelledby="qz-share-cap">
+        <p class="quiz-share-cap" id="qz-share-cap">Share this quiz</p>
+        <ul class="quiz-share-list">
+          <li><a class="quiz-share-link" href="https://x.com/intent/tweet?text={{ shareText | urlencode }}&amp;url={{ shareUrl | urlencode }}" target="_blank" rel="noopener" aria-label="Share on X">{{ socialIcon.glyph("X") }}</a></li>
+          <li><a class="quiz-share-link" href="https://www.facebook.com/sharer/sharer.php?u={{ shareUrl | urlencode }}" target="_blank" rel="noopener" aria-label="Share on Facebook">{{ socialIcon.glyph("Facebook") }}</a></li>
+          <li><a class="quiz-share-link" href="https://www.linkedin.com/sharing/share-offsite/?url={{ shareUrl | urlencode }}" target="_blank" rel="noopener" aria-label="Share on LinkedIn">{{ socialIcon.glyph("LinkedIn") }}</a></li>
+          <li><a class="quiz-share-link" href="https://bsky.app/intent/compose?text={{ shareLine | urlencode }}" target="_blank" rel="noopener" aria-label="Share on Bluesky">{{ socialIcon.glyph("Bluesky") }}</a></li>
+{% for s in chrome.social %}{% if s.label == "Reddit" and s.show %}          <li><a class="quiz-share-link" href="https://www.reddit.com/submit?url={{ shareUrl | urlencode }}&amp;title={{ shareText | urlencode }}" target="_blank" rel="noopener" aria-label="Share on Reddit">{{ socialIcon.glyph("Reddit") }}</a></li>
+{% endif %}{% endfor %}
+          <li><a class="quiz-share-link" href="https://wa.me/?text={{ shareLine | urlencode }}" target="_blank" rel="noopener" aria-label="Share on WhatsApp">{{ socialIcon.glyph("WhatsApp") }}</a></li>
+          <li><a class="quiz-share-link" href="mailto:?subject={{ "The Uncost quiz" | urlencode }}&amp;body={{ shareLine | urlencode }}" aria-label="Share by email">{{ socialIcon.glyph("Email") }}</a></li>
+          <li data-quiz-copy-wrap hidden><button type="button" class="quiz-share-link" data-quiz-copy aria-label="Copy link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="12" width="13" height="6" rx="3" transform="rotate(-45 9 15)"></rect><rect x="8.5" y="6" width="13" height="6" rx="3" transform="rotate(-45 15 9)"></rect></svg></button></li>
+        </ul>
       </div>
       <p class="quiz-note" data-quiz-share-note role="status" aria-live="polite"></p>
     </div>
