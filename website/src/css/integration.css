@@ -3275,8 +3275,19 @@ body[data-page="pledge-thanks"] .share-status { position: absolute; left: 0; rig
  *      below as for the policies pages). Each question's choices are a native
  *      radio group drawn as the pledge form's consent box and rows (.consents,
  *      .crow), restated here as the pledge-resend rules restate them. No new
- *      colour, font or one-off value: tokens and existing declarations only.
- *      Carry back to the canvas. */
+ *      font or one-off value: tokens and existing declarations only, plus
+ *      one new colour token (below). Carry back to the canvas.
+ *
+ *      --sage-deep (2026-11-08, the founder's preview review): the verdict
+ *      colours. "Correct!" and a right result are green, "Not quite." and a
+ *      wrong one red; the words carry the meaning, the colour only repeats
+ *      it. The green starts from the CONFIRMED chip's --sage, which is
+ *      2.54:1 on the card's cream and fails AA at any size, so it is the same
+ *      hue and saturation, darkened (HSL lightness 54.5% to 34%) until it
+ *      clears the 4.5:1 that the 14px result cells need: #4E6C41 is 5.54:1 on
+ *      --cream (5.07:1 on --cream-2), level with --coral-deep's 5.59:1. The
+ *      red is --coral-deep, the existing AA text shade of the site's coral. */
+:root { --sage-deep: #4E6C41; }
 body[data-page="later-quiz"] .sys { flex-direction: column; align-items: stretch; gap: var(--s-5); }
 body[data-page="later-quiz"] .sys > .card,
 body[data-page="later-quiz"] .quiz-list > .card { margin-left: auto; margin-right: auto; }
@@ -3334,23 +3345,40 @@ body[data-page="later-quiz"] [data-quiz-check]:disabled { background: transparen
  * centred, framed, 620px card. */
 body[data-page="later-quiz"] .cards { grid-template-columns: 1fr; margin: var(--s-4) 0; text-align: left; }
 body[data-page="later-quiz"] .cards .card { max-width: none; border: 0; text-align: left; }
-body[data-page="later-quiz"] .quiz-reveal h3,
-body[data-page="later-quiz"] .quiz-end h3 { font-family: var(--font-display); font-weight: 700; font-size: 24px; margin: var(--s-6) 0 var(--s-3); }
+/* The reveal has no heading since 2026-11-08: the verdict line (with
+ * JavaScript) or "The answer: …" (without) opens it, with the space the
+ * heading had above it. "Correct!" is larger, in the display face; "Not
+ * quite." keeps the body size. Both bold, in --sage-deep or --coral-deep. */
+body[data-page="later-quiz"] .quiz-verdict,
+body[data-page="later-quiz"] .quiz-answer { margin-top: var(--s-6); }
 body[data-page="later-quiz"] .quiz-verdict { font-weight: 700; color: var(--ink); }
+body[data-page="later-quiz"] .quiz-verdict[data-quiz-result="right"] { font-family: var(--font-display); font-size: var(--fs-h4); line-height: 1.2; }
+body[data-page="later-quiz"] [data-quiz-result="right"] { color: var(--sage-deep); }
+body[data-page="later-quiz"] [data-quiz-result="wrong"] { color: var(--coral-deep); }
+body[data-page="later-quiz"] .quiz-result { font-weight: 700; white-space: nowrap; }
 body[data-page="later-quiz"] .quiz-others { list-style: none; margin: var(--s-4) 0; padding: 0; text-align: left; font-size: 14px; }
 body[data-page="later-quiz"] .quiz-others li + li { margin-top: var(--s-2); }
-body[data-page="later-quiz"] .quiz-src { font-size: 14px; }
-body[data-page="later-quiz"] .quiz-score { font-family: var(--font-display); font-weight: 700; font-size: 24px; color: var(--ink); }
-/* The tally's line under the score, and each question's share right in the
- * summary's last column (CHG-019): the verdict's weight, the source line's size. */
-body[data-page="later-quiz"] .quiz-average { font-weight: 700; color: var(--ink); }
+/* The score block: the score, then (with the tally, from 30 scores) the
+ * average and the comparison, in one paragraph. */
+body[data-page="later-quiz"] .quiz-score { font-family: var(--font-display); font-weight: 700; font-size: 24px; line-height: 1.3; color: var(--ink); }
+/* Each question's share right, under the summary's Result (CHG-019). */
 body[data-page="later-quiz"] .quiz-share { display: block; font-size: 12px; color: var(--fg-2); }
+/* The close: one line, then four equal buttons, two by two, each in its
+ * existing style (Share ink, Pledge coral, The Case and the sectors ghost).
+ * Equal rows (grid-auto-rows: 1fr) keep all four the same height when a label
+ * wraps. One column at 480px and below, as the summary stacks, same order. */
+body[data-page="later-quiz"] .quiz-close { margin-top: var(--s-6); }
+body[data-page="later-quiz"] .quiz-go { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 12px; margin-top: var(--s-4); }
+body[data-page="later-quiz"] .quiz-go .u-btn:not([hidden]) { display: flex; align-items: center; justify-content: center; text-align: center; margin: 0; min-width: 0; }
 /* The summary: the privacy page's version table. */
 body[data-page="later-quiz"] .vhist { width: 100%; border-collapse: collapse; border: 2px solid var(--ink); margin-top: 6px; text-align: left; }
 body[data-page="later-quiz"] .vhist th { background: var(--ink); color: var(--cream); font-size: 12px; letter-spacing: .05em; text-transform: uppercase; text-align: left; padding: 10px 14px; font-family: var(--font-display); font-weight: 700; }
 body[data-page="later-quiz"] .vhist td,
 body[data-page="later-quiz"] .vhist tbody th { border-top: 2px solid var(--ink); padding: 11px 14px; font-size: 14px; vertical-align: top; }
 body[data-page="later-quiz"] .vhist tbody th { background: transparent; color: var(--ink); text-transform: none; letter-spacing: 0; font-family: inherit; }
+@media (max-width: 480px) {
+  body[data-page="later-quiz"] .quiz-go { grid-template-columns: minmax(0, 1fr); }
+}
 @media (max-width: 680px) {
   body[data-page="later-quiz"] .sys { padding-left: var(--s-4); padding-right: var(--s-4); }
   body[data-page="later-quiz"] .vhist th,
@@ -3358,8 +3386,8 @@ body[data-page="later-quiz"] .vhist tbody th { background: transparent; color: v
 }
 /* The summary on a phone: four columns, one of them SRC-018's whole caption,
  * are wider than a 480px screen, so each answer stacks, as the sector ledger
- * (.lg) collapses its rows: the question, then "Your answer", "The record" and
- * "Right", each named by its cell's data-label. */
+ * (.lg) collapses its rows: the question, then "Your answer", "Correct answer"
+ * and "Result", each named by its cell's data-label. */
 @media (max-width: 480px) {
   body[data-page="later-quiz"] .quiz-sum thead { display: none; }
   body[data-page="later-quiz"] .quiz-sum:not([hidden]),

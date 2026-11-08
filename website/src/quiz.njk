@@ -43,7 +43,7 @@ description: "Quick questions on prices, rent and wealth in the United States: p
       .quiz-js, which integration.css item 150 reads; js/quiz.js removes the mark
       once it has set its own state. The layout has no per-page <head> slot. #}
   <script src="/js/quiz-early.js"></script>
-  <h2>How well do you know what living costs?</h2>
+  <h2>Test your knowledge on the <span class="u-1">cost of living</span>.</h2>
   <p>{{ quiz.total }} quick questions on prices, rent and wealth in the United States. Pick an answer, then see the sourced figure.</p>
   {#- With the anonymous score tally on (features.quizStatsOpen; CHG-019), a
       reader with JavaScript sends their score at the end screen, so they read
@@ -51,7 +51,7 @@ description: "Quick questions on prices, rent and wealth in the United States: p
       "Your answers stay in this browser.", which stays true for them. #}
   <p data-quiz-local-note{% if features.quizStatsOpen %} data-quiz-swap{% endif %}>Your answers stay in this browser.</p>
 {% if features.quizStatsOpen %}
-  <p data-quiz-tally-note hidden>We keep an anonymous tally of scores, with no name, email or IP address, to show the average.</p>
+  <p data-quiz-tally-note hidden>We keep an anonymous tally of scores, with no name, email or IP address, so you can see how you did compared with the average.</p>
 {% endif %}
 </div>
 <div class="sys" data-quiz data-quiz-url="{{ site.origin }}{{ page.url }}" data-quiz-text="{{ description }}" data-quiz-version="{{ quiz.version }}"{% if features.quizStatsOpen %} data-quiz-stats{% endif %}>
@@ -71,9 +71,12 @@ description: "Quick questions on prices, rent and wealth in the United States: p
           </ul>
           <div class="actions"><button type="button" class="u-btn u-btn--primary" data-quiz-check disabled>Check my answer</button></div>
         </div>
+        {#- The reveal has no heading (founder, 2026-11-08): with JavaScript,
+            focus moves to the verdict line ("Correct!" or "Not quite.");
+            without it, "The answer: …" leads straight into the figure card,
+            which carries the source, period and region. #}
         <div class="quiz-reveal" data-quiz-reveal>
-          <h3 id="qz-{{ q.n }}-rh" tabindex="-1">The record</h3>
-          <p class="quiz-verdict" data-quiz-verdict hidden></p>
+          <p class="quiz-verdict" id="qz-{{ q.n }}-v" tabindex="-1" data-quiz-verdict hidden></p>
           <p class="quiz-answer" data-quiz-nojs data-source="{{ q.row.source_id }}">The answer: {{ q.recordText }}.</p>
           <div class="cards">
       {{ fig.card(q.row) }}
@@ -85,7 +88,6 @@ description: "Quick questions on prices, rent and wealth in the United States: p
 {% endfor %}
           </ul>
 {% endif %}
-          <p class="quiz-src">{{ q.row.data_period }} · {{ q.row.region }} · Source: <a href="{{ q.row.url }}" target="_blank" rel="noopener">{{ q.row.source_line }}</a></p>
           <div class="actions" data-quiz-next-wrap hidden><button type="button" class="u-btn u-btn--ink" data-quiz-next>Next question</button></div>
         </div>
       </div>
@@ -98,25 +100,29 @@ description: "Quick questions on prices, rent and wealth in the United States: p
     <div class="bd">
       <h2 id="qz-end-h" tabindex="-1">Your answers vs. the record</h2>
       <p class="quiz-nojs" data-quiz-nojs>Each answer is above, with its source. With JavaScript on, you can pick an answer first and compare.</p>
-      <p class="quiz-score" data-quiz-score hidden>You got <span data-quiz-score-n></span> of {{ quiz.total }} right.</p>
-      <p class="quiz-average" data-quiz-average hidden></p>
+      {#- One block: the score, then (in a build with the tally on, from 30
+          scores) the average and how this reader compares, or "Not enough
+          players yet to show an average." js/quiz.js fills both. #}
+      <p class="quiz-score" data-quiz-score hidden>You got <span data-quiz-score-n></span> out of {{ quiz.total }} right.<span data-quiz-average hidden></span></p>
       <table class="vhist quiz-sum" data-quiz-summary hidden>
-        <thead><tr><th scope="col">Question</th><th scope="col">Your answer</th><th scope="col">The record</th><th scope="col">Right?</th></tr></thead>
+        <thead><tr><th scope="col">Question</th><th scope="col">Your answer</th><th scope="col">Correct answer</th><th scope="col">Result</th></tr></thead>
         <tbody>
 {% for q in quiz.questions %}
-          <tr data-quiz-sum-row><th scope="row">{{ q.topic }}</th><td data-label="Your answer" data-quiz-sum-answer></td><td data-label="The record" data-source="{{ q.row.source_id }}">{{ q.summaryText }}</td><td data-label="Right" data-quiz-sum-right></td></tr>
+          <tr data-quiz-sum-row><th scope="row">{{ q.topic }}</th><td data-label="Your answer" data-quiz-sum-answer></td><td data-label="Correct answer" data-source="{{ q.row.source_id }}">{{ q.summaryText }}</td><td data-label="Result" data-quiz-sum-right></td></tr>
 {% endfor %}
         </tbody>
       </table>
-      <h3>Get updates by email</h3>
-      <p>Get Uncost updates by email: new figures, what they mean, and their sources.</p>
-      {% include "partials/forms/updates.njk" %}
-      <div class="actions">
+      {#- No updates form here (founder, 2026-11-08): the site footer, directly
+          below, has the same one. Four equal buttons, two by two (one column
+          on narrow phones, same order). Share needs JavaScript, so it stays
+          hidden without it. #}
+      <p class="quiz-close">Cost of living pressures keep rising. Help the cause, or learn more:</p>
+      <div class="quiz-go">
+        <button type="button" class="u-btn u-btn--ink" data-quiz-share hidden>Share this quiz</button>
+        <a href="/pledge/" class="u-btn u-btn--primary">Sign the Pledge</a>
         <a href="/case/" class="u-btn u-btn--ghost">Read The Case</a>
         <a href="/sectors/" class="u-btn u-btn--ghost">Explore the sectors</a>
-        <a href="/pledge/" class="u-btn u-btn--primary">Sign the Pledge</a>
       </div>
-      <div class="actions" data-quiz-share-wrap hidden><button type="button" class="u-btn u-btn--ink" data-quiz-share>Share the quiz</button></div>
       <p class="quiz-note" data-quiz-share-note role="status" aria-live="polite"></p>
     </div>
   </div>

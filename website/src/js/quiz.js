@@ -4,7 +4,8 @@
  * list of the ten questions with their sourced answers. With it, the page asks
  * one question at a time as multiple choice: a native radio group (a fieldset
  * whose legend is the question), "Check my answer" once a choice is picked,
- * then the record.
+ * then the verdict ("Correct!" or "Not quite.", in words, never by colour
+ * alone) and the record.
  *
  * Every choice and every number shown comes from the page: quiz.njk lists each
  * question's choices (data-quiz-choice, the right one marked
@@ -23,7 +24,7 @@
  * end screen, and nothing twice. If either request fails, or the endpoints are
  * switched off (404), the reader sees their own score only, never an error.
  * The only other data that goes anywhere is what someone types into the
- * updates form, which ui.js handles exactly as on every other page.
+ * site footer's updates form, which ui.js handles as on every other page.
  *
  * CSP (website/src/_headers): loaded from 'self'; no inline script, style or
  * on* handler is used or created.
@@ -109,7 +110,6 @@
     if (!guess || !check || !reveal || !said || !next) return;
     var group = buildGroup(item, n);
     if (!group) return;
-    var revealHeading = reveal.querySelector("h3");
     // The right answer as the register gives it (a pick question's choice may
     // read "About …"; the record is the exact figure).
     var record = guess.getAttribute("data-quiz-record");
@@ -146,16 +146,19 @@
       answers[i] = { text: picked.text, correct: picked === right };
       group.fieldset.disabled = true;
 
-      said.textContent = picked === right ? "Right." : "Not quite.";
+      // The verdict line: words first; integration.css item 150 colours it
+      // by data-quiz-result (green for right, red for wrong).
+      said.textContent = picked === right ? "Correct!" : "Not quite.";
+      said.setAttribute("data-quiz-result", picked === right ? "right" : "wrong");
       show(said, true);
       show(check.parentNode, false);
       show(reveal, true);
       show(nextWrap, true);
       var recordText = record || right.text;
       announce(picked === right
-        ? "Right. The record: " + recordText + "."
+        ? "Correct! The record: " + recordText + "."
         : "Not quite. Your answer: " + picked.text + ". The record: " + recordText + ".");
-      if (revealHeading) revealHeading.focus();
+      said.focus();
     });
 
     next.addEventListener("click", function () {
@@ -182,13 +185,17 @@
       var mine = row.querySelector("[data-quiz-sum-answer]");
       var right = row.querySelector("[data-quiz-sum-right]");
       if (mine) mine.textContent = a ? a.text : "Not answered";
-      if (right) right.textContent = a && a.correct ? "Yes" : "No";
+      if (right) {
+        right.textContent = "";
+        right.appendChild(el("span", { "class": "quiz-result", "data-quiz-result": a && a.correct ? "right" : "wrong" },
+          a && a.correct ? "Correct!" : "Not quite."));
+      }
     });
     var count = end.querySelector("[data-quiz-score-n]");
     if (count) count.textContent = String(score);
     show(end.querySelector("[data-quiz-score]"), true);
     show(end.querySelector("[data-quiz-summary]"), true);
-    show(end.querySelector("[data-quiz-share-wrap]"), true);
+    show(end.querySelector("[data-quiz-share]"), true);
     show(end, true);
     var line = end.querySelector("[data-quiz-score]");
     announce(line ? line.textContent.replace(/\s+/g, " ").trim() : "Your answers vs. the record.");
@@ -221,6 +228,15 @@
       .catch(function () { /* own score only */ })
       .then(function () { window.clearTimeout(timer); });
   }
+  // The rest of the score block: the average (two decimals, as the stats
+  // give it) and how far this score is from it, as a whole percent of the
+  // average. A difference that rounds to 0% is a match.
+  function compared(score, mean) {
+    if (mean === 0) return score === 0 ? "You matched the average." : "You scored higher than the average.";
+    var p = Math.round(Math.abs(score - mean) / mean * 100);
+    if (p === 0) return "You matched the average.";
+    return "You scored " + p + "% " + (score > mean ? "higher" : "lower") + " than the average.";
+  }
   function showStats(s, score, rows) {
     var line = end.querySelector("[data-quiz-average]");
     if (!line || !s || typeof s.count !== "number") return;
@@ -228,9 +244,8 @@
     if (s.count < MIN_COUNT || typeof s.mean !== "number") {
       text = "Not enough players yet to show an average.";
     } else {
-      var mean = Math.round(s.mean * 10) / 10;
-      text = "The average is " + mean.toFixed(1) + " from " + s.count.toLocaleString("en-US") + " people. " +
-        "You scored " + (score > mean ? "above" : score < mean ? "below" : "the same as") + " the average.";
+      var mean = Math.round(s.mean * 100) / 100;
+      text = "The current average score is " + mean.toFixed(2) + ". " + compared(score, mean);
       if (Array.isArray(s.perQuestion)) {
         Array.prototype.forEach.call(rows, function (row, i) {
           var share = s.perQuestion[i];
@@ -241,7 +256,7 @@
         });
       }
     }
-    line.textContent = text;
+    line.textContent = " " + text;
     show(line, true);
     announce(text);
   }

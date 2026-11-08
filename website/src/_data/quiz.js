@@ -5,13 +5,16 @@
 // every answer — and every number a question states — comes from
 // sources/register.csv through _data/register.js, so the Friday review and the
 // monthly refresh change the quiz by updating the register. Never type a figure
-// here, in quiz.njk, in js/quiz.js or in the copy.
+// here, in quiz.njk, in js/quiz.js or in the copy. The one exception is a
+// question's listed wrong choices (`wrong`, below): they are not register
+// figures, by design, and are never shown as one.
 //
 // Three kinds of question:
 //
 //   pick     Pick the figure (four choices). The right choice is the row's
-//            display_value (or one side of an "X versus Y" value, `part`). The
-//            three wrong choices are made here, at build time, by one fixed
+//            display_value (or one side of an "X versus Y" value, `part`).
+//            The three wrong choices are either listed (`wrong`, the
+//            founder's, 2026-11-08) or made here, at build time, by one fixed
 //            rule (no randomness, so every build is the same): a ladder of
 //            four values, each LADDER times the one below, with the record on
 //            one rung. Percent choices are rounded to the record's own decimal
@@ -19,15 +22,23 @@
 //            rounded the same way, to two significant figures of the largest,
 //            and read "About …" (founder's call, 2026-11-08: exact wrong
 //            choices such as $17,995 looked like real data); the reveal card,
-//            the no-JS answer and the summary keep the exact register figure.
-//            Choices are shown low to high, so the record's rung is its
-//            position: each question starts from the next rung in RANK_ORDER,
-//            and moves to the next rung only when a rule below fails there.
+//            the no-JS answer and the announcement keep the exact register
+//            figure. A `change` question asks which way and how far a figure
+//            moved: its right choice reads "Down about 15%" or "Up about 15%",
+//            the size from the row's display_value and the direction from two
+//            numbers read out of its receipt by `change.pattern`.
+//            Choices are shown low to high, so the record's place among them
+//            is its position. A ladder question starts from the next rung in
+//            RANK_ORDER (counting ladder questions only), and moves to the
+//            next rung only when a rule below fails there. RANK_ORDER is
+//            [1, 3, 2] since four questions took listed choices (2026-11-08):
+//            it keeps every ladder question's choices as they were.
 //   most     Which rose most? (three or four choices). Every choice is a real
 //            register row; the right one is the row whose percent is highest.
 //   compare  Higher or lower (two choices). The answer is computed from two
 //            values the row states: its "X versus Y" display_value, or two
-//            numbers read out of its receipt by `pattern`.
+//            numbers read out of its receipt by `pattern`. No question uses it
+//            since 2026-11-08 (#6 and #9 became pick questions); it stays.
 //
 // Build guard (no fake numbers). The build fails if, for any row in the set:
 //   - it is missing from the register, or has an empty display_value,
@@ -41,6 +52,15 @@
 //     least MIN_GAP (a fifth) away from the record, inside the bounds (a share
 //     stays between nothing and the whole), without the record being the only
 //     choice whose last digit is or is not a zero;
+//   - pick with listed choices: there are not exactly three, one is not a
+//     number, one would not be shown exactly as listed (a percent at the
+//     record's decimal places, a money or count choice at the "About" step,
+//     a change in whole percent), the four do not read differently, the
+//     right one does not appear exactly once, a wrong one is less than
+//     MIN_GAP_LISTED (15%) away from the record, or one is outside the bounds;
+//   - change: the receipt's two numbers cannot be read or are equal, or the
+//     direct read of the index scale, (to - from) / from, does not round to
+//     the row's display_value;
 //   - most: a value is not a single percent, the data periods are not the same
 //     period, or the highest value is tied;
 //   - compare: the two values cannot be read, or they are equal;
@@ -54,15 +74,17 @@
 // changes an answer changes it. eleventy.config.js writes it, with `total`,
 // into functions/_generated/build.json, which the score endpoints import.
 //
-// `summary: "caption"` shows the row's whole caption in the end screen's "The
-// record" column instead of its figure: SRC-018's notes say its two halves
-// (the total fell; chronic homelessness reached a record high) travel together.
+// The end screen's "Correct answer" column shows the right choice as the
+// reader saw it ("About $7", "Down about 15%"). `summary: "caption"` shows the
+// row's whole caption there instead: SRC-018's notes say its two halves (the
+// total fell; chronic homelessness reached a record high) travel together.
 const crypto = require("node:crypto");
 const register = require("./register.js");
 
 const QUESTIONS = [
   { kind: "pick", id: "SRC-025", topic: "Prices overall",
-    question: "Over the past year, how much did prices overall go up?" },
+    question: "Over the past year, how much did prices overall go up?",
+    wrong: [1.2, 2.6, 5.5] },
   { kind: "most", topic: "What went up most",
     question: "Which of these went up most over the past year?",
     choices: [
@@ -72,25 +94,28 @@ const QUESTIONS = [
       { id: "SRC-027", label: "Energy" },
     ] },
   { kind: "pick", id: "SRC-028", topic: "The Forbes 400",
-    question: "Forbes estimated the combined wealth of the 400 richest Americans at $6.6 trillion a year earlier. What was its estimate for 2026?" },
+    // "in 2025": the receipt quotes Forbes, "up from $6.6 trillion in 2025".
+    question: "Forbes estimated the combined wealth of the 400 richest Americans at $6.6 trillion in 2025. What was its estimate for 2026?" },
   { kind: "pick", id: "SRC-024", part: 0, share: true, topic: "The wealthiest households",
     question: "In the second quarter of 2026, what share of the country's net worth did the wealthiest 1% of American households hold?" },
   { kind: "pick", id: "SRC-004", share: true, topic: "Renters and housing costs",
     question: "In 2024, the latest year measured, what share of renter households spent more than 30 percent of their income on rent and utilities?" },
-  { kind: "compare", id: "SRC-022", topic: "Rent and renters' income",
-    question: "Between 2001 and 2024, after inflation, did the median rent rise faster or slower than the median renter's income?",
-    // display_value "A versus B": rent, then income. choices[0] when A > B.
-    choices: ["Faster", "Slower"] },
+  { kind: "pick", id: "SRC-022", part: 0, topic: "Rent and renters' income",
+    // display_value "A versus B": rent (part 0), then income (the 9%).
+    question: "Between 2001 and 2024, after adjusting for inflation, the median renter's income grew 9%. How much did the median rent grow?",
+    wrong: [18, 22, 41] },
   { kind: "pick", id: "SRC-023", topic: "Ground beef",
-    question: "What did a pound of ground beef cost in September 2026?" },
+    question: "What did a pound of ground beef cost in September 2026?",
+    wrong: [5, 10, 15] },
   { kind: "pick", id: "SRC-006", topic: "Family health coverage",
     question: "On average, what did a year of family health coverage through an employer cost in 2025?" },
-  { kind: "compare", id: "SRC-011", topic: "Household appliances",
-    question: "Before adjusting for inflation, do household appliances cost more or less than they did in 1997?",
-    // The receipt's index level against its own base: A is the latest level,
-    // B the base. choices[0] when A > B.
-    pattern: /base December 1997=(\d+(?:\.\d+)?): (\d+(?:\.\d+)?) \(September 2026\)/, a: 2, b: 1,
-    choices: ["More", "Less"] },
+  { kind: "pick", id: "SRC-011", topic: "Household appliances",
+    question: "Before adjusting for inflation, how much has the price of household appliances changed since 1997?",
+    // The row's wording rule: a direct read of the index scale against its
+    // December 1997 base (100), before inflation. The size is the row's
+    // display_value; the direction is the latest level against the base.
+    change: { pattern: /base December 1997=(\d+(?:\.\d+)?): (\d+(?:\.\d+)?) \(September 2026\)/, from: 1, to: 2 },
+    wrong: [-25, 5, 20] },
   { kind: "pick", id: "SRC-018", topic: "Homelessness", summary: "caption",
     question: "On a single night in January 2025, how many people were homeless in the United States?" },
 ];
@@ -108,7 +133,8 @@ const STATED = /\$?\d(?:[\d,]*\d)?(?:\.\d+)?(?:\s?%|\s(?:percent|trillion|billio
 
 const LADDER = 1.5;
 const MIN_GAP = 0.2;
-const RANK_ORDER = [0, 1, 3, 2];
+const MIN_GAP_LISTED = 0.15;
+const RANK_ORDER = [1, 3, 2];
 
 function rowProblems(id, row) {
   if (!row) return [`${id}: not in sources/register.csv`];
@@ -199,7 +225,9 @@ function rung(fig, recordText, rank, share) {
   return { texts };
 }
 
-function pick(q, row, k, problems) {
+// The record's text (the row's display_value, or one side of it) and its
+// parsed figure, or null when either fails.
+function figureOf(q, row, problems) {
   let recordText = String(row.display_value).trim();
   if (q.part !== undefined) recordText = recordText.split(VERSUS)[q.part] || "";
   const fig = parseFigure(recordText);
@@ -211,6 +239,83 @@ function pick(q, row, k, problems) {
     problems.push(`${q.id}: "${recordText}" cannot be rebuilt from its value, so its choices could not share its style`);
     return null;
   }
+  return { fig, recordText };
+}
+
+// "Down about 15%", "Up about 20%": a change in the record's percent style.
+const changeText = (fig, v) => (v < 0 ? "Down" : "Up") + " about " + formatLike(fig, Math.abs(v));
+
+// A change question's record, signed: the size is the row's display_value;
+// the direction is the receipt's latest level (`to`) against its base
+// (`from`). The direct read of the scale must round to the display_value.
+function changeRecord(q, row, fig, problems) {
+  const m = q.change.pattern.exec(String(row.receipt || ""));
+  const from = m ? Number(m[q.change.from]) : NaN;
+  const to = m ? Number(m[q.change.to]) : NaN;
+  if (!(from > 0) || !Number.isFinite(to) || from === to) {
+    problems.push(`${q.id}: the change's two numbers cannot be read from the receipt, or they are equal`);
+    return null;
+  }
+  if (fig.kind !== "percent" || !(fig.value > 0)) {
+    problems.push(`${q.id}: a change question needs a display_value that is a percent above nothing`);
+    return null;
+  }
+  const read = ((to - from) / from) * 100;
+  if (roundTo(Math.abs(read), fig.decimals) !== fig.value) {
+    problems.push(`${q.id}: the receipt reads a change of ${read.toFixed(3)}%, which does not round to the display_value`);
+    return null;
+  }
+  return to < from ? -fig.value : fig.value;
+}
+
+// A pick question with its wrong choices listed (`wrong`). The right choice is
+// still the row's: its figure, rounded alike for money and counts, or its
+// change. Shown low to high; every wrong choice exactly as listed.
+function listed(q, row, problems) {
+  const got = figureOf(q, row, problems);
+  if (!got) return null;
+  const { fig, recordText } = got;
+  const wrong = q.wrong;
+  if (!Array.isArray(wrong) || wrong.length !== 3 || !wrong.every((v) => typeof v === "number" && Number.isFinite(v))) {
+    problems.push(`${q.id}: its listed wrong choices must be exactly three numbers`);
+    return null;
+  }
+  const record = q.change ? changeRecord(q, row, fig, problems) : fig.value;
+  if (record === null) return null;
+  const before = problems.length;
+  const items = [{ v: record, right: true }, ...wrong.map((v) => ({ v, right: false }))].sort((x, y) => x.v - y.v);
+  let texts;
+  let shown;
+  if (q.change) {
+    texts = items.map((it) => changeText(fig, it.v));
+    shown = items.map((it) => (it.right ? it.v : roundTo(it.v, fig.decimals)));
+    if (wrong.some((v) => v === 0)) problems.push(`${q.id}: a listed change of nothing`);
+  } else if (fig.kind === "percent") {
+    texts = items.map((it) => (it.right ? recordText : formatLike(fig, it.v)));
+    shown = items.map((it) => (it.right ? it.v : roundTo(it.v, fig.decimals)));
+  } else {
+    const a = about(fig, items.map((it) => it.v));
+    texts = a.texts;
+    shown = items.map((it, i) => (it.right ? it.v : a.values[i]));
+    if (items.some((it) => !(it.v > 0))) problems.push(`${q.id}: a listed money or count choice of nothing`);
+  }
+  const answer = items.findIndex((it) => it.right);
+  items.forEach((it, i) => {
+    if (it.right) return;
+    if (shown[i] !== it.v) problems.push(`${q.id}: the listed choice ${it.v} would be shown as ${texts[i]}`);
+    if (Math.abs(it.v - record) < MIN_GAP_LISTED * Math.abs(record)) problems.push(`${q.id}: the listed choice ${texts[i]} is less than ${MIN_GAP_LISTED * 100}% from the record`);
+  });
+  if (new Set(texts).size !== 4) problems.push(`${q.id}: two of its choices read the same (${texts.join(" / ")})`);
+  if (texts.filter((t) => t === texts[answer]).length !== 1) problems.push(`${q.id}: the right choice does not appear exactly once`);
+  if (q.share && items.some((it) => it.v <= 0 || it.v >= 100)) problems.push(`${q.id}: a share outside the whole`);
+  if (problems.length > before) return null;
+  return { choices: texts, answer, record: q.change ? changeText(fig, record) : recordText };
+}
+
+function pick(q, row, k, problems) {
+  const got = figureOf(q, row, problems);
+  if (!got) return null;
+  const { fig, recordText } = got;
   const first = RANK_ORDER[k % RANK_ORDER.length];
   const reasons = [];
   for (let step = 0; step < 4; step++) {
@@ -286,7 +391,8 @@ function statedProblems(q, rows) {
 function build(reg) {
   const problems = [];
   const cardIds = new Set();
-  let picks = 0;
+  // Ladder questions only: a pick question with listed choices takes no rung.
+  let ladders = 0;
   const questions = QUESTIONS.map((q, i) => {
     const ids = q.kind === "most" ? q.choices.map((c) => c.id) : [q.id];
     const rows = ids.map((id) => reg.byId[id]);
@@ -295,7 +401,8 @@ function build(reg) {
     if (missing.length) return null;
     problems.push(...statedProblems(q, rows));
     let made;
-    if (q.kind === "pick") made = pick(q, rows[0], picks++, problems);
+    if (q.kind === "pick" && (q.wrong !== undefined || q.change)) made = listed(q, rows[0], problems);
+    else if (q.kind === "pick") made = pick(q, rows[0], ladders++, problems);
     else if (q.kind === "most") made = most(q, reg, problems);
     else made = compare(q, rows[0], problems);
     if (!made) return null;
@@ -314,12 +421,13 @@ function build(reg) {
       choices: made.choices.map((text, j) => ({ text, correct: j === made.answer })),
       answer: made.answer,
       // The right answer as the register gives it: the exact figure for a
-      // pick question (its choice may read "About …"), the row's label for
-      // "most", the answer for "compare". The reveal, the no-JS answer and
-      // the announcement use it.
+      // pick question (its choice may read "About …"), "Down about 15%" for a
+      // change, the row's label for "most", the answer for "compare". The
+      // reveal, the no-JS answer and the announcement use it.
       recordText: made.record,
-      // The end screen's "The record" column: the same, or the whole caption.
-      summaryText: q.summary === "caption" ? row.display_caption : made.record,
+      // The end screen's "Correct answer" column: the right choice as the
+      // reader saw it, or the whole caption.
+      summaryText: q.summary === "caption" ? row.display_caption : made.choices[made.answer],
       row,
       others: q.kind === "most" ? rows.filter((r) => r !== row) : [],
     };
@@ -338,4 +446,4 @@ function build(reg) {
 module.exports = function () {
   return build(register());
 };
-Object.assign(module.exports, { QUESTIONS, REQUIRED, PERCENT, LADDER, MIN_GAP, RANK_ORDER, parseFigure, roundLike, formatLike, build });
+Object.assign(module.exports, { QUESTIONS, REQUIRED, PERCENT, LADDER, MIN_GAP, MIN_GAP_LISTED, RANK_ORDER, parseFigure, roundLike, formatLike, build });
