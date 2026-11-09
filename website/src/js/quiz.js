@@ -14,7 +14,8 @@
  * _data/quiz.js. No figure is typed in this file. The radios are built here
  * because the content audit allows no form control in the built HTML.
  *
- * Privacy: no cookies, localStorage, sessionStorage or analytics, ever. In a
+ * Privacy: this file sets no cookies and uses no localStorage,
+ * sessionStorage or analytics, ever. In a
  * build with the anonymous score tally off (the default), this file makes no
  * network request: the answers never leave the browser. In a build with it on
  * (features.quizStatsOpen; data-quiz-stats on the quiz), and only then, it
@@ -24,6 +25,12 @@
  * set (GET /api/quiz/stats) to show the average. Nothing is sent before the
  * end screen, and nothing twice. If either request fails, or the endpoints are
  * switched off (404), the reader sees their own score only, never an error.
+ * Both requests are same-origin and go with credentials: "same-origin", as
+ * the page's own requests do, so they carry only cookies the browser already
+ * holds for this site. The site sets none; on a preview, Cloudflare Access's
+ * sign-in cookie, without which Access answers with a redirect to its login
+ * and the score never arrives (CHG-019, 2026-11-09). The endpoints read no
+ * cookie and store none.
  * The only other data that goes anywhere is what someone types into the
  * site footer's updates form, which ui.js handles as on every other page.
  * The share panel's links are navigation the reader chooses, to a network's
@@ -224,7 +231,9 @@
     var version = root.getAttribute("data-quiz-version") || "";
     var stop = window.AbortController ? new AbortController() : null;
     var timer = stop ? window.setTimeout(function () { stop.abort(); }, 10000) : 0;
-    var init = { credentials: "omit", cache: "no-store", signal: stop ? stop.signal : undefined };
+    // "same-origin", not "omit": a preview sits behind Cloudflare Access,
+    // which redirects a request without its cookie (see the header comment).
+    var init = { credentials: "same-origin", cache: "no-store", signal: stop ? stop.signal : undefined };
     getJson("/api/quiz/score", Object.assign({ method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ version: version, answers: bits }) }, init))
       .then(function () { return getJson("/api/quiz/stats?version=" + encodeURIComponent(version), Object.assign({ method: "GET" }, init)); })
