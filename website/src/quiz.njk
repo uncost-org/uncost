@@ -3,7 +3,11 @@ layout: layouts/base.njk
 permalink: "/quiz/"
 pageId: "later-quiz"
 title: "The Quiz"
-description: "Quick questions on prices, rent and wealth in the United States: pick an answer, then see the sourced figure."
+# The link-preview text (meta description, og: and twitter: tags). The count
+# comes from _data/quiz.js: "Ten" while there are ten questions, the number
+# otherwise, so it cannot drift (founder, 2026-11-09).
+eleventyComputed:
+  description: "{{ 'Ten' if quiz.total == 10 else quiz.total }} questions on what living costs. Guess, then see the sourced figure."
 shareText: "How well do you know the cost of living? Take the Uncost quiz."
 ---
 {#- The cost-of-living quiz (records/changes/CHG-019). Repo-authored since

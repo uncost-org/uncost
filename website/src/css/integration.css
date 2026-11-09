@@ -3361,16 +3361,14 @@ body[data-page="later-quiz"] .cards .card .foot .row span.m { max-width: 100%; b
 body[data-page="later-quiz"] .cards .card .foot .row span.m .v { min-width: 0; }
 /* The reveal has no heading since 2026-11-08: the verdict line (with
  * JavaScript) or "The answer: …" (without) opens it, with the space the
- * heading had above it. Both verdicts are bold, in the display face, each
- * at 150% of its size before the founder's follow-ups (2026-11-08):
- * "Correct!" at 150% of --fs-h4 (22px to 33px), "Not quite." at the score
- * block's 24px (from the body's 16px). "Correct!" stays the larger. Green
+ * heading had above it. Both verdicts are bold, in the display face, at 150%
+ * of --fs-h4 (33px): "Correct!" since the founder's follow-ups of
+ * 2026-11-08, "Not quite." since those of 2026-11-09 (it was 24px). Green
  * --sage-deep or red --red-deep; the summary's Result cells take the same
  * colours at their own 14px. */
 body[data-page="later-quiz"] .quiz-verdict,
 body[data-page="later-quiz"] .quiz-answer { margin-top: var(--s-6); }
-body[data-page="later-quiz"] .quiz-verdict { font-family: var(--font-display); font-weight: 700; font-size: 24px; line-height: 1.2; color: var(--ink); }
-body[data-page="later-quiz"] .quiz-verdict[data-quiz-result="right"] { font-size: calc(var(--fs-h4) * 1.5); }
+body[data-page="later-quiz"] .quiz-verdict { font-family: var(--font-display); font-weight: 700; font-size: calc(var(--fs-h4) * 1.5); line-height: 1.2; color: var(--ink); }
 body[data-page="later-quiz"] [data-quiz-result="right"] { color: var(--sage-deep); }
 body[data-page="later-quiz"] [data-quiz-result="wrong"] { color: var(--red-deep); }
 body[data-page="later-quiz"] .quiz-result { font-weight: 700; white-space: nowrap; }

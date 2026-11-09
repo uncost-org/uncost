@@ -1,5 +1,5 @@
 {
-  "_note": "STRUCTURE from the design export (design-source/data/site.json): nav, footer and social ordering, labels and section order. Routes are reconciled to the repository's contractual URLs; feature flags live in _data/features.js; org identity lives in _data/site.js. footerBar keeps only links not already present in the columns above. The footer carries no RSS link: it was removed when no feed page existed; both feeds now render as pages (CANVAS-SYNC 99), and re-adding a link is the founder's call. Footer columns (sweep 2026-10-10): The Case column reads The Case, The Sectors, The Receipts, Cost Watch, Corrections & changelog; About & records reads Uncost News; The Movement gains Events. Social accounts (2026-10-18): every social[] entry carries \"show\"; the footer icons, the homepage closing links and the /contact/ \"Follow along\" row render only show: true entries, in social[] order. A hidden account keeps its URL, so turning it back on is a one-word change; scripts/audit_website.py fails the built site if it links to a hidden account's host. Approved changes — docs/CANVAS-SYNC.md.",
+  "_note": "STRUCTURE from the design export (design-source/data/site.json): nav, footer and social ordering, labels and section order. Routes are reconciled to the repository's contractual URLs; feature flags live in _data/features.js; org identity lives in _data/site.js. footerBar keeps only links not already present in the columns above. The footer carries no RSS link: it was removed when no feed page existed; both feeds now render as pages (CANVAS-SYNC 99), and re-adding a link is the founder's call. Footer columns (sweep 2026-10-10): The Case column reads The Case, The Sectors, The Receipts, Cost Watch, Corrections & changelog; About & records reads Uncost News; The Movement gains Events. Social accounts (2026-10-18): every social[] entry carries \"show\"; the footer icons, the homepage closing links and the /contact/ \"Follow along\" row render only show: true entries, in social[] order. A hidden account keeps its URL, so turning it back on is a one-word change; scripts/audit_website.py fails the built site if it links to a hidden account's host. Approved changes — docs/CANVAS-SYNC.md. Take the quiz (founder, 2026-11-09; CHG-019): in the header's Movement menu after Uncost.org News, and in the footer's Movement column after Sign the Pledge.",
   "nav": [
     {
       "label": "The Movement",
@@ -18,6 +18,10 @@
         {
           "label": "Uncost.org News",
           "url": "/news/"
+        },
+        {
+          "label": "Take the quiz",
+          "url": "/quiz/"
         }
       ]
     },
@@ -111,6 +115,10 @@
         {
           "label": "Sign the Pledge",
           "url": "/pledge/"
+        },
+        {
+          "label": "Take the quiz",
+          "url": "/quiz/"
         },
         {
           "label": "Take Part",
