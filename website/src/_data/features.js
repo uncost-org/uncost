@@ -47,6 +47,24 @@ module.exports = {
   // our side. Turning it on is recorded in records/changes/CHG-005.
   contactFormOpen: process.env.UNCOST_CONTACT_FORM_OPEN === "on",
 
+  // The quiz's anonymous score tally (records/changes/CHG-019), the build
+  // half. With it on, /quiz/ tells a reader with JavaScript that we keep an
+  // anonymous tally, js/quiz.js sends their score once at the end screen and
+  // shows the average, and /privacy/ is version 0.6, which describes it. The
+  // endpoints (functions/api/quiz/) have their own runtime switch,
+  // UNCOST_QUIZ_STATS_OPEN=on in the Pages environment plus the QUIZ_DB
+  // binding, and answer 404 without both. It needs formsOpen: notice 0.6
+  // builds on 0.5, the version shown while the forms are on, so a build with
+  // this on and the forms off fails rather than describe the tally in a
+  // notice that does not exist. Defaults OFF; turning it on is the founder's.
+  quizStatsOpen: (() => {
+    const on = process.env.UNCOST_QUIZ_STATS_OPEN === "on";
+    if (on && process.env.UNCOST_FORMS_OPEN !== "on") {
+      throw new Error("features: UNCOST_QUIZ_STATS_OPEN=on needs UNCOST_FORMS_OPEN=on (privacy notice 0.6 builds on 0.5; CHG-019)");
+    }
+    return on;
+  })(),
+
   // No donate ask may appear anywhere while this is false. The gate is
   // lawfulness (POL-004 financial controls), not design.
   donationsOpen: process.env.UNCOST_DONATIONS_OPEN === "on",

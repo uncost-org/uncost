@@ -10,6 +10,10 @@
 // No cookies are set anywhere.
 
 import signups from "../src/_data/signups.json" with { type: "json" };
+// The privacy notice version this build's /privacy/ shows (eleventy.config.js;
+// CHG-019): _data/signups.json's policyVersion, or policyVersionQuizStats in a
+// build with the quiz's anonymous tally on.
+import build from "../functions/_generated/build.json" with { type: "json" };
 
 export const MAX_BODY = 16 * 1024;
 const NO_STORE = { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" };
@@ -73,7 +77,7 @@ export async function consentFor(kind, fields) {
     texts.email_updates = await sha256Hex(`${signups.texts.email_updates}\n${age}`);
   }
   const surface = kind === "pledge" ? "pledge" : signups.surfaces.includes(fields.surface) ? fields.surface : "footer";
-  return { policyVersion: signups.policyVersion, surface, texts };
+  return { policyVersion: build.policyVersion, surface, texts };
 }
 
 // The answer to a sign-up post. `forwarding` is a function that forwards it

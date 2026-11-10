@@ -3,25 +3,161 @@ layout: layouts/base.njk
 permalink: "/quiz/"
 pageId: "later-quiz"
 title: "The Quiz"
-description: "Planned — the guess-the-cost quiz"
-noindex: true
+# The link-preview text (meta description, og: and twitter: tags). The count
+# comes from _data/quiz.js: "Ten" while there are ten questions, the number
+# otherwise, so it cannot drift (founder, 2026-11-09).
+eleventyComputed:
+  description: "{{ 'Ten' if quiz.total == 10 else quiz.total }} questions on what living costs. Guess, then see the sourced figure."
+shareText: "How well do you know the cost of living? Take the Uncost quiz."
 ---
-{#- Markup taken verbatim from design-source/pages/later/quiz.html. CONTENT.md marks this
-    page's copy "inline (draft)", so the export supplies both; only asset
-    references and routes are rewritten. Do not re-author. -#}
-<!-- SECTION: later/quiz.Quiz — title -->
+{#- The cost-of-living quiz (records/changes/CHG-019). Repo-authored since
+    CHG-019: tools/gen_static_pages.py no longer writes this file from the
+    export's placeholder. pageId stays "later-quiz" because sections.css styles
+    the page by it.
+
+    Multiple choice (CHG-019 v2, 2026-11-08). _data/quiz.js holds the ten
+    questions and makes every choice from sources/register.csv through
+    _data/register.js; the answers render through partials/figure.njk inside
+    their data-source. No figure is typed here, in js/quiz.js or in the copy.
+    A question that states a number renders inside its row's data-source, and
+    _data/quiz.js fails the build if that number is not in the row's caption
+    or receipt.
+
+    The choices are listed here as plain text (data-quiz-choice), hidden: the
+    content audit's form-rendered rule allows no form control in the built
+    page, so js/quiz.js builds each radio group from them at runtime. The wrong
+    choices are not register figures; scripts/audit_website.py exempts
+    data-quiz-choice text on this page only (CHG-019; CANVAS-SYNC 191).
+
+    Without JavaScript this is the page: the ten questions with their sourced
+    answers as a plain list, then the end block; no choices show. js/quiz.js
+    turns it into one question at a time. It stores nothing in the browser.
+    With the anonymous score tally off (the default), it makes no network
+    call. With it on (features.quizStatsOpen), it sends one score at the end
+    screen and shows the average (functions/api/quiz/, CHG-019). -#}
+{% import "partials/figure.njk" as fig %}
+{% import "partials/social-icons.njk" as socialIcon %}
+{% set shareUrl = site.origin + page.url %}
+{% set shareLine = shareText + " " + shareUrl %}
+<!-- SECTION: quiz — title -->
 <div class="titleband" data-screen-label="Quiz — title"><h1>The <span class="u-1">Quiz</span></h1></div>
-<div class="sys">
-  <!-- SECTION: later/quiz.Quiz -->
-  <div class="card" data-screen-label="Quiz">
-    <div class="cap"><span class="status status--planned">Planned</span></div>
+<!-- SECTION: quiz — intro -->
+<div class="introband" data-screen-label="Quiz — intro">
+  {#- No defer, and before the intro's lines and the questions: js/quiz-early.js
+      runs before the parser reaches them, so a slow js/quiz.js (deferred) never
+      lets an answer show first, and a build with the score tally on never shows
+      a reader with JavaScript the no-JS line. It sits inside a band so the
+      bands stay adjacent (.titleband + .introband + .sys). It marks <html> with
+      .quiz-js, which integration.css item 150 reads; js/quiz.js removes the mark
+      once it has set its own state. The layout has no per-page <head> slot. #}
+  <script src="/js/quiz-early.js"></script>
+  <h2>Test your knowledge on the <span class="u-1">cost of living</span>.</h2>
+  <p>{{ quiz.total }} quick questions on prices, rent and wealth in the United States. Pick an answer, then see the sourced figure.</p>
+  {#- With the anonymous score tally on (features.quizStatsOpen; CHG-019), a
+      reader with JavaScript sends their score at the end screen, so they read
+      the tally line. A reader without JavaScript sends nothing, so they keep
+      "Your answers stay in this browser.", which stays true for them. #}
+  <p data-quiz-local-note{% if features.quizStatsOpen %} data-quiz-swap{% endif %}>Your answers stay in this browser.</p>
+{% if features.quizStatsOpen %}
+  <p data-quiz-tally-note hidden>We keep an anonymous tally of scores, with no name, email or IP address, so you can see how you did compared with the average.</p>
+{% endif %}
+</div>
+<div class="sys" data-quiz data-quiz-url="{{ site.origin }}{{ page.url }}" data-quiz-text="{{ shareText }}" data-quiz-version="{{ quiz.version }}"{% if features.quizStatsOpen %} data-quiz-stats{% endif %}>
+  <!-- SECTION: quiz — questions -->
+  <ol class="quiz-list" data-quiz-list>
+{% for q in quiz.questions %}
+    <li class="card quiz-q" data-quiz-q data-quiz-kind="{{ q.kind }}" data-screen-label="Quiz — question {{ q.n }}">
+      <div class="cap"><p class="quiz-cap">Question {{ q.n }} of {{ quiz.total }}</p></div>
+      <div class="bd">
+        <div class="eq">{{ q.topic }}</div>
+        <h2 id="qz-{{ q.n }}-h" tabindex="-1"{% if q.sourceId %} data-source="{{ q.sourceId }}"{% endif %}>{{ q.question }}</h2>
+        <div class="quiz-guess" data-quiz-guess data-quiz-n="{{ q.n }}" data-quiz-record="{{ q.recordText }}" hidden>
+          <ul class="quiz-source-list" data-quiz-choices>
+{% for c in q.choices %}
+            <li data-quiz-choice{% if c.correct %} data-quiz-correct{% endif %}>{{ c.text }}</li>
+{% endfor %}
+          </ul>
+          <div class="actions"><button type="button" class="u-btn u-btn--primary" data-quiz-check disabled>Check my answer</button></div>
+        </div>
+        {#- The reveal has no heading (founder, 2026-11-08): with JavaScript,
+            focus moves to the verdict line ("Correct!" or "Not quite.");
+            without it, "The answer: …" leads straight into the figure card,
+            which carries the source, period and region. #}
+        <div class="quiz-reveal" data-quiz-reveal>
+          <p class="quiz-verdict" id="qz-{{ q.n }}-v" tabindex="-1" data-quiz-verdict hidden></p>
+          <p class="quiz-answer" data-quiz-nojs data-source="{{ q.row.source_id }}">The answer: {{ q.recordText }}.</p>
+          <div class="cards">
+      {{ fig.card(q.row) }}
+          </div>
+{% if q.others.length %}
+          <ul class="quiz-others">
+{% for r in q.others %}
+            <li>{{ fig.line(r) }}</li>
+{% endfor %}
+          </ul>
+{% endif %}
+          <div class="actions" data-quiz-next-wrap hidden><button type="button" class="u-btn u-btn--ink" data-quiz-next>Next question</button></div>
+        </div>
+      </div>
+    </li>
+{% endfor %}
+  </ol>
+  <!-- SECTION: quiz — end -->
+  <div class="card quiz-end" data-quiz-end data-screen-label="Quiz — end">
+    <div class="cap"><p class="quiz-cap">Your results</p></div>
     <div class="bd">
-      <div class="eq">Planned tool · The Movement</div>
-      <h2>The Quiz is on the way.</h2>
-      <p>A short, surprising &ldquo;guess what living actually costs&rdquo; quiz — compare your guesses to sourced figures, and see the full breakdown when you join.</p>
-      <p>It&rsquo;s one of the first things we&rsquo;ll build to turn curiosity into participation.</p>
-      <div class="whenrow"><b>When</b><span>Near launch — an early engagement tool</span></div>
-      <div class="actions"><a href="/pledge/" class="u-btn u-btn--primary">Sign the Pledge</a><a href="/case/" class="u-btn u-btn--ghost">Read The Case</a></div>
+      <h2 id="qz-end-h" tabindex="-1">Your answers</h2>
+      <p class="quiz-nojs" data-quiz-nojs>Each answer is above, with its source. With JavaScript on, you can pick an answer first and compare.</p>
+      {#- One block: the score, then (in a build with the tally on, from 30
+          scores) the average and how this reader compares, or "Not enough
+          players yet to show an average." js/quiz.js fills both. #}
+      <p class="quiz-score" data-quiz-score hidden>You got <span data-quiz-score-n></span> out of {{ quiz.total }} right.<span data-quiz-average hidden></span></p>
+      <table class="vhist quiz-sum" data-quiz-summary hidden>
+        <thead><tr><th scope="col">Question</th><th scope="col">Your answer</th><th scope="col">Correct answer</th><th scope="col">Result</th></tr></thead>
+        <tbody>
+{% for q in quiz.questions %}
+          <tr data-quiz-sum-row><th scope="row">{{ q.topic }}</th><td data-label="Your answer" data-quiz-sum-answer></td><td data-label="Correct answer" data-source="{{ q.row.source_id }}">{{ q.summaryText }}</td><td data-label="Result" data-quiz-sum-right></td></tr>
+{% endfor %}
+        </tbody>
+      </table>
+      {#- No updates form here (founder, 2026-11-08): the site footer, directly
+          below, has the same one. Four equal buttons, two by two (one column
+          on narrow phones, same order). The Share button needs JavaScript, so
+          it stays hidden without it; the share links below show instead. #}
+      <p class="quiz-close">Cost of living pressures keep rising. Help the cause, or learn more:</p>
+      <div class="quiz-go">
+        <button type="button" class="u-btn u-btn--ink" data-quiz-share aria-expanded="false" aria-controls="qz-share" hidden>Share this quiz</button>
+        <a href="/pledge/" class="u-btn u-btn--primary">Sign the Pledge</a>
+        <a href="/case/" class="u-btn u-btn--ghost">Read The Case</a>
+        <a href="/sectors/" class="u-btn u-btn--ghost">Explore the sectors</a>
+      </div>
+      {#- The share panel (the founder's follow-ups, 2026-11-08). Plain links to
+          each network's own share page, opening in a new tab, with the quiz's
+          address and shareText (front matter): never the reader's score or
+          answers, and no script, widget or request from any network, so the
+          CSP is unchanged. scripts/audit_website.py allows each host only as
+          a link (ALLOWED_NAV_HOSTS) and fails any address on the host of a
+          social account that chrome.json hides, so Reddit's link is built
+          only while its account is shown. With JavaScript, js/quiz.js hides
+          the panel until "Share this quiz" opens it (Escape closes it) and
+          shows "Copy link"; without it, the links are a plain row. #}
+      <div class="quiz-share-panel" id="qz-share" data-quiz-share-panel role="group" aria-labelledby="qz-share-cap">
+        <p class="quiz-share-cap" id="qz-share-cap">Share this quiz</p>
+        <ul class="quiz-share-list">
+          <li><a class="quiz-share-link" href="https://x.com/intent/tweet?text={{ shareText | urlencode }}&amp;url={{ shareUrl | urlencode }}" target="_blank" rel="noopener" aria-label="Share on X">{{ socialIcon.glyph("X") }}</a></li>
+          <li><a class="quiz-share-link" href="https://www.facebook.com/sharer/sharer.php?u={{ shareUrl | urlencode }}" target="_blank" rel="noopener" aria-label="Share on Facebook">{{ socialIcon.glyph("Facebook") }}</a></li>
+          <li><a class="quiz-share-link" href="https://www.linkedin.com/sharing/share-offsite/?url={{ shareUrl | urlencode }}" target="_blank" rel="noopener" aria-label="Share on LinkedIn">{{ socialIcon.glyph("LinkedIn") }}</a></li>
+          <li><a class="quiz-share-link" href="https://bsky.app/intent/compose?text={{ shareLine | urlencode }}" target="_blank" rel="noopener" aria-label="Share on Bluesky">{{ socialIcon.glyph("Bluesky") }}</a></li>
+{% for s in chrome.social %}{% if s.label == "Reddit" and s.show %}          <li><a class="quiz-share-link" href="https://www.reddit.com/submit?url={{ shareUrl | urlencode }}&amp;title={{ shareText | urlencode }}" target="_blank" rel="noopener" aria-label="Share on Reddit">{{ socialIcon.glyph("Reddit") }}</a></li>
+{% endif %}{% endfor %}
+          <li><a class="quiz-share-link" href="https://wa.me/?text={{ shareLine | urlencode }}" target="_blank" rel="noopener" aria-label="Share on WhatsApp">{{ socialIcon.glyph("WhatsApp") }}</a></li>
+          <li><a class="quiz-share-link" href="mailto:?subject={{ "The Uncost quiz" | urlencode }}&amp;body={{ shareLine | urlencode }}" aria-label="Share by email">{{ socialIcon.glyph("Email") }}</a></li>
+          <li data-quiz-copy-wrap hidden><button type="button" class="quiz-share-link" data-quiz-copy aria-label="Copy link"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="12" width="13" height="6" rx="3" transform="rotate(-45 9 15)"></rect><rect x="8.5" y="6" width="13" height="6" rx="3" transform="rotate(-45 15 9)"></rect></svg></button></li>
+        </ul>
+      </div>
+      <p class="quiz-note" data-quiz-share-note role="status" aria-live="polite"></p>
     </div>
   </div>
+  <p class="skip-link" data-quiz-live aria-live="polite"></p>
 </div>
+<script src="/js/quiz.js" defer></script>

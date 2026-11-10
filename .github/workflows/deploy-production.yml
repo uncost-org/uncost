@@ -42,8 +42,16 @@ jobs:
     # Build and both checks read this one value. It changes only what is built:
     # the run still waits for the founder's approval, and the handlers stay dark
     # until the project `uncost` has the SIGNUPS binding and UNCOST_SIGNUPS_OPEN.
+    #
+    # The quiz score tally's build switch (CHG-019), from the repository
+    # variable UNCOST_QUIZ_STATS_OPEN, in the same way: it decides whether /quiz/
+    # sends a score at the end and whether /privacy/ is version 0.6. It needs
+    # UNCOST_FORMS_OPEN on (the build fails otherwise). The endpoints stay dark
+    # until the project `uncost` has the QUIZ_DB binding and its own
+    # UNCOST_QUIZ_STATS_OPEN=on.
     env:
       UNCOST_FORMS_OPEN: ${{ vars.UNCOST_FORMS_OPEN == 'on' && 'on' || '' }}
+      UNCOST_QUIZ_STATS_OPEN: ${{ vars.UNCOST_QUIZ_STATS_OPEN == 'on' && 'on' || '' }}
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
@@ -64,6 +72,12 @@ jobs:
       - name: Build
         working-directory: website
         run: env -u SITE_ORIGIN -u UNCOST_DONATIONS_OPEN -u UNCOST_SIGNATURE_COUNTER -u UNCOST_FOUNDING_SIGNERS -u UNCOST_SEARCH_ENABLED -u UNCOST_TODAY UNCOST_CONTACT_FORM_OPEN=on npm run build
+      # The quiz score tally's handlers (CHG-019): lib/quiz.js and
+      # functions/api/quiz/, against node:sqlite running the real migration.
+      # After the build, which writes functions/_generated/build.json.
+      - name: Unit tests
+        working-directory: website
+        run: npm test
       - name: Content audit of the build
         working-directory: website
         env:

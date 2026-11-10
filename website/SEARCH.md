@@ -28,8 +28,9 @@ and the ten policy pages, `/privacy`, `/contact`.
   second list to drift. That excludes today: `/pledge/thanks`, the three
   pledge-verification states, `/treasury` (until receipted figures),
   `/contribute` (until activation), and all roadmap-gated LATER routes
-  (`/quiz`, `/share`, `/case/dashboard`, `/case/tracker`, `/news/events`,
-  `/press`, `/community`).
+  (`/share`, `/case/dashboard`, `/case/tracker`, `/news/events`,
+  `/press`, `/community`). `/quiz` joined the index with CHG-019, when it got
+  real content.
 - `404` and `500` states and the loading-state partial.
 - The RSS feed and any non-HTML artifact.
 - Anything under `design-system/` in the deploy artifact (stylesheets,

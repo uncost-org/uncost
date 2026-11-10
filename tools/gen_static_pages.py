@@ -26,7 +26,9 @@ PAGES = {
     "later/community.html":      ("community.njk", "/community/"),
     "later/events.html":         ("news/events.njk", "/news/events/"),
     "later/press.html":          ("press.njk", "/press/"),
-    "later/quiz.html":           ("quiz.njk", "/quiz/"),
+    # later/quiz.html: retired here by CHG-019. /quiz/ is the cost-of-living
+    # quiz, repo-authored in website/src/quiz.njk from the register; a
+    # regeneration must not write the export's placeholder over it.
     "later/share.html":          ("share.njk", "/share/"),
     # Final tranche. These carry repo-authoritative content and/or forms, so the
     # generated body is the export's markup and the dynamic regions are wired
