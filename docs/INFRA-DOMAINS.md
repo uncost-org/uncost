@@ -1,6 +1,6 @@
 # Domain and DNS policy — uncost.org
 
-Updated: 2026-11-07
+Updated: 2026-11-10
 
 Authoritative policy for how the `uncost.org` domain and its subdomains are used,
 plus a dated log of every DNS change. This is documentation and policy only;
@@ -61,10 +61,13 @@ There is **one DMARC record, at the apex** (`_dmarc.uncost.org`),
 and receives the aggregate reports). Do **not** hand-publish a second `_dmarc`
 record — only one `_dmarc` TXT per name is valid.
 
-- **Today: `p=none`** (monitoring). Hold here.
-- **Tighten to `p=quarantine` then `p=reject` only after Postmark sending is stable**
-  and the aggregate (`rua`) reports show no legitimate mail failing alignment.
-  This is a founder decision and must not run ahead of live, aligned Postmark sending.
+- **Today: `p=quarantine`, since 2026-11-09** (founder action; `p=none` before).
+  In the 7 days before the change, Cloudflare DMARC Management showed 23 messages,
+  all passing DMARC and none failing, from four senders (Unknown 10, Cloudflare 6,
+  DEFT.COM 5, inferred to be Postmark's hosting network, and Google 2, inferred to
+  be forwarding), each 100% DKIM aligned.
+- **Moving to `p=reject` is a later founder decision**, made only once the aggregate
+  (`rua`) reports stay clean, with no legitimate mail failing alignment.
 
 ## Relationship to EMAIL_DNS.md
 
@@ -78,7 +81,7 @@ part** by this policy:
   **Postmark** (CHG-012), replacing Amazon SES (`us-east-1`, Easy DKIM).
 - **DMARC:** EMAIL_DNS.md targets **per-subdomain** `_dmarc.t` / `_dmarc.news` at
   `p=reject`; current policy is **one apex DMARC** (`sp=` governs subdomains),
-  held at `p=none` until Postmark sending is stable.
+  now held at `p=quarantine` (since 2026-11-09), not `p=none`.
 - **Unchanged and still governing:** the apex inbound routing, root SPF (`~all`)
   and DKIM via Cloudflare Email Routing, the transactional/marketing separation
   principle, disabling ESP open/click tracking (POL-002), and the launch
@@ -96,6 +99,7 @@ Entries newest first.
 
 | Date | Name / record | Change | Notes |
 |---|---|---|---|
+| 2026-11-09 | `_dmarc.uncost.org` (TXT) | `p=none` → `p=quarantine`; every other tag kept, as the founder reports. | Founder action in Cloudflare, about 15:35 UTC, after 7 days of reports with every message passing (see [DMARC](#dmarc--one-record-at-the-apex)). Read back on 2026-11-10 at 12:00 UTC: one `_dmarc` TXT, TTL 300, `p=quarantine` from 1.1.1.1, 8.8.8.8 and both zone nameservers; `rua` still at Cloudflare's `dmarc-reports.cloudflare.net`. The record has only `v`, `p` and `rua`: with no `sp=` or `pct=`, the policy covers subdomains and all mail. |
 | 2026-11-07 | `mail.uncost.org` (MX, TXT); the three SES Easy DKIM CNAMEs (`…._domainkey.uncost.org` → `….dkim.amazonses.com`) | Deleted: Amazon SES's custom MAIL FROM and Easy DKIM records (CHG-017, follow-up 5). | Founder action, reported at 17:28 UTC. In AWS the SES identities, configuration set, SNS topic and subscription and the IAM user were deleted too. Read back at about 17:30 UTC: `mail.uncost.org` answers NXDOMAIN from 1.1.1.1, 8.8.8.8 and the zone's nameserver. The DKIM selector names were never recorded here, so those three weren't read back. Postmark's records, the apex MX and SPF, and `_dmarc` answer as before. |
 | 2026-11-01 | `20261101110558pm._domainkey.uncost.org` (TXT) | Postmark DKIM key added (CHG-012). | Founder action. Verified in Postmark, as the founder reports; same value from two public resolvers and the zone's nameserver. No `_dmarc` or SPF change. SES records left in place. |
 | 2026-11-01 | `pm-bounces.uncost.org` (CNAME) | Postmark Return-Path added, → `pm.mtasv.net` (CHG-012). | Founder action. Verified in Postmark, as the founder reports. |
