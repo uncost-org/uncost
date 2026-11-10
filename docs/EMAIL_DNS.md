@@ -36,7 +36,7 @@ The root `uncost.org` mail posture is **active**, managed by Cloudflare, and doe
 
 | Control | Observed state | Notes |
 |---|---|---|
-| DMARC | **`p=none` (monitoring), active** | Cloudflare **DMARC Management** owns the single `_dmarc` TXT record and receives the aggregate reports to a dashboard. Do **not** hand-publish a second `_dmarc` record — only one `_dmarc` TXT per domain is valid; a manual record would break Cloudflare's. There is no `dmarc@uncost.org` mailbox. First reports expected within 24h. |
+| DMARC | **`p=quarantine` since 2026-11-09, active** (see [`docs/INFRA-DOMAINS.md`](INFRA-DOMAINS.md)) | Cloudflare **DMARC Management** owns the single `_dmarc` TXT record and receives the aggregate reports to a dashboard. Do **not** hand-publish a second `_dmarc` record — only one `_dmarc` TXT per domain is valid; a manual record would break Cloudflare's. There is no `dmarc@uncost.org` mailbox. First reports expected within 24h. |
 | SPF | **soft fail (`~all`)**, auto-added | Added by Cloudflare Email Routing. |
 | DKIM | **in use**, via Email Routing | |
 | `contact@uncost.org` | **working** | Routes through Cloudflare Email Routing to the founder inbox. |

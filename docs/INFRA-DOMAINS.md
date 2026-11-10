@@ -1,6 +1,6 @@
 # Domain and DNS policy — uncost.org
 
-Updated: 2026-11-01
+Updated: 2026-11-10
 
 Authoritative policy for how the `uncost.org` domain and its subdomains are used,
 plus a dated log of every DNS change. This is documentation and policy only;
@@ -17,8 +17,8 @@ and supersedes the parts of that document listed under
 | Name | Role | Sends mail? | Status |
 |---|---|---|---|
 | **`uncost.org`** (apex) | The website and **all** content routes; also the inbound human mailbox (`contact@`). | Inbound only (Cloudflare Email Routing). Never bulk. | Live |
-| **`pm-bounces.uncost.org`** | Postmark **Return-Path** for **transactional** mail only (pledge/verification/receipts/withdrawal links), with DKIM at `20261101110558pm._domainkey.uncost.org`. CHG-012. | Transactional only. | Exists since 2026-11-01 — Postmark. Sign-ups are off in production. |
-| **`mail.uncost.org`** | Amazon SES **custom MAIL FROM**, the earlier transactional identity. | No longer used. | Exists — SES, `us-east-1`, Easy DKIM. Left configured but unused (CHG-012), to be removed after go-live. |
+| **`pm-bounces.uncost.org`** | Postmark **Return-Path** for **transactional** mail only (pledge/verification/receipts/withdrawal links), with DKIM at `20261101110558pm._domainkey.uncost.org`. CHG-012. | Transactional only. | Exists since 2026-11-01 — Postmark. Sending in production since sign-ups went live on 2026-11-07 (CHG-017). |
+| **`mail.uncost.org`** | Amazon SES **custom MAIL FROM**, the earlier transactional identity. | No. | **Removed 2026-11-07:** its MX and TXT and the SES Easy DKIM records are deleted, and the SES identity with them (CHG-017). |
 | `news.uncost.org` *(or `marketing.`)* | Bulk email — the newsletter / email-updates stream. Its **own** SPF/DKIM. | Bulk only. | **RESERVED** — create only when the system exists |
 | `api.uncost.org` | Application/API endpoint. | No | **RESERVED** — create only when the system exists |
 | `docs.uncost.org` | Documentation site. | No | **RESERVED** — create only when the system exists |
@@ -47,7 +47,7 @@ future `join.` **redirect** to `/pledge`, which serves no content of its own.
   inbox. Working since 2026-07-21.
 - **Transactional (`pm-bounces.uncost.org`)** — Postmark, with DKIM on
   `uncost.org` (CHG-012). Transactional mail only. The earlier Amazon SES identity
-  (`mail.uncost.org`) stays configured but unused.
+  (`mail.uncost.org`) and its DNS records were removed on 2026-11-07 (CHG-017).
 - **Bulk / marketing** — must send from its own reserved subdomain
   (`news.`/`marketing.`) with its **own** SPF and DKIM. **Bulk mail is never
   sent from the apex, and never from the transactional identity** — a complaint
@@ -61,10 +61,13 @@ There is **one DMARC record, at the apex** (`_dmarc.uncost.org`),
 and receives the aggregate reports). Do **not** hand-publish a second `_dmarc`
 record — only one `_dmarc` TXT per name is valid.
 
-- **Today: `p=none`** (monitoring). Hold here.
-- **Tighten to `p=quarantine` then `p=reject` only after Postmark sending is stable**
-  and the aggregate (`rua`) reports show no legitimate mail failing alignment.
-  This is a founder decision and must not run ahead of live, aligned Postmark sending.
+- **Today: `p=quarantine`, since 2026-11-09** (founder action; `p=none` before).
+  In the 7 days before the change, Cloudflare DMARC Management showed 23 messages,
+  all passing DMARC and none failing, from four senders (Unknown 10, Cloudflare 6,
+  DEFT.COM 5, inferred to be Postmark's hosting network, and Google 2, inferred to
+  be forwarding), each 100% DKIM aligned.
+- **Moving to `p=reject` is a later founder decision**, made only once the aggregate
+  (`rua`) reports stay clean, with no legitimate mail failing alignment.
 
 ## Relationship to EMAIL_DNS.md
 
@@ -78,15 +81,15 @@ part** by this policy:
   **Postmark** (CHG-012), replacing Amazon SES (`us-east-1`, Easy DKIM).
 - **DMARC:** EMAIL_DNS.md targets **per-subdomain** `_dmarc.t` / `_dmarc.news` at
   `p=reject`; current policy is **one apex DMARC** (`sp=` governs subdomains),
-  held at `p=none` until Postmark sending is stable.
+  now held at `p=quarantine` (since 2026-11-09), not `p=none`.
 - **Unchanged and still governing:** the apex inbound routing, root SPF (`~all`)
   and DKIM via Cloudflare Email Routing, the transactional/marketing separation
   principle, disabling ESP open/click tracking (POL-002), and the launch
   sequencing / warm-up lead time.
 
-The exact SES records (MAIL FROM MX + SPF TXT, Easy DKIM CNAMEs) should be
-captured in EMAIL_DNS.md when published; this file records that the change
-happened and when. The exact Postmark records are in
+The SES records (MAIL FROM MX + SPF TXT, Easy DKIM CNAMEs) were never captured
+in EMAIL_DNS.md, and were deleted on 2026-11-07 (see the change log below).
+EMAIL_DNS.md's SES material is history. The exact Postmark records are in
 [CHG-012](../records/changes/CHG-012-postmark.md).
 
 ## DNS change log
@@ -96,6 +99,8 @@ Entries newest first.
 
 | Date | Name / record | Change | Notes |
 |---|---|---|---|
+| 2026-11-09 | `_dmarc.uncost.org` (TXT) | `p=none` → `p=quarantine`; every other tag kept, as the founder reports. | Founder action in Cloudflare, about 15:35 UTC, after 7 days of reports with every message passing (see [DMARC](#dmarc--one-record-at-the-apex)). Read back on 2026-11-10 at 12:00 UTC: one `_dmarc` TXT, TTL 300, `p=quarantine` from 1.1.1.1, 8.8.8.8 and both zone nameservers; `rua` still at Cloudflare's `dmarc-reports.cloudflare.net`. The record has only `v`, `p` and `rua`: with no `sp=` or `pct=`, the policy covers subdomains and all mail. |
+| 2026-11-07 | `mail.uncost.org` (MX, TXT); the three SES Easy DKIM CNAMEs (`…._domainkey.uncost.org` → `….dkim.amazonses.com`) | Deleted: Amazon SES's custom MAIL FROM and Easy DKIM records (CHG-017, follow-up 5). | Founder action, reported at 17:28 UTC. In AWS the SES identities, configuration set, SNS topic and subscription and the IAM user were deleted too. Read back at about 17:30 UTC: `mail.uncost.org` answers NXDOMAIN from 1.1.1.1, 8.8.8.8 and the zone's nameserver. The DKIM selector names were never recorded here, so those three weren't read back. Postmark's records, the apex MX and SPF, and `_dmarc` answer as before. |
 | 2026-11-01 | `20261101110558pm._domainkey.uncost.org` (TXT) | Postmark DKIM key added (CHG-012). | Founder action. Verified in Postmark, as the founder reports; same value from two public resolvers and the zone's nameserver. No `_dmarc` or SPF change. SES records left in place. |
 | 2026-11-01 | `pm-bounces.uncost.org` (CNAME) | Postmark Return-Path added, → `pm.mtasv.net` (CHG-012). | Founder action. Verified in Postmark, as the founder reports. |
 | 2026-08-02 | — | This policy documented; `mail.uncost.org` SES transactional identity recorded as existing. | Baseline. Exact SES-record creation dates predate this doc and are to be confirmed against the SES console / Cloudflare DNS history. |
@@ -121,6 +126,10 @@ The table records the deploys made by hand, from `website/` with `npx wrangler p
 **Sign-ups go-live, 2026-11-07 ([CHG-017](../records/changes/CHG-017-signups-live.md)).**
 - **The site:** a workflow deploy, not a hand deploy, so it isn't in the table. It is recorded here for CHG-013's checklist step 10. Run 42371803058, attempt 2, built `3f53cdb` with `UNCOST_FORMS_OPEN=on`. The founder approved it, and it was deployed at 12:47:52 UTC as `07fc3f05-d0d8-426a-8aa9-bb768f6ecd6c`, after `e9cdc061-67ea-4ae2-b6ce-62e31ca6775b` (the same commit, with the forms off). The project `uncost` carries the Service binding `SIGNUPS` and `UNCOST_SIGNUPS_OPEN=on` from that day.
 - **The Worker** `uncost-signups` is deployed by hand from `uncost-org/uncost-api`. At go-live it was version `caa69997-e9ee-4713-a357-06cdc484202e`, from `main` (`9ac9dd0`), deployed at 12:22:52 UTC, on the D1 database `uncost-signups-live`.
+- **The Worker, 2026-11-07 17:15:55 UTC:** deployed by hand with the founder's approval, from `main` (`d127d26`): [uncost-org/uncost-api#5](https://github.com/uncost-org/uncost-api/pull/5), which suppresses an address Postmark refuses as inactive (ErrorCode 406).
+  - **Versions:** `2a9661be-15d4-4afc-a01e-4bf3b1436cbb`, after `caa69997-e9ee-4713-a357-06cdc484202e`.
+  - **Read back:** `DB` is bound to `uncost-signups-live`, and the secrets, plain variables and cron are unchanged.
+  - **Rollback:** `npx wrangler rollback caa69997-e9ee-4713-a357-06cdc484202e` from uncost-api.
 - **Closing the sign-ups** is CHG-017's rollback, not only the dashboard rollback below.
 
 **Rollback:** in the Cloudflare dashboard, Workers & Pages → `uncost` → **Deployments** → the previous deployment → **Rollback**. Record any rollback here.
