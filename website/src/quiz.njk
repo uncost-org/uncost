@@ -108,10 +108,16 @@ shareText: "How well do you know the cost of living? Take the Uncost quiz."
     <div class="bd">
       <h2 id="qz-end-h" tabindex="-1">Your answers</h2>
       <p class="quiz-nojs" data-quiz-nojs>Each answer is above, with its source. With JavaScript on, you can pick an answer first and compare.</p>
-      {#- One block: the score, then (in a build with the tally on, from 30
-          scores) the average and how this reader compares, or "Not enough
-          players yet to show an average." js/quiz.js fills both. #}
-      <p class="quiz-score" data-quiz-score hidden>You got <span data-quiz-score-n></span> out of {{ quiz.total }} right.<span data-quiz-average hidden></span></p>
+      {#- The score block, one line per paragraph so each keeps its own row on
+          a phone (CHG-020): the score; then, in a build with the tally on, the
+          average and how this reader compares (from 30 scores), or "Not
+          enough players yet to show an average." js/quiz.js fills the figures
+          and the two later lines; each figure is a strong.quiz-fig. #}
+      <div class="quiz-score" data-quiz-score hidden>
+        <p class="quiz-line">You got <strong class="quiz-fig" data-quiz-score-n></strong> out of {{ quiz.total }} right.</p>
+        <p class="quiz-line" data-quiz-average hidden></p>
+        <p class="quiz-line" data-quiz-compare hidden></p>
+      </div>
       <table class="vhist quiz-sum" data-quiz-summary hidden>
         <thead><tr><th scope="col">Question</th><th scope="col">Your answer</th><th scope="col">Correct answer</th><th scope="col">Result</th></tr></thead>
         <tbody>
