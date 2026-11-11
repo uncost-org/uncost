@@ -208,8 +208,7 @@
     show(end.querySelector("[data-quiz-summary]"), true);
     show(end.querySelector("[data-quiz-share]"), true);
     show(end, true);
-    var line = end.querySelector("[data-quiz-score]");
-    announce(line ? line.textContent.replace(/\s+/g, " ").trim() : "Your answers.");
+    announce(scoreText() || "Your answers.");
     var h = end.querySelector("h2");
     if (h) h.focus();
     if (items.every(function (_, i) { return !!answers[i]; })) tally(bits, score, rows);
@@ -241,24 +240,48 @@
       .catch(function () { /* own score only */ })
       .then(function () { window.clearTimeout(timer); });
   }
-  // The rest of the score block: the average (two decimals, as the stats
-  // give it) and how far this score is from it, as a whole percent of the
-  // average. A difference that rounds to 0% is a match.
+  // The rest of the score block, one line each (CHG-020): the average (two
+  // decimals, as the stats give it), then how far this score is from it, as a
+  // whole percent of the average. A difference that rounds to 0% is a match
+  // (null: "You matched the average.", plain); otherwise the figure ("21%
+  // higher") and its direction, which only sets its colour.
   function compared(score, mean) {
-    if (mean === 0) return score === 0 ? "You matched the average." : "You scored higher than the average.";
+    if (mean === 0) return score === 0 ? null : { fig: "higher", dir: "higher" };
     var p = Math.round(Math.abs(score - mean) / mean * 100);
-    if (p === 0) return "You matched the average.";
-    return "You scored " + p + "% " + (score > mean ? "higher" : "lower") + " than the average.";
+    if (p === 0) return null;
+    var dir = score > mean ? "higher" : "lower";
+    return { fig: p + "% " + dir, dir: dir };
+  }
+  // A line of plain text with one figure in it: strong.quiz-fig, bold and
+  // underlined, not a link (no href, no tabindex, no pointer).
+  function figLine(p, before, fig, after, dir) {
+    p.textContent = "";
+    p.appendChild(document.createTextNode(before));
+    var f = el("strong", { "class": "quiz-fig" }, fig);
+    if (dir) f.setAttribute("data-quiz-dir", dir);
+    p.appendChild(f);
+    p.appendChild(document.createTextNode(after));
+  }
+  // The score block's shown lines, in order, as the announcement reads them.
+  function scoreText() {
+    var lines = end.querySelectorAll("[data-quiz-score] .quiz-line");
+    return Array.prototype.filter.call(lines, function (p) { return !p.hidden; })
+      .map(function (p) { return p.textContent.replace(/\s+/g, " ").trim(); })
+      .filter(Boolean).join(" ");
   }
   function showStats(s, score, rows) {
-    var line = end.querySelector("[data-quiz-average]");
-    if (!line || !s || typeof s.count !== "number") return;
-    var text;
+    var avg = end.querySelector("[data-quiz-average]");
+    var cmp = end.querySelector("[data-quiz-compare]");
+    if (!avg || !cmp || !s || typeof s.count !== "number") return;
     if (s.count < MIN_COUNT || typeof s.mean !== "number") {
-      text = "Not enough players yet to show an average.";
+      avg.textContent = "Not enough players yet to show an average.";
     } else {
       var mean = Math.round(s.mean * 100) / 100;
-      text = "The current average score is " + mean.toFixed(2) + ". " + compared(score, mean);
+      figLine(avg, "The current average score is ", mean.toFixed(2), ".");
+      var c = compared(score, mean);
+      if (c) figLine(cmp, "You scored ", c.fig, " than the average.", c.dir);
+      else cmp.textContent = "You matched the average.";
+      show(cmp, true);
       if (Array.isArray(s.perQuestion)) {
         Array.prototype.forEach.call(rows, function (row, i) {
           var share = s.perQuestion[i];
@@ -269,9 +292,9 @@
         });
       }
     }
-    line.textContent = " " + text;
-    show(line, true);
-    announce(text);
+    show(avg, true);
+    // The whole block again, in order: the score, then the new line or lines.
+    announce(scoreText());
   }
 
   // The no-JavaScript lines ("The answer: …", the end block's note) and the
