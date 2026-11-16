@@ -108,16 +108,16 @@ const QUESTIONS = [
     question: "Between 2001 and 2024, after adjusting for inflation, the median renter's income grew 9%. How much did the median rent grow?",
     wrong: [18, 22, 41] },
   { kind: "pick", id: "SRC-023", topic: "Ground beef", summary: "exact",
-    question: "What did a pound of ground beef cost in September 2026?",
+    question: "What did a pound of ground beef cost in October 2026?",
     wrong: [5, 10, 15] },
   { kind: "pick", id: "SRC-006", topic: "Family health coverage",
-    question: "On average, what did a year of family health coverage through an employer cost in 2025?" },
+    question: "On average, what did a year of family health coverage through an employer cost in 2026?" },
   { kind: "pick", id: "SRC-011", topic: "Household appliances",
     question: "Before adjusting for inflation, how much has the price of household appliances changed since 1997?",
     // The row's wording rule: a direct read of the index scale against its
     // December 1997 base (100), before inflation. The size is the row's
     // display_value; the direction is the latest level against the base.
-    change: { pattern: /base December 1997=(\d+(?:\.\d+)?): (\d+(?:\.\d+)?) \(September 2026\)/, from: 1, to: 2 },
+    change: { pattern: /base December 1997=(\d+(?:\.\d+)?): (\d+(?:\.\d+)?) \(October 2026\)/, from: 1, to: 2 },
     wrong: [-25, 5, 20] },
   // Every choice to the nearest 5,000 (founder, 2026-11-08: "About 745,000";
   // 745,652 to the nearest 1,000 would read 746,000). The figure card keeps
